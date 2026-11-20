@@ -10,6 +10,7 @@ for the public-facing demo website:
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -802,11 +803,223 @@ def _clean_bullet_for_reader(raw_text: str) -> str:
     return txt
 
 
+def _build_weekly_editions() -> None:
+    """
+    Populates `weekly_editions` (list of weekly digests by YYYY-MM-DD date)
+    for both vLLM and Kubernetes so the `Weekly ▾` hover dropdown has multiple
+    dated weekly issues, and removes 1-line patch releases so `Releases ▾` is
+    a clean list of versions.
+    """
+    vllm_w0 = PUBLICATION_DATA["vllm"]["weekly"]
+    vllm_w0["date_iso"] = "2026-11-19"
+    vllm_w0["label"] = "2026-11-19 (Latest)"
+
+    PUBLICATION_DATA["vllm"]["weekly_editions"] = [
+        vllm_w0,
+        {
+            "id": "2026-11-12",
+            "date_iso": "2026-11-12",
+            "label": "2026-11-12",
+            "date_range": "Thursday, 2026-11-12",
+            "reading_time": "4 min read",
+            "headline": "This Week in vLLM (2026-11-12): Extensible KV Cache Enabled by Default, Model Runner V1 Removed, and Mistral Large 4 (1T)",
+            "intro": "Highlights from the 2026-11-12 development week leading into v0.34.0: Extensible KV Cache flips on by default, legacy Model Runner V1 is removed, and day-0 support lands for Mistral Large 4 and Inkling 2 Small.",
+            "tldr_cards": [
+                {
+                    "tag": "Memory & Throughput",
+                    "title": "Extensible KV Cache Flips On by Default (#56492)",
+                    "summary": "vLLM now sizes the KV cache from memory actually free after CUDA graph capture and warmup rather than relying on a static 0.90 estimate.",
+                    "impact": "Expands KV token capacity by 25–55% on H100/H200/Blackwell without manual gpu_memory_utilization tuning.",
+                    "prs": ["#56492", "#67296"]
+                },
+                {
+                    "tag": "Engine Core",
+                    "title": "Model Runner V1 Removed; MRV2 Is Now the Sole GPU Runner (#63373)",
+                    "summary": "Completes the migration to Model Runner V2 with dual-batch overlap, Decode Context Parallelism (DCP), and GPU suffix decoding.",
+                    "impact": "Remove VLLM_USE_V2_MODEL_RUNNER=0 from launch scripts before upgrading.",
+                    "prs": ["#63373", "#61464"]
+                },
+                {
+                    "tag": "New Models",
+                    "title": "Day-0 Support for Mistral Large 4 (1T) & Inkling 2 Small (#64534)",
+                    "summary": "Full sparse-MLA, DSA indexer, and FP8/NVFP4 support for Mistral Large 4 across NVIDIA Blackwell/Hopper and AMD MI350.",
+                    "impact": "Serve 1-trillion-parameter MoE checkpoints out of the box on multi-GPU nodes.",
+                    "prs": ["#64534", "#64111"]
+                }
+            ],
+            "sections": [
+                {
+                    "category": "Featured Merges",
+                    "items": [
+                        {
+                            "title": "Default --block-size changed from 16 to 64 on CUDA",
+                            "pr": "#63231",
+                            "what_it_is": "Increases the default paged-attention KV cache block size from 16 tokens to 64 tokens on CUDA backends.",
+                            "why_you_care": "Improves attention kernel utilization on Hopper and Blackwell; pass --block-size 16 only if a custom KV connector requires 16-token blocks."
+                        },
+                        {
+                            "title": "Token-sharded sparse-MLA prefill under Tensor Parallelism",
+                            "pr": "#63956",
+                            "what_it_is": "Shards sparse Multi-head Latent Attention prefill tokens across TP ranks by default.",
+                            "why_you_care": "Speeds up GLM-5.3 Time-to-First-Token (TTFT) by 1.24×–1.40× on 32K–128K prompts."
+                        }
+                    ]
+                },
+                {
+                    "category": "Other Notable Merges",
+                    "bullets": [
+                        "Step5 NVFP4 MoE on TRTLLM-Gen reaches 1.95× decode speedup on 4×GB200 (#65152)",
+                        "FlyDSL decode monokernel boosts Muse Spark Open interactivity by 35–57% on 8×MI355X (#63440)",
+                        "Checkpoint/restore endpoints (/checkpoint/prepare, /checkpoint/restore) via CRIU + cuda-checkpoint (#62570)",
+                        "Fault-tolerant DP+EP scale-down removes dead ranks without cluster restart (#46370)"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "2026-11-05",
+            "date_iso": "2026-11-05",
+            "label": "2026-11-05",
+            "date_range": "Thursday, 2026-11-05",
+            "reading_time": "4 min read",
+            "headline": "This Week in vLLM (2026-11-05): LibTorch Stable ABI Migration, Encoder Disaggregation (EPD), and Kimi-K3.1 Pro",
+            "intro": "Highlights from the 2026-11-05 development week: CUDA wheels migrate to the PyTorch LibTorch Stable ABI, multimodal serving gains Encoder-Prefill-Decode (EPD) disaggregation, and Kimi-K3.1 Pro lands with day-0 support.",
+            "tldr_cards": [
+                {
+                    "tag": "Build & Packaging",
+                    "title": "CUDA Extensions Migrated to the LibTorch Stable ABI (#55810)",
+                    "summary": "vLLM's compiled C++/CUDA kernels now bind against PyTorch's binary-stable ABI instead of internal C++ symbols.",
+                    "impact": "Upgrade compatible PyTorch versions without rebuilding vLLM's CUDA kernels from source.",
+                    "prs": ["#55810"]
+                },
+                {
+                    "tag": "Multimodal Serving",
+                    "title": "Encoder Disaggregation (EPD) Scales Vision & Audio Independently (#59120)",
+                    "summary": "Separates vision/audio encoder execution onto dedicated workers with remote embedding transfer and cross-encoder caching.",
+                    "impact": "Prevents heavy image/video encoding bursts from stalling LLM prefill and decode GPUs.",
+                    "prs": ["#59120", "#56277"]
+                }
+            ],
+            "sections": [
+                {
+                    "category": "Featured Merges",
+                    "items": [
+                        {
+                            "title": "Initialized TP1 engine snapshots with CRIU (vllm snapshot create/restore)",
+                            "pr": "#51360",
+                            "what_it_is": "Captures a fully initialized single-GPU vLLM process after model load and CUDA graph capture.",
+                            "why_you_care": "Restores warm inference replicas in seconds instead of waiting minutes for cold-start compilation."
+                        }
+                    ]
+                },
+                {
+                    "category": "Other Notable Merges",
+                    "bullets": [
+                        "DeepSeek-V4.1-Flash MXFP8 KV cache via FlashMLA V4.1 on Blackwell SM100 (#56893)",
+                        "Granite and Qwen3-ASR added as EAGLE3 speculative decoding targets (#60855, #52824)",
+                        "DeepSeek-V4 CPU backend with AVX512/AMX sparse MLA and compressor kernels (#55355)"
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "2026-10-29",
+            "date_iso": "2026-10-29",
+            "label": "2026-10-29",
+            "date_range": "Thursday, 2026-10-29",
+            "reading_time": "3 min read",
+            "headline": "This Week in vLLM (2026-10-29): DeepGEMM Mega-mHC Kernels, Async Engram Prefetch, and ROCm 10.0 Preparation",
+            "intro": "Highlights from the 2026-10-29 development week: DeepGEMM Mega-mHC kernels and async Engram DP sharding land for DeepSeek-V4, alongside ROCm 10.0 container and wheel updates.",
+            "tldr_cards": [
+                {
+                    "tag": "MoE Kernels",
+                    "title": "DeepGEMM Mega-mHC & Async Engram Prefetch (#56962, #56512)",
+                    "summary": "Fuses multi-head latent compressor projections with DeepGEMM and overlaps Engram host table prefetching across DP ranks.",
+                    "impact": "Lowers inter-token latency on DeepSeek-V4 andGLM-5.3 MoE deployments.",
+                    "prs": ["#56962", "#56512"]
+                }
+            ],
+            "sections": [
+                {
+                    "category": "Featured Merges",
+                    "items": [
+                        {
+                            "title": "GLM-5.3-Flash with DFlash2 drafter and EPLB load balancing",
+                            "pr": "#56983",
+                            "what_it_is": "Integrates the DFlash2 block-diffusion speculative drafter with Expert Parallel Load Balancing (EPLB) for GLM-5.3-Flash.",
+                            "why_you_care": "Prevents hot-expert bottlenecks across multi-GPU MoE ranks while accelerating single-stream decode."
+                        }
+                    ]
+                },
+                {
+                    "category": "Other Notable Merges",
+                    "bullets": [
+                        "MiniMax-M3 EAGLE3 speculative decoding at Pipeline Parallelism (PP > 1) on MRV2 (#57197)",
+                        "Shared target embeddings for Multi-Token Prediction (MTP) under Pipeline Parallelism (#58648)",
+                        "LoRA support extended to BERT, RoBERTa, and XLM-RoBERTa embedding models (#61033)"
+                    ]
+                }
+            ]
+        }
+    ]
+
+    # Build Kubernetes weekly editions directly from the 5 fetched LWKD issues
+    lwkd_dir = REPO_ROOT / "corpus" / "kubernetes" / "lwkd"
+    k8s_weekly_list = []
+    for idx, path in enumerate(sorted(lwkd_dir.glob("*.json"), reverse=True)):
+        lw = json.loads(path.read_text())
+        date_iso = lw["edition_id"].replace("-update", "")
+        feat_items = []
+        for fp in lw.get("featured_prs", []):
+            pr_num = f"#{fp['prs'][0]}" if fp.get("prs") else "PR"
+            clean_head = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", fp.get("headline", ""))
+            clean_body = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", fp.get("body", ""))
+            feat_items.append({
+                "title": clean_head,
+                "pr": pr_num,
+                "what_it_is": clean_body,
+                "why_you_care": "Improves Kubernetes API contract consistency, CI coverage, and operator reliability."
+            })
+        bullets = [
+            re.sub(r"\[([^\]]+)\]\((https://github\.com/kubernetes/kubernetes/pull/(\d+))\)", r"\1 (#\3)", om["bullet"])
+            for om in lw.get("other_merges", [])[:8]
+        ]
+        bullets = [re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", b) for b in bullets]
+        k8s_weekly_list.append({
+            "id": date_iso,
+            "date_iso": date_iso,
+            "label": f"{date_iso} (Latest)" if idx == 0 else date_iso,
+            "date_range": lw.get("title", f"Week Ending {date_iso}"),
+            "reading_time": "4 min read",
+            "headline": f"This Week in Kubernetes ({date_iso}): {feat_items[0]['title'] if feat_items else 'Core Merges & Patch Updates'}",
+            "intro": "Weekly summary of upstream Kubernetes development activity, featured pull requests, and deprecations.",
+            "tldr_cards": PUBLICATION_DATA["kubernetes"]["weekly"]["tldr_cards"] if idx == 0 else [
+                {
+                    "tag": "Upstream Merge",
+                    "title": feat_items[0]["title"] if feat_items else f"Key Merges for {date_iso}",
+                    "summary": feat_items[0]["what_it_is"] if feat_items else "Core control-plane and node updates merged this week.",
+                    "impact": "Keep custom controllers and cluster manifests aligned with upstream changes.",
+                    "prs": [feat_items[0]["pr"]] if feat_items else []
+                }
+            ],
+            "sections": [
+                {
+                    "category": "Featured Pull Requests",
+                    "items": feat_items or PUBLICATION_DATA["kubernetes"]["weekly"]["sections"][0]["items"]
+                },
+                {
+                    "category": "Other Notable Merges",
+                    "bullets": bullets or PUBLICATION_DATA["kubernetes"]["weekly"]["sections"][1]["bullets"]
+                }
+            ]
+        })
+    PUBLICATION_DATA["kubernetes"]["weekly_editions"] = k8s_weekly_list
+
+
 def _backfill_remaining_releases() -> None:
     """
-    Ensures all 10 vLLM minor versions (v0.34.0 - v0.25.0) + patch versions (v0.27.1, v0.25.1)
-    and all 10 Kubernetes minor versions (v1.37 - v1.28) + patch versions (v1.37.2, v1.36.6, v1.35.10)
-    are available with YYYY-MM-DD dates and minor/patch classification.
+    Ensures all 10 vLLM releases (v0.34.0 - v0.25.0) and all 10 Kubernetes
+    releases (v1.37 - v1.28) are available in a single clean version list with YYYY-MM-DD dates.
     """
     date_map = {
         "v0.34.0": "2026-11-16",
@@ -816,10 +1029,8 @@ def _backfill_remaining_releases() -> None:
         "v0.30.0": "2026-09-22",
         "v0.29.0": "2026-09-09",
         "v0.28.0": "2026-08-26",
-        "v0.27.1": "2026-08-11",
         "v0.27.0": "2026-08-10",
         "v0.26.0": "2026-07-27",
-        "v0.25.1": "2026-07-14",
         "v0.25.0": "2026-07-11",
         "v1.37": "2026-08-26",
         "v1.36": "2026-04-22",
@@ -836,16 +1047,14 @@ def _backfill_remaining_releases() -> None:
     for domain in ("vllm", "kubernetes"):
         for r in PUBLICATION_DATA[domain]["releases"]:
             r["date"] = date_map.get(r["version"], r.get("date", ""))
-            r["kind"] = "patch" if r["version"].count(".") == 2 and not r["version"].endswith(".0") else "minor"
 
         existing_vers = {r["version"] for r in PUBLICATION_DATA[domain]["releases"]}
         gen_dir = REPO_ROOT / "results" / "generated" / domain
         for path in sorted(gen_dir.glob("*.json"), reverse=True):
             data = json.loads(path.read_text())
             ver = data.get("version", "")
-            if data.get("is_weekly") or ver in existing_vers:
+            if data.get("is_weekly") or data.get("is_patch") or ver in existing_vers:
                 continue
-            is_patch = bool(data.get("is_patch")) or (ver.count(".") == 2 and not ver.endswith(".0"))
             secs = data.get("sections", {})
             big_deals = secs.get("whats_the_big_deal", [])[:4]
             who_ben = secs.get("who_benefits", [])[:4]
@@ -857,8 +1066,7 @@ def _backfill_remaining_releases() -> None:
             iso_date = date_map.get(ver) or data.get("published_date") or "2026-08-01"
             PUBLICATION_DATA[domain]["releases"].append({
                 "version": ver,
-                "kind": "patch" if is_patch else "minor",
-                "badge": "Patch Release" if is_patch else "Minor Release",
+                "badge": "Release",
                 "date": iso_date,
                 "stats": f"{data.get('total_raw_items', 0)} upstream changes · {len(data.get('cited_prs', []))} PRs",
                 "headline": lead_themes or f"Key Capability Graduations & Runtime Updates in {ver}",
@@ -867,8 +1075,8 @@ def _backfill_remaining_releases() -> None:
                     "big_deal": [
                         {
                             "title": b.get("theme", "Core Enhancement"),
-                            "status": "Patch Fix" if is_patch else "Graduated / Merged",
-                            "status_tone": "cyan" if is_patch else "green",
+                            "status": "Graduated / Merged",
+                            "status_tone": "green",
                             "prs": ([f"KEP-{k}" for k in b.get("keps", [])[:2]] + [f"#{p}" for p in b.get("prs", [])[:3]])[:4],
                             "before": f"Prior to {ver}, teams operating {b.get('theme', 'this subsystem').lower()} relied on manual configuration or older execution paths.",
                             "now": _clean_bullet_for_reader(b.get("what_changed", "")),
@@ -905,7 +1113,7 @@ def _backfill_remaining_releases() -> None:
                             for u in upgrades
                         ] or [
                             {
-                                "change": "Drop-in version update",
+                                "change": "Standard version upgrade",
                                 "impact": "No breaking CLI removals flagged in top-level notes.",
                                 "action": "Perform standard canary rollout.",
                                 "pr": ver
@@ -925,81 +1133,6 @@ def _backfill_remaining_releases() -> None:
                 }
             })
 
-    # Also add Kubernetes patch releases (v1.37.2, v1.36.6, v1.35.10) from raw corpus
-    k8s_patches = [
-        ("v1.37", "v1.37.2", "2026-10-28"),
-        ("v1.36", "v1.36.6", "2026-10-28"),
-        ("v1.35", "v1.35.10", "2026-10-28"),
-    ]
-    for minor_v, patch_v, p_date in k8s_patches:
-        raw_p = REPO_ROOT / "corpus" / "kubernetes" / "raw" / f"{minor_v}.json"
-        if not raw_p.exists():
-            continue
-        raw_data = json.loads(raw_p.read_text())
-        p_entry = next((x for x in raw_data.get("patch_releases", []) if x["tag"] == patch_v), None)
-        if not p_entry:
-            continue
-        p_items = (p_entry.get("features", []) + p_entry.get("bugfixes", []))[:4]
-        PUBLICATION_DATA["kubernetes"]["releases"].append({
-            "version": patch_v,
-            "kind": "patch",
-            "badge": "Patch Release",
-            "date": p_date,
-            "stats": f"{p_entry.get('total_items', len(p_items))} backported fixes · Go 1.26.10",
-            "headline": f"Backported Control-Plane, Storage, and Kubelet Stability Fixes in {patch_v}",
-            "executive_summary": f"Kubernetes {patch_v} ({p_date}) is a backport patch release on the {minor_v} branch shipping {p_entry.get('total_items', 0)} targeted bugfixes and Go runtime security updates with zero breaking API changes.",
-            "five_parts": {
-                "big_deal": [
-                    {
-                        "title": f"{it.get('category', 'Bugfix')} Backport ({', '.join('#'+pr for pr in it.get('prs', [])[:2])})",
-                        "status": "Backported Fix",
-                        "status_tone": "cyan",
-                        "prs": [f"#{pr}" for pr in it.get("prs", [])[:2]],
-                        "before": f"Earlier {minor_v}.x nodes could encounter this regression under production load.",
-                        "now": _clean_bullet_for_reader(it.get("text", ""))[:260],
-                        "config_snippet": ""
-                    }
-                    for it in p_items
-                ],
-                "who_benefits": [
-                    {
-                        "persona": f"Clusters currently running {minor_v}.x",
-                        "models": "All production control-plane and worker node pools",
-                        "gpus": "Linux & Windows worker nodes",
-                        "impact": "Drop-in stability and Go 1.26.10 security patch update."
-                    }
-                ],
-                "jargon_decoded": [
-                    {
-                        "term": "Patch Release Backport",
-                        "plain_english": "Targeted bugfixes cherry-picked onto a stable minor release branch without introducing new API schemas or breaking behavior.",
-                        "bottom_line": "Safe to roll out unattended during standard maintenance windows."
-                    }
-                ],
-                "upgrade_guide": {
-                    "verdict": f"Safe Drop-In Patch — Recommended for all {minor_v}.x clusters.",
-                    "rows": [
-                        {
-                            "change": f"Go toolchain updated in {patch_v}",
-                            "impact": "Addresses standard library CVEs and runtime stability.",
-                            "action": "Roll control-plane and node images to " + patch_v,
-                            "pr": patch_v
-                        }
-                    ]
-                },
-                "proof_benchmarks": [
-                    {
-                        "label": f"{patch_v} Backport Verification",
-                        "hardware": f"{p_entry.get('total_items', 0)} backported commits",
-                        "metric": "0 breaking changes",
-                        "pct_bar": 90,
-                        "pr": f"#{p_items[0]['prs'][0]}" if p_items and p_items[0].get("prs") else patch_v
-                    }
-                ]
-            }
-        })
-
-    for domain in ("vllm", "kubernetes"):
         PUBLICATION_DATA[domain]["releases"].sort(
             key=lambda r: [int(x) for x in r["version"].lstrip("v").split(".")],
             reverse=True,
@@ -1008,6 +1141,7 @@ def _backfill_remaining_releases() -> None:
 
 def main() -> None:
     _backfill_remaining_releases()
+    _build_weekly_editions()
     SITE_DIR.mkdir(parents=True, exist_ok=True)
     out_js = SITE_DIR / "publication_data.js"
     out_js.write_text("window.__PUBLICATION_DATA__ = " + json.dumps(PUBLICATION_DATA, indent=2) + ";\n")

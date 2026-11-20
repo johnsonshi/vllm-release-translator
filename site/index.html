@@ -203,16 +203,114 @@
       flex-wrap: wrap;
     }
 
-    .form-select {
+    /* BOOTSTRAP NAVBAR DROPDOWNS (OPEN ON HOVER OR CLICK) */
+    .nav-menus {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-toggle {
+      appearance: none;
       background-color: var(--bs-body-bg);
       color: var(--bs-body-color);
       border: 1px solid var(--bs-border-strong);
       border-radius: 0.375rem;
-      padding: 0.32rem 0.65rem;
-      font-size: 0.85rem;
+      padding: 0.34rem 0.75rem;
+      font-size: 0.86rem;
       font-weight: 500;
-      font-variant-numeric: tabular-nums;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .dropdown-toggle:hover {
+      background-color: var(--bs-tertiary-bg);
+    }
+    .dropdown-toggle.active {
+      background-color: var(--bs-primary-subtle);
+      color: var(--bs-primary-text);
+      border-color: var(--bs-primary);
+      font-weight: 600;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 2px;
+      min-width: 225px;
+      max-height: 360px;
+      overflow-y: auto;
+      background-color: var(--bs-body-bg);
+      border: 1px solid var(--bs-border-strong);
+      border-radius: 0.375rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
+      padding: 0.35rem 0;
+      z-index: 60;
+      list-style: none;
+    }
+
+    /* Bridge the 2px gap so hover doesn't close when moving cursor into menu */
+    .dropdown::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 100%;
+      height: 6px;
+    }
+
+    .dropdown:hover .dropdown-menu,
+    .dropdown:focus-within .dropdown-menu,
+    .dropdown.open .dropdown-menu {
+      display: block;
+    }
+
+    .dropdown-header {
+      padding: 0.25rem 0.85rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--bs-muted-color);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .dropdown-item {
+      appearance: none;
+      width: 100%;
+      text-align: left;
+      border: none;
+      background: transparent;
+      color: var(--bs-body-color);
+      padding: 0.42rem 0.85rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      font-variant-numeric: tabular-nums;
+    }
+    .dropdown-item:hover {
+      background-color: var(--bs-tertiary-bg);
+    }
+    .dropdown-item[aria-current="true"] {
+      background-color: var(--bs-primary-subtle);
+      color: var(--bs-primary-text);
+      font-weight: 600;
+    }
+
+    .dropdown-date {
+      font-size: 0.76rem;
+      color: var(--bs-muted-color);
     }
 
     .btn-theme {
@@ -221,7 +319,7 @@
       color: var(--bs-body-color);
       border: 1px solid var(--bs-border-strong);
       border-radius: 0.375rem;
-      padding: 0.32rem 0.7rem;
+      padding: 0.34rem 0.7rem;
       font-size: 0.85rem;
       font-weight: 500;
       cursor: pointer;
@@ -231,67 +329,6 @@
     }
     .btn-theme:hover {
       background-color: var(--bs-tertiary-bg);
-    }
-
-    /* COMPACT VERSION PILL BAR */
-    .subnav {
-      border-bottom: 1px solid var(--bs-border-color);
-      background-color: var(--bs-body-bg);
-      padding: 0.5rem 1rem;
-    }
-
-    .subnav-container {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .subnav-container::-webkit-scrollbar {
-      display: none;
-    }
-
-    .subnav-label {
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--bs-muted-color);
-      margin-right: 0.2rem;
-      white-space: nowrap;
-    }
-
-    .subnav-divider {
-      width: 1px;
-      height: 1.1rem;
-      background-color: var(--bs-border-color);
-      margin: 0 0.25rem;
-      flex-shrink: 0;
-    }
-
-    .nav-pill {
-      appearance: none;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--bs-secondary-color);
-      font-size: 0.82rem;
-      font-weight: 500;
-      padding: 0.22rem 0.6rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      white-space: nowrap;
-      font-variant-numeric: tabular-nums;
-    }
-    .nav-pill:hover {
-      background-color: var(--bs-tertiary-bg);
-      border-color: var(--bs-border-color);
-      color: var(--bs-body-color);
-    }
-    .nav-pill[aria-current="true"] {
-      background-color: var(--bs-primary-subtle);
-      color: var(--bs-primary-text);
-      border-color: var(--bs-primary);
-      font-weight: 600;
     }
 
     /* MAIN CONTAINER */
@@ -528,6 +565,27 @@
     <div class="navbar-container">
       <div class="navbar-left">
         <span class="navbar-brand" id="navbar-brand">What’s New in vLLM</span>
+
+        <nav class="nav-menus" aria-label="Releases and weekly digests">
+          <div class="dropdown" id="dd-releases">
+            <button type="button" class="dropdown-toggle active" id="btn-dd-releases" onclick="toggleDropdown('dd-releases')">
+              <span id="lbl-dd-releases">Releases: v0.34.0</span>
+              <span aria-hidden="true">▾</span>
+            </button>
+            <ul class="dropdown-menu" id="menu-releases"></ul>
+          </div>
+
+          <div class="dropdown" id="dd-weekly">
+            <button type="button" class="dropdown-toggle" id="btn-dd-weekly" onclick="toggleDropdown('dd-weekly')">
+              <span id="lbl-dd-weekly">Weekly</span>
+              <span aria-hidden="true">▾</span>
+            </button>
+            <ul class="dropdown-menu" id="menu-weekly"></ul>
+          </div>
+        </nav>
+      </div>
+
+      <div class="navbar-right">
         <div class="btn-group" role="group" aria-label="Select project">
           <button type="button" class="btn-seg" id="btn-proj-vllm" onclick="switchProject('vllm')" aria-pressed="true">
             vLLM
@@ -536,11 +594,6 @@
             Kubernetes
           </button>
         </div>
-      </div>
-
-      <div class="navbar-right">
-        <label for="edition-select" class="sr-only">Jump to version or weekly digest</label>
-        <select id="edition-select" class="form-select" onchange="handleSelectChange(this.value)"></select>
 
         <button type="button" class="btn-theme" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <span id="theme-toggle-label">Dark mode</span>
@@ -548,11 +601,6 @@
       </div>
     </div>
   </header>
-
-  <!-- QUICK EDITION STRIP (MINOR, PATCH, AND WEEKLY YYYY-MM-DD) -->
-  <nav class="subnav" aria-label="Release and weekly editions">
-    <div class="subnav-container" id="subnav-container"></div>
-  </nav>
 
   <!-- MAIN CONTENT -->
   <main class="container" id="main-content" tabindex="-1"></main>
@@ -565,8 +613,30 @@
       project: 'vllm',
       mode: 'releases', // 'releases' | 'weekly'
       version: 'v0.34.0',
+      weeklyDate: '2026-11-19',
       theme: localStorage.getItem('release_theme') || 'light'
     };
+
+    function toggleDropdown(ddId) {
+      const el = document.getElementById(ddId);
+      if (!el) return;
+      const isOpen = el.classList.contains('open');
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      if (!isOpen) el.classList.add('open');
+    }
+
+    function closeDropdowns() {
+      document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      if (document.activeElement && typeof document.activeElement.blur === 'function') {
+        document.activeElement.blur();
+      }
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.dropdown')) {
+        document.querySelectorAll('.dropdown.open').forEach(d => d.classList.remove('open'));
+      }
+    });
 
     function applyTheme(theme) {
       state.theme = theme === 'dark' ? 'dark' : 'light';
@@ -594,13 +664,19 @@
       if (mode === 'releases' || mode === 'weekly') state.mode = mode;
       const ver = p.get('ver');
       if (ver) state.version = ver;
+      const wk = p.get('week');
+      if (wk) state.weeklyDate = wk;
     }
 
     function syncUrl() {
       const p = new URLSearchParams();
       p.set('project', state.project);
       p.set('mode', state.mode);
-      if (state.mode === 'releases') p.set('ver', state.version);
+      if (state.mode === 'releases') {
+        p.set('ver', state.version);
+      } else {
+        p.set('week', state.weeklyDate);
+      }
       window.history.replaceState(null, '', `${window.location.pathname}?${p.toString()}`);
     }
 
@@ -644,6 +720,10 @@
       if (projObj && projObj.releases && projObj.releases.length > 0) {
         state.version = projObj.releases[0].version;
       }
+      if (projObj && projObj.weekly_editions && projObj.weekly_editions.length > 0) {
+        state.weeklyDate = projObj.weekly_editions[0].date_iso;
+      }
+      closeDropdowns();
       syncUrl();
       render();
     }
@@ -651,90 +731,72 @@
     function selectVersion(ver) {
       state.mode = 'releases';
       state.version = ver;
+      closeDropdowns();
       syncUrl();
       render();
     }
 
-    function selectWeekly() {
+    function selectWeekly(dateIso) {
       state.mode = 'weekly';
+      if (dateIso) state.weeklyDate = dateIso;
+      closeDropdowns();
       syncUrl();
       render();
-    }
-
-    function handleSelectChange(val) {
-      if (val === 'weekly') {
-        selectWeekly();
-      } else {
-        selectVersion(val);
-      }
     }
 
     function renderNavigation(projObj) {
       const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
       const releases = projObj.releases || [];
-      const minorReleases = releases.filter(r => r.kind !== 'patch');
-      const patchReleases = releases.filter(r => r.kind === 'patch');
-      const weeklyDate = (projObj.weekly && projObj.weekly.date_iso) || '2026-11-19';
+      const weeklyList = projObj.weekly_editions || [projObj.weekly];
 
-      // Populate <select> dropdown with Minor, Patch, and Weekly (YYYY-MM-DD)
-      const selectEl = document.getElementById('edition-select');
-      selectEl.innerHTML = `
-        <optgroup label="Minor Releases">
-          ${minorReleases.map(r => `
-            <option value="${escapeHtml(r.version)}" ${state.mode === 'releases' && state.version === r.version ? 'selected' : ''}>
-              ${escapeHtml(r.version)} (${escapeHtml(r.date)})
-            </option>
-          `).join('')}
-        </optgroup>
-        <optgroup label="Patch Releases">
-          ${patchReleases.map(r => `
-            <option value="${escapeHtml(r.version)}" ${state.mode === 'releases' && state.version === r.version ? 'selected' : ''}>
-              ${escapeHtml(r.version)} (${escapeHtml(r.date)})
-            </option>
-          `).join('')}
-        </optgroup>
-        <optgroup label="Weekly Digest (Thursdays)">
-          <option value="weekly" ${state.mode === 'weekly' ? 'selected' : ''}>
-            ${escapeHtml(weeklyDate)} — This Week in ${projName}
-          </option>
-        </optgroup>
+      const btnRel = document.getElementById('btn-dd-releases');
+      const btnWk = document.getElementById('btn-dd-weekly');
+      const lblRel = document.getElementById('lbl-dd-releases');
+      const lblWk = document.getElementById('lbl-dd-weekly');
+
+      if (state.mode === 'releases') {
+        btnRel.classList.add('active');
+        btnWk.classList.remove('active');
+        lblRel.textContent = `Releases (${state.version})`;
+        lblWk.textContent = `Weekly`;
+      } else {
+        btnWk.classList.add('active');
+        btnRel.classList.remove('active');
+        lblRel.textContent = `Releases`;
+        lblWk.textContent = `Weekly (${state.weeklyDate})`;
+      }
+
+      document.getElementById('menu-releases').innerHTML = `
+        <li class="dropdown-header">${projName} Releases</li>
+        ${releases.map((r, i) => `
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              aria-current="${state.mode === 'releases' && state.version === r.version ? 'true' : 'false'}"
+              onclick="selectVersion('${escapeHtml(r.version)}')"
+            >
+              <span translate="no">${escapeHtml(r.version)}${i === 0 ? ' (Latest)' : ''}</span>
+              <span class="dropdown-date">${escapeHtml(r.date)}</span>
+            </button>
+          </li>
+        `).join('')}
       `;
 
-      // Populate quick horizontal pill strip (fits Weekly + recent Minor + Patch without scrolling)
-      const subnav = document.getElementById('subnav-container');
-      subnav.innerHTML = `
-        <span class="subnav-label">Weekly:</span>
-        <button
-          type="button"
-          class="nav-pill"
-          aria-current="${state.mode === 'weekly' ? 'true' : 'false'}"
-          onclick="selectWeekly()"
-        >
-          ${escapeHtml(weeklyDate)} (Thu)
-        </button>
-        <span class="subnav-divider" aria-hidden="true"></span>
-        <span class="subnav-label">Minor:</span>
-        ${minorReleases.slice(0, 4).map(r => `
-          <button
-            type="button"
-            class="nav-pill"
-            aria-current="${state.mode === 'releases' && state.version === r.version ? 'true' : 'false'}"
-            onclick="selectVersion('${escapeHtml(r.version)}')"
-          >
-            <span translate="no">${escapeHtml(r.version)}</span>
-          </button>
-        `).join('')}
-        <span class="subnav-divider" aria-hidden="true"></span>
-        <span class="subnav-label">Patch:</span>
-        ${patchReleases.slice(0, 2).map(r => `
-          <button
-            type="button"
-            class="nav-pill"
-            aria-current="${state.mode === 'releases' && state.version === r.version ? 'true' : 'false'}"
-            onclick="selectVersion('${escapeHtml(r.version)}')"
-          >
-            <span translate="no">${escapeHtml(r.version)}</span>
-          </button>
+      document.getElementById('menu-weekly').innerHTML = `
+        <li class="dropdown-header">This Week in ${projName}</li>
+        ${weeklyList.map((w, i) => `
+          <li>
+            <button
+              type="button"
+              class="dropdown-item"
+              aria-current="${state.mode === 'weekly' && state.weeklyDate === w.date_iso ? 'true' : 'false'}"
+              onclick="selectWeekly('${escapeHtml(w.date_iso)}')"
+            >
+              <span>${escapeHtml(w.date_iso)}${i === 0 ? ' (Latest)' : ''}</span>
+              <span class="dropdown-date">Thu</span>
+            </button>
+          </li>
         `).join('')}
       `;
     }
@@ -742,13 +804,12 @@
     function renderReleaseView(projObj, rel) {
       const fp = rel.five_parts;
       const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
-      const kindLabel = rel.kind === 'patch' ? 'Patch Release' : 'Minor Release';
 
       return `
         <article>
           <header class="page-header">
             <div class="page-meta">
-              ${escapeHtml(kindLabel)} &middot; Released ${escapeHtml(rel.date)} &middot; ${escapeHtml(rel.stats)}
+              Released ${escapeHtml(rel.date)} &middot; ${escapeHtml(rel.stats)}
             </div>
             <h1 class="page-title">What’s New in ${projName} ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
             <p class="lead">${formatProse(rel.executive_summary, state.project)}</p>
@@ -889,9 +950,7 @@
       `;
     }
 
-    function renderWeeklyView(projObj) {
-      const w = projObj.weekly;
-
+    function renderWeeklyView(projObj, w) {
       return `
         <article>
           <header class="page-header">
@@ -965,6 +1024,11 @@
         state.version = releases[0].version;
       }
 
+      const weeklyList = projObj.weekly_editions || [projObj.weekly];
+      if (!weeklyList.some(w => w.date_iso === state.weeklyDate) && weeklyList.length > 0) {
+        state.weeklyDate = weeklyList[0].date_iso;
+      }
+
       renderNavigation(projObj);
 
       const mainEl = document.getElementById('main-content');
@@ -972,7 +1036,8 @@
         const activeRel = releases.find(r => r.version === state.version) || releases[0];
         mainEl.innerHTML = renderReleaseView(projObj, activeRel);
       } else {
-        mainEl.innerHTML = renderWeeklyView(projObj);
+        const activeWk = weeklyList.find(w => w.date_iso === state.weeklyDate) || weeklyList[0];
+        mainEl.innerHTML = renderWeeklyView(projObj, activeWk);
       }
     }
 
