@@ -511,13 +511,24 @@
     /* TELEMETRY SPEC STRIP */
     .telemetry-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       gap: 1px;
       background: var(--line);
       border: 1px solid var(--line);
       border-radius: 10px;
       overflow: hidden;
       margin-top: 22px;
+    }
+
+    @media (max-width: 1220px) {
+      .telemetry-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+    @media (max-width: 640px) {
+      .telemetry-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     .telemetry-cell {
@@ -640,9 +651,13 @@
     }
 
     .thesis-body {
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.5;
+      margin: 0;
+      padding-left: 16px;
+      display: grid;
+      gap: 5px;
     }
 
     .thesis-impact {
@@ -1188,6 +1203,12 @@
       const secs = guide.sections || {};
       const ev = guide.eval || {};
       const repo = guide.project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
+      const projDisplay = guide.project === 'vllm' ? 'vLLM' : 'Kubernetes';
+      const cleanPitch = (guide.positioning || '')
+        .replace(/VLLM Last Week in VLLM/gi, 'Last Week in vLLM')
+        .replace(/\bVLLM\b/g, 'vLLM')
+        .replace(/\bKUBERNETES\b/g, 'Kubernetes');
+      const headingLabel = guide.display_title || `${projDisplay} ${guide.version}`;
 
       const bigDeals = secs.whats_the_big_deal || [];
       const whoBenefits = secs.who_benefits || [];
@@ -1232,8 +1253,8 @@
             <span>·</span>
             <span class="num">${escapeHtml(guide.published_date || 'Latest')}</span>
           </div>
-          <h1 class="dossier-title">What’s New in <span translate="no">${escapeHtml(guide.display_title || (guide.project.toUpperCase() + ' ' + guide.version))}</span></h1>
-          <p class="dossier-thesis">${escapeHtml(guide.positioning || '')}</p>
+          <h1 class="dossier-title">What’s New in <span translate="no">${escapeHtml(headingLabel)}</span></h1>
+          <p class="dossier-thesis">${escapeHtml(cleanPitch)}</p>
 
           <div class="telemetry-grid" role="region" aria-label="Release telemetry metrics">
             <div class="telemetry-cell">
@@ -1277,6 +1298,11 @@
             ${bigDeals.map((b, idx) => {
               const prs = (b.prs || []).slice(0, 4);
               const keps = (b.keps || []).slice(0, 3);
+              const rawBullets = String(b.what_changed || b.text || '')
+                .split(/;\s+/)
+                .map(s => s.trim())
+                .filter(Boolean)
+                .slice(0, 4);
               return `
                 <article class="thesis-card">
                   <div class="thesis-top">
@@ -1287,7 +1313,9 @@
                       ${prs.map(p => `<a href="https://github.com/${repo}/pull/${p}" target="_blank" rel="noopener">#${p}</a>`).join(' ')}
                     </div>
                   </div>
-                  <div class="thesis-body">${formatRichText(b.what_changed || b.text || '', guide.project)}</div>
+                  <ul class="thesis-body">
+                    ${rawBullets.map(item => `<li>${formatRichText(item, guide.project)}</li>`).join('')}
+                  </ul>
                   ${b.why_it_matters ? `
                     <div class="thesis-impact">
                       <strong>Bottom Line</strong> ${formatRichText(b.why_it_matters, guide.project)}
@@ -1742,7 +1770,8 @@
     readUrlState();
     const initialList = getActiveList();
     if (!state.ver && initialList.length > 0) {
-      state.ver = initialList[0].version;
+      const latestMinor = initialList.find(x => !x.is_weekly && !x.is_patch);
+      state.ver = latestMinor ? latestMinor.version : initialList[0].version;
     }
     renderApp();
   </script>
