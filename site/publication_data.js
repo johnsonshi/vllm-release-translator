@@ -5614,7 +5614,7 @@ window.__PUBLICATION_DATA__ = {
         "badge": "Inaugural Release",
         "date": "2023-06-20",
         "stats": "initial open-source release with PagedAttention and continuous batching",
-        "headline": "The First Official Release of vLLM: PagedAttention, Continuous Batching, and OpenAI-Compatible Serving",
+        "headline": "Initial Open-Source Release with PagedAttention, Continuous Batching, and OpenAI-Compatible Serving",
         "executive_summary": "vLLM 0.1.0 is the initial open-source release of vLLM from UC Berkeley Sky Computing Lab. It introduces PagedAttention\u2014managing attention Keys and Values in non-contiguous virtual memory blocks like an operating system\u2014reducing KV cache memory waste from 60\u201380% to under 4% and delivering up to 24\u00d7 higher LLM serving throughput than Hugging Face Transformers.",
         "five_parts": {
           "big_deal": [

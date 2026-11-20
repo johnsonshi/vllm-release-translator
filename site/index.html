@@ -144,22 +144,23 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 0.5rem;
+      flex-wrap: nowrap;
     }
 
     .navbar-left {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
+      gap: 0.6rem;
+      min-width: 0;
     }
 
     .navbar-brand {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--bs-body-color);
       letter-spacing: -0.01em;
+      white-space: nowrap;
     }
 
     .btn-group {
@@ -581,7 +582,7 @@
   <!-- MAIN CONTENT -->
   <main class="container" id="main-content" tabindex="-1"></main>
 
-  <script src="publication_data.js"></script>
+  <script src="publication_data.js?v=3"></script>
   <script>
     const PUB = window.__PUBLICATION_DATA__ || {};
 
@@ -705,7 +706,7 @@
         <article>
           <header class="page-header">
             <div class="page-meta">
-              Released on ${escapeHtml(rel.date)} (<a href="https://github.com/vllm-project/vllm/releases/tag/${escapeHtml(ghTag)}" target="_blank" rel="noopener">GitHub release</a> with ${escapeHtml(rel.stats)}).
+              Released on ${escapeHtml(rel.date)} (<a href="https://github.com/vllm-project/vllm/releases/tag/${escapeHtml(ghTag)}" target="_blank" rel="noopener">GitHub release</a> with ${escapeHtml(String(rel.stats || '').replace(/\s*·\s*/g, ', '))}).
             </div>
             <h1 class="page-title">What’s New in vLLM ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
             <p class="lead">${formatProse(rel.executive_summary)}</p>
