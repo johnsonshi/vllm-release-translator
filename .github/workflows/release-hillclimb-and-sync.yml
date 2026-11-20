@@ -1,0 +1,48 @@
+name: Upstream Release Watcher & Hill-Climb Control Suite
+
+on:
+  schedule:
+    # Poll upstream Kubernetes and vLLM releases every 12 hours
+    - cron: "0 */12 * * *"
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  sync-and-verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check upstream Kubernetes (v1.0+) & vLLM (v0.1.0+) releases
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/fetch_corpora.py
+
+      - name: Run full K8s Control (38+ versions) & vLLM Target (34+ versions) hill-climb evaluation
+        run: |
+          PYTHONPATH=. python3 -m harness.cli eval
+          PYTHONPATH=. python3 -m unittest discover -s tests -v
+          python3 scripts/build_publication_site.py
+
+      - name: Commit newly discovered upstream releases (if any)
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if [ -n "$(git status --porcelain corpus/ results/ site/)" ]; then
+            git add corpus/ results/ site/ review_queue/
+            git commit -m "Auto-sync new upstream release and verify hill-climb suite"
+            git push
+          else
+            echo "No new upstream releases since last check."
+          fi

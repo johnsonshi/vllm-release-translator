@@ -1,0 +1,1166 @@
+{
+  "project": "kubernetes",
+  "version": "v1.4",
+  "tag": "v1.4.0",
+  "total_raw_items": 82,
+  "counts_by_category": {
+    "Feature": 63,
+    "Urgent Upgrade Notes": 19
+  },
+  "urgent_upgrade_notes": [
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Completed pods lose logs across node upgrade ([#32324](https://github.com/kubernetes/kubernetes/issues/32324))",
+      "prs": [
+        "32324"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Pods are deleted across node upgrade ([#32323](https://github.com/kubernetes/kubernetes/issues/32323))",
+      "prs": [
+        "32323"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Secure master -> node communication ([#11816](https://github.com/kubernetes/kubernetes/issues/11816))",
+      "prs": [
+        "11816"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "upgrading master doesn't upgrade kubectl ([#32538](https://github.com/kubernetes/kubernetes/issues/32538))",
+      "prs": [
+        "32538"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Specific error message on failed rolling update issued by older kubectl against 1.4 master ([#32751](https://github.com/kubernetes/kubernetes/issues/32751))",
+      "prs": [
+        "32751"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "bump master cidr range from /30 to /29 ([#32886](https://github.com/kubernetes/kubernetes/issues/32886))",
+      "prs": [
+        "32886"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "non-hostNetwork daemonsets will almost always have a pod that fails to schedule ([#32900](https://github.com/kubernetes/kubernetes/issues/32900))",
+      "prs": [
+        "32900"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033))",
+      "prs": [
+        "33033"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346))",
+      "prs": [
+        "33346"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0 (#28698)",
+      "prs": [
+        "23397",
+        "28698"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "docker"
+      ]
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "The NamespaceExists and NamespaceAutoProvision admission controllers have been removed, use the NamespaceLifecycle admission controller instead (#31250, @derekwaynecarr)",
+      "prs": [
+        "31250"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead.  (#29929, @madhusudancs)",
+      "prs": [
+        "29929"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "federation-apiserver",
+        "federation-controller-manager",
+        "hyperkube"
+      ]
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If there are any pods with the key `pods.beta.kubernetes.io/init-containers`, then that pod may not have been filtered by the PodSecurityPolicy. You should find such pods and either delete them or audit them to ensure they do not use features that you intend to be blocked by PodSecurityPolicy. (#31026, @erictune)",
+      "prs": [
+        "31026"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If upgrading Cluster Federation components from 1.3.x, please ensure your cluster name is a valid DNS label (#30956, @nikhiljindal)",
+      "prs": [
+        "30956"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead (#29999, @mtaufen)",
+      "prs": [
+        "29999"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ``` kubectl --namespace=federation get secret federation-apiserver-secret -o json | sed 's/federation-apiserver-secret/federation-apiserver-kubeconfig/g' | kubectl create -f - # optionally, remove the old secret kubectl delete secret --namespace=federation federation-apiserver-secret ```",
+      "prs": [
+        "28938"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but those with custom environments may need to double-check (#28800, @lavalamp)",
+      "prs": [
+        "28800"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "kubelet now defaults to `--cloud-provider=auto-detect`, use `--cloud-provider=''` to preserve previous default of no cloud provider (#28258, @vishh)",
+      "prs": [
+        "28258"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "deprecations": [],
+  "api_changes": [],
+  "features": [
+    {
+      "category": "Feature",
+      "text": "**Simplified User Experience**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Easier to get a cluster up and running (eg: `kubeadm`, intra-cluster bootstrapping)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubeadm"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Easier to understand a cluster (eg: API audit logs, server-based API defaults)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Stateful Application Support**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Enhanced persistence capabilities (eg: `StorageClasses`, new volume plugins)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "StorageClasses"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ScheduledJob"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "**Cluster Federation**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Global Multi-cluster HTTP(S) Ingress across GCE and GKE clusters.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Expanded support for federated hybrid-cloud resources including ReplicaSets, Secrets, Namespaces and Events.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Security**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Increased pod-level security granularity (eg: Container Image Policies, AppArmor and `sysctl` support)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "sysctl"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Increased cluster-level security granularity (eg: Access Review API)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**API Machinery**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Generate audit logs for every request user performs against secured API server endpoint. ([docs](http://kubernetes.io/docs/admin/audit/)) ([kubernetes/features#22](https://github.com/kubernetes/enhancements/issues/22))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] `kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kube-apiserver"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time. ([docs](http://kubernetes.io/docs/user-guide/scheduled-jobs/)) ([kubernetes/features#19](https://github.com/kubernetes/enhancements/issues/19))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Container Image Policy allows an access controller to determine whether a pod may be scheduled based on a policy ([docs](http://kubernetes.io/docs/admin/admission-controllers/#imagepolicywebhook)) ([kubernetes/features#59](https://github.com/kubernetes/enhancements/issues/59))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Access Review APIs expose authorization engine to external inquiries for delegation, inspection, and debugging ([docs](http://kubernetes.io/docs/admin/authorization/)) ([kubernetes/features#37](https://github.com/kubernetes/enhancements/issues/37))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Cluster Lifecycle**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Ensure critical cluster infrastructure pods (Heapster, DNS, etc.) can schedule by evicting regular pods when necessary to make the critical pods schedule. ([docs](http://kubernetes.io/docs/admin/rescheduler/#guaranteed-scheduling-of-critical-add-on-pods)) ([kubernetes/features#62](https://github.com/kubernetes/enhancements/issues/62))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Simplifies bootstrapping of TLS secured communication between the API server and kubelet. ([docs](http://kubernetes.io/docs/admin/master-node-communication/#kubelet-tls-bootstrap)) ([kubernetes/features#43](https://github.com/kubernetes/enhancements/issues/43))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] The `kubeadm` tool makes it much easier to bootstrap Kubernetes. ([docs](http://kubernetes.io/docs/getting-started-guides/kubeadm/)) ([kubernetes/features#11](https://github.com/kubernetes/enhancements/issues/11))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubeadm"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "**Federation**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual IP to load balance incoming HTTP(S) traffic across some or all the registered clusters, across all regions. Google's GCE L7 LoadBalancer is the first supported implementation, and is available in this release. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-ingress.md)) ([kubernetes/features#82](https://github.com/kubernetes/enhancements/issues/82))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Ingress"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] `Federated Replica Sets` create and maintain matching `Replica Set`s in some or all clusters in a federation, with the desired replica count distributed equally or according to specified per-cluster weights. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-replicasets.md)) ([kubernetes/features#46](https://github.com/kubernetes/enhancements/issues/46))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] `Federated Secrets` are created and kept consistent across all clusters in a federation. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-secrets.md)) ([kubernetes/features#68](https://github.com/kubernetes/enhancements/issues/68))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] Federation API server gained support for events and many federation controllers now report important events. ([docs](http://kubernetes.io/docs/user-guide/federation/events)) ([kubernetes/features#70](https://github.com/kubernetes/enhancements/issues/70))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Creating a `Federated Namespace` causes matching `Namespace`s to be created and maintained in all the clusters registered with that federation. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-namespaces.md)) ([kubernetes/features#69](https://github.com/kubernetes/enhancements/issues/69))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Namespace"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] ingress has alpha support for a single master multi zone cluster ([docs](http://kubernetes.io/docs/user-guide/ingress.md#failing-across-availability-zones)) ([kubernetes/features#52](https://github.com/kubernetes/enhancements/issues/52))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Network**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Service LB now has alpha support for preserving client source IP ([docs](http://kubernetes.io/docs/user-guide/load-balancer/)) ([kubernetes/features#27](https://github.com/kubernetes/enhancements/issues/27))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Publish node performance dashboard at http://node-perf-dash.k8s.io/#/builds ([docs](https://github.com/kubernetes/contrib/blob/master/node-perf-dash/README.md)) ([kubernetes/features#83](https://github.com/kubernetes/enhancements/issues/83))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Pods now have alpha support for setting whitelisted, safe sysctls. Unsafe sysctls can be whitelisted on the kubelet. ([docs](http://kubernetes.io/docs/admin/sysctls/)) ([kubernetes/features#34](https://github.com/kubernetes/enhancements/issues/34))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] AppArmor profiles can be specified & applied to pod containers ([docs](http://kubernetes.io/docs/admin/apparmor/)) ([kubernetes/features#24](https://github.com/kubernetes/enhancements/issues/24))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] Cluster policy to control access and defaults of security related features ([docs](http://kubernetes.io/docs/user-guide/pod-security-policy/)) ([kubernetes/features#5](https://github.com/kubernetes/enhancements/issues/5))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker [kubernetes/features#57](https://github.com/kubernetes/enhancements/issues/57)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Scheduling**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Allows pods to require or prohibit (or prefer or prefer not) co-scheduling on the same node (or zone or other topology domain) as another set of pods. ([docs](http://kubernetes.io/docs/user-guide/node-selection/) ([kubernetes/features#51](https://github.com/kubernetes/enhancements/issues/51))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "**Storage**",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[beta] Persistent Volume provisioning now supports multiple provisioners using StorageClass configuration. ([docs](http://kubernetes.io/docs/user-guide/persistent-volumes/)) ([kubernetes/features#36](https://github.com/kubernetes/enhancements/issues/36))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] New volume plugin for the Quobyte Distributed File System ([docs](http://kubernetes.io/docs/user-guide/volumes/#quobyte)) ([kubernetes/features#80](https://github.com/kubernetes/enhancements/issues/80))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] New volume plugin for Azure Data Disk ([docs](http://kubernetes.io/docs/user-guide/volumes/#azurediskvolume)) ([kubernetes/features#79](https://github.com/kubernetes/enhancements/issues/79))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[stable] `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults. ([kubernetes/features#55](https://github.com/kubernetes/enhancements/issues/55))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubectl"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Deployments: - ReplicaSets of paused Deployments are now scaled while the Deployment is paused. This is retroactive to existing Deployments.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Deployments: - When scaling a Deployment during a rollout, the ReplicaSets of all Deployments are now scaled proportionally based on the number of replicas they each have instead of only scaling the newest ReplicaSet.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller name. You will need to update to kubectl 1.4 or higher to use the rolling update command against a 1.4 cluster if you want to keep the original name, or you'll have to do two rolling updates. If you do happen to use old version kubectl's rolling update against a 1.4 cluster, it will fail, usually with an error message that will direct you here. If you saw that error, then don't worry, the operation succeeded except for the part where the new replication controller is renamed back to the old name. You can just do another rolling update using kubectl 1.4 or higher to change the name back: look for a replication controller that has the original name plus a random suffix. Unfortunately, there is a much rarer second possible failure mode: the replication controller gets renamed to the old name, but there is a duplicated set of pods in the cluster. kubectl will not report an error since it thinks its job is done. If this happens to you, you can wait at most 10 minutes for the replication controller to start a resync, the extra pods will then be deleted. Or, you can manually trigger a resync by change the replicas in the spec of the replication controller.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubectl delete: < v1.4.0 client vs >=v1.4.0 cluster: If you use an old version kubectl to delete a replication controller or replicaset, then after the delete command has returned, the replication controller or the replicaset will continue to exist in the key-value store for a short period of time (<1s). You probably will not notice any difference if you use kubectl manually, but you might notice it if you are using kubectl in a script.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "DELETE operation in REST API: * **Replication controller & Replicaset**: the DELETE request of a replication controller or a replicaset becomes asynchronous by default. The object will continue to exist in the key-value store for some time. The API server will set its metadata.deletionTimestamp, add the \"orphan\" finalizer to its metadata.finalizers. The object will be deleted from the key-value store after the garbage collector orphans its dependents. Please refer to this [user-guide](http://kubernetes.io/docs/user-guide/garbage-collector/) for more information regarding the garbage collection.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "DELETE operation in REST API: * **Other objects**: no changes unless you explicitly request orphaning.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.10](CHANGELOG.md#v140-beta10)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.8](CHANGELOG.md#v140-beta8)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.7](CHANGELOG.md#v140-beta7)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.6](CHANGELOG.md#v140-beta6)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.5](CHANGELOG.md#v140-beta5)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.3](CHANGELOG.md#v140-beta3)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.2](CHANGELOG.md#v140-beta2)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-beta.1](CHANGELOG.md#v140-beta1)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-alpha.3](CHANGELOG.md#v140-alpha3)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-alpha.2](CHANGELOG.md#v140-alpha2)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[v1.4.0-alpha.1](CHANGELOG.md#v140-alpha1)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "bugfixes": [],
+  "other": [],
+  "patch_releases": [
+    {
+      "tag": "v1.4.9",
+      "total_items": 15,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Bump GCE ContainerVM to container-vm-v20170201 to address CVE-2016-9962. ([#40828](https://github.com/kubernetes/kubernetes/pull/40828), [@zmerlynn](https://github.com/zmerlynn))",
+          "prs": [
+            "40828"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Bump GCI to gci-beta-56-9000-80-0 ([#41027](https://github.com/kubernetes/kubernetes/pull/41027), [@dchen1107](https://github.com/dchen1107))",
+          "prs": [
+            "41027"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix for detach volume when node is not present/ powered off ([#40118](https://github.com/kubernetes/kubernetes/pull/40118), [@BaluDontu](https://github.com/BaluDontu))",
+          "prs": [
+            "40118"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Bump GCI to gci-beta-56-9000-80-0 ([#41027](https://github.com/kubernetes/kubernetes/pull/41027), [@dchen1107](https://github.com/dchen1107))",
+          "prs": [
+            "41027"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Move b.gcr.io/k8s_authenticated_test to gcr.io/k8s-authenticated-test ([#40335](https://github.com/kubernetes/kubernetes/pull/40335), [@zmerlynn](https://github.com/zmerlynn))",
+          "prs": [
+            "40335"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Prep node_e2e for GCI to COS name change ([#41088](https://github.com/kubernetes/kubernetes/pull/41088), [@jessfraz](https://github.com/jessfraz))",
+          "prs": [
+            "41088"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * If ExperimentalCriticalPodAnnotation=True flag gate is set, kubelet will ensure that pods with `scheduler.alpha.kubernetes.io/critical-pod` annotation will be admitted even under resource pressure, will not be evicted, and are reasonably protected from system OOMs. ([#41052](https://github.com/kubernetes/kubernetes/pull/41052), [@vishh](https://github.com/vishh))",
+          "prs": [
+            "41052"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix resync goroutine leak in ListAndWatch ([#35672](https://github.com/kubernetes/kubernetes/pull/35672), [@tatsuhiro-t](https://github.com/tatsuhiro-t))",
+          "prs": [
+            "35672"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.4.8",
+      "total_items": 18,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * AWS: recognize eu-west-2 region ([#38746](https://github.com/kubernetes/kubernetes/pull/38746), [@justinsb](https://github.com/justinsb))",
+          "prs": [
+            "38746"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add path exist check in getPodVolumePathListFromDisk ([#38909](https://github.com/kubernetes/kubernetes/pull/38909), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "38909"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Update fluentd-gcp addon to 1.21.1/1.25.1. ([#39705](https://github.com/kubernetes/kubernetes/pull/39705), [@ixdy](https://github.com/ixdy))",
+          "prs": [
+            "39705"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Admit critical pods in the kubelet ([#38836](https://github.com/kubernetes/kubernetes/pull/38836), [@bprashanth](https://github.com/bprashanth))",
+          "prs": [
+            "38836"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * assign -998 as the oom_score_adj for critical pods (e.g. kube-proxy) ([#39114](https://github.com/kubernetes/kubernetes/pull/39114), [@dchen1107](https://github.com/dchen1107))",
+          "prs": [
+            "39114"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Don't evict static pods ([#39059](https://github.com/kubernetes/kubernetes/pull/39059), [@bprashanth](https://github.com/bprashanth))",
+          "prs": [
+            "39059"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Provide kubernetes-controller-manager flags to control volume attach/detach reconciler sync.  The duration of the syncs can be controlled, and the syncs can be shut off as well.  ([#39551](https://github.com/kubernetes/kubernetes/pull/39551), [@chrislovecnm](https://github.com/chrislovecnm))",
+          "prs": [
+            "39551"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * AWS: Recognize ca-central-1 region ([#38410](https://github.com/kubernetes/kubernetes/pull/38410), [@justinsb](https://github.com/justinsb))",
+          "prs": [
+            "38410"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.4.7",
+      "total_items": 33,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Exit with error if <version number or publication> is not the final parameter. ([#37723](https://github.com/kubernetes/kubernetes/pull/37723), [@mtaufen](https://github.com/mtaufen))",
+          "prs": [
+            "37723"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix GCI mounter issue ([#38124](https://github.com/kubernetes/kubernetes/pull/38124), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "38124"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix space issue in volumePath with vSphere Cloud Provider ([#38338](https://github.com/kubernetes/kubernetes/pull/38338), [@BaluDontu](https://github.com/BaluDontu))",
+          "prs": [
+            "38338"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix panic in vSphere cloud provider ([#38423](https://github.com/kubernetes/kubernetes/pull/38423), [@BaluDontu](https://github.com/BaluDontu))",
+          "prs": [
+            "38423"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Changed default scsi controller type in vSphere Cloud Provider ([#38426](https://github.com/kubernetes/kubernetes/pull/38426), [@abrarshivani](https://github.com/abrarshivani))",
+          "prs": [
+            "38426"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix unmountDevice issue caused by shared mount in GCI ([#38411](https://github.com/kubernetes/kubernetes/pull/38411), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "38411"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Implement CanMount() for gfsMounter for linux ([#36686](https://github.com/kubernetes/kubernetes/pull/36686), [@rkouj](https://github.com/rkouj))",
+          "prs": [
+            "36686"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Better messaging for missing volume binaries on host ([#36280](https://github.com/kubernetes/kubernetes/pull/36280), [@rkouj](https://github.com/rkouj))",
+          "prs": [
+            "36280"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.4.6",
+      "total_items": 21,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix issue in reconstruct volume data when kubelet restarts ([#36616](https://github.com/kubernetes/kubernetes/pull/36616), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "36616"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add sync state loop in master's volume reconciler ([#34859](https://github.com/kubernetes/kubernetes/pull/34859), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "34859"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * AWS: strong-typing for k8s vs aws volume ids ([#35883](https://github.com/kubernetes/kubernetes/pull/35883), [@justinsb](https://github.com/justinsb))",
+          "prs": [
+            "35883"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Bump GCI version to gci-beta-55-8872-47-0 ([#36679](https://github.com/kubernetes/kubernetes/pull/36679), [@mtaufen](https://github.com/mtaufen)) ``` gci-beta-55-8872-47-0: Date:           Nov 11, 2016 Kernel:         ChromiumOS-4.4 Kubernetes:     v1.4.5 Docker:         v1.11.2 Changelog (vs 55-8872-18-0)",
+          "prs": [
+            "36679"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes:     * Cherry-pick runc PR#608: Eliminate redundant parsing of mountinfo",
+          "prs": [
+            "608"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes:     * Updated kubernetes to v1.4.5",
+          "prs": [],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes:     * Fixed a bug in e2fsprogs that caused mke2fs to take a very long time. Upstream fix: http://git.kernel.org/cgit/fs/ext2/e2fsprogs.git/commit/?h=next&id=d33e690fe7a6cbeb51349d9f2c7fb16a6ebec9c2 ```",
+          "prs": [],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix fetching pids running in a cgroup, which caused problems with OOM score adjustments & setting the /system cgroup (\"misc\" in the summary API). ([#36614](https://github.com/kubernetes/kubernetes/pull/36614), [@timstclair](https://github.com/timstclair))",
+          "prs": [
+            "36614"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.4.5",
+      "total_items": 38,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix volume states out of sync problem after kubelet restarts ([#33616](https://github.com/kubernetes/kubernetes/pull/33616), [@jingxu97](https://github.com/jingxu97))",
+          "prs": [
+            "33616"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * cross: add IsNotMountPoint() to mount_unsupported.go ([#35566](https://github.com/kubernetes/kubernetes/pull/35566), [@rootfs](https://github.com/rootfs))",
+          "prs": [
+            "35566"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Bump GCE debian image to container-vm-v20161025 (CVE-2016-5195 Dirty COW) ([#35825](https://github.com/kubernetes/kubernetes/pull/35825), [@dchen1107](https://github.com/dchen1107))",
+          "prs": [
+            "35825"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Avoid overriding system and kubelet cgroups on GCI ([#35319](https://github.com/kubernetes/kubernetes/pull/35319), [@vishh](https://github.com/vishh))",
+          "prs": [
+            "35319"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes:         * Make the kubectl from k8s release the default on GCI",
+          "prs": [],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * kubelet summary rootfs now refers to the filesystem that contains the Kubelet RootDirectory (var/lib/kubelet) instead of cadvisor's rootfs ( / ), since they may be different filesystems. ([#35136](https://github.com/kubernetes/kubernetes/pull/35136), [@dashpole](https://github.com/dashpole))",
+          "prs": [
+            "35136"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix cadvisor_unsupported and the crossbuild ([#35817](https://github.com/kubernetes/kubernetes/pull/35817), [@luxas](https://github.com/luxas))",
+          "prs": [
+            "35817"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * kubenet: SyncHostports for both running and ready to run pods. ([#31388](https://github.com/kubernetes/kubernetes/pull/31388), [@yifan-gu](https://github.com/yifan-gu))",
+          "prs": [
+            "31388"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    }
+  ]
+}

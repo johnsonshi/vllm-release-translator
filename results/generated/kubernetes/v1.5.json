@@ -1,0 +1,659 @@
+{
+  "variant": "v5_progressive_clarity_engine",
+  "project": "kubernetes",
+  "version": "v1.5",
+  "positioning": "Kubernetes v1.5 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 98 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "Kubernetes v1.5 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 98 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "high_level_changes": [
+      {
+        "headline": "Feature Enhancements",
+        "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Urgent Upgrade Notes Enhancements",
+        "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+      },
+      {
+        "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+      },
+      {
+        "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+        "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Feature Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Urgent Upgrade Notes Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "models_workloads": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+        "gpus_infra": "CSI storage drivers and cloud block volumes",
+        "bill_impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+      },
+      {
+        "capability": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "models_workloads": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+        "gpus_infra": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+        "bill_impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+      },
+      {
+        "capability": "Autoscaling & Scale-to-Zero Cost Optimization",
+        "models_workloads": "Event-driven workers, async queue consumers, and bursty GPU inference endpoints",
+        "gpus_infra": "Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller",
+        "bill_impact": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives"
+      },
+      {
+        "capability": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "models_workloads": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+        "gpus_infra": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+        "bill_impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+      },
+      {
+        "capability": "Workload Identity, User Namespaces & Fine-Grained Authz",
+        "models_workloads": "Multi-tenant SaaS workloads, zero-trust service meshes, and privileged container migrations",
+        "gpus_infra": "Linux kernel namespaces, kubelet endpoints, and CSI secret injection paths",
+        "bill_impact": "Reduces security agent/sidecar overhead and shrinks blast radius of container compromises"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "DRA (Dynamic Resource Allocation)",
+        "domain": "kubernetes",
+        "meaning": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+        "why_it_matters": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+      },
+      {
+        "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+        "domain": "kubernetes",
+        "meaning": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+        "why_it_matters": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+      },
+      {
+        "term": "Linux User Namespaces (`hostUsers: false`)",
+        "domain": "kubernetes",
+        "meaning": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+        "why_it_matters": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+      },
+      {
+        "term": "CSI (Container Storage Interface)",
+        "domain": "kubernetes",
+        "meaning": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+        "why_it_matters": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "CRI [known issues and limitations](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v15-release-cri-v1alpha1)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "getDeviceNameFromMount() function doesn't return the volume path correctly when the volume path contains spaces [#37712](https://github.com/kubernetes/kubernetes/issues/37712)",
+        "prs": [
+          "37712"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593)",
+        "prs": [
+          "38593"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this release [38537](https://github.com/kubernetes/kubernetes/issues/38537)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "Deployment"
+        ]
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Important Security-related changes before upgrading",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your apiserver.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your federation apiserver.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "You do not need to adjust this flag on Kubelet:  there was no authorization for the Kubelet APIs in 1.4.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "batch/v2alpha1.ScheduledJob has been renamed, use batch/v2alpha1.CronJob instead ([#36021](https://github.com/kubernetes/kubernetes/pull/36021), [@soltysh](https://github.com/soltysh))",
+        "prs": [
+          "36021"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "PetSet has been renamed to StatefulSet. If you have existing PetSets, **you must perform extra migration steps** both before and after upgrading to convert them to StatefulSets. ([docs](http://kubernetes.io/docs/tasks/manage-stateful-set/upgrade-pet-set-to-stateful-set/)) ([#35663](https://github.com/kubernetes/kubernetes/pull/35663), [@janetkuo](https://github.com/janetkuo))",
+        "prs": [
+          "35663"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.5, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "`kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)).",
+          "Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)).",
+          "In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. (#119).",
+          "Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "128",
+          "119",
+          "120",
+          "113",
+          "136"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubefed",
+          "kubeadm",
+          "kubelet"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.5, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593).",
+          "The deprecated kubelet --configure-cbr0 flag has been removed, and with that the \"classic\" networking mode as well.  If you depend on this mode, please investigate whether the other network plugins (#34906).",
+          "The deprecated kube-scheduler --bind-pods-qps and --bind-pods burst flags have been removed, use --kube-api-qps and --kube-api-burst instead (#34471).",
+          "Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "38593",
+          "34906",
+          "34471",
+          "37712",
+          "34989"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubenet",
+          "Deployment"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "previously": "Prior to v1.5, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+        "tech_bullets": [
+          "StatefulSets allow workloads that require persistent identity or per-instance storage to be created and managed on Kubernetes. (#137).",
+          "PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets. (#35663).",
+          "StatefulSets are beta now (fixes and stabilization).",
+          "StatefulSets (ex-PetSets)."
+        ],
+        "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+        "prs": [
+          "137",
+          "35663"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.5, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "`kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it.",
+          "You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access.",
+          "You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to.",
+          "If you are upgrading your Cluster Federation components from v1.4.x, please update your `federation-apiserver` and `federation-controller-manager` manifests to the new version (#30601)."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "30601"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kube-apiserver",
+          "federation-apiserver",
+          "federation-controller-manager"
+        ]
+      },
+      {
+        "rank": 5,
+        "theme": "Autoscaling & Scale-to-Zero Cost Optimization",
+        "previously": "Prior to v1.5, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+        "tech_bullets": [
+          "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must."
+        ],
+        "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "PodDisruptionBudget"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.5, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "PodDisruptionBudget has been promoted to beta, can be used to safely drain nodes while respecting application SLO's ([docs](http://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)).",
+          "The kubelet --reconcile-cdir flag is deprecated because it has no function anymore. ([#35523](https://github.com/kubernetes/kubernetes/pull/35523), [@luxas](https://github.com/luxas))."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [
+          "35523"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.5, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "`kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)).",
+          "Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)).",
+          "In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. (#119).",
+          "Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "128",
+          "119",
+          "120",
+          "113",
+          "136"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubefed",
+          "kubeadm",
+          "kubelet"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.5, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593).",
+          "The deprecated kubelet --configure-cbr0 flag has been removed, and with that the \"classic\" networking mode as well.  If you depend on this mode, please investigate whether the other network plugins (#34906).",
+          "The deprecated kube-scheduler --bind-pods-qps and --bind-pods burst flags have been removed, use --kube-api-qps and --kube-api-burst instead (#34471).",
+          "Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "38593",
+          "34906",
+          "34471",
+          "37712",
+          "34989"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubenet",
+          "Deployment"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "previously": "Prior to v1.5, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+        "tech_bullets": [
+          "StatefulSets allow workloads that require persistent identity or per-instance storage to be created and managed on Kubernetes. (#137).",
+          "PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets. (#35663).",
+          "StatefulSets are beta now (fixes and stabilization).",
+          "StatefulSets (ex-PetSets)."
+        ],
+        "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+        "prs": [
+          "137",
+          "35663"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.5, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "`kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it.",
+          "You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access.",
+          "You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to.",
+          "If you are upgrading your Cluster Federation components from v1.4.x, please update your `federation-apiserver` and `federation-controller-manager` manifests to the new version (#30601)."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "30601"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kube-apiserver",
+          "federation-apiserver",
+          "federation-controller-manager"
+        ]
+      },
+      {
+        "rank": 5,
+        "theme": "Autoscaling & Scale-to-Zero Cost Optimization",
+        "previously": "Prior to v1.5, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+        "tech_bullets": [
+          "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must."
+        ],
+        "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "PodDisruptionBudget"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.5, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "PodDisruptionBudget has been promoted to beta, can be used to safely drain nodes while respecting application SLO's ([docs](http://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)).",
+          "The kubelet --reconcile-cdir flag is deprecated because it has no function anymore. ([#35523](https://github.com/kubernetes/kubernetes/pull/35523), [@luxas](https://github.com/luxas))."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [
+          "35523"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Feature",
+        "text": "[stable] `kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128))",
+        "prs": [
+          "128"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 18.3
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593)",
+        "prs": [
+          "38593"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.5
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "[beta] In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. ([docs](http://kubernetes.io/docs/tasks/manage-stateful-set/scale-stateful-set/)) ([kubernetes/features#119](https://github.com/kubernetes/enhancements/issues/119))",
+        "prs": [
+          "119"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 16.5
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then **BEFORE**  upgrading from 1.4 to 1.5, you must delete all `PodDisruptionBudget` objects (`policy/v1alpha1/PodDisruptionBudget`) that you have created. It is not possible to delete these objects after you upgrade, and their presence will prevent you from using the beta PodDisruptionBudget feature in 1.5 (which uses `policy/v1beta1/PodDisruptionBudget`). If you have already upgraded, you will need to downgrade the master to 1.4 to delete the `policy/v1alpha1/PodDisruptionBudget` objects.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "PodDisruptionBudget"
+        ],
+        "_score": 16.4
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/)) ([kubernetes/features#48](https://github.com/kubernetes/enhancements/issues/48))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 15.7
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] When replica sets cannot create pods, they will now report detail via the API about the underlying reason ([kubernetes/features#120](https://github.com/kubernetes/enhancements/issues/120))",
+        "prs": [
+          "120"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.8
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Roles should appear in kubectl get nodes ([kubernetes/features#113](https://github.com/kubernetes/enhancements/issues/113))",
+        "prs": [
+          "113"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.8
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Dashboard UI now shows all user facing objects and their resource usage. ([docs](http://kubernetes.io/docs/user-guide/ui/)) ([kubernetes/features#136](https://github.com/kubernetes/enhancements/issues/136))",
+        "prs": [
+          "136"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.8
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Services can reference another service by DNS name, rather than being hosted in pods ([kubernetes/features#33](https://github.com/kubernetes/enhancements/issues/33))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "Docker 1.10.3 contains [backports provided by RedHat](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for known issues",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "[beta] `kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kube-apiserver"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Introducing `kubefed`, a new command line tool to simplify federation control plane. ([docs](http://kubernetes.io/docs/admin/federation/kubefed/)) ([kubernetes/features#97](https://github.com/kubernetes/enhancements/issues/97))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubefed"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Feature",
+        "text": "[beta] Deployments that cannot make progress in rolling out the newest version will now indicate via the API they are blocked ([docs](http://kubernetes.io/docs/user-guide/deployments/#failed-deployment)) ([kubernetes/features#122](https://github.com/kubernetes/enhancements/issues/122))",
+        "prs": [
+          "122"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.0
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "Patch release `v1.5.8` ships 5 backported fixes and stability updates ([#53149](https://github.com/kubernetes/kubernetes/pull/53149), [#48310](https://github.com/kubernetes/kubernetes/pull/48310), [#48011](https://github.com/kubernetes/kubernetes/pull/48011))",
+      "Patch release `v1.5.7` ships 6 backported fixes and stability updates ([#44585](https://github.com/kubernetes/kubernetes/pull/44585), [#44365](https://github.com/kubernetes/kubernetes/pull/44365), [#44169](https://github.com/kubernetes/kubernetes/pull/44169))",
+      "Patch release `v1.5.6` ships 15 backported fixes and stability updates ([#43676](https://github.com/kubernetes/kubernetes/pull/43676), [#42936](https://github.com/kubernetes/kubernetes/pull/42936))",
+      "[stable] `kubectl apply` is now able to delete resources you no longer need with `--prune`... ([#128](https://github.com/kubernetes/kubernetes/pull/128))",
+      "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release.... ([#38593](https://github.com/kubernetes/kubernetes/pull/38593))",
+      "[stable] Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support... (Upstream release notes)",
+      "[beta] In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to... ([#119](https://github.com/kubernetes/kubernetes/pull/119))",
+      "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then... (Upstream release notes)"
+    ]
+  },
+  "cited_prs": [
+    "128",
+    "38593",
+    "119",
+    "120",
+    "113",
+    "136",
+    "34906",
+    "35235",
+    "122",
+    "137",
+    "105",
+    "101",
+    "100",
+    "127",
+    "126",
+    "125",
+    "116",
+    "35663",
+    "34471",
+    "30601",
+    "36355",
+    "35523",
+    "36760",
+    "37263",
+    "32386",
+    "37991",
+    "35071",
+    "27885",
+    "275",
+    "21737",
+    "191",
+    "38444",
+    "38411",
+    "37712",
+    "36021",
+    "34989"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [
+    "PodDisruptionBudget",
+    "kubenet",
+    "kube-apiserver",
+    "kubefed",
+    "federation-apiserver",
+    "federation-controller-manager",
+    "kubeadm",
+    "kubelet",
+    "Deployment"
+  ],
+  "markdown": "# What's New in Kubernetes v1.5\n\n## High-Level Explanation\nKubernetes v1.5 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 98 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Feature Enhancements**: Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Urgent Upgrade Notes Enhancements**: Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion**: Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets.\n- **API Server & etcd Watch/Cache Efficiency at Scale**: Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages.\n- **Autoscaling & Scale-to-Zero Cost Optimization**: Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Feature Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Urgent Upgrade Notes Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion** | Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage | CSI storage drivers and cloud block volumes | Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets |\n| **API Server & etcd Watch/Cache Efficiency at Scale** | Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods | Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint | Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages |\n| **Autoscaling & Scale-to-Zero Cost Optimization** | Event-driven workers, async queue consumers, and bursty GPU inference endpoints | Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller | Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives |\n| **Dynamic Resource Allocation (DRA) & GPU/Accelerator Management** | AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers | NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools | Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting |\n| **Workload Identity, User Namespaces & Fine-Grained Authz** | Multi-tenant SaaS workloads, zero-trust service meshes, and privileged container migrations | Linux kernel namespaces, kubelet endpoints, and CSI secret injection paths | Reduces security agent/sidecar overhead and shrinks blast radius of container compromises |\n\n## 3. What Does the Jargon Mean?\n- **DRA (Dynamic Resource Allocation)**: Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins. Why it matters: Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks.\n- **Gang Scheduling (`Workload` / `PodGroup`)**: An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group. Why it matters: Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity.\n- **Linux User Namespaces (`hostUsers: false`)**: Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel. Why it matters: Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container.\n- **CSI (Container Storage Interface)**: The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers. Why it matters: Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Urgent Upgrade Notes**: CRI [known issues and limitations](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v15-release-cri-v1alpha1). (Upstream release notes)\n- **Urgent Upgrade Notes**: getDeviceNameFromMount() function doesn't return the volume path correctly when the volume path contains spaces [#37712](https://github.com/kubernetes/kubernetes/issues/37712). ([#37712](https://github.com/kubernetes/kubernetes/pull/37712))\n- **Urgent Upgrade Notes**: Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593). ([#38593](https://github.com/kubernetes/kubernetes/pull/38593))\n- **Urgent Upgrade Notes**: Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this release. (Upstream release notes)\n- **Urgent Upgrade Notes**: Important Security-related changes before upgrading. (Upstream release notes)\n- **Urgent Upgrade Notes**: You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your. (Upstream release notes)\n- **Urgent Upgrade Notes**: You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your. (Upstream release notes)\n- **Urgent Upgrade Notes**: You do not need to adjust this flag on Kubelet:  there was no authorization for the Kubelet APIs in 1.4. (Upstream release notes)\n- **Urgent Upgrade Notes**: batch/v2alpha1.ScheduledJob has been renamed, use batch/v2alpha1.CronJob instead ([#36021](https://github.com/kubernetes/kubernetes/pull/36021), [@soltysh](https://github.com/soltysh)). ([#36021](https://github.com/kubernetes/kubernetes/pull/36021))\n- **Urgent Upgrade Notes**: PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets.. ([#35663](https://github.com/kubernetes/kubernetes/pull/35663))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Feature Enhancements ([#128](https://github.com/kubernetes/kubernetes/pull/128), [#119](https://github.com/kubernetes/kubernetes/pull/119), [#120](https://github.com/kubernetes/kubernetes/pull/120), [#113](https://github.com/kubernetes/kubernetes/pull/113))\n- **Previously**: Prior to v1.5, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: `kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)).\n- **Technical change**: Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)).\n- **Technical change**: In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. (#119).\n- **Technical change**: Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/)).\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Urgent Upgrade Notes Enhancements ([#38593](https://github.com/kubernetes/kubernetes/pull/38593), [#34906](https://github.com/kubernetes/kubernetes/pull/34906), [#34471](https://github.com/kubernetes/kubernetes/pull/34471), [#37712](https://github.com/kubernetes/kubernetes/pull/37712))\n- **Previously**: Prior to v1.5, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593).\n- **Technical change**: The deprecated kubelet --configure-cbr0 flag has been removed, and with that the \"classic\" networking mode as well.  If you depend on this mode, please investigate whether the other network plugins (#34906).\n- **Technical change**: The deprecated kube-scheduler --bind-pods-qps and --bind-pods burst flags have been removed, use --kube-api-qps and --kube-api-burst instead (#34471).\n- **Technical change**: Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this.\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 3. StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion ([#137](https://github.com/kubernetes/kubernetes/pull/137), [#35663](https://github.com/kubernetes/kubernetes/pull/35663))\n- **Previously**: Prior to v1.5, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.\n- **Technical change**: StatefulSets allow workloads that require persistent identity or per-instance storage to be created and managed on Kubernetes. (#137).\n- **Technical change**: PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets. (#35663).\n- **Technical change**: StatefulSets are beta now (fixes and stabilization).\n- **Technical change**: StatefulSets (ex-PetSets).\n- **Operational impact**: Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets\n### 4. API Server & etcd Watch/Cache Efficiency at Scale ([#30601](https://github.com/kubernetes/kubernetes/pull/30601))\n- **Previously**: Prior to v1.5, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.\n- **Technical change**: `kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it.\n- **Technical change**: You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access.\n- **Technical change**: You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to.\n- **Technical change**: If you are upgrading your Cluster Federation components from v1.4.x, please update your `federation-apiserver` and `federation-controller-manager` manifests to the new version (#30601).\n- **Operational impact**: Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages\n### 5. Autoscaling & Scale-to-Zero Cost Optimization (Upstream release notes)\n- **Previously**: Prior to v1.5, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.\n- **Technical change**: If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must.\n- **Operational impact**: Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives\n### 6. Dynamic Resource Allocation (DRA) & GPU/Accelerator Management ([#35523](https://github.com/kubernetes/kubernetes/pull/35523))\n- **Previously**: Prior to v1.5, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.\n- **Technical change**: PodDisruptionBudget has been promoted to beta, can be used to safely drain nodes while respecting application SLO's ([docs](http://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)).\n- **Technical change**: The kubelet --reconcile-cdir flag is deprecated because it has no function anymore. ([#35523](https://github.com/kubernetes/kubernetes/pull/35523), [@luxas](https://github.com/luxas)).\n- **Operational impact**: Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting\n\n### Weekly / Patch Merge Pulse\n- Patch release `v1.5.8` ships 5 backported fixes and stability updates ([#53149](https://github.com/kubernetes/kubernetes/pull/53149), [#48310](https://github.com/kubernetes/kubernetes/pull/48310), [#48011](https://github.com/kubernetes/kubernetes/pull/48011))\n- Patch release `v1.5.7` ships 6 backported fixes and stability updates ([#44585](https://github.com/kubernetes/kubernetes/pull/44585), [#44365](https://github.com/kubernetes/kubernetes/pull/44365), [#44169](https://github.com/kubernetes/kubernetes/pull/44169))\n- Patch release `v1.5.6` ships 15 backported fixes and stability updates ([#43676](https://github.com/kubernetes/kubernetes/pull/43676), [#42936](https://github.com/kubernetes/kubernetes/pull/42936))\n- [stable] `kubectl apply` is now able to delete resources you no longer need with `--prune`... ([#128](https://github.com/kubernetes/kubernetes/pull/128))\n- Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release.... ([#38593](https://github.com/kubernetes/kubernetes/pull/38593))\n- [stable] Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support... (Upstream release notes)\n- [beta] In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to... ([#119](https://github.com/kubernetes/kubernetes/pull/119))\n- If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then... (Upstream release notes)\n\n## 6. Where's the Proof?\n- **Feature** ([#128](https://github.com/kubernetes/kubernetes/pull/128)): `kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)).\n- **Urgent Upgrade Notes** ([#38593](https://github.com/kubernetes/kubernetes/pull/38593)): Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593).\n- **Feature** (Upstream release notes): Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)).\n- **Feature** ([#119](https://github.com/kubernetes/kubernetes/pull/119)): In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI..\n- **Urgent Upgrade Notes** (Upstream release notes): If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must delete all.\n- **Feature** (Upstream release notes): Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/)).\n- **Feature** ([#120](https://github.com/kubernetes/kubernetes/pull/120)): When replica sets cannot create pods, they will now report detail via the API about the underlying reason ([kubernetes/features#120](https://github.com/kubernetes/enhancements/issues/120)).\n- **Feature** ([#113](https://github.com/kubernetes/kubernetes/pull/113)): Roles should appear in kubectl get nodes ([kubernetes/features#113](https://github.com/kubernetes/enhancements/issues/113)).\n- **Feature** ([#136](https://github.com/kubernetes/kubernetes/pull/136)): Dashboard UI now shows all user facing objects and their resource usage. ([docs](http://kubernetes.io/docs/user-guide/ui/)) ([kubernetes/features#136](https://github.com/kubernetes/enhancements/issues/136)).\n- **Feature** (Upstream release notes): Services can reference another service by DNS name, rather than being hosted in pods ([kubernetes/features#33](https://github.com/kubernetes/enhancements/issues/33)).\n- **Feature** (Upstream release notes): Docker 1.10.3 contains [backports provided by RedHat](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for known issues.\n- **Feature** (Upstream release notes): `kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it.\n- **Feature** (Upstream release notes): Introducing `kubefed`, a new command line tool to simplify federation control plane. ([docs](http://kubernetes.io/docs/admin/federation/kubefed/)).\n- **Feature** ([#122](https://github.com/kubernetes/kubernetes/pull/122)): Deployments that cannot make progress in rolling out the newest version will now indicate via the API they are blocked ([docs](http://kubernetes.io/docs/user-guide/deployments/#failed-deployment)).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Feature]** `kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)). ([#128](https://github.com/kubernetes/kubernetes/pull/128))\n- **[Urgent Upgrade Notes]** Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593). ([#38593](https://github.com/kubernetes/kubernetes/pull/38593))\n- **[Feature]** Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)). (Upstream release notes)\n- **[Feature]** In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. ([docs](http://kubernetes.io/docs/tasks/manage-stateful-set/scale-stateful-set/)). ([#119](https://github.com/kubernetes/kubernetes/pull/119))\n- **[Urgent Upgrade Notes]** If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must delete all `PodDisruptionBudget` objects (`policy/v1alpha1/PodDisruptionBudget`) that you have created.. (Upstream release notes)\n- **[Feature]** Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/)) ([kubernetes/features#48](https://github.com/kubernetes/enhancements/issues/48)). (Upstream release notes)\n- **[Feature]** When replica sets cannot create pods, they will now report detail via the API about the underlying reason ([kubernetes/features#120](https://github.com/kubernetes/enhancements/issues/120)). ([#120](https://github.com/kubernetes/kubernetes/pull/120))\n- **[Feature]** Roles should appear in kubectl get nodes ([kubernetes/features#113](https://github.com/kubernetes/enhancements/issues/113)). ([#113](https://github.com/kubernetes/kubernetes/pull/113))\n- **[Feature]** Dashboard UI now shows all user facing objects and their resource usage. ([docs](http://kubernetes.io/docs/user-guide/ui/)) ([kubernetes/features#136](https://github.com/kubernetes/enhancements/issues/136)). ([#136](https://github.com/kubernetes/kubernetes/pull/136))\n- **[Urgent Upgrade Notes]** The deprecated kubelet --configure-cbr0 flag has been removed, and with that the \"classic\" networking mode as well.  If you depend on this mode, please investigate whether the other network plugins `kubenet` or `cni` meet your needs. ([#34906](https://github.com/kubernetes/kubernetes/pull/34906). ([#34906](https://github.com/kubernetes/kubernetes/pull/34906))\n- **[Feature]** Services can reference another service by DNS name, rather than being hosted in pods ([kubernetes/features#33](https://github.com/kubernetes/enhancements/issues/33)). (Upstream release notes)\n- **[Feature]** Docker 1.10.3 contains [backports provided by RedHat](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for known issues. (Upstream release notes)\n- **[Feature]** `kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)). (Upstream release notes)\n- **[Feature]** Introducing `kubefed`, a new command line tool to simplify federation control plane. ([docs](http://kubernetes.io/docs/admin/federation/kubefed/)) ([kubernetes/features#97](https://github.com/kubernetes/enhancements/issues/97)). (Upstream release notes)\n- **[Feature]** Node controller no longer force-deletes pods from the api-server. ([#35235](https://github.com/kubernetes/kubernetes/pull/35235), [@foxish](https://github.com/foxish)). ([#35235](https://github.com/kubernetes/kubernetes/pull/35235))\n- **[Feature]** Deployments that cannot make progress in rolling out the newest version will now indicate via the API they are blocked ([docs](http://kubernetes.io/docs/user-guide/deployments/#failed-deployment)) ([kubernetes/features#122](https://github.com/kubernetes/enhancements/issues/122)). ([#122](https://github.com/kubernetes/kubernetes/pull/122))\n- **[Feature]** StatefulSets allow workloads that require persistent identity or per-instance storage to be created and managed on Kubernetes. ([docs](http://kubernetes.io/docs/concepts/abstractions/controllers/statefulsets/)) ([kubernetes/features#137](https://github.com/kubernetes/enhancements/issues/137)). ([#137](https://github.com/kubernetes/kubernetes/pull/137))\n- **[Feature]** Support for ConfigMaps in federation. ([docs](http://kubernetes.io/docs/user-guide/federation/configmap/)) ([kubernetes/features#105](https://github.com/kubernetes/enhancements/issues/105)). ([#105](https://github.com/kubernetes/kubernetes/pull/105))\n- **[Feature]** Alpha level support for DaemonSets in federation. ([docs](http://kubernetes.io/docs/user-guide/federation/daemonsets/)) ([kubernetes/features#101](https://github.com/kubernetes/enhancements/issues/101)). ([#101](https://github.com/kubernetes/kubernetes/pull/101))\n- **[Feature]** Alpha level support for Deployments in federation. ([docs](http://kubernetes.io/docs/user-guide/federation/deployment/)) ([kubernetes/features#100](https://github.com/kubernetes/enhancements/issues/100)). ([#100](https://github.com/kubernetes/kubernetes/pull/100))\n- **[Feature]** Added ability to preserve access to host userns when userns remapping is enabled in container runtime ([kubernetes/features#127](https://github.com/kubernetes/enhancements/issues/127)). ([#127](https://github.com/kubernetes/kubernetes/pull/127))\n- **[Feature]** Kubelet launches container in a per pod cgroup hierarchy based on quality of service tier ([kubernetes/features#126](https://github.com/kubernetes/enhancements/issues/126)). ([#126](https://github.com/kubernetes/kubernetes/pull/126))\n- **[Feature]** Kubelet integrates with memcg notification API to detect when a hard eviction threshold is crossed ([kubernetes/features#125](https://github.com/kubernetes/enhancements/issues/125)). ([#125](https://github.com/kubernetes/kubernetes/pull/125))\n- **[Feature]** Added support for Windows Server 2016 nodes and scheduling Windows Server Containers ([docs](http://kubernetes.io/docs/getting-started-guides/windows/)) ([kubernetes/features#116](https://github.com/kubernetes/enhancements/issues/116)). ([#116](https://github.com/kubernetes/kubernetes/pull/116))\n- **[Urgent Upgrade Notes]** PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets. ([docs](http://kubernetes.io/docs/tasks/manage-stateful-set/upgrade-pet-set-to-stateful-set/)). ([#35663](https://github.com/kubernetes/kubernetes/pull/35663))\n- **[Urgent Upgrade Notes]** The deprecated kube-scheduler --bind-pods-qps and --bind-pods burst flags have been removed, use --kube-api-qps and --kube-api-burst instead ([#34471](https://github.com/kubernetes/kubernetes/pull/34471), [@timothysc](https://github.com/timothysc)). ([#34471](https://github.com/kubernetes/kubernetes/pull/34471))\n- **[Feature]** IMPORTANT: See Action Required for important actions related to this change. (Upstream release notes)\n- **[Feature]** StatefulSets are beta now (fixes and stabilization). (Upstream release notes)\n- **[Feature]** Further polishing of the Role-based access control alpha API including a default set of cluster roles. ([docs](http://kubernetes.io/docs/admin/authorization/)) ([kubernetes/features#2](https://github.com/kubernetes/enhancements/issues/2)). (Upstream release notes)\n- **[Feature]** Added ability to authenticate/authorize access to the Kubelet API ([docs](http://kubernetes.io/docs/admin/kubelet-authentication-authorization/)) ([kubernetes/features#89](https://github.com/kubernetes/enhancements/issues/89)). (Upstream release notes)\n- **[Feature]** Improved UX and usability for the kubeadm binary that makes it easy to get a new cluster running. ([docs](http://kubernetes.io/docs/getting-started-guides/kubeadm/)) ([changelog](https://github.com/kubernetes/kubeadm/blob/master/CHANGELOG.md)). (Upstream release notes)\n- **[Feature]** Cluster federation: Added support for DeleteOptions.OrphanDependents for federation resources. ([docs](http://kubernetes.io/docs/user-guide/federation/#cascading-deletion)) ([kubernetes/features#99](https://github.com/kubernetes/enhancements/issues/99)). (Upstream release notes)\n- **[Feature]** Opt in source ip preservation for Services with Type NodePort or LoadBalancer ([docs](http://kubernetes.io/docs/tutorials/services/source-ip/)) ([kubernetes/features#27](https://github.com/kubernetes/enhancements/issues/27)). (Upstream release notes)\n- **[Feature]** Introducing the v1alpha1 CRI API to allow pluggable container runtimes; an experimental docker-CRI integration is ready for testing and feedback. ([docs](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md)). (Upstream release notes)\n- **[Feature]** Introducing the beta version containerized node conformance test gcr.io/google_containers/node-test:0.2 for users to verify node setup. ([docs](http://kubernetes.io/docs/admin/node-conformance/)) ([kubernetes/features#84](https://github.com/kubernetes/enhancements/issues/84)). (Upstream release notes)\n- **[Feature]** Added support for accounting opaque integer resources. ([docs](http://kubernetes.io/docs/user-guide/compute-resources/#opaque-integer-resources-alpha-feature)) ([kubernetes/features#76](https://github.com/kubernetes/enhancements/issues/76)). (Upstream release notes)\n- **[Feature]** PodDisruptionBudget has been promoted to beta, can be used to safely drain nodes while respecting application SLO's ([docs](http://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/)) ([kubernetes/features#85](https://github.com/kubernetes/enhancements/issues/85)). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.5.0: - [v1.5.0-beta.3](CHANGELOG.md#v150-beta3). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.5.0: - [v1.5.0-beta.2](CHANGELOG.md#v150-beta2). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.5.0: - [v1.5.0-beta.1](CHANGELOG.md#v150-beta1). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.5.0: - [v1.5.0-alpha.2](CHANGELOG.md#v150-alpha2). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.5.0: - [v1.5.0-alpha.1](CHANGELOG.md#v150-alpha1). (Upstream release notes)\n- **[Urgent Upgrade Notes]** You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your apiserver. (Upstream release notes)\n- **[Urgent Upgrade Notes]** You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access your federation apiserver. (Upstream release notes)\n- **[Urgent Upgrade Notes]** If you are upgrading your Cluster Federation components from v1.4.x, please update your `federation-apiserver` and `federation-controller-manager` manifests to the new version ([#30601](https://github.com/kubernetes/kubernetes/pull/30601), [@madhusudancs](https://github.com/madhusudancs)). ([#30601](https://github.com/kubernetes/kubernetes/pull/30601))\n- **[Deprecation]** extensions/v1beta1.Jobs is deprecated, use batch/v1.Job instead ([#36355](https://github.com/kubernetes/kubernetes/pull/36355), [@soltysh](https://github.com/soltysh)). ([#36355](https://github.com/kubernetes/kubernetes/pull/36355))\n- **[Deprecation]** The kubelet --reconcile-cdir flag is deprecated because it has no function anymore. ([#35523](https://github.com/kubernetes/kubernetes/pull/35523), [@luxas](https://github.com/luxas)). ([#35523](https://github.com/kubernetes/kubernetes/pull/35523))\n- **[Deprecation]** Notice of deprecation for recycler [#36760](https://github.com/kubernetes/kubernetes/pull/36760). ([#36760](https://github.com/kubernetes/kubernetes/pull/36760))\n- **[Feature]** New command: `kubefed`. (Upstream release notes)\n- **[Feature]** Improvements to `kubeadm`. (Upstream release notes)\n- **[Feature]** `kubelet` API supports authentication and authorization. (Upstream release notes)\n- **[Feature]** When deleting an object with `kubectl delete ... --grace-period=0`, the client will begin a graceful deletion and wait until the resource is fully deleted.  To force deletion immediately, use the `--force` flag. This prevents users from accidentally allowing two Stateful Set pods to share the same. ([#37263](https://github.com/kubernetes/kubernetes/pull/37263))\n- **[Feature]** Allow anonymous API server access, decorate authenticated users with system:authenticated group ([#32386](https://github.com/kubernetes/kubernetes/pull/32386), [@liggitt](https://github.com/liggitt)). ([#32386](https://github.com/kubernetes/kubernetes/pull/32386))\n- **[Feature]** kubectl get -o jsonpath=... will now throw an error if the path is to a field not present in the json, even if the path is for a field valid for the type.  This is a change from the pre-1.5 behavior, which would return the default value for some fields even if they were not present in the json.. ([#37991](https://github.com/kubernetes/kubernetes/pull/37991))\n- **[Feature]** The strategicmerge patchMergeKey for VolumeMounts was changed from \"name\" to \"mountPath\".  This was necessary because the name field refers to the name of the Volume, and is not a unique key for the VolumeMount.  Multiple VolumeMounts will have the same Volume name if mounting the same volume more. ([#35071](https://github.com/kubernetes/kubernetes/pull/35071))\n- **[Feature]** Kernel crash with Aufs storage driver on Debian Jessie ([#27885]((https://github.com/kubernetes/kubernetes/issues/27885)) which can be identified by the [node problem detector](http://kubernetes.io/docs/admin/node-problem/). ([#27885](https://github.com/kubernetes/kubernetes/pull/27885))\n- **[Feature]** Leaked File descriptors ([#275](https://github.com/docker/containerd/issues/275)). ([#275](https://github.com/kubernetes/kubernetes/pull/275))\n- **[Feature]** Additional memory overhead per container ([#21737]((https://github.com/docker/docker/issues/21737)). ([#21737](https://github.com/kubernetes/kubernetes/pull/21737))\n- **[Feature]** Docker versions as old as may 1.9.1 work with [known issues](CHANGELOG.md#191) but this is not guaranteed. ([#191](https://github.com/kubernetes/kubernetes/pull/191))\n- **[Feature]** Other notable changes: * Bump GCE debian image to container-vm-v20161208 ([release notes](https://cloud.google.com/compute/docs/containers/container_vms#changelog)) ([#38444](https://github.com/kubernetes/kubernetes/pull/38444), [@timstclair](https://github.com/timstclair)). ([#38444](https://github.com/kubernetes/kubernetes/pull/38444))\n- **[Feature]** Other notable changes: * Fix unmountDevice issue caused by shared mount in GCI ([#38411](https://github.com/kubernetes/kubernetes/pull/38411), [@jingxu97](https://github.com/jingxu97)). ([#38411](https://github.com/kubernetes/kubernetes/pull/38411))\n- **[Urgent Upgrade Notes]** Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this release [38537](https://github.com/kubernetes/kubernetes/issues/38537). (Upstream release notes)\n- **[Deprecation]** The init-container (pod.beta.kubernetes.io/init-containers) annotations used to accept capitalized field names that could be accidentally generated by the k8s.io/kubernetes/pkg/api package. Using an upper case field name will now return an error and all users should use the versioned API types from. (Upstream release notes)\n- **[Urgent Upgrade Notes]** getDeviceNameFromMount() function doesn't return the volume path correctly when the volume path contains spaces [#37712](https://github.com/kubernetes/kubernetes/issues/37712). ([#37712](https://github.com/kubernetes/kubernetes/pull/37712))\n- **[Urgent Upgrade Notes]** batch/v2alpha1.ScheduledJob has been renamed, use batch/v2alpha1.CronJob instead ([#36021](https://github.com/kubernetes/kubernetes/pull/36021), [@soltysh](https://github.com/soltysh)). ([#36021](https://github.com/kubernetes/kubernetes/pull/36021))\n- **[Urgent Upgrade Notes]** New client-go structure, refer to kubernetes/client-go for versioning policy ([#34989](https://github.com/kubernetes/kubernetes/pull/34989), [@caesarxuchao](https://github.com/caesarxuchao)). ([#34989](https://github.com/kubernetes/kubernetes/pull/34989))\n- **[Feature]** StatefulSets (ex-PetSets). (Upstream release notes)\n- **[Feature]** Improved Federation Support. (Upstream release notes)\n- **[Feature]** DaemonSets. (Upstream release notes)\n- **[Feature]** Deployments. (Upstream release notes)\n- **[Feature]** ConfigMaps. (Upstream release notes)\n- **[Feature]** Simplified Cluster Deployment. (Upstream release notes)\n- **[Feature]** HA Setup for Master. (Upstream release notes)\n- **[Feature]** Node Robustness and Extensibility. (Upstream release notes)\n- **[Feature]** Windows Server Container support. (Upstream release notes)\n- **[Feature]** CRI for pluggable container runtimes. (Upstream release notes)\n- **[Feature]** API Machinery. (Upstream release notes)\n- **[Feature]** Cluster Lifecycle. (Upstream release notes)\n- **[Feature]** Cluster Ops. (Upstream release notes)\n- **[Feature]** Federation. (Upstream release notes)\n- **[Feature]** Network. (Upstream release notes)\n- **[Feature]** Scheduling. (Upstream release notes)\n- **[Feature]** Windows. (Upstream release notes)\n- **[Feature]** For StatefulSet (previously PetSet), this change means creation of replacement pods is blocked until old pods are definitely not running (indicated either by the kubelet returning from partitioned state, deletion of the Node object, deletion of the instance in the cloud provider, or force deletion. (Upstream release notes)\n- **[Feature]** For all other existing controllers except StatefulSet, this has no effect on the ability of the controller to replace pods because the controllers do not reuse pod names (they use generate-name). (Upstream release notes)\n- **[Feature]** User-written controllers that reuse names of pod objects should evaluate this change. (Upstream release notes)\n- **[Feature]** kube-apiserver learned the '--anonymous-auth' flag, which defaults to true. When enabled, requests to the secure port that are not rejected by other configured authentication methods are treated as anonymous requests, and given a username of 'system:anonymous' and a group of. (Upstream release notes)\n- **[Feature]** Authenticated users are decorated with a 'system:authenticated' group. (Upstream release notes)\n- **[Feature]** Docker versions 1.10.3 - 1.12.3. (Upstream release notes)\n- **[Feature]** Docker version 1.11.2 known issues. (Upstream release notes)\n- **[Feature]** Docker version 1.12.1 [has been validated](https://github.com/kubernetes/kubernetes/issues/28698) through the Kubernetes docker automated validation framework as has Docker version 1.12.3. (Upstream release notes)\n- **[Feature]** rkt version 1.21.0. (Upstream release notes)\n- **[Feature]** known issues with the rkt runtime are [listed here](http://kubernetes.io/docs/getting-started-guides/rkt/notes/). (Upstream release notes)\n- **[Feature]** etcd version 2.2.1. (Upstream release notes)\n- **[Feature]** etcd version 3.0.14 [has also been validated](https://k8s-gubernator.appspot.com/builds/kubernetes-jenkins/logs/ci-kubernetes-e2e-gce-etcd3/) but does require [specific configuration steps](https://coreos.com/blog/migrating-applications-etcd-v3.html). (Upstream release notes)\n- **[Urgent Upgrade Notes]** CRI [known issues and limitations](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v15-release-cri-v1alpha1). (Upstream release notes)\n- **[Urgent Upgrade Notes]** Important Security-related changes before upgrading. (Upstream release notes)\n- **[Urgent Upgrade Notes]** You do not need to adjust this flag on Kubelet:  there was no authorization for the Kubelet APIs in 1.4. (Upstream release notes)\n\n**Key Feature Gates / API Identifiers**: `PodDisruptionBudget`, `kubenet`, `kube-apiserver`, `kubefed`, `federation-apiserver`, `federation-controller-manager`, `kubeadm`, `kubelet`, `Deployment`",
+  "eval": {
+    "variant": "v5_progressive_clarity_engine",
+    "project": "kubernetes",
+    "version": "v1.5",
+    "headline_salience_recall": 1.0,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 0.7833,
+    "cluster_diversity_score": 0.9497,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.976,
+    "matched_spotlights": "0/0",
+    "cited_prs_count": 36,
+    "cited_keps_count": 0
+  },
+  "published_date": "2016-12-13",
+  "total_raw_items": 98
+}

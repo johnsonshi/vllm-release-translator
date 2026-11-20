@@ -1,0 +1,121 @@
+{
+  "project": "kubernetes",
+  "version": "v1.20",
+  "blog_title": "Kubernetes 1.20: The Raddest Release",
+  "release_date": "2020-12-08",
+  "reported_enhancements_count": 42,
+  "spotlight_count": 10,
+  "spotlights": [
+    {
+      "heading": "Volume Snapshot Operations Goes Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature provides a standard way to trigger volume snapshot operations and allows users to incorporate snapshot operations in a portable manner on any Kubernetes environment and supported storage providers.  Additionally, these Kubernetes snapshot primitives act as basic building blocks that unlock the ability to develop advanced, enterprise-grade, storage administration features for Kubernetes, including application or cluster level backup solutions.  Note that snapshot support requires Kubernetes distributors to bundle the Snapshot controller, Snapshot CRDs, and validation webhook. A CSI"
+    },
+    {
+      "heading": "Kubectl Debug Graduates to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `kubectl alpha debug` features graduates to beta in 1.20, becoming `kubectl debug`. The feature provides support for common debugging workflows directly from kubectl. Troubleshooting scenarios supported in this release of kubectl include:  * Troubleshoot workloads that crash on startup by creating a copy of the pod that uses a different container image or command. * Troubleshoot distroless containers by adding a new container with debugging tools, either in a new copy of the pod or using an ephemeral container. (Ephemeral containers are an alpha feature that are not enabled by default.) * "
+    },
+    {
+      "heading": "Beta: API Priority and Fairness",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introduced in 1.18, Kubernetes 1.20 now enables API Priority and Fairness (APF) by default. This allows `kube-apiserver` to categorize incoming requests by priority levels."
+    },
+    {
+      "heading": "Alpha with updates: IPV4/IPV6",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The IPv4/IPv6 dual stack has been reimplemented to support dual stack services based on user and community feedback. This allows both IPv4 and IPv6 service cluster IP addresses to be assigned to a single service, and also enables a service to be transitioned from single to dual IP stack and vice versa."
+    },
+    {
+      "heading": "GA: Process PID Limiting for Stability",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "SupportNodePidsLimit",
+        "SupportPodPidsLimit"
+      ],
+      "summary": "Process IDs (pids) are a fundamental resource on Linux hosts. It is trivial to hit the task limit without hitting any other resource limits and cause instability to a host machine.  Administrators require mechanisms to ensure that user pods cannot induce pid exhaustion that prevents host daemons (runtime, kubelet, etc) from running. In addition, it is important to ensure that pids are limited among pods in order to ensure they have limited impact to other workloads on the node. After being enabled-by-default for a year, SIG Node graduates PID Limits to GA on both `SupportNodePidsLimit` (node-t"
+    },
+    {
+      "heading": "Alpha: Graceful node shutdown",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "GracefulNodeShutdown"
+      ],
+      "summary": "Users and cluster administrators expect that pods will adhere to expected pod lifecycle including pod termination. Currently, when a node shuts down, pods do not follow the expected pod termination lifecycle and are not terminated gracefully which can cause issues for some workloads. The `GracefulNodeShutdown` feature is now in Alpha. `GracefulNodeShutdown` makes the kubelet aware of node system shutdowns, enabling graceful termination of pods during a system shutdown."
+    },
+    {
+      "heading": "Dockershim Deprecation",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Dockershim, the container runtime interface (CRI) shim for Docker is being deprecated. Support for Docker is deprecated and will be removed in a future release. Docker-produced images will continue to work in your cluster with all CRI compliant runtimes as Docker images follow the Open Container Initiative (OCI) image specification. The Kubernetes community has written a [detailed blog post about deprecation](https://blog.k8s.io/2020/12/02/dont-panic-kubernetes-and-docker/) with [a dedicated FAQ page for it](https://blog.k8s.io/2020/12/02/dockershim-faq/)."
+    },
+    {
+      "heading": "Exec Probe Timeout Handling",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ExecProbeTimeout"
+      ],
+      "summary": "A longstanding bug regarding exec probe timeouts that may impact existing pod definitions has been fixed. Prior to this fix, the field `timeoutSeconds` was not respected for exec probes. Instead, probes would run indefinitely, even past their configured deadline, until a result was returned. With this change, the default value of `1 second` will be applied if a value is not specified and existing pod definitions may no longer be sufficient if a probe takes longer than one second. A feature gate, called `ExecProbeTimeout`, has been added with this fix that enables cluster operators to revert to"
+    },
+    {
+      "heading": "Graduated to Stable",
+      "stage": "Stable",
+      "keps": [
+        "585",
+        "1929",
+        "950",
+        "1001",
+        "614",
+        "1507"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [RuntimeClass](https://github.com/kubernetes/enhancements/issues/585) * [Built-in API Types Defaults](https://github.com/kubernetes/enhancements/issues/1929) * [Add Pod-Startup Liveness-Probe Holdoff](https://github.com/kubernetes/enhancements/issues/950) * [Support CRI-ContainerD On Windows](https://github.com/kubernetes/enhancements/issues/1001) * [SCTP Support for Services](https://github.com/kubernetes/enhancements/issues/614) * [Adding AppProtocol To Services And Endpoints](https://github.com/kubernetes/enhancements/issues/1507)"
+    },
+    {
+      "heading": "Notable Feature Updates",
+      "stage": "Unspecified",
+      "keps": [
+        "2067"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [CronJobs](https://github.com/kubernetes/enhancements/issues/19)  # Release notes  You can check out the full details of the 1.20 release in the [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.20.md)."
+    }
+  ],
+  "ground_truth_keps": [
+    "585",
+    "1929",
+    "950",
+    "1001",
+    "614",
+    "1507",
+    "2067"
+  ],
+  "ground_truth_identifiers": [
+    "SupportNodePidsLimit",
+    "SupportPodPidsLimit",
+    "GracefulNodeShutdown",
+    "ExecProbeTimeout"
+  ]
+}

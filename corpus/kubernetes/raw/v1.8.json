@@ -1,0 +1,2423 @@
+{
+  "project": "kubernetes",
+  "version": "v1.8",
+  "tag": "v1.8.0",
+  "total_raw_items": 212,
+  "counts_by_category": {
+    "Feature": 185,
+    "Urgent Upgrade Notes": 8,
+    "Deprecation": 19
+  },
+  "urgent_upgrade_notes": [
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Kubelets using TLS bootstrapping (`--bootstrap-kubeconfig`) or certificate rotation (`--rotate-certificates`) store certificates in the directory specified by `--cert-dir`. The default location (`/var/run/kubernetes`) is automatically erased on reboot on some platforms, which can prevent the kubelet from authenticating to the API server after a reboot. Specifying a non-transient location, such as `--cert-dir=/var/lib/kubelet/pki`, is recommended. For more information, see [#53288](https://issue.k8s.io/53288).",
+      "prs": [
+        "53288"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "`kubeadm init` and `kubeadm join` invocations on newly installed systems can encounter a `/var/lib/kubelet is not empty` message during pre-flight checks that prevents setup. If this is the only pre-flight failure, it can be safely ignored with `--skip-preflight-checks`. For more information, see [#53356](https://issue.k8s.io/53356#issuecomment-333748618).",
+      "prs": [
+        "53356"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "A performance issue was identified in large-scale clusters when deleting thousands of pods simultaneously across hundreds of nodes. Kubelets in this scenario can encounter temporarily increased latency of `delete pod` API calls -- above the target service level objective of 1 second. If you run clusters with this usage pattern and if pod deletion latency could be an issue for you, you might want to wait until the issue is resolved before you upgrade. For more information and for updates on resolution of this issue, see [#51899](https://github.com/kubernetes/kubernetes/issues/51899).",
+      "prs": [
+        "51899"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Audit logs might impact the API server performance and the latency of large request and response calls. The issue is observed under the following conditions: if `AdvancedAuditing` feature gate is enabled, which is the default case, if audit logging uses the log backend in JSON format, or if the audit policy records large API calls for requests or responses. For more information, see [#51899](https://github.com/kubernetes/kubernetes/issues/51899).",
+      "prs": [
+        "51899"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "AdvancedAuditing"
+      ]
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Minikube version 0.22.2 or lower does not work with kubectl version 1.8 or higher. This issue is caused by the presence of an unregistered type in the minikube API server. New versions of kubectl force validate the OpenAPI schema, which is not registered with all known types in the minikube API server. For more information, see [#1996](https://github.com/kubernetes/minikube/issues/1996).",
+      "prs": [
+        "1996"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "The `ENABLE_APISERVER_BASIC_AUDIT` configuration parameter for GCE deployments is broken, but deprecated. For more information, see [#53154](https://github.com/kubernetes/kubernetes/issues/53154).",
+      "prs": [
+        "53154"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ENABLE_APISERVER_BASIC_AUDIT"
+      ]
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "`kubectl set` commands\u00a0placed on ReplicaSet and DaemonSet occasionally return version errors. All set\u00a0commands, including\u00a0set image,\u00a0set env,\u00a0set resources, and\u00a0set serviceaccounts, are affected. For more information, see [#53040](https://github.com/kubernetes/kubernetes/issues/53040).",
+      "prs": [
+        "53040"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Object quotas are not consistently charged or updated. Specifically, the object count quota does not reliably account for uninitialized objects. Some quotas are charged only when an object is initialized. Others are charged when an object is created, whether it is initialized or not. We plan to fix this issue in a future release. For more information, see [#53109](https://github.com/kubernetes/kubernetes/issues/53109).",
+      "prs": [
+        "53109"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "deprecations": [
+    {
+      "category": "Deprecation",
+      "text": "Apps: - The `.spec.rollbackTo` field of the Deployment kind is deprecated in `extensions/v1beta1`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Apps: - The `kubernetes.io/created-by` annotation is deprecated and will be removed in version 1.9. Use [ControllerRef](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/controller-ref.md) instead to determine which controller, if any, owns an object.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Apps:  - The `batch/v2alpha1.CronJob` is deprecated in favor of `batch/v1beta1`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Apps:  - The `batch/v2alpha1.ScheduledJob` was removed. Use `batch/v1beta1.CronJob` instead.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Auth:  - The RBAC v1alpha1 API group is deprecated in favor of RBAC v1.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Auth:  - The API server flag `--experimental-bootstrap-token-auth` is deprecated in favor of `--enable-bootstrap-token-auth`. The `--experimental-bootstrap-token-auth` flag will be removed in version 1.9.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Autoscaling:  - Consuming metrics directly from Heapster is deprecated in favor of consuming metrics via an aggregated version of the resource metrics API.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Autoscaling:    - In version 1.8, enable this behavior by setting the `--horizontal-pod-autoscaler-use-rest-clients` flag to `true`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "true"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Autoscaling:    - In version 1.9, this behavior will be enabled by default, and must be explicitly disabled by setting the `--horizontal-pod-autoscaler-use-rest-clients` flag to `false`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "false"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle: - The `auto-detect` behavior of the kubelet's `--cloud-provider` flag is deprecated.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "auto-detect"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - In version 1.8, the default value for the kubelet's `--cloud-provider` flag is `auto-detect`. Be aware that it works only on GCE, AWS and Azure.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "auto-detect"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - In version 1.9, the default will be `\"\"`, which means no built-in cloud provider extension will be enabled by default.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - Enable an out-of-tree cloud provider with `--cloud-provider=external` in either version. For more information on deprecating auto-detecting cloud providers in kubelet, see PR [#51312](https://github.com/kubernetes/kubernetes/pull/51312) and [announcement](https://groups.google.com/forum/#!topic/kubernetes-dev/UAxwa2inbTA).",
+      "prs": [
+        "51312"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle: - The `PersistentVolumeLabel` admission controller in the API server is deprecated.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PersistentVolumeLabel"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - The replacement is running a cloud-specific controller-manager (often referred to as `cloud-controller-manager`) with the `PersistentVolumeLabel` controller enabled. This new controller loop operates as the `PersistentVolumeLabel` admission controller did in previous versions.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "cloud-controller-manager",
+        "PersistentVolumeLabel"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - Do not use the `PersistentVolumeLabel` admission controller in the configuration files and scripts unless you are dependent on the in-tree GCE and AWS cloud providers.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PersistentVolumeLabel"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Cluster Lifecycle:   - The `PersistentVolumeLabel` admission controller will be removed in a future release, when the out-of-tree versions of the GCE and AWS cloud providers move to GA. The cloud providers are marked alpha in version 1.9.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PersistentVolumeLabel"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "OpenStack: - The `openstack-heat` provider for `kube-up` is deprecated and will be removed in a future release. Refer to Issue [#49213](https://github.com/kubernetes/kubernetes/issues/49213) for background information.",
+      "prs": [
+        "49213"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "openstack-heat",
+        "kube-up"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Scheduling:   - Opaque Integer Resources (OIRs) are deprecated and will be removed in version 1.9. Extended Resources (ERs) are a drop-in replacement for OIRs. You can use any domain name prefix outside of the `kubernetes.io/` domain instead of the `pod.alpha.kubernetes.io/opaque-int-resource-` prefix.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "api_changes": [],
+  "features": [
+    {
+      "category": "Feature",
+      "text": "SIG API Machinery: [SIG API Machinery][] is responsible for all aspects of the API server: API registration and discovery, generic API CRUD semantics, admission control, encoding/decoding, conversion, defaulting, persistence layer (etcd), OpenAPI, third-party resources, garbage collection, and client libraries. For the 1.8 release, SIG API Machinery focused on stability and on ecosystem enablement. Features include the ability to break large LIST calls into smaller chunks, improved support for API server customization with either custom API servers or Custom Resource Definitions, and client side event spam filtering. [Sig API Machinery]: https://github.com/kubernetes/community/tree/master/sig-api-machinery",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Apps: [SIG Apps][] focuses on the Kubernetes APIs and the external tools that are required to deploy and operate Kubernetes workloads. For the 1.8 release, SIG Apps moved the Kubernetes workloads API to the new apps/v1beta2 group and version. The DaemonSet, Deployment, ReplicaSet, and StatefulSet objects are affected by this change. The new apps/v1beta2 group and version provide a stable and consistent API surface for building applications in Kubernetes. For details about deprecations and behavioral changes, see [Notable Features](#notable-features). SIG Apps intends to promote this version to GA in a future release. [SIG Apps]: https://github.com/kubernetes/community/tree/master/sig-apps",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Apps"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Auth: [SIG Auth][] is responsible for Kubernetes authentication and authorization, and for cluster security policies. For the 1.8 release, SIG Auth focused on stablizing existing features that were introduced in previous releases. RBAC was moved from beta to v1, and advanced auditing was moved from alpha to beta. Encryption of resources stored on disk (resources at rest) remained in alpha, and the SIG began exploring integrations with external key management systems. [SIG Auth]: https://github.com/kubernetes/community/tree/master/sig-auth",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Auth"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Autoscaling: [SIG Autoscaling][] is responsible for autoscaling-related components, such as the Horizontal Pod Autoscaler and Cluster Autoscaler. For the 1.8 release, SIG Autoscaling continued to focus on stabilizing features introduced in previous releases: the new version of the Horizontal Pod Autoscaler API, which supports custom metrics, and the Cluster Autoscaler, which provides improved performance and error reporting. [SIG Autoscaling]: https://github.com/kubernetes/community/tree/master/sig-autoscaling",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Autoscaling"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Cluster Lifecycle: [SIG Cluster Lifecycle][] is responsible for the user experience of deploying, upgrading, and deleting clusters. For the 1.8 release, SIG Cluster Lifecycle continued to focus on expanding the capabilities of kubeadm, which is both a user-facing tool to manage clusters and a building block for higher-level provisioning systems. Starting with the 1.8 release, kubeadm supports a new upgrade command and includes alpha support for self hosting the cluster control plane. [SIG Cluster Lifecycle]: https://github.com/kubernetes/community/tree/master/sig-cluster-lifecycle",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Cluster Lifecycle"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Instrumentation: [SIG Instrumentation][] is responsible for metrics production and collection. For the 1.8 release, SIG Instrumentation focused on stabilizing the APIs and components that are required to support the new version of the Horizontal Pod Autoscaler API: the resource metrics API, custom metrics API, and metrics-server, which is the new replacement for Heapster in the default monitoring pipeline. [SIG Instrumentation]: https://github.com/kubernetes/community/tree/master/sig-instrumentation",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Instrumentation"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Multi-cluster (formerly known as SIG Federation): [SIG Multi-cluster][] is responsible for infrastructure that supports the efficient and reliable management of multiple Kubernetes clusters, and applications that run in and across multiple clusters. For the 1.8 release, SIG Multicluster focussed on expanding the set of Kubernetes primitives that our Cluster Federation control plane supports, expanding the number of approaches taken to multi-cluster management (beyond our initial Federation approach), and preparing to release Federation for general availability ('GA'). [SIG Multi-cluster]: https://github.com/kubernetes/community/tree/master/sig-federation",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Multi-cluster"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Node: [SIG Node][] is responsible for the components that support the controlled interactions between pods and host resources, and manage the lifecycle of pods scheduled on a node. For the 1.8 release, SIG Node continued to focus on a broad set of workload types, including hardware and performance sensitive workloads such as data analytics and deep learning. The SIG also delivered incremental improvements to node reliability. [SIG Node]: https://github.com/kubernetes/community/tree/master/sig-node",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Node"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Network: [SIG Network][] is responsible for networking components, APIs, and plugins in Kubernetes. For the 1.8 release, SIG Network enhanced the NetworkPolicy API to support pod egress traffic policies. The SIG also provided match criteria that allow policy rules to match a source or destination CIDR. Both features are in beta. SIG Network also improved the kube-proxy to include an alpha IPVS mode in addition to the current iptables and userspace modes. [SIG Network]: https://github.com/kubernetes/community/tree/master/sig-network",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Network"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Scalability: [SIG Scalability][] is responsible for scalability testing, measuring and improving system performance, and answering questions related to scalability. For the 1.8 release, SIG Scalability focused on automating large cluster scalability testing in a continuous integration (CI) environment. The SIG defined a concrete process for scalability testing, created documentation for the current scalability thresholds, and defined a new set of Service Level Indicators (SLIs) and Service Level Objectives (SLOs) for the system. Here's the release [scalability validation report]. [SIG Scalability]: https://github.com/kubernetes/community/tree/master/sig-scalability [scalability validation report]: https://github.com/kubernetes/sig-release/blob/master/releases/release-1.8/scalability_validation_report.md",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Scalability"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Scheduling: [SIG Scheduling][] is responsible for generic scheduler and scheduling components. For the 1.8 release, SIG Scheduling extended the concept of cluster sharing by introducing pod priority and pod preemption. These features allow mixing various types of workloads in a single cluster, and help reach higher levels of resource utilization and availability. These features are in alpha. SIG Scheduling also improved the internal APIs for scheduling and made them easier for other components and external schedulers to use. [SIG Scheduling]: https://github.com/kubernetes/community/tree/master/sig-scheduling",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Scheduling"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "SIG Storage: [SIG Storage][] is responsible for storage and volume plugin components. For the 1.8 release, SIG Storage extended the Kubernetes storage API. In addition to providing simple volume availability, the API now enables volume resizing and snapshotting. These features are in alpha. The SIG also focused on providing more control over storage: the ability to set requests and limits on ephemeral storage, the ability to specify mount options, more metrics, and improvements to Flex driver deployments. [SIG Storage]: https://github.com/kubernetes/community/tree/master/sig-storage",
+      "prs": [],
+      "keps": [],
+      "sigs": [
+        "Storage"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The kubelet now fails if swap is enabled on a node. To override the default and run with /proc/swaps on, set `--fail-swap-on=false`. The experimental flag `--experimental-fail-swap-on` is deprecated in this release, and will be removed in a future release.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The `autoscaling/v2alpha1` API is now at `autoscaling/v2beta1`. However, the form of the API remains unchanged. Migrate the `HorizontalPodAutoscaler` resources to `autoscaling/v2beta1` to persist the `HorizontalPodAutoscaler` changes introduced in `autoscaling/v2alpha1`. The Horizontal Pod Autoscaler changes include support for status conditions, and autoscaling on memory and custom metrics.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "HorizontalPodAutoscaler"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The metrics APIs, `custom-metrics.metrics.k8s.io` and `metrics`, were moved from `v1alpha1` to `v1beta1`, and renamed to `custom.metrics.k8s.io` and `metrics.k8s.io`, respectively. If you have deployed a custom metrics adapter, ensure that it supports the new API version. If you have deployed Heapster in aggregated API server mode, upgrade Heapster to support the latest API version.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "custom-metrics.metrics.k8s.io",
+        "metrics",
+        "v1alpha1",
+        "v1beta1",
+        "custom.metrics.k8s.io",
+        "metrics.k8s.io"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Advanced auditing is the default auditing mechanism at `v1beta1`. The new version introduces the following changes:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "v1beta1"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `--audit-policy-file` option is required if the `AdvancedAuditing` feature is not explicitly turned off (`--feature-gates=AdvancedAuditing=false`) on the API server.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "AdvancedAuditing"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The audit log file defaults to JSON encoding when using the advanced auditing feature gate.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "An audit policy file without either an `apiVersion` or a `kind` field may be treated as invalid.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "apiVersion",
+        "kind"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The webhook and log file now output the `v1beta1` event format. For more details, see [Advanced audit](https://kubernetes.io/docs/tasks/debug-application-cluster/audit/#advanced-audit).",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "v1beta1"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The deprecated `ThirdPartyResource` (TPR) API was removed. To avoid losing your TPR data, [migrate to CustomResourceDefinition](https://kubernetes.io/docs/tasks/access-kubernetes-api/migrate-third-party-resource/).",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ThirdPartyResource"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The following deprecated flags were removed from `kube-controller-manager`:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kube-controller-manager"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`replication-controller-lookup-cache-size`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "replication-controller-lookup-cache-size"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`replicaset-lookup-cache-size`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "replicaset-lookup-cache-size"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`daemonset-lookup-cache-size` Don't use these flags. Using deprecated flags causes the server to print a warning. Using a removed flag causes the server to abort the startup.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "daemonset-lookup-cache-size"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The following deprecated flags were removed from `kubelet`:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubelet"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`api-servers` - add apiserver addresses to the kubeconfig file instead. Don't use these flags. Using deprecated flags causes the kubelet to print a warning. Using a removed flag causes the kubelet to abort the startup.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "api-servers"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "StatefulSet: The deprecated `pod.alpha.kubernetes.io/initialized` annotation for interrupting the StatefulSet Pod management is now ignored. StatefulSets with this annotation set to `true` or with no value will behave just as they did in previous versions. Dormant StatefulSets with the annotation set to `false` will become active after upgrading.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "true",
+        "false"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The CronJob object is now enabled by default at `v1beta1`. CronJob `v2alpha1` is still available, but it must be explicitly enabled. We recommend that you move any current CronJob objects to `batch/v1beta1.CronJob`. Be aware that if you specify the deprecated version, you may encounter Resource Not Found errors. These errors occur because the new controllers look for the new version during a rolling update.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "v1beta1",
+        "v2alpha1"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `batch/v2alpha1.ScheduledJob` was removed. Migrate to `batch/v1beta.CronJob` to continue managing time based jobs.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The `rbac/v1alpha1`, `settings/v1alpha1`, and `scheduling/v1alpha1` APIs are disabled by default.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The `system:node` role is no longer automatically granted to the `system:nodes` group in new clusters. The role gives broad read access to resources, including secrets and configmaps. Use the `Node` authorization mode to authorize the nodes in new clusters. To continue providing the `system:node` role to the members of the `system:nodes` group, create an installation-specific `ClusterRoleBinding` in the installation. ([#49638](https://github.com/kubernetes/kubernetes/pull/49638))",
+      "prs": [
+        "49638"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Node",
+        "ClusterRoleBinding"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (apps/v1beta2): Kubernetes 1.8 adds the apps/v1beta2 group and version, which now consists of the DaemonSet, Deployment, ReplicaSet and StatefulSet kinds. This group and version are part of the Kubernetes Workloads API. We plan to move them to v1 in an upcoming release, so you might want to plan your migration accordingly. For more information, see [the issue that describes this work in detail](https://github.com/kubernetes/enhancements/issues/353)",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "API Object Additions and Migrations: - The DaemonSet, Deployment, ReplicaSet, and StatefulSet kinds are now in the apps/v1beta2 group and version.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "API Object Additions and Migrations: - The apps/v1beta2 group version adds a Scale subresource for the StatefulSet kind.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "API Object Additions and Migrations: - All kinds in the apps/v1beta2 group version add a corresponding conditions kind.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Behavioral Changes:  - For all kinds in the API group version, a spec.selector default value is no longer available, because it's incompatible with `kubectl apply` and strategic merge patch. You must explicitly set the spec.selector value in your manifest. An object with a spec.selector value that does not match the labels in its spec.template is invalid.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Behavioral Changes:  - Selector mutation is disabled for all kinds in the app/v1beta2 group version, because the controllers in the workloads API do not handle selector mutation in a consistent way. This restriction may be lifted in the future, but it is likely that that selectors will remain immutable after the move to v1. You can continue to use code that depends on mutable selectors by calling the apps/v1beta1 API in this release, but you should start planning for code that does not depend on mutable selectors.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Behavioral Changes:  - Extended Resources are fully-qualified resource names outside the `kubernetes.io` domain. Extended Resource quantities must be integers. You can specify any resource name of the form `[aaa.]my-domain.bbb/ccc` in place of [Opaque Integer Resources](https://v1-6.docs.kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#opaque-integer-resources-alpha-feature). Extended resources cannot be overcommitted, so make sure that request and limit are equal if both are present in a container spec.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubernetes.io"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Behavioral Changes:  - The default Bootstrap Token created with `kubeadm init` v1.8 expires and is deleted after 24 hours by default to limit the exposure of the valuable credential. You can create a new Bootstrap Token with `kubeadm token create` or make the default token permanently valid by specifying `--token-ttl 0` to `kubeadm init`. The default token can later be deleted with `kubeadm token delete`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Behavioral Changes:  - `kubeadm join` now delegates TLS Bootstrapping to the kubelet itself, instead of reimplementing the process. `kubeadm join` writes the bootstrap kubeconfig file to `/etc/kubernetes/bootstrap-kubelet.conf`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Defaults:  - The default spec.updateStrategy for the StatefulSet and DaemonSet kinds is RollingUpdate for the apps/v1beta2 group version. You can explicitly set the OnDelete strategy, and no strategy auto-conversion is applied to replace default values.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Defaults:  - As mentioned in [Behavioral Changes](#behavioral-changes), selector defaults are disabled.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Defaults:  - The default spec.revisionHistoryLimit for all applicable kinds in the apps/v1beta2 group version is 10.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Defaults:  - In a CronJob object, the default spec.successfulJobsHistoryLimit is 3, and the default spec.failedJobsHistoryLimit is 1.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - CronJob is now at `batch/v1beta1` ([#41039](https://github.com/kubernetes/kubernetes/issues/41039), [@soltysh](https://github.com/soltysh)).",
+      "prs": [
+        "41039"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - `batch/v2alpha.CronJob` is deprecated in favor of `batch/v1beta` and will be removed in a future release.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - Job can now set a failure policy using `.spec.backoffLimit`. The default value for this new field is 6. ([#30243](https://github.com/kubernetes/kubernetes/issues/30243), [@clamoriniere1A](https://github.com/clamoriniere1A)).",
+      "prs": [
+        "30243"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - `batch/v2alpha1.ScheduledJob` is removed.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - The Job controller now creates pods in batches instead of all at once. ([#49142](https://github.com/kubernetes/kubernetes/pull/49142), [@joelsmith](https://github.com/joelsmith)).",
+      "prs": [
+        "49142"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Workloads API (batch): - Short `.spec.ActiveDeadlineSeconds` is properly applied to a Job. ([#48545](https://github.com/kubernetes/kubernetes/pull/48454), [@weiwei4](https://github.com/weiwei04)).",
+      "prs": [
+        "48545"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - [alpha] `kubectl` plugins: `kubectl` now allows binary extensibility. You can extend the default set of `kubectl` commands by writing plugins that provide new subcommands. Refer to the documentation for more information.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "kubectl"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl rollout` and `rollback` now support StatefulSet.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "rollback"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl scale` now uses the Scale subresource for kinds in the apps/v1beta2 group.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl create configmap` and `kubectl create secret` subcommands now support the `--append-hash` flag, which enables unique but deterministic naming for objects generated from files, for example with `--from-file`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl run` can set a service account name in the generated pod spec with the `--serviceaccount` flag.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl proxy` now correctly handles the `exec`, `attach`, and `portforward` commands.  You must pass `--disable-filter` to the command to allow these commands.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "exec",
+        "attach",
+        "portforward"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Added `cronjobs.batch` to \"all\", so that `kubectl get all` returns them.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "cronjobs.batch"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Added flag `--include-uninitialized` to `kubectl annotate`, `apply`, `edit-last-applied`, `delete`, `describe`, `edit`, `get`, `label,` and `set`. `--include-uninitialized=true` makes kubectl commands apply to uninitialized objects, which by default are ignored if the names of the objects are not provided. `--all` also makes kubectl commands apply to uninitialized objects. See the [initializer documentation](https://kubernetes.io/docs/admin/extensible-admission-controllers/) for more details.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "apply",
+        "edit-last-applied",
+        "delete",
+        "describe",
+        "edit"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Added RBAC reconcile commands with `kubectl auth reconcile -f FILE`. When passed a file which contains RBAC roles, rolebindings, clusterroles, or clusterrolebindings, this command computes covers and adds the missing rules. The logic required to properly apply RBAC permissions is more complicated than a JSON merge because you have to compute logical covers operations between rule sets. This means that we cannot use `kubectl apply` to update RBAC roles without risking breaking old clients, such as controllers.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl delete` no longer scales down workload API objects before deletion. Users who depend on ordered termination for the Pods of their StatefulSets must use `kubectl scale` to scale down the StatefulSet before deletion.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - `kubectl run --env` no longer supports CSV parsing. To provide multiple environment variables, use the `--env` flag multiple times instead. Example: `--env ONE=1 --env TWO=2` instead of `--env ONE=1,TWO=2`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Removed deprecated command `kubectl stop`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Kubectl can now use http caching for the OpenAPI schema. The cache directory can be configured by passing the `--cache-dir` command line flag to kubectl. If set to an empty string, caching is disabled.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Kubectl now performs validation against OpenAPI schema instead of Swagger 1.2. If OpenAPI is not available on the server, it falls back to the old Swagger 1.2.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Added Italian translation for kubectl.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CLI Changes: - Added German translation for kubectl.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Scheduling: * [alpha] This version now supports pod priority and creation of PriorityClasses ([user doc](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/))([design doc](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/pod-priority-api.md))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Scheduling: * [alpha] This version now supports priority-based preemption of pods ([user doc](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/))([design doc](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/pod-preemption.md))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Scheduling: * [alpha] Users can now add taints to nodes by condition ([design doc](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/scheduling/taint-node-by-condition.md))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] Mount options",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * The ability to specify mount options for volumes is moved from beta to stable.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * A new `MountOptions` field in the `PersistentVolume` spec is available to specify mount options. This field replaces an annotation.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "MountOptions",
+        "PersistentVolume"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * A new `MountOptions` field in the `StorageClass` spec allows configuration of mount options for dynamically provisioned volumes.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "MountOptions",
+        "StorageClass"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] Support Attach and Detach operations for ReadWriteOnce (RWO) volumes that use iSCSI and Fibre Channel plugins.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] Expose storage usage metrics",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * The available capacity of a given Persistent Volume (PV) is available by calling the Kubernetes metrics API.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] Volume plugin metrics",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * Success and latency metrics for all Kubernetes calls are available by calling the Kubernetes metrics API. You can request volume operations, including mount, unmount, attach, detach, provision, and delete.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] The PV spec for Azure File, CephFS, iSCSI, and Glusterfs is modified to reference namespaced resources.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] You can now customize the iSCSI initiator name per volume in the iSCSI volume plugin.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [stable] You can now specify the World Wide Identifier (WWID) for the volume identifier in the Fibre Channel volume plugin.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [beta] Reclaim policy in StorageClass",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * You can now configure the reclaim policy in StorageClass, instead of defaulting to `delete` for dynamically provisioned volumes.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "delete"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [alpha] Volume resizing",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * You can now increase the size of a volume by calling the Kubernetes API.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * For alpha, this feature increases only the size of the underlying volume. It does not support resizing the file system.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * For alpha, volume resizing supports only Gluster volumes.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [alpha] Provide capacity isolation and resource management for local ephemeral storage",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * You can now set container requests, container limits, and node allocatable reservations for the new `ephemeral-storage` resource.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ephemeral-storage"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * The `ephemeral-storage` resource includes all the disk space a container might consume with container overlay or scratch.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ephemeral-storage"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [alpha] Mount namespace propagation",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * The `VolumeMount.Propagation` field for `VolumeMount` in pod containers is now available.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "VolumeMount.Propagation",
+        "VolumeMount"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * You can now set `VolumeMount.Propagation` to `Bidirectional` to enable a particular mount for a container to propagate itself to the host or other containers.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "VolumeMount.Propagation",
+        "Bidirectional"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [alpha] Improve Flex volume deployment",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * Flex volume driver deployment is simplified in the following ways:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:     * New driver files can now be automatically discovered and initialized without requiring a kubelet or controller-manager restart.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:     * A sample DaemonSet to deploy Flexvolume drivers is now available.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage: * [prototype] Volume snapshots",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * You can now create a volume snapshot by calling the Kubernetes API.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * Note that the prototype does not support quiescing before snapshot, so snapshots might be inconsistent.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Storage:   * In the prototype phase, this feature is external to the core Kubernetes. It's available at https://github.com/kubernetes-incubator/external-storage/tree/master/snapshot.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Federated Jobs: Federated Jobs that are automatically deployed to multiple clusters are now supported. Cluster selection and weighting determine how Job parallelism and completions are spread across clusters. Federated Job status reflects the aggregate status across all underlying cluster jobs.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[alpha] Federated Horizontal Pod Autoscaling (HPA): Federated HPAs are similar to the traditional Kubernetes HPAs, except that they span multiple clusters. Creating a Federated HPA targeting multiple clusters ensures that cluster-level autoscalers are consistently deployed across those clusters, and dynamically managed to ensure that autoscaling can occur optimially in all clusters, within a set of global constraints on the total number of replicas permitted across all clusters.  If replicas are not required in some clusters due to low system load or insufficient quota or capacity in those clusters, additional replicas are made available to the autoscalers in other clusters if required.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Support for custom metrics in the Horizontal Pod Autoscaler is now at v1beta1. The associated metrics APIs (custom metrics and resource/master metrics) were also moved to v1beta1. For more information, see [Before Upgrading](#before-upgrading).",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * `metrics-server` is now the recommended way to provide the resource metrics API. Deploy `metrics-server` as an add-on in the same way that you deploy Heapster. ##### Cluster Autoscaler",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "metrics-server"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Cluster autoscaler is now GA",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Cluster support size is increased to 1000 nodes",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Respect graceful pod termination of up to 10 minutes",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Handle zone stock-outs and failures",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Autoscaling and Metrics: * Improve monitoring and error reporting",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI): * [alpha] Add a CRI validation test suite and CRI command-line tools. ([#292](https://github.com/kubernetes/enhancements/issues/292), [@feiskyer](https://github.com/feiskyer))",
+      "prs": [
+        "292"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI): * [stable] [cri-o](https://github.com/kubernetes-incubator/cri-o): CRI implementation for OCI-based runtimes [[@mrunalp](https://github.com/mrunalp)]",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Passed all the Kubernetes 1.7 end-to-end conformance test suites.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Verification against Kubernetes 1.8 is planned soon after the release.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI): * [stable] [frakti](https://github.com/kubernetes/frakti): CRI implementation for hypervisor-based runtimes is now v1.1. [[@feiskyer](https://github.com/feiskyer)]",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Enhance CNI plugin compatibility, supports flannel, calico, weave and so on.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Pass all CRI validation conformance tests and node end-to-end conformance tests.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Add experimental Unikernel support.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI): * [alpha] [cri-containerd](https://github.com/kubernetes-incubator/cri-containerd): CRI implementation for containerd is now v1.0.0-alpha.0, [[@Random-Liu](https://github.com/Random-Liu)]",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Feature complete. Support the full CRI API defined in v1.8.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * Pass all the CRI validation tests and regular node end-to-end tests.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * An ansible playbook is provided to configure a Kubernetes cri-containerd cluster with kubeadm.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI): * Add support in Kubelet to consume container metrics via CRI. [[@yguo0905](https://github.com/yguo0905)]",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Container Runtime Interface (CRI):   * There are known bugs that result in errors when querying Kubelet's stats summary API. We expect to fix them in v1.8.1.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * [alpha] Kubelet now supports alternative container-level CPU affinity policies by using the new CPU manager. ([#375](https://github.com/kubernetes/enhancements/issues/375), [@sjenning](https://github.com/sjenning), [@ConnorDoyle](https://github.com/ConnorDoyle))",
+      "prs": [
+        "375"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * [alpha] Applications may now request pre-allocated hugepages by using the new `hugepages` resource in the container resource requests. ([#275](https://github.com/kubernetes/enhancements/issues/275), [@derekwaynecarr](https://github.com/derekwaynecarr))",
+      "prs": [
+        "275"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "hugepages"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * [alpha] Add support for dynamic Kubelet configuration. ([#281](https://github.com/kubernetes/enhancements/issues/281), [@mtaufen](https://github.com/mtaufen))",
+      "prs": [
+        "281"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * [alpha] Add the Hardware Device Plugins API. ([#368](https://github.com/kubernetes/enhancements/issues/368), [[@jiayingz](https://github.com/jiayingz)], [[@RenaudWasTaken](https://github.com/RenaudWasTaken)])",
+      "prs": [
+        "368"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * [stable] Upgrade cAdvisor to v0.27.1 with the enhancement for node monitoring. [[@dashpole](https://github.com/dashpole)]",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * Fix journalctl leak",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * Fix container memory rss",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * Fix incorrect CPU usage with 4.7 kernel",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * OOM parser uses kmsg",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * Add hugepages support",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet:   * Add CRI-O support",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * Sharing a PID namespace between containers in a pod is disabled by default in version 1.8. To enable for a node, use the `--docker-disable-shared-pid=false` kubelet flag. Be aware that PID namespace sharing requires Docker version greater than or equal to 1.13.1.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * Fix issues related to the eviction manager.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * Fix inconsistent Prometheus cAdvisor metrics.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubelet: * Fix issues related to the local storage allocatable feature.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * [GA] The RBAC API group has been promoted from v1beta1 to v1. No API changes were introduced.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * [beta] Advanced auditing has been promoted from alpha to beta. The webhook and logging policy formats have changed since alpha, and may require modification.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * [beta] Kubelet certificate rotation through the certificates API has been promoted from alpha to beta. RBAC cluster roles for the certificates controller have been added for common uses of the certificates API, such as the kubelet's.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * [beta] SelfSubjectRulesReview, an API that lets a user see what actions they can perform with a namespace, has been added to the authorization.k8s.io API group. This bulk query is intended to enable UIs to show/hide actions based on the end user, and for users to quickly reason about their own permissions.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * [alpha] Building on the 1.7 work to allow encryption of resources such as secrets, a mechanism to store resource encryption keys in external Key Management Systems (KMS) was introduced. This complements the original file-based storage and allows integration with multiple KMS. A Google Cloud KMS plugin was added and will be usable once the Google side of the integration is complete.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * Websocket requests may now authenticate to the API server by passing a bearer token in a websocket subprotocol of the form `base64url.bearer.authorization.k8s.io.<base64url-encoded-bearer-token>`. ([#47740](https://github.com/kubernetes/kubernetes/pull/47740), [@liggitt](https://github.com/liggitt))",
+      "prs": [
+        "47740"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * Advanced audit now correctly reports impersonated user info. ([#48184](https://github.com/kubernetes/kubernetes/pull/48184), [@CaoShuFeng](https://github.com/CaoShuFeng))",
+      "prs": [
+        "48184"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * Advanced audit policy now supports matching subresources and resource names, but the top level resource no longer matches the subresouce. For example \"pods\" no longer matches requests to the logs subresource of pods. Use \"pods/logs\" to match subresources. ([#48836](https://github.com/kubernetes/kubernetes/pull/48836), [@ericchiang](https://github.com/ericchiang))",
+      "prs": [
+        "48836"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * Previously a deleted service account or bootstrapping token secret would be considered valid until it was reaped. It is now invalid as soon as the `deletionTimestamp` is set. ([#48343](https://github.com/kubernetes/kubernetes/pull/48343), [@deads2k](https://github.com/deads2k); [#49057](https://github.com/kubernetes/kubernetes/pull/49057), [@ericchiang](https://github.com/ericchiang))",
+      "prs": [
+        "48343",
+        "49057"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "deletionTimestamp"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The `--insecure-allow-any-token` flag has been removed from the API server. Users of the flag should use impersonation headers instead for debugging. ([#49045](https://github.com/kubernetes/kubernetes/pull/49045), [@ericchiang](https://github.com/ericchiang))",
+      "prs": [
+        "49045"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The NodeRestriction admission plugin now allows a node to evict pods bound to itself. ([#48707](https://github.com/kubernetes/kubernetes/pull/48707), [@danielfm](https://github.com/danielfm))",
+      "prs": [
+        "48707"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The OwnerReferencesPermissionEnforcement admission plugin now requires `update` permission on the `finalizers` subresource of the referenced owner in order to set `blockOwnerDeletion` on an owner reference. ([#49133](https://github.com/kubernetes/kubernetes/pull/49133), [@deads2k](https://github.com/deads2k))",
+      "prs": [
+        "49133"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "update",
+        "finalizers",
+        "blockOwnerDeletion"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The SubjectAccessReview API in the `authorization.k8s.io` API group now allows providing the user uid. ([#49677](https://github.com/kubernetes/kubernetes/pull/49677), [@dims](https://github.com/dims))",
+      "prs": [
+        "49677"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "authorization.k8s.io"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * After a kubelet rotates its client cert, it now closes its connections to the API server to force a handshake using the new cert. Previously, the kubelet could keep its existing connection open, even if the cert used for that connection was expired and rejected by the API server. ([#49899](https://github.com/kubernetes/kubernetes/pull/49899), [@ericchiang](https://github.com/ericchiang))",
+      "prs": [
+        "49899"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * PodSecurityPolicies can now specify a whitelist of allowed paths for host volumes. ([#50212](https://github.com/kubernetes/kubernetes/pull/50212), [@jhorwit2](https://github.com/jhorwit2))",
+      "prs": [
+        "50212"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * API server authentication now caches successful bearer token authentication results for a few seconds. ([#50258](https://github.com/kubernetes/kubernetes/pull/50258), [@liggitt](https://github.com/liggitt))",
+      "prs": [
+        "50258"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The OpenID Connect authenticator can now use a custom prefix, or omit the default prefix, for username and groups claims through the --oidc-username-prefix and --oidc-groups-prefix flags. For example, the authenticator can map a user with the username \"jane\" to \"google:jane\" by supplying the \"google:\" username prefix. ([#50875](https://github.com/kubernetes/kubernetes/pull/50875), [@ericchiang](https://github.com/ericchiang))",
+      "prs": [
+        "50875"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * The bootstrap token authenticator can now configure tokens with a set of extra groups in addition to `system:bootstrappers`. ([#50933](https://github.com/kubernetes/kubernetes/pull/50933), [@mattmoyer](https://github.com/mattmoyer))",
+      "prs": [
+        "50933"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * Advanced audit allows logging failed login attempts. ([#51119](https://github.com/kubernetes/kubernetes/pull/51119), [@soltysh](https://github.com/soltysh))",
+      "prs": [
+        "51119"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Auth: * A `kubectl auth reconcile` subcommand has been added for applying RBAC resources. When passed a file which contains RBAC roles, rolebindings, clusterroles, or clusterrolebindings, it will compute covers and add the missing rules. ([#51636](https://github.com/kubernetes/kubernetes/pull/51636), [@deads2k](https://github.com/deads2k))",
+      "prs": [
+        "51636"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubeadm: * [beta] A new `upgrade` subcommand allows you to automatically upgrade a self-hosted cluster created with kubeadm. ([#296](https://github.com/kubernetes/enhancements/issues/296), [@luxas](https://github.com/luxas))",
+      "prs": [
+        "296"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "upgrade"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "kubeadm: * [alpha] An experimental self-hosted cluster can now easily be created with `kubeadm init`. Enable the feature by setting the SelfHosting feature gate to true: `--feature-gates=SelfHosting=true` ([#296](https://github.com/kubernetes/enhancements/issues/296), [@luxas](https://github.com/luxas))",
+      "prs": [
+        "296"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubeadm:    * **NOTE:** Self-hosting will be the default way to host the control plane in the next release, v1.9",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kubeadm: * [alpha] A new `phase` subcommand supports performing only subtasks of the full `kubeadm init` flow. Combined with fine-grained configuration, kubeadm is now more easily consumable by higher-level provisioning tools like kops or GKE. ([#356](https://github.com/kubernetes/enhancements/issues/356), [@luxas](https://github.com/luxas))",
+      "prs": [
+        "356"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "phase"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "kubeadm:    * **NOTE:** This command is currently staged under `kubeadm alpha phase` and will be graduated to top level in a future release.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kops: * [alpha] Added support for targeting bare metal (or non-cloudprovider) machines. ([#360](https://github.com/kubernetes/enhancements/issues/360), [@justinsb](https://github.com/justinsb)).",
+      "prs": [
+        "360"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kops: * [alpha] kops now supports [running as a server](https://github.com/kubernetes/kops/blob/master/docs/api-server/README.md). ([#359](https://github.com/kubernetes/enhancements/issues/359), [@justinsb](https://github.com/justinsb))",
+      "prs": [
+        "359"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kops: * [beta] GCE support is promoted from alpha to beta. ([#358](https://github.com/kubernetes/enhancements/issues/358), [@justinsb](https://github.com/justinsb)).",
+      "prs": [
+        "358"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Cluster Discovery/Bootstrap: * [beta] The authentication and verification mechanism called Bootstrap Tokens is improved. Use Bootstrap Tokens to easily add new node identities to a cluster. ([#130](https://github.com/kubernetes/enhancements/issues/130), [@luxas](https://github.com/luxas), [@jbeda](https://github.com/jbeda)).",
+      "prs": [
+        "130"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Multi-platform: * [alpha] The Conformance e2e test suite now passes on the arm, arm64, and ppc64le platforms. ([#288](https://github.com/kubernetes/enhancements/issues/288), [@luxas](https://github.com/luxas), [@mkumatag](https://github.com/mkumatag), [@ixdy](https://github.com/ixdy))",
+      "prs": [
+        "288"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Cloud Providers: * [alpha] Support is improved for the pluggable, out-of-tree and out-of-core cloud providers. ([#88](https://github.com/kubernetes/enhancements/issues/88), [@wlan0](https://github.com/wlan0))",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "network-policy: * [beta] Apply NetworkPolicy based on CIDR ([#50033](https://github.com/kubernetes/kubernetes/pull/50033), [@cmluciano](https://github.com/cmluciano))",
+      "prs": [
+        "50033"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "network-policy: * [beta] Support EgressRules in NetworkPolicy ([#51351](https://github.com/kubernetes/kubernetes/pull/51351), [@cmluciano](https://github.com/cmluciano))",
+      "prs": [
+        "51351"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kube-proxy ipvs mode: [alpha] Support ipvs mode for kube-proxy([#46580](https://github.com/kubernetes/kubernetes/pull/46580), [@haibinxie](https://github.com/haibinxie))",
+      "prs": [
+        "46580"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kube-apiserver: * Fixed an issue with `APIService` auto-registration. This issue affected rolling restarts of HA API servers that added or removed API groups being served.([#51921](https://github.com/kubernetes/kubernetes/pull/51921))",
+      "prs": [
+        "51921"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "APIService"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "kube-apiserver: * [Alpha] The Kubernetes API server now supports the ability to break large LIST calls into multiple smaller chunks. A client can specify a limit to the number of results to return. If more results exist, a token is returned that allows the client to continue the previous list call repeatedly until all results are retrieved.  The resulting list is identical to a list call that does not perform chunking, thanks to capabilities provided by etcd3.  This allows the server to use less memory and CPU when very large lists are returned. This feature is gated as APIListChunking and is not enabled by default. The 1.9 release will begin using this by default.([#48921](https://github.com/kubernetes/kubernetes/pull/48921))",
+      "prs": [
+        "48921"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "kube-apiserver: * Pods that are marked for deletion and have exceeded their grace period, but are not yet deleted, no longer count toward the resource quota.([#46542](https://github.com/kubernetes/kubernetes/pull/46542))",
+      "prs": [
+        "46542"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Dynamic Admission Control: * Pod spec is mutable when the pod is uninitialized. The API server requires the pod spec to be valid even if it's uninitialized. Updating the status field of uninitialized pods is invalid.([#51733](https://github.com/kubernetes/kubernetes/pull/51733))",
+      "prs": [
+        "51733"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Dynamic Admission Control: * Use of the alpha initializers feature now requires enabling the `Initializers` feature gate. This feature gate is automatically enabled if the `Initializers` admission plugin is enabled.([#51436](https://github.com/kubernetes/kubernetes/pull/51436))",
+      "prs": [
+        "51436"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Initializers"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Dynamic Admission Control: * [Action required] The validation rule for metadata.initializers.pending[x].name is tightened. The initializer name must contain at least three segments, separated by dots. You can create objects with pending initializers and not rely on the API server to add pending initializers according to `initializerConfiguration`. If you do so, update the initializer name in the existing objects and the configuration files to comply with the new validation rule.([#51283](https://github.com/kubernetes/kubernetes/pull/51283))",
+      "prs": [
+        "51283"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "initializerConfiguration"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Dynamic Admission Control: * The webhook admission plugin now works even if the API server and the nodes are in two separate networks,for example, in GKE. The webhook admission plugin now lets the webhook author use the DNS name of the service as the CommonName when generating the server cert for the webhook. Action required: Regenerate the server cert for the admission webhooks. Previously, the CN value could be ignored while generating the server cert for the admission webhook. Now you must set it to the DNS name of the webhook service: `<service.Name>.<service.Namespace>.svc`.([#50476](https://github.com/kubernetes/kubernetes/pull/50476))",
+      "prs": [
+        "50476"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Custom Resource Definitions (CRDs): * [alpha] The CustomResourceDefinition API can now optionally [validate custom objects](https://kubernetes.io/docs/tasks/access-kubernetes-api/extend-api-custom-resource-definitions/#validation) based on a JSON schema provided in the CRD spec. Enable this alpha feature with the `CustomResourceValidation` feature gate in `kube-apiserver`.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CustomResourceValidation",
+        "kube-apiserver"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Garbage Collector: * The garbage collector now supports custom APIs added via Custom Resource Definitions or aggregated API servers. The garbage collector controller refreshes periodically. Therefore, expect a latency of about 30 seconds between when an API is added and when the garbage collector starts to manage it.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Monitoring/Prometheus: * [action required] The WATCHLIST calls are now reported as WATCH verbs in prometheus for the apiserver_request_* series.  A new \"scope\" label is added to all apiserver_request_* values that is either 'cluster', 'resource', or 'namespace' depending on which level the query is performed at.([#52237](https://github.com/kubernetes/kubernetes/pull/52237))",
+      "prs": [
+        "52237"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Go Client: * Add support for client-side spam filtering of events([#47367](https://github.com/kubernetes/kubernetes/pull/47367))",
+      "prs": [
+        "47367"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "bugfixes": [],
+  "other": [],
+  "patch_releases": [
+    {
+      "tag": "v1.8.9",
+      "total_items": 12,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fixes CVE-2017-1002101 - See https://issue.k8s.io/60813 for details ([#61046](https://github.com/kubernetes/kubernetes/pull/61046), [@liggitt](https://github.com/liggitt))",
+          "prs": [
+            "61046"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Changes secret, configMap, downwardAPI and projected volumes to mount read-only, instead of allowing applications to write data and then reverting it automatically. Until version 1.11, setting the feature gate ReadOnlyAPIDataVolumes=false will preserve the old behavior. ([#58720](https://github.com/kubernetes/kubernetes/pull/58720), [@joelsmith](https://github.com/joelsmith))",
+          "prs": [
+            "58720"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Update dashboard version to v1.8.3 ([#57326](https://github.com/kubernetes/kubernetes/pull/57326), [@floreks](https://github.com/floreks))",
+          "prs": [
+            "57326"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fixes a case when Deployment with recreate strategy could get stuck on old failed Pod. ([#60496](https://github.com/kubernetes/kubernetes/pull/60496), [@tnozicka](https://github.com/tnozicka))",
+          "prs": [
+            "60496"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix race condition issue when detaching azure disk ([#60183](https://github.com/kubernetes/kubernetes/pull/60183), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "60183"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix kubelet PVC stale metrics ([#59170](https://github.com/kubernetes/kubernetes/pull/59170), [@cofyc](https://github.com/cofyc))",
+          "prs": [
+            "59170"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Restores the ability of older clients to delete and scale jobs with initContainers ([#59880](https://github.com/kubernetes/kubernetes/pull/59880), [@liggitt](https://github.com/liggitt))",
+          "prs": [
+            "59880"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix race causing apiserver crashes during etcd healthchecking ([#60069](https://github.com/kubernetes/kubernetes/pull/60069), [@wojtek-t](https://github.com/wojtek-t))",
+          "prs": [
+            "60069"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.8.8",
+      "total_items": 19,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Configurable etcd quota backend bytes in GCE ([#59259](https://github.com/kubernetes/kubernetes/pull/59259), [@wojtek-t](https://github.com/wojtek-t))",
+          "prs": [
+            "59259"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Cluster Autoscaler 1.0.4 ([#59271](https://github.com/kubernetes/kubernetes/pull/59271), [@mwielgus](https://github.com/mwielgus))",
+          "prs": [
+            "59271"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Prevent kubelet from getting wedged if initialization of modules returns an error. ([#59020](https://github.com/kubernetes/kubernetes/pull/59020), [@brendandburns](https://github.com/brendandburns))",
+          "prs": [
+            "59020"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Updates Calico version to v2.6.7 (Fixed a bug where Felix would crash when parsing a NetworkPolicy with a named port. See https://github.com/projectcalico/calico/releases/tag/v2.6.7) ([#59130](https://github.com/kubernetes/kubernetes/pull/59130), [@caseydavenport](https://github.com/caseydavenport))",
+          "prs": [
+            "59130"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Configurable etcd compaction frequency in GCE ([#59106](https://github.com/kubernetes/kubernetes/pull/59106), [@wojtek-t](https://github.com/wojtek-t))",
+          "prs": [
+            "59106"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * [GCE] Apiserver uses `InternalIP` as the most preferred kubelet address type by default. ([#59019](https://github.com/kubernetes/kubernetes/pull/59019), [@MrHohn](https://github.com/MrHohn))",
+          "prs": [
+            "59019"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": [
+            "InternalIP"
+          ]
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Updated priority of mirror pod according to PriorityClassName. ([#58485](https://github.com/kubernetes/kubernetes/pull/58485), [@k82cn](https://github.com/k82cn))",
+          "prs": [
+            "58485"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix kubelet to correctly umounts mount points for glusterfs when transport endpoint is not connected and nfs when there is a stale file handle ([#58660](https://github.com/kubernetes/kubernetes/pull/58660), [@humblec](https://github.com/humblec))",
+          "prs": [
+            "58660"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.8.7",
+      "total_items": 8,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix device name change issue for azure disk: add remount logic ([#57953](https://github.com/kubernetes/kubernetes/pull/57953), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "57953"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * GCE: Allows existing internal load balancers to continue using an outdated subnetwork  ([#57861](https://github.com/kubernetes/kubernetes/pull/57861), [@nicksardo](https://github.com/nicksardo))",
+          "prs": [
+            "57861"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix azure disk not available issue when device name changed ([#57549](https://github.com/kubernetes/kubernetes/pull/57549), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "57549"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Allow kubernetes components to react to SIGTERM signal and shutdown gracefully. ([#57756](https://github.com/kubernetes/kubernetes/pull/57756), [@mborsz](https://github.com/mborsz))",
+          "prs": [
+            "57756"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix incorrect error info when creating an azure file PVC failed ([#56550](https://github.com/kubernetes/kubernetes/pull/56550), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "56550"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * GCE: Fixes ILB creation on automatic networks with manually created subnetworks. ([#57351](https://github.com/kubernetes/kubernetes/pull/57351), [@nicksardo](https://github.com/nicksardo))",
+          "prs": [
+            "57351"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Configurable liveness probe initial delays for etcd and kube-apiserver in GCE ([#57749](https://github.com/kubernetes/kubernetes/pull/57749), [@wojtek-t](https://github.com/wojtek-t))",
+          "prs": [
+            "57749"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fixes a bug where if an error was returned that was not an `autorest.DetailedError` we would return `\"not found\", nil` which caused nodes to go to `NotReady` state. ([#57484](https://github.com/kubernetes/kubernetes/pull/57484), [@brendandburns](https://github.com/brendandburns))",
+          "prs": [
+            "57484"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": [
+            "autorest.DetailedError",
+            "NotReady"
+          ]
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.8.6",
+      "total_items": 10,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * change default azure file/dir mode to 0755 ([#56551](https://github.com/kubernetes/kubernetes/pull/56551), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "56551"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Retry 'connection refused' errors when setting up clusters on GCE. ([#57394](https://github.com/kubernetes/kubernetes/pull/57394), [@mborsz](https://github.com/mborsz))",
+          "prs": [
+            "57394"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * enable flexvolume on Windows node ([#56921](https://github.com/kubernetes/kubernetes/pull/56921), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "56921"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add prometheus metrics for the PodSecurityPolicy admission controller ([#57346](https://github.com/kubernetes/kubernetes/pull/57346), [@tallclair](https://github.com/tallclair))",
+          "prs": [
+            "57346"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix CreateVolume func: use search mode instead ([#54687](https://github.com/kubernetes/kubernetes/pull/54687), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "54687"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * remove time waiting after create storage account (save 25s) ([#56679](https://github.com/kubernetes/kubernetes/pull/56679), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "56679"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add pvc as part of equivalence hash ([#56577](https://github.com/kubernetes/kubernetes/pull/56577), [@resouer](https://github.com/resouer))",
+          "prs": [
+            "56577"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * fix azure disk storage account init issue ([#55927](https://github.com/kubernetes/kubernetes/pull/55927), [@andyzhangx](https://github.com/andyzhangx))",
+          "prs": [
+            "55927"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    },
+    {
+      "tag": "v1.8.5",
+      "total_items": 19,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix scheduler cache panic when updating pod conditions. ([#56731](https://github.com/kubernetes/kubernetes/pull/56731), [@bsalamat](https://github.com/bsalamat))",
+          "prs": [
+            "56731"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add new Prometheus metric that monitors the remaining lifetime of certificates used to authenticate requests to the API server. ([#50387](https://github.com/kubernetes/kubernetes/pull/50387), [@jcbsmpsn](https://github.com/jcbsmpsn))",
+          "prs": [
+            "50387"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * scheduler: Fix issue were a new pod with affinity gets stuck at `creating` because the node had been deleted but the pod still exists. ([#56835](https://github.com/kubernetes/kubernetes/pull/56835), [@wenlxie](https://github.com/wenlxie))",
+          "prs": [
+            "56835"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": [
+            "creating"
+          ]
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Updated Dashboard add-on to version 1.8.0: The Dashboard add-on now deploys with https enabled. The Dashboard can be accessed via kubectl proxy at http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/. The /ui redirect is deprecated and will be removed in 1.10. ([#53046](https://github.com/kubernetes/kubernetes/pull/53046), [@maciaszczykm](https://github.com/maciaszczykm))",
+          "prs": [
+            "53046"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix issue where masquerade rules are flushed in GCE k8s clusters. ([#56729](https://github.com/kubernetes/kubernetes/pull/56729), [@dnardo](https://github.com/dnardo))",
+          "prs": [
+            "56729"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * kubelet: Fix bug where `runAsUser: MustRunAsNonRoot` strategy didn't reject a pod with a non-numeric `USER`. ([#56708](https://github.com/kubernetes/kubernetes/pull/56708), [@php-coder](https://github.com/php-coder))",
+          "prs": [
+            "56708"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": [
+            "USER"
+          ]
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Add iptables rules to allow Pod traffic even when default iptables policy is to reject. ([#52569](https://github.com/kubernetes/kubernetes/pull/52569), [@tmjd](https://github.com/tmjd))",
+          "prs": [
+            "52569"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Other notable changes: * Fix a bug in GCE multizonal clusters where PersistentVolumes were sometimes created in zones without nodes. ([#52322](https://github.com/kubernetes/kubernetes/pull/52322), [@davidz627](https://github.com/davidz627))",
+          "prs": [
+            "52322"
+          ],
+          "keps": [],
+          "sigs": [],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": []
+    }
+  ]
+}

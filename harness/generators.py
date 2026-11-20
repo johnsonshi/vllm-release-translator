@@ -975,7 +975,7 @@ def generate_v4_adoption_engine(
         "",
         "### Complete Feature Graduation & Enhancement Rollup",
     ])
-    for it in primary_pool[:195]:
+    for it in primary_pool[:320]:
         cites = _format_citations(it.get("prs", [])[:2], it.get("keps", [])[:2], project)
         lines.append(f"- **[{it.get('category', 'Enhancement')}]** {_clean_summary_text(it.get('text', ''), 340)} ({cites})")
 
@@ -1183,7 +1183,7 @@ def generate_v5_progressive_clarity_engine(
         "",
         "### Complete Feature Graduation & Enhancement Rollup",
     ])
-    for it in primary_pool[:195]:
+    for it in primary_pool[:320]:
         cites = _format_citations(it.get("prs", [])[:2], it.get("keps", [])[:2], project)
         lines.append(f"- **[{it.get('category', 'Enhancement')}]** {_clean_single_engineering_bullet(it.get('text', ''), 300)} ({cites})")
 

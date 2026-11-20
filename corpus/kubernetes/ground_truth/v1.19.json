@@ -1,0 +1,115 @@
+{
+  "project": "kubernetes",
+  "version": "v1.19",
+  "blog_title": "Kubernetes  1.19: Accentuate the Paw-sitive",
+  "release_date": "2020-08-26",
+  "reported_enhancements_count": 34,
+  "spotlight_count": 8,
+  "spotlights": [
+    {
+      "heading": "Increase Kubernetes support window to one year",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "A survey conducted in early 2019 by the [Long Term Support (LTS) working group](https://github.com/kubernetes/community/tree/master/wg-lts#readme) showed that a significant subset of Kubernetes end-users fail to upgrade within the current 9-month support period. This, and other responses from the survey, suggest that 30% of users would be able to keep their deployments on supported versions if the patch support period were extended to 12-14 months. This appears to be true regardless of whether the users are on self build or commercially vendored distributions. An extension would thus lead to m"
+    },
+    {
+      "heading": "Storage capacity tracking",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Traditionally, the Kubernetes scheduler was based on the assumptions that additional persistent storage is available everywhere in the cluster and has infinite capacity. Topology constraints addressed the first point, but up to now pod scheduling was still done without considering that the remaining storage capacity may not be enough to start a new pod. [Storage capacity tracking](/docs/concepts/storage/storage-capacity/), a new alpha feature, addresses that by adding an API for a CSI driver to report storage capacity and uses that information in the Kubernetes scheduler when choosing a node f"
+    },
+    {
+      "heading": "Ingress graduates to General Availability",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In terms of moving the Ingress API towards GA, the API itself has been available in beta for so long that it has attained de facto GA status through usage and adoption (both by users and by load balancer / ingress controller providers). Abandoning it without a full replacement is not a viable approach. It is clearly a useful API and captures a non-trivial set of use cases. At this point, it seems more prudent to declare the current API as something the community will support as a V1, codifying its status, while working on either a V2 Ingress API or an entirely different API with a superset of "
+    },
+    {
+      "heading": "Structured logging",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "Infof",
+        "Errorf",
+        "InfoS",
+        "ErrorS"
+      ],
+      "summary": "Before v1.19, logging in the Kubernetes control plane couldn't guarantee any uniform structure for log messages and references to Kubernetes objects in those logs. This makes parsing, processing, storing, querying and analyzing logs hard and forces administrators and developers to rely on ad-hoc solutions in most cases based on some regular expressions. Due to those problems any analytical solution based on those logs is hard to implement and maintain.  #### New klog methods This Kubernetes release introduces new methods to the _klog_ library that provide a more structured interface for format"
+    },
+    {
+      "heading": "Client TLS certificate rotation for kubelet",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "A kubelet authenticates the kubelet to the kube-apiserver using a private key and certificate. The certificate is supplied to the kubelet when it is first booted, via an out-of-cluster mechanism. Since Kubernetes v1.8, clusters have included a (beta) process for obtaining the initial cert/key pair and rotating it as expiration of the certificate approaches. In Kubernetes v1.19 this graduates to stable.  During the kubelet start-up sequence, the filesystem is scanned for an existing cert/key pair, which is managed by the certificate manager. In the case that a cert/key is available it will be l"
+    },
+    {
+      "heading": "Graduated to Stable",
+      "stage": "Stable",
+      "keps": [
+        "135",
+        "266",
+        "279",
+        "383",
+        "1453",
+        "1513",
+        "1547"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [Seccomp](https://github.com/kubernetes/enhancements/issues/135) * [Kubelet client TLS certificate rotation](https://github.com/kubernetes/enhancements/issues/266) * [Limit node access to API](https://github.com/kubernetes/enhancements/issues/279) * [Redesign Event API](https://github.com/kubernetes/enhancements/issues/383) * [Graduate Ingress to V1](https://github.com/kubernetes/enhancements/issues/1453) * [CertificateSigningRequest API](https://github.com/kubernetes/enhancements/issues/1513)"
+    },
+    {
+      "heading": "Major Changes",
+      "stage": "Unspecified",
+      "keps": [
+        "693",
+        "752",
+        "1498"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [Node Topology Manager](https://github.com/kubernetes/enhancements/issues/693) * [New Endpoint API](https://github.com/kubernetes/enhancements/issues/752) * [Increase Kubernetes support window to one year](https://github.com/kubernetes/enhancements/issues/1498)"
+    },
+    {
+      "heading": "Other Notable Features",
+      "stage": "Unspecified",
+      "keps": [
+        "1451",
+        "1513",
+        "1412"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [Run multiple Scheduling Profiles](https://github.com/kubernetes/enhancements/issues/1451) * [CertificateSigningRequest API](https://github.com/kubernetes/enhancements/issues/1513) * [Immutable Secrets and ConfigMaps](https://github.com/kubernetes/enhancements/issues/1412)"
+    }
+  ],
+  "ground_truth_keps": [
+    "135",
+    "266",
+    "279",
+    "383",
+    "1453",
+    "1513",
+    "1547",
+    "693",
+    "752",
+    "1498",
+    "1451",
+    "1412"
+  ],
+  "ground_truth_identifiers": [
+    "Infof",
+    "Errorf",
+    "InfoS",
+    "ErrorS"
+  ]
+}

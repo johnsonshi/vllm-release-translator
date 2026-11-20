@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.30: Uwubernetes",
   "release_date": "2024-04-17",
   "reported_enhancements_count": 45,
-  "spotlight_count": 24,
+  "spotlight_count": 17,
   "spotlights": [
     {
       "heading": "Robust VolumeManager reconstruction after kubelet restart ()",
@@ -159,69 +159,6 @@
       "prs": [],
       "identifiers": [],
       "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.30.md).  This release includes a total of 17 enhancements promoted to Stable:"
-    },
-    {
-      "heading": "Deprecations and removals",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "#### Removed the SecurityContextDeny admission plugin, deprecated since v1.27  ([SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth), [SIG Security](https://github.com/kubernetes/community/tree/master/sig-security), and [SIG Testing](https://github.com/kubernetes/community/tree/master/sig-testing)) With the removal of the SecurityContextDeny admission plugin, the Pod Security Admission plugin, available since v1.25, is recommended instead."
-    },
-    {
-      "heading": "Structured parameters for dynamic resource allocation ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "[Dynamic resource allocation](/docs/concepts/resource-management/dynamic-resource-allocation/) was added to Kubernetes as an alpha feature in v1.26. It defines an alternative to the traditional device-plugin API for requesting access to third-party resources. By design, dynamic resource allocation uses parameters for resources that are completely opaque to core Kubernetes. This approach poses a problem for the Cluster Autoscaler (CA) or any higher-level controller that needs to make decisions for a group of pods (e.g. a job scheduler). It cannot simulate the effect of"
-    },
-    {
-      "heading": "Node memory swap support ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "NodeSwap",
-        "UnlimitedSwap",
-        "NoSwap",
-        "LimitedSwap"
-      ],
-      "summary": "In Kubernetes v1.30, memory swap support on Linux nodes gets a big change to how it works - with a strong emphasis on improving system stability. In previous Kubernetes versions, the `NodeSwap` feature gate was disabled by default, and when enabled, it used `UnlimitedSwap` behavior as the default behavior. To achieve better stability, `UnlimitedSwap` behavior (which might compromise node stability) will be removed in v1.30."
-    },
-    {
-      "heading": "Support user namespaces in pods ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "[User namespaces](/docs/concepts/workloads/pods/user-namespaces) is a Linux-only feature that better isolates pods to prevent or mitigate several CVEs rated high/critical, including [CVE-2024-21626](https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv), published in January 2024. In Kubernetes 1.30, support for user namespaces is migrating to beta and now supports pods with and without volumes, custom UID/GID ranges, and more!"
-    },
-    {
-      "heading": "Structured authorization configuration ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Support for [structured authorization configuration](/docs/reference/access-authn-authz/authorization/#configuring-the-api-server-using-an-authorization-config-file) is moving to beta and will be enabled by default. This feature enables the creation of authorization chains with multiple webhooks with well-defined parameters that validate requests in a particular order and allows fine-grained control \u2013 such as explicit Deny on failures. The configuration file approach even allows you to specify [CEL](/docs/reference/using-api/cel/) rules"
-    },
-    {
-      "heading": "Container resource based pod autoscaling ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "ContainerResource"
-      ],
-      "summary": "Horizontal pod autoscaling based on `ContainerResource` metrics will graduate to stable in v1.30. This new behavior for HorizontalPodAutoscaler allows you to configure automatic scaling based on the resource usage for individual containers, rather than the aggregate resource use over a Pod. See our [previous article](/blog/2023/05/02/hpa-container-resource-metric/) for further details, or read [container resource metrics](/docs/tasks/run-application/horizontal-pod-autoscale/#container-resource-metrics)."
-    },
-    {
-      "heading": "CEL for admission control ()",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Integrating Common Expression Language (CEL) for admission control in Kubernetes introduces a more dynamic and expressive way of evaluating admission requests. This feature allows complex, fine-grained policies to be defined and enforced directly through the Kubernetes API, enhancing security and governance capabilities without compromising performance or flexibility.  CEL's addition to Kubernetes admission control empowers cluster administrators to craft intricate"
     }
   ],
   "ground_truth_keps": [],
@@ -236,11 +173,6 @@
     "SELinuxMountReadWriteOncePod",
     "SELinuxMount",
     "ServiceTrafficDistribution",
-    "PreferClose",
-    "NodeSwap",
-    "UnlimitedSwap",
-    "NoSwap",
-    "LimitedSwap",
-    "ContainerResource"
+    "PreferClose"
   ]
 }

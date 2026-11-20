@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.31: Elli",
   "release_date": "2024-08-13",
   "reported_enhancements_count": 45,
-  "spotlight_count": 23,
+  "spotlight_count": 15,
   "spotlights": [
     {
       "heading": "AppArmor support is now stable",
@@ -160,48 +160,6 @@
       "summary": "By enabling the feature gate `AnonymousAuthConfigurableEndpoints` users can now use the authentication configuration file to configure the endpoints that can be accessed by anonymous requests.  This allows users to protect themselves against RBAC misconfigurations that can give anonymous users broad access to the cluster.       This work was done as a part of [KEP #4633](https://github.com/kubernetes/enhancements/issues/4633) and by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth)."
     },
     {
-      "heading": "Graduations to Stable",
-      "stage": "Stable",
-      "keps": [
-        "3762",
-        "2305",
-        "3836",
-        "4009",
-        "4569",
-        "3017",
-        "3329",
-        "3715",
-        "3335",
-        "2185"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 11 enhancements promoted to Stable:  * [PersistentVolume last phase transition time](https://github.com/kubernetes/enhancements/issues/3762) * [Metric cardinality enforcement](https://github.com/kubernetes/enhancements/issues/2305)"
-    },
-    {
-      "heading": "Deprecations and Removals",
-      "stage": "Deprecation",
-      "keps": [
-        "4569",
-        "4004"
-      ],
-      "prs": [
-        "125689",
-        "122082"
-      ],
-      "identifiers": [
-        "DisableNodeKubeProxyVersion",
-        "InTreePluginAWSUnregister",
-        "InTreePluginAzureDiskUnregister",
-        "InTreePluginAzureFileUnregister",
-        "InTreePluginGCEUnregister",
-        "InTreePluginOpenStackUnregister",
-        "InTreePluginvSphereUnregister",
-        "InTreePluginPortworxUnregister"
-      ],
-      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health.  See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process.      #### Cgroup v1 enters the maintenance mode  As Kubernetes continues to evolve and adapt to the changing landscape of container orchestration, the community has decided to move cgroup v1 support into maintenance mode in v1.31."
-    },
-    {
       "heading": "Release notes and upgrade actions required",
       "stage": "Unspecified",
       "keps": [],
@@ -214,64 +172,6 @@
         "Queue"
       ],
       "summary": "Check out the full details of the Kubernetes v1.31 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md).  #### Scheduler now uses QueueingHint when `SchedulerQueueingHints` is enabled Added support to the scheduler to start using a QueueingHint registered for Pod/Updated events, to determine whether updates to  previously unschedulable Pods have made them schedulable. The new support is active when the feature gate `SchedulerQueueingHints` is enabled."
-    },
-    {
-      "heading": "Deprecation of `status.nodeInfo.kubeProxyVersion` field for Nodes ()",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "DisableNodeKubeProxyVersion"
-      ],
-      "summary": "The `.status.nodeInfo.kubeProxyVersion` field of Nodes is being deprecated in Kubernetes v1.31, and will be removed in a later release. It's being deprecated because the value of this field wasn't (and isn't) accurate. This field is set by the kubelet, which does not have reliable information about the kube-proxy version or whether kube-proxy is running.   The `DisableNodeKubeProxyVersion` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) will be set to `true` in by default in v1.31 and the kubelet will no longer attempt to set the `.status.kubeProxyVersion` field for"
-    },
-    {
-      "heading": "Removal of all in-tree integrations with cloud providers",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "As highlighted in a [previous article](/blog/2024/05/20/completing-cloud-provider-migration/), the last remaining in-tree support for cloud provider integration will be removed as part of the v1.31 release. This doesn't mean you can't integrate with a cloud provider, however you now **must** use the recommended approach using an external integration. Some integrations are part of the Kubernetes project and others are third party software.  This milestone marks the completion of the externalization process for all cloud providers' integrations from the Kubernetes core ([KEP-2395](https://github"
-    },
-    {
-      "heading": "Removal of kubelet `--keep-terminated-pod-volumes` command line flag",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [
-        "122082"
-      ],
-      "identifiers": [],
-      "summary": "The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, will be removed as part of the v1.31 release.  You can find more details in the pull request [#122082](https://github.com/kubernetes/kubernetes/pull/122082)."
-    },
-    {
-      "heading": "Removal of CephFS volume plugin",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "[CephFS volume plugin](/docs/concepts/storage/volumes/#cephfs) was removed in this release and the `cephfs` volume type became non-functional.   It is recommended that you use the [CephFS CSI driver](https://github.com/ceph/ceph-csi/) as a third-party storage driver instead. If you were using the CephFS volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.  CephFS volume plugin was formally marked as deprecated in v1.28."
-    },
-    {
-      "heading": "Removal of Ceph RBD volume plugin",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The v1.31 release will remove the [Ceph RBD volume plugin](/docs/concepts/storage/volumes/#rbd) and its CSI migration support, making the `rbd` volume type non-functional.  It's recommended that you use the [RBD CSI driver](https://github.com/ceph/ceph-csi/) in your clusters instead.  If you were using Ceph RBD volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.  The Ceph RBD volume plugin was formally marked as deprecated in v1.28."
-    },
-    {
-      "heading": "Deprecation of non-CSI volume limit plugins in kube-scheduler",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "AzureDiskLimits",
-        "CinderLimits",
-        "EBSLimits",
-        "GCEPDLimits",
-        "NodeVolumeLimits"
-      ],
-      "summary": "The v1.31 release will deprecate all non-CSI volume limit scheduler plugins, and will remove some already deprected plugins from the [default plugins](/docs/reference/scheduling/config/), including:  - `AzureDiskLimits` - `CinderLimits` - `EBSLimits`"
     }
   ],
   "ground_truth_keps": [

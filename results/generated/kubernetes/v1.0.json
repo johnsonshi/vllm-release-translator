@@ -1,0 +1,542 @@
+{
+  "variant": "v5_progressive_clarity_engine",
+  "project": "kubernetes",
+  "version": "v1.0",
+  "positioning": "Kubernetes v1.0 focuses on Feature Enhancements, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, and Dynamic Resource Allocation. For operators, this release translates 113 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "Kubernetes v1.0 focuses on Feature Enhancements, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, and Dynamic Resource Allocation. For operators, this release translates 113 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "high_level_changes": [
+      {
+        "headline": "Feature Enhancements",
+        "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
+      },
+      {
+        "headline": "Dynamic Resource Allocation",
+        "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+      },
+      {
+        "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+      },
+      {
+        "headline": "Workload-Aware & Gang Scheduling",
+        "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Feature Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "models_workloads": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
+        "gpus_infra": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
+        "bill_impact": "Stops zombie sidecars from holding batch nodes open after job completion"
+      },
+      {
+        "capability": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "models_workloads": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+        "gpus_infra": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+        "bill_impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+      },
+      {
+        "capability": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "models_workloads": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+        "gpus_infra": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+        "bill_impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+      },
+      {
+        "capability": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "models_workloads": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+        "gpus_infra": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+        "bill_impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+      },
+      {
+        "capability": "CEL-Based Validating & Mutating Admission Policies",
+        "models_workloads": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+        "gpus_infra": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+        "bill_impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "DRA (Dynamic Resource Allocation)",
+        "domain": "kubernetes",
+        "meaning": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+        "why_it_matters": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+      },
+      {
+        "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+        "domain": "kubernetes",
+        "meaning": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+        "why_it_matters": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+      },
+      {
+        "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+        "domain": "kubernetes",
+        "meaning": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+        "why_it_matters": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+      },
+      {
+        "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+        "domain": "kubernetes",
+        "meaning": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+        "why_it_matters": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Feature",
+        "text": "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson)",
+        "prs": [
+          "8945",
+          "10830"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.1
+      },
+      {
+        "category": "Feature",
+        "text": "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese)",
+        "prs": [
+          "10856"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.3
+      },
+      {
+        "category": "Feature",
+        "text": "Remove the unsafe_format_and_mount instructions #10912 (brendandburns)",
+        "prs": [
+          "10912"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.3
+      },
+      {
+        "category": "Feature",
+        "text": "Jenkins: remove dead 'use server version' code #10952 (mbforbes)",
+        "prs": [
+          "10952"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.3
+      },
+      {
+        "category": "Feature",
+        "text": "Remove race in setting/reading kubelet.podCIDR #10958 (cjcullen)",
+        "prs": [
+          "10958"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.3
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.0, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson).",
+          "When releasing, update versions in title #11062 (thockin).",
+          "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese).",
+          "Remove the unsafe_format_and_mount instructions #10912 (brendandburns)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "8945",
+          "10830",
+          "11062",
+          "10856",
+          "10912"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubernetes.tar.gz",
+          "dcdd47e55c11247be6d39c459a84a0f9",
+          "build-official-release.sh"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "previously": "Prior to v1.0, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
+        "tech_bullets": [
+          "Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth).",
+          "Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth)."
+        ],
+        "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
+        "prs": [
+          "10925",
+          "11004"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.0, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "First draft of deployment-oriented sections of the user guide. #11071 (bgrant0607).",
+          "examples/cassandra - image version inc and reduced cpu requirements #10993 (mwielgus).",
+          "Fix IP field name and add namespace support in Cassandra example #10231 (mwielgus)."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [
+          "11071",
+          "10993",
+          "10231"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.0, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "Assigned emptyDir for etcd data dir in skydns pod #11055 (ArtfulCoder).",
+          "Fully automated impl of containerized high available etcd+apiserver+controllermgr+scheduler #9904 (jayunit100)."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "11055",
+          "9904"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "previously": "Prior to v1.0, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+        "tech_bullets": [
+          "Add skip/flaky arguments for gce-release job #10932 (zmerlynn).",
+          "Jenkins: Allow fetching new tars for multi-job tests #10940 (mbforbes)."
+        ],
+        "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+        "prs": [
+          "10932",
+          "10940"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 6,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.0, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "Flower service and updated kubectl outputs in examples/celery-rabbitmq #10672 (mwielgus)."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "10672"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.0, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson).",
+          "When releasing, update versions in title #11062 (thockin).",
+          "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese).",
+          "Remove the unsafe_format_and_mount instructions #10912 (brendandburns)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "8945",
+          "10830",
+          "11062",
+          "10856",
+          "10912"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kubernetes.tar.gz",
+          "dcdd47e55c11247be6d39c459a84a0f9",
+          "build-official-release.sh"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "previously": "Prior to v1.0, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
+        "tech_bullets": [
+          "Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth).",
+          "Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth)."
+        ],
+        "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
+        "prs": [
+          "10925",
+          "11004"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.0, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "First draft of deployment-oriented sections of the user guide. #11071 (bgrant0607).",
+          "examples/cassandra - image version inc and reduced cpu requirements #10993 (mwielgus).",
+          "Fix IP field name and add namespace support in Cassandra example #10231 (mwielgus)."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [
+          "11071",
+          "10993",
+          "10231"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.0, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "Assigned emptyDir for etcd data dir in skydns pod #11055 (ArtfulCoder).",
+          "Fully automated impl of containerized high available etcd+apiserver+controllermgr+scheduler #9904 (jayunit100)."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "11055",
+          "9904"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "previously": "Prior to v1.0, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+        "tech_bullets": [
+          "Add skip/flaky arguments for gce-release job #10932 (zmerlynn).",
+          "Jenkins: Allow fetching new tars for multi-job tests #10940 (mbforbes)."
+        ],
+        "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+        "prs": [
+          "10932",
+          "10940"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 6,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.0, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "Flower service and updated kubectl outputs in examples/celery-rabbitmq #10672 (mwielgus)."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "10672"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Feature",
+        "text": "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese)",
+        "prs": [
+          "10856"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.3
+      },
+      {
+        "category": "Feature",
+        "text": "Stop exposing v1beta3 by default #10525 (nikhiljindal)",
+        "prs": [
+          "10525"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 9.8
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth) ([#10925](https://github.com/kubernetes/kubernetes/pull/10925))",
+      "Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth) ([#11004](https://github.com/kubernetes/kubernetes/pull/11004))",
+      "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson) ([#8945](https://github.com/kubernetes/kubernetes/pull/8945), [#10830](https://github.com/kubernetes/kubernetes/pull/10830))",
+      "When releasing, update versions in title #11062 (thockin) ([#11062](https://github.com/kubernetes/kubernetes/pull/11062))",
+      "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese) ([#10856](https://github.com/kubernetes/kubernetes/pull/10856))",
+      "Remove the unsafe_format_and_mount instructions #10912 (brendandburns) ([#10912](https://github.com/kubernetes/kubernetes/pull/10912))"
+    ]
+  },
+  "cited_prs": [
+    "10925",
+    "11004",
+    "8945",
+    "10830",
+    "11062",
+    "10856",
+    "10912",
+    "10952",
+    "10958",
+    "10930",
+    "10910",
+    "10659",
+    "10884",
+    "10845",
+    "10872",
+    "10611",
+    "11055",
+    "11015",
+    "11038",
+    "10709",
+    "11066",
+    "10914",
+    "10794",
+    "11071",
+    "11072",
+    "10935",
+    "11060",
+    "11091",
+    "9264",
+    "11086",
+    "11090",
+    "11083",
+    "11096",
+    "9904",
+    "10993",
+    "10951",
+    "10971",
+    "10851",
+    "10762",
+    "10898",
+    "10895",
+    "10847",
+    "10869",
+    "10844",
+    "10875",
+    "10811",
+    "10863",
+    "10870",
+    "10832",
+    "10407",
+    "10672",
+    "10865",
+    "10854",
+    "10800",
+    "10681",
+    "10946",
+    "10765",
+    "10917",
+    "10950",
+    "10949",
+    "10859",
+    "10907",
+    "10231",
+    "10887",
+    "10911",
+    "10924",
+    "10927",
+    "10937",
+    "10941",
+    "10890",
+    "10896",
+    "10871",
+    "10799",
+    "10867",
+    "10880",
+    "10903",
+    "10894",
+    "10488",
+    "10590",
+    "9943",
+    "10525",
+    "10923",
+    "10948",
+    "10864",
+    "10978",
+    "10823",
+    "10932",
+    "10964",
+    "11010",
+    "10940",
+    "11068",
+    "11005",
+    "9782",
+    "10905",
+    "10562",
+    "10877",
+    "10922",
+    "10916",
+    "10961",
+    "11084",
+    "11078",
+    "11073",
+    "11024",
+    "11019",
+    "10974",
+    "11008",
+    "10757",
+    "10944",
+    "10953",
+    "10965",
+    "10963",
+    "10751",
+    "10752",
+    "9381",
+    "10889"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [
+    "kubernetes.tar.gz",
+    "dcdd47e55c11247be6d39c459a84a0f9",
+    "build-official-release.sh"
+  ],
+  "markdown": "# What's New in Kubernetes v1.0\n\n## High-Level Explanation\nKubernetes v1.0 focuses on Feature Enhancements, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, and Dynamic Resource Allocation. For operators, this release translates 113 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Feature Enhancements**: Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle**: Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion.\n- **Dynamic Resource Allocation**: Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting.\n- **API Server & etcd Watch/Cache Efficiency at Scale**: Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages.\n- **Workload-Aware & Gang Scheduling**: Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Feature Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle** | Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts | Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes | Stops zombie sidecars from holding batch nodes open after job completion |\n| **Dynamic Resource Allocation (DRA) & GPU/Accelerator Management** | AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers | NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools | Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting |\n| **API Server & etcd Watch/Cache Efficiency at Scale** | Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods | Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint | Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages |\n| **Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)** | Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads | High-density GPU/CPU batch pools and `kube-scheduler` queues | Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers |\n| **CEL-Based Validating & Mutating Admission Policies** | Platform security guardrails, multi-tenant compliance policies, and default resource injectors | In-process `kube-apiserver` admission chain (replaces external webhook deployments) | Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts |\n\n## 3. What Does the Jargon Mean?\n- **DRA (Dynamic Resource Allocation)**: Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins. Why it matters: Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks.\n- **Gang Scheduling (`Workload` / `PodGroup`)**: An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group. Why it matters: Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity.\n- **Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)**: First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish. Why it matters: Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive.\n- **ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)**: In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers. Why it matters: Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Feature**: Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson). ([#8945](https://github.com/kubernetes/kubernetes/pull/8945), [#10830](https://github.com/kubernetes/kubernetes/pull/10830))\n- **Feature**: remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese). ([#10856](https://github.com/kubernetes/kubernetes/pull/10856))\n- **Feature**: Remove the unsafe_format_and_mount instructions #10912 (brendandburns). ([#10912](https://github.com/kubernetes/kubernetes/pull/10912))\n- **Feature**: Jenkins: remove dead 'use server version' code #10952 (mbforbes). ([#10952](https://github.com/kubernetes/kubernetes/pull/10952))\n- **Feature**: Remove race in setting/reading kubelet.podCIDR #10958 (cjcullen). ([#10958](https://github.com/kubernetes/kubernetes/pull/10958))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Feature Enhancements ([#8945](https://github.com/kubernetes/kubernetes/pull/8945), [#10830](https://github.com/kubernetes/kubernetes/pull/10830), [#11062](https://github.com/kubernetes/kubernetes/pull/11062), [#10856](https://github.com/kubernetes/kubernetes/pull/10856))\n- **Previously**: Prior to v1.0, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson).\n- **Technical change**: When releasing, update versions in title #11062 (thockin).\n- **Technical change**: remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese).\n- **Technical change**: Remove the unsafe_format_and_mount instructions #10912 (brendandburns).\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle ([#10925](https://github.com/kubernetes/kubernetes/pull/10925), [#11004](https://github.com/kubernetes/kubernetes/pull/11004))\n- **Previously**: Prior to v1.0, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.\n- **Technical change**: Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth).\n- **Technical change**: Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth).\n- **Operational impact**: Stops zombie sidecars from holding batch nodes open after job completion\n### 3. Dynamic Resource Allocation (DRA) & GPU/Accelerator Management ([#11071](https://github.com/kubernetes/kubernetes/pull/11071), [#10993](https://github.com/kubernetes/kubernetes/pull/10993), [#10231](https://github.com/kubernetes/kubernetes/pull/10231))\n- **Previously**: Prior to v1.0, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.\n- **Technical change**: First draft of deployment-oriented sections of the user guide. #11071 (bgrant0607).\n- **Technical change**: examples/cassandra - image version inc and reduced cpu requirements #10993 (mwielgus).\n- **Technical change**: Fix IP field name and add namespace support in Cassandra example #10231 (mwielgus).\n- **Operational impact**: Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting\n### 4. API Server & etcd Watch/Cache Efficiency at Scale ([#11055](https://github.com/kubernetes/kubernetes/pull/11055), [#9904](https://github.com/kubernetes/kubernetes/pull/9904))\n- **Previously**: Prior to v1.0, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.\n- **Technical change**: Assigned emptyDir for etcd data dir in skydns pod #11055 (ArtfulCoder).\n- **Technical change**: Fully automated impl of containerized high available etcd+apiserver+controllermgr+scheduler #9904 (jayunit100).\n- **Operational impact**: Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages\n### 5. Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing) ([#10932](https://github.com/kubernetes/kubernetes/pull/10932), [#10940](https://github.com/kubernetes/kubernetes/pull/10940))\n- **Previously**: Prior to v1.0, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.\n- **Technical change**: Add skip/flaky arguments for gce-release job #10932 (zmerlynn).\n- **Technical change**: Jenkins: Allow fetching new tars for multi-job tests #10940 (mbforbes).\n- **Operational impact**: Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers\n### 6. CEL-Based Validating & Mutating Admission Policies ([#10672](https://github.com/kubernetes/kubernetes/pull/10672))\n- **Previously**: Prior to v1.0, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).\n- **Technical change**: Flower service and updated kubectl outputs in examples/celery-rabbitmq #10672 (mwielgus).\n- **Operational impact**: Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts\n\n### Weekly / Patch Merge Pulse\n- Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth) ([#10925](https://github.com/kubernetes/kubernetes/pull/10925))\n- Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth) ([#11004](https://github.com/kubernetes/kubernetes/pull/11004))\n- Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson) ([#8945](https://github.com/kubernetes/kubernetes/pull/8945), [#10830](https://github.com/kubernetes/kubernetes/pull/10830))\n- When releasing, update versions in title #11062 (thockin) ([#11062](https://github.com/kubernetes/kubernetes/pull/11062))\n- remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese) ([#10856](https://github.com/kubernetes/kubernetes/pull/10856))\n- Remove the unsafe_format_and_mount instructions #10912 (brendandburns) ([#10912](https://github.com/kubernetes/kubernetes/pull/10912))\n\n## 6. Where's the Proof?\n- **Feature** ([#10856](https://github.com/kubernetes/kubernetes/pull/10856)): remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese).\n- **Feature** ([#10525](https://github.com/kubernetes/kubernetes/pull/10525)): Stop exposing v1beta3 by default #10525 (nikhiljindal).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Feature]** Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth). ([#10925](https://github.com/kubernetes/kubernetes/pull/10925))\n- **[Feature]** Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth). ([#11004](https://github.com/kubernetes/kubernetes/pull/11004))\n- **[Feature]** Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson). ([#8945](https://github.com/kubernetes/kubernetes/pull/8945), [#10830](https://github.com/kubernetes/kubernetes/pull/10830))\n- **[Feature]** When releasing, update versions in title #11062 (thockin). ([#11062](https://github.com/kubernetes/kubernetes/pull/11062))\n- **[Feature]** remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese). ([#10856](https://github.com/kubernetes/kubernetes/pull/10856))\n- **[Feature]** Remove the unsafe_format_and_mount instructions #10912 (brendandburns). ([#10912](https://github.com/kubernetes/kubernetes/pull/10912))\n- **[Feature]** Jenkins: remove dead 'use server version' code #10952 (mbforbes). ([#10952](https://github.com/kubernetes/kubernetes/pull/10952))\n- **[Feature]** Remove race in setting/reading kubelet.podCIDR #10958 (cjcullen). ([#10958](https://github.com/kubernetes/kubernetes/pull/10958))\n- **[Feature]** Update the web ui (kube-ui) pod to v1.1 #10930 (bcbroussard) | binary | hash alg | hash | | --- | --- | --- | | `kubernetes.tar.gz` | md5 | `dcdd47e55c11247be6d39c459a84a0f9` | | `kubernetes.tar.gz` | sha1 | `2eb5d2489ff551451ae2690d92e044dc0497ecbb` |. ([#10930](https://github.com/kubernetes/kubernetes/pull/10930))\n- **[Feature]** Add `build-official-release.sh` (take two) #10910 (zmerlynn). ([#10910](https://github.com/kubernetes/kubernetes/pull/10910))\n- **[Feature]** Disable liveness for dns due to #10659 #10884 (dchen1107). ([#10659](https://github.com/kubernetes/kubernetes/pull/10659), [#10884](https://github.com/kubernetes/kubernetes/pull/10884))\n- **[Feature]** update kubectl output in examples/elasticsearch #10845 (caesarxuchao). ([#10845](https://github.com/kubernetes/kubernetes/pull/10845))\n- **[Feature]** Use latest heapster image #10872 (nikhiljindal). ([#10872](https://github.com/kubernetes/kubernetes/pull/10872))\n- **[Feature]** Addon update kill children #10611 (marekbiskup). ([#10611](https://github.com/kubernetes/kubernetes/pull/10611))\n- **[Feature]** Assigned emptyDir for etcd data dir in skydns pod #11055 (ArtfulCoder). ([#11055](https://github.com/kubernetes/kubernetes/pull/11055))\n- **[Feature]** Update Fedora Getting Started to indicate needs v0.18 or later #11015 (aveshagarwal). ([#11015](https://github.com/kubernetes/kubernetes/pull/11015))\n- **[Feature]** Link verification #11038 (lavalamp). ([#11038](https://github.com/kubernetes/kubernetes/pull/11038))\n- **[Feature]** Update releasing.md with Kubernetes release process #10709 (zmerlynn). ([#10709](https://github.com/kubernetes/kubernetes/pull/10709))\n- **[Feature]** Add monitoring docs #11066 (JanetKuo). ([#11066](https://github.com/kubernetes/kubernetes/pull/11066))\n- **[Feature]** Create schedule_algorithm file #10914 (HaiyangDING). ([#10914](https://github.com/kubernetes/kubernetes/pull/10914))\n- **[Feature]** Better docs for downward API #10794 (thockin). ([#10794](https://github.com/kubernetes/kubernetes/pull/10794))\n- **[Feature]** First draft of deployment-oriented sections of the user guide. #11071 (bgrant0607). ([#11071](https://github.com/kubernetes/kubernetes/pull/11071))\n- **[Feature]** Add user guide for connecting applications #11072 (bprashanth). ([#11072](https://github.com/kubernetes/kubernetes/pull/11072))\n- **[Feature]** update kubectl output in examples #10935 (caesarxuchao). ([#10935](https://github.com/kubernetes/kubernetes/pull/10935))\n- **[Feature]** Change the generated release template to docs/README.md #11060 (zmerlynn). ([#11060](https://github.com/kubernetes/kubernetes/pull/11060))\n- **[Feature]** Fix kubelet.md with --max-pods #11091 (dchen1107). ([#11091](https://github.com/kubernetes/kubernetes/pull/11091))\n- **[Feature]** LimitRange example improvements, detailed README #9264 (derekwaynecarr). ([#9264](https://github.com/kubernetes/kubernetes/pull/9264))\n- **[Feature]** Run all munges on all docs #11086 (thockin). ([#11086](https://github.com/kubernetes/kubernetes/pull/11086))\n- **[Feature]** add user guide docs for kubectl exec, proxy, and port-forward #11090 (caesarxuchao). ([#11090](https://github.com/kubernetes/kubernetes/pull/11090))\n- **[Feature]** First version of Introspection and Debugging section of User Guide. #11083 (davidopp). ([#11083](https://github.com/kubernetes/kubernetes/pull/11083))\n- **[Feature]** Docs munge infrastructure #11096 (thockin). ([#11096](https://github.com/kubernetes/kubernetes/pull/11096))\n- **[Feature]** Fully automated impl of containerized high available etcd+apiserver+controllermgr+scheduler #9904 (jayunit100). ([#9904](https://github.com/kubernetes/kubernetes/pull/9904))\n- **[Feature]** examples/cassandra - image version inc and reduced cpu requirements #10993 (mwielgus). ([#10993](https://github.com/kubernetes/kubernetes/pull/10993))\n- **[Feature]** Update logging example #10951 (satnam6502). ([#10951](https://github.com/kubernetes/kubernetes/pull/10951))\n- **[Feature]** Fix reference to kube-ui proxy path #10971 (timstclair). ([#10971](https://github.com/kubernetes/kubernetes/pull/10971))\n- **[Feature]** Fix up alignment of columns w/ namespaces. #10851 (jbeda). ([#10851](https://github.com/kubernetes/kubernetes/pull/10851))\n- **[Feature]** Automatic Doc Editing, with Table of Contents Generation #10762 (erictune). ([#10762](https://github.com/kubernetes/kubernetes/pull/10762))\n- **[Feature]** Update logging getting started guides to reflect namespace change #10898 (satnam6502). ([#10898](https://github.com/kubernetes/kubernetes/pull/10898))\n- **[Feature]** Update UI doc for the usage of Kubernetes UI #10895 (JanetKuo). ([#10895](https://github.com/kubernetes/kubernetes/pull/10895))\n- **[Feature]** Fixed link in persistent-volumes.md #10847 (markturansky). ([#10847](https://github.com/kubernetes/kubernetes/pull/10847))\n- **[Feature]** update the output of kubectl get in examples/hazelcast #10869 (caesarxuchao). ([#10869](https://github.com/kubernetes/kubernetes/pull/10869))\n- **[Feature]** Update GCE docs to reflect namespaces #10844 (jbeda). ([#10844](https://github.com/kubernetes/kubernetes/pull/10844))\n- **[Feature]** Fix broken links in docs/README #10875 (thockin). ([#10875](https://github.com/kubernetes/kubernetes/pull/10875))\n- **[Feature]** Make examples links be relative #10811 (thockin). ([#10811](https://github.com/kubernetes/kubernetes/pull/10811))\n- **[Feature]** update kubectl output in examples/glusterfs #10863 (caesarxuchao). ([#10863](https://github.com/kubernetes/kubernetes/pull/10863))\n- **[Feature]** update the output of kubectl get pods in examples/iscsi #10870 (caesarxuchao). ([#10870](https://github.com/kubernetes/kubernetes/pull/10870))\n- **[Feature]** Examples/rethinkdb fixes - namespaces, api update, curl params #10832 (mwielgus). ([#10832](https://github.com/kubernetes/kubernetes/pull/10832))\n- **[Feature]** Updated spark example with docker images moved to gcr.io/google_containers #10407 (mwielgus). ([#10407](https://github.com/kubernetes/kubernetes/pull/10407))\n- **[Feature]** Flower service and updated kubectl outputs in examples/celery-rabbitmq #10672 (mwielgus). ([#10672](https://github.com/kubernetes/kubernetes/pull/10672))\n- **[Feature]** Update document of security context #10865 (JanetKuo). ([#10865](https://github.com/kubernetes/kubernetes/pull/10865))\n- **[Feature]** Embed doc URLs in swagger document #10854 (JanetKuo). ([#10854](https://github.com/kubernetes/kubernetes/pull/10854))\n- **[Feature]** Better volumes docs #10800 (thockin). ([#10800](https://github.com/kubernetes/kubernetes/pull/10800))\n- **[Feature]** Make docs links be relative so we can version them #10681 (thockin). ([#10681](https://github.com/kubernetes/kubernetes/pull/10681))\n- **[Feature]** Fix document typo #10946 (JanetKuo). ([#10946](https://github.com/kubernetes/kubernetes/pull/10946))\n- **[Feature]** update kube\\* daemon docs synposis and flags. #10765 (mikedanese). ([#10765](https://github.com/kubernetes/kubernetes/pull/10765))\n- **[Feature]** Fix typo in examples/rethinkdb/rc.yaml (google_containes->google_containers) #10917 (mwielgus). ([#10917](https://github.com/kubernetes/kubernetes/pull/10917))\n- **[Feature]** Change remaining instances of hostDir in docs to hostPath #10950 (pmorie). ([#10950](https://github.com/kubernetes/kubernetes/pull/10950))\n- **[Feature]** Update kubectl output in doc #10949 (JanetKuo). ([#10949](https://github.com/kubernetes/kubernetes/pull/10949))\n- **[Feature]** Move scheduler overview from docs/design/ to docs/devel/ #10859 (davidopp). ([#10859](https://github.com/kubernetes/kubernetes/pull/10859))\n- **[Feature]** Add a pointer to a new java library. #10907 (brendandburns). ([#10907](https://github.com/kubernetes/kubernetes/pull/10907))\n- **[Feature]** Fix IP field name and add namespace support in Cassandra example #10231 (mwielgus). ([#10231](https://github.com/kubernetes/kubernetes/pull/10231))\n- **[Feature]** Update release notes tool and documentation #10887 (alex-mohr). ([#10887](https://github.com/kubernetes/kubernetes/pull/10887))\n- **[Feature]** Add some additional clarity to label prefix requirements. #10911 (brendandburns). ([#10911](https://github.com/kubernetes/kubernetes/pull/10911))\n- **[Feature]** Update CLI flags in node overview doc #10924 (kelcecil). ([#10924](https://github.com/kubernetes/kubernetes/pull/10924))\n- **[Feature]** Fixed image name in example #10927 (markturansky). ([#10927](https://github.com/kubernetes/kubernetes/pull/10927))\n- **[Feature]** Make \"age\" of pod print example static #10937 (JanetKuo). ([#10937](https://github.com/kubernetes/kubernetes/pull/10937))\n- **[Feature]** update the kubectl output in gettint-started-guides #10941 (caesarxuchao). ([#10941](https://github.com/kubernetes/kubernetes/pull/10941))\n- **[Feature]** update the kubectl get command in examples/node-selection #10890 (caesarxuchao). ([#10890](https://github.com/kubernetes/kubernetes/pull/10890))\n- **[Feature]** Make READMEs even more obviously versioned. #10896 (thockin). ([#10896](https://github.com/kubernetes/kubernetes/pull/10896))\n- **[Feature]** update the output of kubectl get in examples/kubernetes-namespace #10871 (caesarxuchao). ([#10871](https://github.com/kubernetes/kubernetes/pull/10871))\n- **[Feature]** update kubectl get outputs in examples/cluster-dns #10799 (caesarxuchao). ([#10799](https://github.com/kubernetes/kubernetes/pull/10799))\n- **[Feature]** Replace REASON with STATUS in examples #10867 (caesarxuchao). ([#10867](https://github.com/kubernetes/kubernetes/pull/10867))\n- **[Feature]** Fix \"Docker Containers should be able to override the image's default command\" tests #10880 (saad-ali). ([#10880](https://github.com/kubernetes/kubernetes/pull/10880))\n- **[Feature]** Update kubectl get command in docs/devel/ #10903 (JanetKuo). ([#10903](https://github.com/kubernetes/kubernetes/pull/10903))\n- **[Feature]** Update kubectl describe help to document prefix matching behavior #10894 (jlowdermilk). ([#10894](https://github.com/kubernetes/kubernetes/pull/10894))\n- **[Feature]** Salt: support systemd (don't assume Redhat <=> systemd) #10488 (justinsb). ([#10488](https://github.com/kubernetes/kubernetes/pull/10488))\n- **[Feature]** Install the kubectl binary on nodes in addition to the master. #10590 (roberthbailey). ([#10590](https://github.com/kubernetes/kubernetes/pull/10590))\n- **[Feature]** Do not override environment variable in ubuntu defaults #9943 (mamikonyana). ([#9943](https://github.com/kubernetes/kubernetes/pull/9943))\n- **[Feature]** Stop exposing v1beta3 by default #10525 (nikhiljindal). ([#10525](https://github.com/kubernetes/kubernetes/pull/10525))\n- **[Feature]** Promote ElasticSearch test to non-flaky suite #10923 (wojtek-t). ([#10923](https://github.com/kubernetes/kubernetes/pull/10923))\n- **[Feature]** End to end test for Kibana liveness #10948 (satnam6502). ([#10948](https://github.com/kubernetes/kubernetes/pull/10948))\n- **[Feature]** Fully update gcloud before Jenkins runs #10864 (mbforbes). ([#10864](https://github.com/kubernetes/kubernetes/pull/10864))\n- **[Feature]** Fix Shell services test #10978 (wojtek-t). ([#10978](https://github.com/kubernetes/kubernetes/pull/10978))\n- **[Feature]** Added load test with pods doing real works #10823 (piosz). ([#10823](https://github.com/kubernetes/kubernetes/pull/10823))\n- **[Feature]** Add skip/flaky arguments for gce-release job #10932 (zmerlynn). ([#10932](https://github.com/kubernetes/kubernetes/pull/10932))\n- **[Feature]** E2E tests for kubectl label command #10964 (JanetKuo). ([#10964](https://github.com/kubernetes/kubernetes/pull/10964))\n- **[Feature]** Enable e2e networking test for intra-pod communication for vagrant #11010 (derekwaynecarr). ([#11010](https://github.com/kubernetes/kubernetes/pull/11010))\n- **[Feature]** Jenkins: Allow fetching new tars for multi-job tests #10940 (mbforbes). ([#10940](https://github.com/kubernetes/kubernetes/pull/10940))\n- **[Feature]** Add GKE coverage for e2e tests that support both GCE and GKE #11068 (alex-mohr). ([#11068](https://github.com/kubernetes/kubernetes/pull/11068))\n- **[Feature]** Allow upgrade target version to be specified #11005 (mbforbes). ([#11005](https://github.com/kubernetes/kubernetes/pull/11005))\n- **[Feature]** TestCreateCleanWithPrefix was failing if env variables existed #9782 (andronat). ([#9782](https://github.com/kubernetes/kubernetes/pull/9782))\n- **[Feature]** Make merge conflicts less likely in jenkins/e2e.sh w/ multiline regexes #10905 (quinton-hoole). ([#10905](https://github.com/kubernetes/kubernetes/pull/10905))\n- **[Feature]** Vagrant cloud provider not including ca.crt in secret #10562 (derekwaynecarr). ([#10562](https://github.com/kubernetes/kubernetes/pull/10562))\n- **[Feature]** Fix AWS Setup. #10877 (brendandburns). ([#10877](https://github.com/kubernetes/kubernetes/pull/10877))\n- **[Feature]** Fix service shell e2e test #10922 (wojtek-t). ([#10922](https://github.com/kubernetes/kubernetes/pull/10922))\n- **[Feature]** Add more logging to scheduler predicates to help debugging max_pods e2e test flakyness #10916 (gmarek). ([#10916](https://github.com/kubernetes/kubernetes/pull/10916))\n- **[Feature]** Fix quoting issue on sed #10961 (thockin). ([#10961](https://github.com/kubernetes/kubernetes/pull/10961))\n- **[Feature]** add spec.host as a synonym for spec.nodeName in v1 #11084 (brendandburns). ([#11084](https://github.com/kubernetes/kubernetes/pull/11084))\n- **[Feature]** Change kubelet flag --max-pods default value to 40 to match v1.0 roadmap #11078 (dchen1107). ([#11078](https://github.com/kubernetes/kubernetes/pull/11078))\n- **[Feature]** fix verify gendocs #11073 (mikedanese). ([#11073](https://github.com/kubernetes/kubernetes/pull/11073))\n- **[Feature]** Increase the rate limiting of GCE's token source #11024 (a-robinson). ([#11024](https://github.com/kubernetes/kubernetes/pull/11024))\n- **[Feature]** ignore pods that are failed but controlled by a rc when start e2e tests #11019 (caesarxuchao). ([#11019](https://github.com/kubernetes/kubernetes/pull/11019))\n- **[Feature]** Automatically open a firewall when creating a GCE load balancer. #10974 (brendandburns). ([#10974](https://github.com/kubernetes/kubernetes/pull/10974))\n- **[Feature]** Adding polling to all node readiness #11008 (krousey). ([#11008](https://github.com/kubernetes/kubernetes/pull/11008))\n- **[Feature]** Add cherry_pick_pull.sh <pr-number> <branch> #10757 (zmerlynn). ([#10757](https://github.com/kubernetes/kubernetes/pull/10757))\n- **[Feature]** Brendan noticed this silly inconsistency. #10944 (zmerlynn). ([#10944](https://github.com/kubernetes/kubernetes/pull/10944))\n- **[Feature]** Improvements to conformance test #10953 (erictune). ([#10953](https://github.com/kubernetes/kubernetes/pull/10953))\n- **[Feature]** Fix two issues in cherry_pick_pull.sh #10965 (zmerlynn). ([#10965](https://github.com/kubernetes/kubernetes/pull/10965))\n- **[Feature]** Ignore untracked files in cherrypick #10963 (thockin). ([#10963](https://github.com/kubernetes/kubernetes/pull/10963))\n- **[Feature]** AWS: Allow callers to specify VPC_ID and SUBNET_ID #10751 (justinsb). ([#10751](https://github.com/kubernetes/kubernetes/pull/10751))\n- **[Feature]** AWS: Query by subnet-id, if we have it #10752 (justinsb). ([#10752](https://github.com/kubernetes/kubernetes/pull/10752))\n- **[Feature]** AWS: Add support for Vivid Vervet & Debian Jessie #9381 (justinsb). ([#9381](https://github.com/kubernetes/kubernetes/pull/9381))\n- **[Feature]** Add prometheus metrics for altTokenSource. #10889 (cjcullen). ([#10889](https://github.com/kubernetes/kubernetes/pull/10889))\n\n**Key Feature Gates / API Identifiers**: `kubernetes.tar.gz`, `dcdd47e55c11247be6d39c459a84a0f9`, `build-official-release.sh`",
+  "eval": {
+    "variant": "v5_progressive_clarity_engine",
+    "project": "kubernetes",
+    "version": "v1.0",
+    "headline_salience_recall": 1.0,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 1.0,
+    "cluster_diversity_score": 0.9931,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.9994,
+    "matched_spotlights": "0/0",
+    "cited_prs_count": 115,
+    "cited_keps_count": 0
+  },
+  "published_date": "2015-07-02",
+  "total_raw_items": 113
+}

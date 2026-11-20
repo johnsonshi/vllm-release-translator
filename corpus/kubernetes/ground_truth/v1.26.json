@@ -1,0 +1,143 @@
+{
+  "project": "kubernetes",
+  "version": "v1.26",
+  "blog_title": "Kubernetes v1.26: Electrifying",
+  "release_date": "2022-12-09",
+  "reported_enhancements_count": null,
+  "spotlight_count": 9,
+  "spotlights": [
+    {
+      "heading": "Change in container image registry",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "109938"
+      ],
+      "identifiers": [],
+      "summary": "In the previous release, [Kubernetes changed the container registry](https://github.com/kubernetes/kubernetes/pull/109938), allowing the spread of the load across multiple Cloud Providers and Regions, a change that reduced the reliance on a single entity and provided a faster download experience for a large number of users.  This release of Kubernetes is the first that is exclusively published in the new `registry.k8s.io`"
+    },
+    {
+      "heading": "CRI v1alpha2 removed",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [
+        "110618"
+      ],
+      "identifiers": [],
+      "summary": "With the adoption of the [Container Runtime Interface](/docs/concepts/architecture/cri/) (CRI) and the [removal of dockershim](/blog/2022/02/17/dockershim-faq/) in v1.24, the CRI is the only supported and documented way through which Kubernetes interacts with different container runtimes. Each kubelet negotiates which version of CRI to use with the container runtime on that node."
+    },
+    {
+      "heading": "Storage improvements",
+      "stage": "Stable",
+      "keps": [
+        "1491",
+        "1885",
+        "2317",
+        "3446",
+        "1489"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Following the GA of the [core Container Storage Interface (CSI) Migration](https://github.com/kubernetes/enhancements/tree/master/keps/sig-storage/625-csi-migration) feature in the previous release, CSI migration is an on-going effort that we've been working on for a few releases now, and this release continues to add (and remove) features aligned with the migration's goals, as well as other improvements to Kubernetes storage."
+    },
+    {
+      "heading": "Signing Kubernetes release artifacts graduates to beta",
+      "stage": "Beta",
+      "keps": [
+        "3031"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introduced in Kubernetes v1.24, [this feature](https://github.com/kubernetes/enhancements/issues/3031) constitutes a significant milestone in improving the security of the Kubernetes release process. All release artifacts are signed keyless using [cosign](https://github.com/sigstore/cosign/), and both binary artifacts and images [can be verified](/docs/tasks/administer-cluster/verify-signed-artifacts/)."
+    },
+    {
+      "heading": "Support for Windows privileged containers graduates to stable",
+      "stage": "Stable",
+      "keps": [
+        "1981"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Privileged container support allows containers to run with similar access to the host as processes that run on the host directly. Support for this feature in Windows nodes, called [HostProcess containers](/docs/tasks/configure-pod-container/create-hostprocess-pod/), will now [graduate to Stable](https://github.com/kubernetes/enhancements/issues/1981), enabling access to host resources (including network resources) from privileged containers."
+    },
+    {
+      "heading": "Improvements to Kubernetes metrics",
+      "stage": "Alpha",
+      "keps": [
+        "3498"
+      ],
+      "prs": [
+        "112884",
+        "112690"
+      ],
+      "identifiers": [
+        "Internal",
+        "Beta",
+        "ComponentSLIs"
+      ],
+      "summary": "This release has several noteworthy improvements on metrics.  #### Metrics framework extension graduates to alpha  The metrics framework extension [graduates to Alpha](https://github.com/kubernetes/enhancements/issues/3498), and"
+    },
+    {
+      "heading": "Dynamic Resource Allocation graduates to alpha",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DynamicResourceAllocation"
+      ],
+      "summary": "[Dynamic Resource Allocation](/docs/concepts/resource-management/dynamic-resource-allocation/) is a [new feature](https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/3063-dynamic-resource-allocation/README.md)  that puts resource scheduling in the hands of third-party developers: it offers an alternative to the limited \"countable\" interface for requesting access to resources (e.g. `nvidia.com/gpu: 2`), providing an API more akin to that of persistent volumes. Under the"
+    },
+    {
+      "heading": "CEL in Admission Control graduates to alpha",
+      "stage": "Alpha",
+      "keps": [
+        "3488"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ValidatingAdmissionPolicy"
+      ],
+      "summary": "[This feature](https://github.com/kubernetes/enhancements/issues/3488) introduces a `v1alpha1` API for [validating admission policies](/docs/reference/access-authn-authz/validating-admission-policy/), enabling extensible admission control via [Common Expression Language](https://github.com/google/cel-spec) expressions. Currently, custom policies are enforced via [admission webhooks](/docs/reference/access-authn-authz/extensible-admission-controllers/), which, while flexible, have a few drawbacks when compared to in-process policy enforcement. To use,"
+    },
+    {
+      "heading": "Pod scheduling improvements",
+      "stage": "Unspecified",
+      "keps": [
+        "3521"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PodSchedulingReadiness",
+        "NodeInclusionPolicyInPodTopologySpread"
+      ],
+      "summary": "Kubernetes v1.26 introduces some relevant enhancements to the ability to better control scheduling behavior.  #### `PodSchedulingReadiness` graduates to alpha  [This feature](https://github.com/kubernetes/enhancements/issues/3521) introduces a `.spec.schedulingGates`"
+    }
+  ],
+  "ground_truth_keps": [
+    "1491",
+    "1885",
+    "2317",
+    "3446",
+    "1489",
+    "3031",
+    "1981",
+    "3498",
+    "3488",
+    "3521",
+    "2307",
+    "2086",
+    "2133",
+    "1435",
+    "3070",
+    "3570",
+    "3573"
+  ],
+  "ground_truth_identifiers": [
+    "Internal",
+    "ComponentSLIs",
+    "DynamicResourceAllocation",
+    "ValidatingAdmissionPolicy",
+    "PodSchedulingReadiness",
+    "NodeInclusionPolicyInPodTopologySpread"
+  ]
+}

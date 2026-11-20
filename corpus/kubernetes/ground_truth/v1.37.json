@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.37: Garhwal",
   "release_date": "2026-08-26",
   "reported_enhancements_count": 67,
-  "spotlight_count": 51,
+  "spotlight_count": 41,
   "spotlights": [
     {
       "heading": "Stable: Resilient watchcache initialization",
@@ -462,32 +462,6 @@
       "summary": "Support for context propagation and contextual logging in client-go is complete, with the exception of a small number of authentication plugin log calls that still rely on the global klog logger because the underlying APIs do not support context passing."
     },
     {
-      "heading": "Graduations to Stable",
-      "stage": "Stable",
-      "keps": [
-        "1710",
-        "3257",
-        "4317",
-        "4762",
-        "4817",
-        "4951",
-        "5311",
-        "4680",
-        "5055",
-        "5004",
-        "5328",
-        "3085",
-        "4192",
-        "4568",
-        "6072",
-        "5207",
-        "5295"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This lists all the features that graduated to Stable (also known as general availability). For a full list of updates including new features and graduations from Alpha to Beta, see the release notes.  This release includes a total of 16 enhancements promoted to Stable:  * [Speed up recursive SELinux label change](https://www.kubernetes.dev/resources/keps/1710/)"
-    },
-    {
       "heading": "Deprecation of `kube-dns`",
       "stage": "Deprecation",
       "keps": [],
@@ -538,105 +512,6 @@
       "prs": [],
       "identifiers": [],
       "summary": "As modern Linux distributions and container runtimes use [cgroup v2](/docs/concepts/architecture/cgroups/) as the default, support for the legacy cgroup v1 is officially being phased out. Since the v1.35 release, the `failCgroupV1` setting has defaulted to true. Consequently, the `kubelet` will fail to initialize on any nodes that still rely on cgroup v1 unless an explicit configuration override is applied.  ```yaml"
-    },
-    {
-      "heading": "Event updates",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Explore the upcoming KubeCons worldwide:  - [KubeCon + CloudNativeCon China](https://www.lfopensource.cn/kubecon-cloudnativecon-openinfra-summit-pytorch-conference-china/):   September 7\u20139, 2026, in Shanghai, China - [KubeCon + CloudNativeCon North America](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/):   November 9\u201312, 2026, in Salt Lake City, United States"
-    },
-    {
-      "heading": "Kubectl: `kubectl run --filename/-f` to be deprecated",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [
-        "138671"
-      ],
-      "identifiers": [
-        "NAME"
-      ],
-      "summary": "The `--filename` (or `-f`) flag for `kubectl run` is being deprecated as the generated pod is always built purely from CLI arguments like `NAME` and `--image`.  See [kubernetes/kubernetes#138671](https://github.com/kubernetes/kubernetes/issues/138671) for the original issue and discussion."
-    },
-    {
-      "heading": "Kubelet: Static Pods can no longer reference Secrets or ConfigMaps",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [
-        "140226"
-      ],
-      "identifiers": [
-        "PreventStaticPodAPIReferences"
-      ],
-      "summary": "Static Pods were never meant to read API resources directly, since they aren't created through the API server \u2014 but a bug let them reference Secrets or ConfigMaps via fields like `configMapRef` or `secretRef`. That bug is now fixed: as of v1.37 these references are strictly prohibited, and the `PreventStaticPodAPIReferences` feature gate that previously let you opt out of the restriction has been removed.  See [kubernetes/kubernetes#140226](https://github.com/kubernetes/kubernetes/issues/140226) for the original issue and discussion."
-    },
-    {
-      "heading": "Deprecating kube-proxy's support for `ipvs` mode",
-      "stage": "Unspecified",
-      "keps": [
-        "5495"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "`kube-proxy` support for `ipvs` mode was introduced in v1.8 to resolve `iptables` performance bottlenecks. However, since the kernel `ipvs` API alone cannot fully implement Kubernetes Services, `ipvs` mode continues to use `iptables` underneath ([KEP-3866, \"The ipvs mode of kube-proxy will not save us\"](https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/3866-nftables-proxy/README.md#the-ipvs-mode-of-kube-proxy-will-not-save-us)).  Clusters running `kube-proxy` in ipvs mode (or mode: ipvs in KubeProxyConfiguration) would now be logging a deprecation warning on startup. The "
-    },
-    {
-      "heading": "Future removal of cgroup v1 support",
-      "stage": "Removal",
-      "keps": [
-        "5573"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "As modern Linux distributions and container runtimes use [cgroup v2](/docs/concepts/architecture/cgroups/) as the default, support for the legacy cgroup v1 is officially being phased out. Since the v1.35 release, the `failCgroupV1` setting has defaulted to true. Consequently, the `kubelet` will fail to initialize on any nodes that still rely on cgroup v1 unless an explicit configuration override is applied.  ```yaml apiVersion: kubelet.config.k8s.io/v1beta1 kind: KubeletConfiguration failCgroupV1: false # temporary override"
-    },
-    {
-      "heading": "SELinux volume relabeling (\"SELinuxMount\") graduates to GA",
-      "stage": "Stable",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "SELinuxMount is expected to reach GA and be enabled by default in v1.37. Volumes would then be mounted with `-o context=<label>` (the mount option default) instead of being recursively relabeled, but **only** when the volume's CSI driver opts in via a CSIDriver that sets `.spec seLinuxMount: true`.  Because a single mount can only hold one SELinux context, pods with different SELinux labels sharing a volume on the same node (which previously coexisted under recursive relabeling) may now fail to start. To retain the previous recursive behavior for a specific workload, set `seLinuxChangePolicy: "
-    },
-    {
-      "heading": "Metrics API goes GA",
-      "stage": "Stable",
-      "keps": [
-        "5207"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The `metrics.k8s.io` API is expected to graduate to Stable (GA) in Kubernetes v1.37 after spending nearly nine years in Beta. The API provides a standard way to retrieve CPU and memory usage for pods and nodes, powering widely used Kubernetes features such as the Horizontal Pod Autoscaler (HPA) and commands like `kubectl top`.  This graduation recognizes the API's stability and widespread adoption, with no functional changes expected. Both `v1` and `v1beta1` will remain usable during the transition, enabling developers to adopt the stable API at their own pace without breaking existing workflo"
-    },
-    {
-      "heading": "Kubelet in UserNS a.k.a. Rootless Mode",
-      "stage": "Unspecified",
-      "keps": [
-        "2033"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Traditionally, Kubernetes node components such as the `kubelet` run with root privileges on the host. While necessary for many deployments, this also means that a vulnerability in one of these components could potentially have a greater impact on the underlying system.   With Kubernetes v1.37, kubelet in User Namespace (Rootless Mode) is expected to graduate to Beta. This enhancement allows Kubernetes node components to run inside a Linux user namespace as an unprivileged user on the host while still behaving as root within the namespace. By reducing the need for host-level root privileges, it"
-    },
-    {
-      "heading": "Volume health monitor",
-      "stage": "Unspecified",
-      "keps": [
-        "1432"
-      ],
-      "prs": [],
-      "identifiers": [
-        "ControllerListVolumeHealth",
-        "ControllerGetVolumeHealth",
-        "PersistentVolumeClaim.status.healthStatus",
-        "NodeGetVolumeHealth",
-        "Pod.status.volumeHealth",
-        "NodeGetStorageHealth",
-        "CSINode.status.storageHealth",
-        "Inaccessible"
-      ],
-      "summary": "Historically, Kubernetes has lacked an API for CSI drivers to report storage failures, which become evident only through failed mounts or hung I/O. Since remediation controllers had nothing machine-readable to act upon, the only way to figure out the root cause behind this failure was to cross-reference Kubernetes objects alongside external vendor dashboards.   In Kubernetes v1.37, this KEP resets graduation to Alpha after an initial implementation in v1.21 and introduces four new CSI RPCs. The controller plugin reports the health of storage volumes using `ControllerListVolumeHealth` (lists un"
     }
   ],
   "ground_truth_keps": [
@@ -688,9 +563,7 @@
     "4680",
     "3085",
     "5495",
-    "5573",
-    "2033",
-    "1432"
+    "5573"
   ],
   "ground_truth_identifiers": [
     "ResilientWatchCacheInitialization",

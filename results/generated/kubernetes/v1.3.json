@@ -1,0 +1,478 @@
+{
+  "variant": "v5_progressive_clarity_engine",
+  "project": "kubernetes",
+  "version": "v1.3",
+  "positioning": "Kubernetes v1.3 focuses on Urgent Upgrade Notes Enhancements, Feature Enhancements, and Dynamic Resource Allocation. For operators, this release translates 60 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "Kubernetes v1.3 focuses on Urgent Upgrade Notes Enhancements, Feature Enhancements, and Dynamic Resource Allocation. For operators, this release translates 60 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "high_level_changes": [
+      {
+        "headline": "Urgent Upgrade Notes Enhancements",
+        "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Feature Enhancements",
+        "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Dynamic Resource Allocation",
+        "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+      },
+      {
+        "headline": "Networking, `nftables` Proxy & Traffic Observability",
+        "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Urgent Upgrade Notes Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Feature Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "models_workloads": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+        "gpus_infra": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+        "bill_impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+      },
+      {
+        "capability": "Networking, `nftables` Proxy & Traffic Observability",
+        "models_workloads": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+        "gpus_infra": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+        "bill_impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "DRA (Dynamic Resource Allocation)",
+        "domain": "kubernetes",
+        "meaning": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+        "why_it_matters": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+      },
+      {
+        "term": "nftables `kube-proxy` Backend",
+        "domain": "kubernetes",
+        "meaning": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+        "why_it_matters": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+      },
+      {
+        "term": "In-Place Pod Vertical Scaling (Resize)",
+        "domain": "kubernetes",
+        "meaning": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+        "why_it_matters": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+      },
+      {
+        "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+        "domain": "kubernetes",
+        "meaning": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+        "why_it_matters": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+      },
+      {
+        "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+        "domain": "kubernetes",
+        "meaning": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+        "why_it_matters": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "ThirdPartyResource: If you use ThirdPartyResource objects, they have moved from being namespaced-scoped to be cluster-scoped. Before upgrading to 1.3.0, export and delete any existing ThirdPartyResource objects using a 1.2.x client: kubectl get thirdpartyresource --all-namespaces -o yaml > tprs.yaml kubectl delete -f tprs.yaml After upgrading to 1.3.0, re-register the third party resource objects at the root scope (using a 1.3 server and client): kubectl create -f tprs.yaml",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000))",
+        "prs": [
+          "24000"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "This issue can be resolved by restarting docker daemon",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086))",
+        "prs": [
+          "24086"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Persistent volume claims gets added incorrectly after being deleted under stress. Happens very infrequently. ([#26082](https://github.com/kubernetes/kubernetes/issues/26082))",
+        "prs": [
+          "26082"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Kernel crash with Aufs storage driver on Debian Jessie ([#27885](https://github.com/kubernetes/kubernetes/issues/27885))",
+        "prs": [
+          "27885"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Consider running the *new* [kubernetes node problem detector](https://github.com/kubernetes/node-problem-detector) to identify this (and other) kernel issues automatically.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "File descriptors are leaked in docker v1.11 ([#275](https://github.com/docker/containerd/issues/275))",
+        "prs": [
+          "275"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Additional memory overhead per container in docker v1.11 ([#21737](https://github.com/docker/docker/issues/21737))",
+        "prs": [
+          "21737"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.3, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "(https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat.",
+          "kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.",
+          "Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)).",
+          "CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "24000",
+          "24086",
+          "26082",
+          "27885",
+          "275"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.3, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)).",
+          "Alpha RBAC authorization API group.",
+          "federation api group is now beta.",
+          "alpha PetSets manage stateful apps."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "24836"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.3, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "Stop 'kubectl drain' deleting pods with local storage."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.3, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "Adding loadBalancer services and nodeports services to quota system."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.3, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "(https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat.",
+          "kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.",
+          "Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)).",
+          "CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "24000",
+          "24086",
+          "26082",
+          "27885",
+          "275"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.3, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)).",
+          "Alpha RBAC authorization API group.",
+          "federation api group is now beta.",
+          "alpha PetSets manage stateful apps."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "24836"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "previously": "Prior to v1.3, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+        "tech_bullets": [
+          "Stop 'kubectl drain' deleting pods with local storage."
+        ],
+        "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+        "prs": [],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.3, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "Adding loadBalancer services and nodeports services to quota system."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "[List of upstream fixes](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.5
+      },
+      {
+        "category": "Feature",
+        "text": "**alpha**: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc))",
+        "prs": [
+          "24836"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 13.0
+      },
+      {
+        "category": "Feature",
+        "text": "**Alpha** RBAC authorization API group",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "federation api group is now **beta**",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "**alpha** PetSets manage stateful apps",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "**alpha** Init containers provide one-time setup for stateful containers",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "**beta** PodSecurityPolicy objects limits use of security-sensitive features by pods.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-beta.3](CHANGELOG.md#v130-beta3)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-beta.2](CHANGELOG.md#v130-beta2)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-beta.1](CHANGELOG.md#v130-beta1)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-alpha.5](CHANGELOG.md#v130-alpha5)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-alpha.4](CHANGELOG.md#v130-alpha4)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-alpha.3](CHANGELOG.md#v130-alpha3)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[v1.3.0-alpha.2](CHANGELOG.md#v130-alpha2)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "Patch release `v1.3.9` ships 2 backported fixes and stability updates ([#34524](https://github.com/kubernetes/kubernetes/pull/34524), [#34076](https://github.com/kubernetes/kubernetes/pull/34076))",
+      "Patch release `v1.3.8` ships 1 backported fixes and stability updates ([#31090](https://github.com/kubernetes/kubernetes/pull/31090))",
+      "Patch release `v1.3.7` ships 5 backported fixes and stability updates ([#28428](https://github.com/kubernetes/kubernetes/pull/28428), [#31993](https://github.com/kubernetes/kubernetes/pull/31993), [#32001](https://github.com/kubernetes/kubernetes/pull/32001))",
+      "[List of upstream fixes](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat (Upstream release notes)",
+      "**alpha**: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)) ([#24836](https://github.com/kubernetes/kubernetes/pull/24836))",
+      "**Alpha** RBAC authorization API group (Upstream release notes)",
+      "federation api group is now **beta** (Upstream release notes)",
+      "**alpha** PetSets manage stateful apps (Upstream release notes)"
+    ]
+  },
+  "cited_prs": [
+    "24836",
+    "24000",
+    "24086",
+    "26082",
+    "27885",
+    "275",
+    "21737"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [],
+  "markdown": "# What's New in Kubernetes v1.3\n\n## High-Level Explanation\nKubernetes v1.3 focuses on Urgent Upgrade Notes Enhancements, Feature Enhancements, and Dynamic Resource Allocation. For operators, this release translates 60 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Urgent Upgrade Notes Enhancements**: Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Feature Enhancements**: Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Dynamic Resource Allocation**: Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting.\n- **Networking, `nftables` Proxy & Traffic Observability**: Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Urgent Upgrade Notes Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Feature Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Dynamic Resource Allocation (DRA) & GPU/Accelerator Management** | AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers | NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools | Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting |\n| **Networking, `nftables` Proxy & Traffic Observability** | High-throughput east-west microservices and latency-sensitive ingress traffic | Linux dataplane (`nftables`/`ipvs`) and cloud load balancers | Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules |\n\n## 3. What Does the Jargon Mean?\n- **DRA (Dynamic Resource Allocation)**: Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins. Why it matters: Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks.\n- **nftables `kube-proxy` Backend**: A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains. Why it matters: Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services.\n- **In-Place Pod Vertical Scaling (Resize)**: Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container. Why it matters: Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers.\n- **Gang Scheduling (`Workload` / `PodGroup`)**: An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group. Why it matters: Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity.\n- **Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)**: First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish. Why it matters: Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Urgent Upgrade Notes**: ThirdPartyResource: If you use ThirdPartyResource objects, they have moved from being namespaced-scoped to be cluster-scoped. Before upgrading to 1.3.0, export and delete any existing ThirdPartyResource. (Upstream release notes)\n- **Urgent Upgrade Notes**: kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead. (Upstream release notes)\n- **Urgent Upgrade Notes**: Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)). ([#24000](https://github.com/kubernetes/kubernetes/pull/24000))\n- **Urgent Upgrade Notes**: This issue can be resolved by restarting docker daemon. (Upstream release notes)\n- **Urgent Upgrade Notes**: CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086)). ([#24086](https://github.com/kubernetes/kubernetes/pull/24086))\n- **Urgent Upgrade Notes**: Persistent volume claims gets added incorrectly after being deleted under stress. Happens very infrequently. ([#26082](https://github.com/kubernetes/kubernetes/issues/26082)). ([#26082](https://github.com/kubernetes/kubernetes/pull/26082))\n- **Urgent Upgrade Notes**: Kernel crash with Aufs storage driver on Debian Jessie ([#27885](https://github.com/kubernetes/kubernetes/issues/27885)). ([#27885](https://github.com/kubernetes/kubernetes/pull/27885))\n- **Urgent Upgrade Notes**: Consider running the *new* [kubernetes node problem detector](https://github.com/kubernetes/node-problem-detector) to identify this (and other) kernel issues automatically. (Upstream release notes)\n- **Urgent Upgrade Notes**: File descriptors are leaked in docker v1.11 ([#275](https://github.com/docker/containerd/issues/275)). ([#275](https://github.com/kubernetes/kubernetes/pull/275))\n- **Urgent Upgrade Notes**: Additional memory overhead per container in docker v1.11 ([#21737](https://github.com/docker/docker/issues/21737)). ([#21737](https://github.com/kubernetes/kubernetes/pull/21737))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Urgent Upgrade Notes Enhancements ([#24000](https://github.com/kubernetes/kubernetes/pull/24000), [#24086](https://github.com/kubernetes/kubernetes/pull/24086), [#26082](https://github.com/kubernetes/kubernetes/pull/26082), [#27885](https://github.com/kubernetes/kubernetes/pull/27885))\n- **Previously**: Prior to v1.3, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: (https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat.\n- **Technical change**: kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.\n- **Technical change**: Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)).\n- **Technical change**: CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086)).\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Feature Enhancements ([#24836](https://github.com/kubernetes/kubernetes/pull/24836))\n- **Previously**: Prior to v1.3, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)).\n- **Technical change**: Alpha RBAC authorization API group.\n- **Technical change**: federation api group is now beta.\n- **Technical change**: alpha PetSets manage stateful apps.\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 3. Dynamic Resource Allocation (DRA) & GPU/Accelerator Management (Upstream release notes)\n- **Previously**: Prior to v1.3, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.\n- **Technical change**: Stop 'kubectl drain' deleting pods with local storage.\n- **Operational impact**: Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting\n### 4. Networking, `nftables` Proxy & Traffic Observability (Upstream release notes)\n- **Previously**: Prior to v1.3, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.\n- **Technical change**: Adding loadBalancer services and nodeports services to quota system.\n- **Operational impact**: Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules\n\n### Weekly / Patch Merge Pulse\n- Patch release `v1.3.9` ships 2 backported fixes and stability updates ([#34524](https://github.com/kubernetes/kubernetes/pull/34524), [#34076](https://github.com/kubernetes/kubernetes/pull/34076))\n- Patch release `v1.3.8` ships 1 backported fixes and stability updates ([#31090](https://github.com/kubernetes/kubernetes/pull/31090))\n- Patch release `v1.3.7` ships 5 backported fixes and stability updates ([#28428](https://github.com/kubernetes/kubernetes/pull/28428), [#31993](https://github.com/kubernetes/kubernetes/pull/31993), [#32001](https://github.com/kubernetes/kubernetes/pull/32001))\n- [List of upstream fixes](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat (Upstream release notes)\n- **alpha**: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)) ([#24836](https://github.com/kubernetes/kubernetes/pull/24836))\n- **Alpha** RBAC authorization API group (Upstream release notes)\n- federation api group is now **beta** (Upstream release notes)\n- **alpha** PetSets manage stateful apps (Upstream release notes)\n\n## 6. Where's the Proof?\n- **Urgent Upgrade Notes** (Upstream release notes): (https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat.\n- **Feature** ([#24836](https://github.com/kubernetes/kubernetes/pull/24836)): alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)).\n- **Feature** (Upstream release notes): Alpha RBAC authorization API group.\n- **Feature** (Upstream release notes): federation api group is now beta.\n- **Feature** (Upstream release notes): alpha PetSets manage stateful apps.\n- **Feature** (Upstream release notes): alpha Init containers provide one-time setup for stateful containers.\n- **Feature** (Upstream release notes): beta PodSecurityPolicy objects limits use of security-sensitive features by pods.\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-beta3).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-beta2).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-beta1).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-alpha5).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-alpha4).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-alpha3).\n- **Feature** (Upstream release notes): (CHANGELOG.md#v130-alpha2).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Urgent Upgrade Notes]** (https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat. (Upstream release notes)\n- **[Feature]** alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)). ([#24836](https://github.com/kubernetes/kubernetes/pull/24836))\n- **[Feature]** Alpha RBAC authorization API group. (Upstream release notes)\n- **[Feature]** federation api group is now beta. (Upstream release notes)\n- **[Feature]** alpha PetSets manage stateful apps. (Upstream release notes)\n- **[Feature]** alpha Init containers provide one-time setup for stateful containers. (Upstream release notes)\n- **[Feature]** beta PodSecurityPolicy objects limits use of security-sensitive features by pods. (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-beta3). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-beta2). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-beta1). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-alpha5). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-alpha4). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-alpha3). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-alpha2). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v130-alpha1). (Upstream release notes)\n- **[Urgent Upgrade Notes]** kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)). ([#24000](https://github.com/kubernetes/kubernetes/pull/24000))\n- **[Urgent Upgrade Notes]** CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086)). ([#24086](https://github.com/kubernetes/kubernetes/pull/24086))\n- **[Urgent Upgrade Notes]** Persistent volume claims gets added incorrectly after being deleted under stress. Happens very infrequently. ([#26082](https://github.com/kubernetes/kubernetes/issues/26082)). ([#26082](https://github.com/kubernetes/kubernetes/pull/26082))\n- **[Urgent Upgrade Notes]** Kernel crash with Aufs storage driver on Debian Jessie ([#27885](https://github.com/kubernetes/kubernetes/issues/27885)). ([#27885](https://github.com/kubernetes/kubernetes/pull/27885))\n- **[Urgent Upgrade Notes]** File descriptors are leaked in docker v1.11 ([#275](https://github.com/docker/containerd/issues/275)). ([#275](https://github.com/kubernetes/kubernetes/pull/275))\n- **[Urgent Upgrade Notes]** Additional memory overhead per container in docker v1.11 ([#21737](https://github.com/docker/docker/issues/21737)). ([#21737](https://github.com/kubernetes/kubernetes/pull/21737))\n- **[Feature]** Authorization:. (Upstream release notes)\n- **[Feature]** Federation. (Upstream release notes)\n- **[Feature]** Services from all federated clusters are now registered in Cloud DNS (AWS and GCP). (Upstream release notes)\n- **[Feature]** Stateful Apps:. (Upstream release notes)\n- **[Feature]** Retry Pod/RC updates in kubectl rolling-update. (Upstream release notes)\n- **[Feature]** Stop 'kubectl drain' deleting pods with local storage. (Upstream release notes)\n- **[Feature]** Add `kubectl rollout status`. (Upstream release notes)\n- **[Feature]** Security/Auth. (Upstream release notes)\n- **[Feature]** L7 LB controller and disk attach controllers run on master, so nodes do not need those privileges. (Upstream release notes)\n- **[Feature]** Setting TLS1.2 minimum. (Upstream release notes)\n- **[Feature]** `kubectl create secret tls` command. (Upstream release notes)\n- **[Feature]** Webhook Token Authenticator. (Upstream release notes)\n- **[Feature]** Display line number on JSON errors. (Upstream release notes)\n- **[Feature]** Add flag -t as shorthand for --tty. (Upstream release notes)\n- **[Feature]** Improved node stability by *optionally* evicting pods upon memory pressure - [Design Doc](https://github.com/kubernetes/kubernetes/blob/release-1.3/docs/proposals/kubelet-eviction.md). (Upstream release notes)\n- **[Feature]** Adding loadBalancer services and nodeports services to quota system. (Upstream release notes)\n- **[Feature]** Support for ap-northeast-2 region (Seoul). (Upstream release notes)\n- **[Feature]** Allow cross-region image pulling with ECR. (Upstream release notes)\n- **[Feature]** More reliable kube-up/kube-down. (Upstream release notes)\n- **[Feature]** Enable ICMP Type 3 Code 4 for ELBs. (Upstream release notes)\n- **[Feature]** ARP caching fix. (Upstream release notes)\n- **[Feature]** Use /dev/xvdXX names. (Upstream release notes)\n- **[Feature]** ELB proxy protocol support. (Upstream release notes)\n- **[Feature]** mixed plaintext/encrypted ports support in ELBs. (Upstream release notes)\n- **[Feature]** SSL support for ELB listeners. (Upstream release notes)\n- **[Feature]** Allow VPC CIDR to be specified (experimental). (Upstream release notes)\n- **[Feature]** Fix problems with >2 security groups. (Upstream release notes)\n- **[Feature]** Enable using gcr.io as a Docker registry mirror. (Upstream release notes)\n- **[Feature]** Make bigger master root disks in GCE for large clusters. (Upstream release notes)\n- **[Feature]** Change default clusterCIDRs from /16 to /14 allowing 1000 Node clusters by default. (Upstream release notes)\n- **[Feature]** Allow Debian Jessie on GCE. (Upstream release notes)\n- **[Feature]** Node problem detector addon pod detects and reports kernel deadlocks. (Upstream release notes)\n- **[Feature]** Provider added. (Upstream release notes)\n- **[Feature]** Provider updated. (Upstream release notes)\n- **[Urgent Upgrade Notes]** ThirdPartyResource: If you use ThirdPartyResource objects, they have moved from being namespaced-scoped to be cluster-scoped. Before upgrading to 1.3.0, export and delete any existing ThirdPartyResource objects using a 1.2.x client: kubectl get thirdpartyresource --all-namespaces -o yaml >. (Upstream release notes)\n- **[Urgent Upgrade Notes]** This issue can be resolved by restarting docker daemon. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Consider running the *new* [kubernetes node problem detector](https://github.com/kubernetes/node-problem-detector) to identify this (and other) kernel issues automatically. (Upstream release notes)\n- **[Urgent Upgrade Notes]** A detailed list of known issues can be found [here](https://github.com/kubernetes/kubernetes.github.io/blob/release-1.3/docs/getting-started-guides/rkt/notes.md) *More Instructions coming soon*. (Upstream release notes)",
+  "eval": {
+    "variant": "v5_progressive_clarity_engine",
+    "project": "kubernetes",
+    "version": "v1.3",
+    "headline_salience_recall": 0.3333,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 1.0,
+    "cluster_diversity_score": 0.9767,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.8379,
+    "matched_spotlights": "2/6",
+    "cited_prs_count": 7,
+    "cited_keps_count": 0
+  },
+  "published_date": "2016-07-06",
+  "total_raw_items": 60
+}

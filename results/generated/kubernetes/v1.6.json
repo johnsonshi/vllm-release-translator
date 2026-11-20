@@ -1,0 +1,1091 @@
+{
+  "variant": "v5_progressive_clarity_engine",
+  "project": "kubernetes",
+  "version": "v1.6",
+  "positioning": "Kubernetes v1.6 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 511 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "Kubernetes v1.6 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 511 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "high_level_changes": [
+      {
+        "headline": "Feature Enhancements",
+        "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Urgent Upgrade Notes Enhancements",
+        "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+      },
+      {
+        "headline": "Networking, `nftables` Proxy & Traffic Observability",
+        "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+      },
+      {
+        "headline": "CEL-Based Validating & Mutating Admission Policies",
+        "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Feature Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Urgent Upgrade Notes Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "models_workloads": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+        "gpus_infra": "CSI storage drivers and cloud block volumes",
+        "bill_impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+      },
+      {
+        "capability": "Networking, `nftables` Proxy & Traffic Observability",
+        "models_workloads": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+        "gpus_infra": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+        "bill_impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+      },
+      {
+        "capability": "CEL-Based Validating & Mutating Admission Policies",
+        "models_workloads": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+        "gpus_infra": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+        "bill_impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+      },
+      {
+        "capability": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "models_workloads": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+        "gpus_infra": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+        "bill_impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+      },
+      {
+        "capability": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "models_workloads": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+        "gpus_infra": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+        "bill_impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "In-Place Pod Vertical Scaling (Resize)",
+        "domain": "kubernetes",
+        "meaning": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+        "why_it_matters": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+      },
+      {
+        "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+        "domain": "kubernetes",
+        "meaning": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+        "why_it_matters": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+      },
+      {
+        "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+        "domain": "kubernetes",
+        "meaning": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+        "why_it_matters": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+      },
+      {
+        "term": "nftables `kube-proxy` Backend",
+        "domain": "kubernetes",
+        "meaning": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+        "why_it_matters": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+      },
+      {
+        "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+        "domain": "kubernetes",
+        "meaning": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+        "why_it_matters": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+      },
+      {
+        "term": "CSI (Container Storage Interface)",
+        "domain": "kubernetes",
+        "meaning": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+        "why_it_matters": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Certificates API: * Users of the alpha certificates API should delete v1alpha1 CSRs from the API before upgrading and recreate them as v1beta1 CSR after upgrading. ([#39772](https://github.com/kubernetes/kubernetes/pull/39772), [@mikedanese](https://github.com/mikedanese))",
+        "prs": [
+          "39772"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Cluster Autoscaler: * If you are using (or planning to use) Cluster Autoscaler please wait for Kubernetes 1.6.1. In 1.6.0 Cluster Autoscaler may occasionally increase the size of the cluster a bit more than it is actually needed, when there are unschedulable pods, scale up is required and cloud provider is slow to set up networking for new nodes. Anyway, the cluster should get back to the proper size after 10 min.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Deployment now fully respects ControllerRef to avoid fighting over Pods and ReplicaSets. At the time of upgrade, **you must not have Deployments with selectors that overlap**, or else [ownership of ReplicaSets may change](https://github.com/kubernetes/community/blob/master/contributors/design-proposals/api-machinery/controller-ref.md#upgrading). ([#42175](https://github.com/kubernetes/kubernetes/pull/42175), [@enisoc](https://github.com/enisoc))",
+        "prs": [
+          "42175"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Federation: * The --dns-provider argument of 'kubefed init' is now mandatory and does not default to `google-clouddns`. To initialize a Federation control plane with Google Cloud DNS, use the following invocation: 'kubefed init --dns-provider=google-clouddns' ([#42092](https://github.com/kubernetes/kubernetes/pull/42092), [@marun](https://github.com/marun))",
+        "prs": [
+          "42092"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "google-clouddns"
+        ]
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Federation: * Cluster federation servers have changed the location in etcd where federated services are stored, so existing federated services must be deleted and recreated. Before upgrading, export all federated services from the federation server and delete the services. After upgrading the cluster, recreate the federated services from the exported data. ([#37770](https://github.com/kubernetes/kubernetes/pull/37770), [@enj](https://github.com/enj))",
+        "prs": [
+          "37770"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Internal Storage Layer: * upgrade to etcd3 prior to upgrading to 1.6 **OR** explicitly specify `--storage-backend=etcd2 --storage-media-type=application/json` when starting the apiserver",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Node Components: * **Kubelet with the Docker-CRI implementation**",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Node Components:   * The Docker-CRI implementation is enabled by default.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Node Components:   * It is not compatible with containers created by older Kubelets. It is recommended to drain your node before upgrade. If you choose to perform an in-place upgrade, the Kubelet will automatically restart all Kubernetes-managed containers on the node.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Node Components:   * It is not compatible with CNI plugins that do not conform to the [error handling behavior in the spec](https://github.com/containernetworking/cni/blob/master/SPEC.md#network-configuration-list-error-handling). The plugins are being updated to resolve this issue ([#43488](https://github.com/kubernetes/kubernetes/issues/43488)). You can disable CRI explicitly (`--enable-cri=false`) as a temporary workaround.",
+        "prs": [
+          "43488"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.6, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by (#40355).",
+          "Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod.",
+          "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together.",
+          "Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "40355",
+          "38382",
+          "38871",
+          "38968",
+          "40000"
+        ],
+        "keps": [],
+        "identifiers": [
+          "affinity",
+          "kubefed",
+          "kube-dns",
+          "kubeadm",
+          "AlwaysAllow",
+          "NoExecute"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.6, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or (#38981).",
+          "Scheduling:   * You can continue to use the alpha version of this feature (with one caveat -- see below), in which you specify affinity requests using Pod annotations, in 1.6 by including.",
+          "Scheduling:   * Caveat: The alpha version no longer supports, and the beta version does not support, the \"empty `podAffinityTerm.namespaces` list means all namespaces\" behavior. In both alpha and.",
+          "Scheduling:   * After your master is upgraded to 1.6, you will need to update your PodSpecs to set the `tolerations` field of the PodSpec and remove the `scheduler.alpha.kubernetes.io/tolerations`."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "38981",
+          "38121",
+          "39284",
+          "43488",
+          "41184"
+        ],
+        "keps": [],
+        "identifiers": [
+          "affinity",
+          "podAffinityTerm.namespaces",
+          "tolerations",
+          "v1beta1",
+          "apiVersion",
+          "apiGroup"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "previously": "Prior to v1.6, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+        "tech_bullets": [
+          "Volumes: * StorageClassName attribute has been added to PersistentVolume and PersistentVolumeClaim objects and should be used instead of annotation `volume.beta.kubernetes.io/storage-class`. The beta (#42128).",
+          "Volumes:   * If you depend on the old behavior of volumes binding to existing pool of PersistentVolume objects then modify the StorageClass object and set.",
+          "StatefulSet now respects ControllerRef to avoid fighting over Pods. At the time of upgrade, you must not have StatefulSets with selectors that overlap with any other controllers (such as (#42080).",
+          "StatefulSet: * Fixes issue [#38418](https://github.com/kubernetes/kubernetes/pull/38418) which, under circumstance, could cause StatefulSet to deadlock.."
+        ],
+        "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+        "prs": [
+          "42128",
+          "42080",
+          "38418",
+          "40838",
+          "40910"
+        ],
+        "keps": [],
+        "identifiers": [
+          "false"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.6, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "kube-proxy: * Remove outdated net.experimental.kubernetes.io/proxy-mode and net.beta.kubernetes.io/proxy-mode annotations from kube-proxy. (#40585).",
+          "kube-proxy: * Clean up the kube-proxy container image by removing unnecessary packages and files. ([#42090](https://github.com/kubernetes/kubernetes/pull/42090).",
+          "Service: * Fix Service Update on LoadBalancerSourceRanges Field ([#37720](https://github.com/kubernetes/kubernetes/pull/37720), [@freehan](https://github.com/freehan)).",
+          "Services of type loadbalancer consume both loadbalancer and nodeport quota. ([#39364](https://github.com/kubernetes/kubernetes/pull/39364), [@zhouhaibing089](https://github.com/zhouhaibing089))."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [
+          "40585",
+          "42090",
+          "37720",
+          "39364",
+          "41487"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.6, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "Admission Control: * An `automountServiceAccountToken` field was added to ServiceAccount and PodSpec objects. If set to `false` on a pod spec, no service account token is automounted in the pod. If (#37953).",
+          "Node Components: * [alpha] `--experimental-nvidia-gpus` flag is replaced by `Accelerators` alpha feature gate along with addition of support for multiple Nvidia GPUs.",
+          "Service Catalog: - [alpha] Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods.",
+          "Node Components: * [alpha] Critical Pods: When feature gate \"ExperimentalCriticalPodAnnotation\" is set to true, the system will guarantee scheduling and admission of pods with the following."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "37953",
+          "41931",
+          "41815",
+          "36765",
+          "41414"
+        ],
+        "keps": [],
+        "identifiers": [
+          "automountServiceAccountToken",
+          "false",
+          "Accelerators",
+          "PodPreset"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.6, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "Kubernetes now supports up to 5,000 nodes via etcd v3, which is enabled by default.",
+          "Internal Storage Layer: * [stable] The internal storage layer for kubernetes cluster state has been updated to use etcd v3 by default. Existing clusters will have to plan for a data migration window..",
+          "API Server: * The --long-running-request-regexp flag to kube-apiserver is deprecated and will be removed in a future release. Long-running requests are now detected based on specific verbs (watch (#38119).",
+          "Generic API Server: * Remove genericapiserver.Options.MasterServiceNamespace ([#38186](https://github.com/kubernetes/kubernetes/pull/38186), [@sttts](https://github.com/sttts))."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "38119",
+          "38186",
+          "41807",
+          "40039",
+          "37770"
+        ],
+        "keps": [],
+        "identifiers": [
+          "logrotate",
+          "kube-apiserver.log",
+          "kube-apiserver"
+        ]
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.6, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by (#40355).",
+          "Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod.",
+          "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together.",
+          "Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "40355",
+          "38382",
+          "38871",
+          "38968",
+          "40000"
+        ],
+        "keps": [],
+        "identifiers": [
+          "affinity",
+          "kubefed",
+          "kube-dns",
+          "kubeadm",
+          "AlwaysAllow",
+          "NoExecute"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.6, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or (#38981).",
+          "Scheduling:   * You can continue to use the alpha version of this feature (with one caveat -- see below), in which you specify affinity requests using Pod annotations, in 1.6 by including.",
+          "Scheduling:   * Caveat: The alpha version no longer supports, and the beta version does not support, the \"empty `podAffinityTerm.namespaces` list means all namespaces\" behavior. In both alpha and.",
+          "Scheduling:   * After your master is upgraded to 1.6, you will need to update your PodSpecs to set the `tolerations` field of the PodSpec and remove the `scheduler.alpha.kubernetes.io/tolerations`."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "38981",
+          "38121",
+          "39284",
+          "43488",
+          "41184"
+        ],
+        "keps": [],
+        "identifiers": [
+          "affinity",
+          "podAffinityTerm.namespaces",
+          "tolerations",
+          "v1beta1",
+          "apiVersion",
+          "apiGroup"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "previously": "Prior to v1.6, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+        "tech_bullets": [
+          "Volumes: * StorageClassName attribute has been added to PersistentVolume and PersistentVolumeClaim objects and should be used instead of annotation `volume.beta.kubernetes.io/storage-class`. The beta (#42128).",
+          "Volumes:   * If you depend on the old behavior of volumes binding to existing pool of PersistentVolume objects then modify the StorageClass object and set.",
+          "StatefulSet now respects ControllerRef to avoid fighting over Pods. At the time of upgrade, you must not have StatefulSets with selectors that overlap with any other controllers (such as (#42080).",
+          "StatefulSet: * Fixes issue [#38418](https://github.com/kubernetes/kubernetes/pull/38418) which, under circumstance, could cause StatefulSet to deadlock.."
+        ],
+        "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+        "prs": [
+          "42128",
+          "42080",
+          "38418",
+          "40838",
+          "40910"
+        ],
+        "keps": [],
+        "identifiers": [
+          "false"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.6, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "kube-proxy: * Remove outdated net.experimental.kubernetes.io/proxy-mode and net.beta.kubernetes.io/proxy-mode annotations from kube-proxy. (#40585).",
+          "kube-proxy: * Clean up the kube-proxy container image by removing unnecessary packages and files. ([#42090](https://github.com/kubernetes/kubernetes/pull/42090).",
+          "Service: * Fix Service Update on LoadBalancerSourceRanges Field ([#37720](https://github.com/kubernetes/kubernetes/pull/37720), [@freehan](https://github.com/freehan)).",
+          "Services of type loadbalancer consume both loadbalancer and nodeport quota. ([#39364](https://github.com/kubernetes/kubernetes/pull/39364), [@zhouhaibing089](https://github.com/zhouhaibing089))."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [
+          "40585",
+          "42090",
+          "37720",
+          "39364",
+          "41487"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.6, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "Admission Control: * An `automountServiceAccountToken` field was added to ServiceAccount and PodSpec objects. If set to `false` on a pod spec, no service account token is automounted in the pod. If (#37953).",
+          "Node Components: * [alpha] `--experimental-nvidia-gpus` flag is replaced by `Accelerators` alpha feature gate along with addition of support for multiple Nvidia GPUs.",
+          "Service Catalog: - [alpha] Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods.",
+          "Node Components: * [alpha] Critical Pods: When feature gate \"ExperimentalCriticalPodAnnotation\" is set to true, the system will guarantee scheduling and admission of pods with the following."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "37953",
+          "41931",
+          "41815",
+          "36765",
+          "41414"
+        ],
+        "keps": [],
+        "identifiers": [
+          "automountServiceAccountToken",
+          "false",
+          "Accelerators",
+          "PodPreset"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.6, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "Kubernetes now supports up to 5,000 nodes via etcd v3, which is enabled by default.",
+          "Internal Storage Layer: * [stable] The internal storage layer for kubernetes cluster state has been updated to use etcd v3 by default. Existing clusters will have to plan for a data migration window..",
+          "API Server: * The --long-running-request-regexp flag to kube-apiserver is deprecated and will be removed in a future release. Long-running requests are now detected based on specific verbs (watch (#38119).",
+          "Generic API Server: * Remove genericapiserver.Options.MasterServiceNamespace ([#38186](https://github.com/kubernetes/kubernetes/pull/38186), [@sttts](https://github.com/sttts))."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "38119",
+          "38186",
+          "41807",
+          "40039",
+          "37770"
+        ],
+        "keps": [],
+        "identifiers": [
+          "logrotate",
+          "kube-apiserver.log",
+          "kube-apiserver"
+        ]
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Feature",
+        "text": "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by default. It's gated by controller-manager enable-taint-manager flag. ([#40355](https://github.com/kubernetes/kubernetes/pull/40355), [@gmarek](https://github.com/gmarek))",
+        "prs": [
+          "40355"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 21.5
+      },
+      {
+        "category": "Feature",
+        "text": "Scheduling: - **[beta]** [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and **[beta]** [pod affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/). Node affinity/anti-affinity allow you to specify rules for restricting which node(s) a pod can schedule onto, based on the labels on the node. Pod affinity/anti-affinity allow you to specify rules for spreading and packing pods relative to one another, across arbitrary topologies (node, zone, etc.) These affinity rules are now be specified in a new-in-1.6 `affinity` field of the PodSpec. Kubernetes 1.6 continues to support the alpha `scheduler.alpha.kubernetes.io/affinity` annotation on the Pod if you explicitly enable the alpha feature \"AffinityInAnnotations\", but it will be removed in a future release. When you upgrade to 1.6, if you have not enabled the alpha feature, then the scheduler will use the `affinity` field in PodSpec and will ignore the annotation. If you have enabled the alpha feature, then the scheduler will use the `affinity` field in PodSpec if it is present, and otherwise will use the annotation.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "affinity"
+        ],
+        "_score": 20.9
+      },
+      {
+        "category": "Feature",
+        "text": "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together (for example kubeadm v1.5 can't join a kubeadm v1.6 cluster).",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 20.7
+      },
+      {
+        "category": "Feature",
+        "text": "Federation: * **[beta]** `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to federation components.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubefed",
+          "kube-dns"
+        ],
+        "_score": 19.6
+      },
+      {
+        "category": "Feature",
+        "text": "The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights:",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubeadm"
+        ],
+        "_score": 18.4
+      },
+      {
+        "category": "Feature",
+        "text": "The [`kubefed` federation bootstrap tool](https://kubernetes.io/docs/tutorials/federation/set-up-cluster-federation-kubefed/) has also graduated to beta.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubefed"
+        ],
+        "_score": 18.4
+      },
+      {
+        "category": "Feature",
+        "text": "Pod: * Init containers have graduated to GA and now appear as a field.  The beta annotation value will still be respected and overrides the field value. ([#38382](https://github.com/kubernetes/kubernetes/pull/38382), [@hodovska](https://github.com/hodovska))",
+        "prs": [
+          "38382"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 18.0
+      },
+      {
+        "category": "Feature",
+        "text": "Scheduler: * Mark multi-scheduler graduation to beta and then v1. ([#38871](https://github.com/kubernetes/kubernetes/pull/38871), [@k82cn](https://github.com/k82cn))",
+        "prs": [
+          "38871"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 18.0
+      },
+      {
+        "category": "Feature",
+        "text": "[Role-based access control (RBAC)](https://kubernetes.io//docs/admin/authorization/rbac) has graduated to beta, and defines secure default roles for control plane, node, and controller components.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "Various scheduling features have graduated to beta:",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "Node Components: * **[stable]** Init containers have graduated to GA and now appear as a field. The beta annotation value will still be respected and overrides the field value.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "Node Components:   - **[beta]** The Docker-CRI implementation is enabled by default in kubelet. You can disable it by --enable-cri=false. See [notes on the new implementation](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v16-release-docker-cri-integration-beta) for more details.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "RBAC: * **[beta]** The Docker-CRI implementation is Beta and is enabled by default in kubelet.  You can disable it by `--enable-cri=false`. See [notes on the new implementation]( https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v16-release-docker-cri-integration-beta) for more details.",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or `system:unauthenticated`. Existing v1alpha1 bindings to the user `*` are automatically converted to the group `system:authenticated`. ([#38981](https://github.com/kubernetes/kubernetes/pull/38981), [@liggitt](https://github.com/liggitt))",
+        "prs": [
+          "38981"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 16.8
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "Patch release `v1.6.9` ships 4 backported fixes and stability updates ([#50942](https://github.com/kubernetes/kubernetes/pull/50942), [#49725](https://github.com/kubernetes/kubernetes/pull/49725), [#49897](https://github.com/kubernetes/kubernetes/pull/49897))",
+      "Patch release `v1.6.8` ships 8 backported fixes and stability updates ([#49689](https://github.com/kubernetes/kubernetes/pull/49689), [#48875](https://github.com/kubernetes/kubernetes/pull/48875), [#44661](https://github.com/kubernetes/kubernetes/pull/44661))",
+      "Patch release `v1.6.7` ships 10 backported fixes and stability updates ([#48050](https://github.com/kubernetes/kubernetes/pull/48050), [#46267](https://github.com/kubernetes/kubernetes/pull/46267), [#48182](https://github.com/kubernetes/kubernetes/pull/48182))",
+      "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature... ([#40355](https://github.com/kubernetes/kubernetes/pull/40355))",
+      "Scheduling: - **[beta]** [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and **[beta]** [pod... (Upstream release notes)",
+      "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and... (Upstream release notes)",
+      "Federation: * **[beta]** `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in... (Upstream release notes)",
+      "The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights: (Upstream release notes)"
+    ]
+  },
+  "cited_prs": [
+    "40355",
+    "38382",
+    "38871",
+    "38968",
+    "41576",
+    "38981",
+    "42128",
+    "40000",
+    "41710",
+    "40585",
+    "37953",
+    "38121",
+    "39284",
+    "38706",
+    "36292",
+    "40630",
+    "39743",
+    "41819",
+    "39625",
+    "43422",
+    "38730",
+    "41035",
+    "41837",
+    "43488",
+    "35782",
+    "43106",
+    "36087",
+    "38119",
+    "38186",
+    "41532",
+    "39842",
+    "38334",
+    "39338",
+    "41942",
+    "34664",
+    "41924",
+    "41864",
+    "42090",
+    "41666",
+    "41670",
+    "37593",
+    "41807",
+    "41998",
+    "38902",
+    "36033",
+    "41133",
+    "39469",
+    "40039",
+    "42064",
+    "41027",
+    "41037",
+    "42931",
+    "41184",
+    "42175",
+    "37770",
+    "39383",
+    "42080",
+    "39772",
+    "39341",
+    "36672",
+    "39202",
+    "41041",
+    "40941",
+    "41196",
+    "41931",
+    "41755",
+    "36101",
+    "39454",
+    "39834",
+    "40892",
+    "41077",
+    "40666",
+    "41304",
+    "39006",
+    "41211",
+    "40722",
+    "38816",
+    "41360",
+    "38614",
+    "38772",
+    "41672",
+    "39140",
+    "42070",
+    "25319",
+    "39478",
+    "38418",
+    "40838",
+    "42092",
+    "41815",
+    "36765",
+    "41414",
+    "39109",
+    "34554",
+    "41058",
+    "40709",
+    "40935",
+    "39694",
+    "39981",
+    "36245",
+    "40932",
+    "42173",
+    "42028",
+    "41116",
+    "41896",
+    "41172",
+    "40330",
+    "39157",
+    "37959",
+    "39683",
+    "42362",
+    "36592",
+    "37299",
+    "37968",
+    "35676",
+    "39446",
+    "41281",
+    "37093",
+    "37720",
+    "32561",
+    "39364",
+    "40910",
+    "36859",
+    "39914",
+    "40088",
+    "36900",
+    "41363",
+    "39651",
+    "36064",
+    "42506",
+    "41165",
+    "40124",
+    "37190",
+    "38533",
+    "38175",
+    "37693",
+    "43122",
+    "39466",
+    "39619",
+    "38724",
+    "39948",
+    "38191",
+    "38603",
+    "40426",
+    "40216",
+    "39943",
+    "39945",
+    "39946",
+    "39947",
+    "39022",
+    "38826",
+    "38690",
+    "36704",
+    "41722",
+    "40907",
+    "38167",
+    "35672",
+    "38154",
+    "41653",
+    "39063",
+    "40508",
+    "40497",
+    "39996",
+    "41695",
+    "41702",
+    "41455",
+    "38880",
+    "38746",
+    "38410",
+    "38818",
+    "40405",
+    "40066",
+    "37783",
+    "36882",
+    "40634",
+    "41160",
+    "40118",
+    "40538",
+    "38426",
+    "36169",
+    "38423",
+    "38338",
+    "41335",
+    "40528",
+    "41410",
+    "40917",
+    "40516",
+    "40862",
+    "40392",
+    "36447",
+    "36310",
+    "40464",
+    "36390",
+    "36643",
+    "37353",
+    "38976",
+    "35943",
+    "39964",
+    "38676",
+    "41417",
+    "42066",
+    "41820",
+    "40682",
+    "39846",
+    "39280",
+    "35805",
+    "41694",
+    "41146",
+    "36646",
+    "41538",
+    "39852",
+    "37098",
+    "34789",
+    "38966",
+    "40746",
+    "42843",
+    "42162",
+    "39217",
+    "36396",
+    "37943",
+    "38112",
+    "39240",
+    "39038",
+    "42216",
+    "40073",
+    "40365",
+    "40057",
+    "39218",
+    "36802",
+    "40645",
+    "38665",
+    "40289",
+    "40541",
+    "39226",
+    "35191",
+    "43553",
+    "38957",
+    "42120",
+    "39486",
+    "36424",
+    "37263",
+    "39196",
+    "41449",
+    "41569",
+    "39158",
+    "41988",
+    "41149",
+    "33684",
+    "38258",
+    "34259",
+    "38375",
+    "37721",
+    "39373",
+    "39740",
+    "41487",
+    "41618",
+    "38919",
+    "38996",
+    "39695",
+    "39725",
+    "37594",
+    "41708",
+    "41119",
+    "41398",
+    "39718",
+    "39491",
+    "38084",
+    "37357",
+    "37379",
+    "40030",
+    "37886",
+    "37167",
+    "41597",
+    "38655",
+    "37413",
+    "41306",
+    "39311",
+    "38547",
+    "39551",
+    "38411",
+    "37009",
+    "42196",
+    "38645",
+    "41923",
+    "41919",
+    "42058",
+    "41351",
+    "40691",
+    "40324",
+    "36751",
+    "43544",
+    "39537",
+    "41933",
+    "41525",
+    "41332",
+    "41285",
+    "40172",
+    "38727",
+    "38617",
+    "38695",
+    "38124",
+    "37723",
+    "37638",
+    "37582",
+    "37562",
+    "38432",
+    "40828",
+    "40094",
+    "40368",
+    "40105",
+    "41911",
+    "41017",
+    "39966",
+    "39462",
+    "38865",
+    "34002",
+    "38001",
+    "36838",
+    "37671",
+    "43210",
+    "41826",
+    "39925",
+    "42933",
+    "41824",
+    "42212",
+    "41674",
+    "32088",
+    "42126",
+    "39656",
+    "39146",
+    "36857",
+    "43298",
+    "35582",
+    "35797",
+    "27885",
+    "275",
+    "21737",
+    "41155",
+    "41804"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [
+    "affinity",
+    "kubefed",
+    "kube-dns",
+    "kubeadm",
+    "kubectl",
+    "resource.version.group",
+    "jobs.v1.batch",
+    "podAffinityTerm.namespaces",
+    "tolerations",
+    "automountServiceAccountToken",
+    "false",
+    "AlwaysAllow",
+    "NoExecute",
+    "tolerationSeconds",
+    "taints",
+    "kube-up.sh",
+    "kube-down.sh",
+    "apply",
+    "attributeRestrictions",
+    "null",
+    "kubernetes.tar.gz",
+    "experimentalCriticalPodAnnotation",
+    "taint",
+    "Accelerators",
+    "schedulerName",
+    "PodPreset",
+    "parameters",
+    "kubernetes.io",
+    "k8s.io",
+    "deploy.sh",
+    "v1beta1",
+    "apiVersion",
+    "apiGroup",
+    "Taints",
+    "terminationMessagePolicy",
+    "FallbackToLogsOnError",
+    "LastAppliedConfig",
+    "type",
+    "Ready",
+    "status",
+    "True",
+    "extra",
+    "kube-public",
+    "minAvailable",
+    "bind",
+    "items",
+    "vm-uuid",
+    "can-i",
+    "edit",
+    "logrotate",
+    "salt-minion",
+    "kube-apiserver.log",
+    "kube-reserved",
+    "system-reserved",
+    "google-clouddns",
+    "kube-apiserver",
+    "Pod.Spec.HostPid",
+    "NoSchedule",
+    "bridge",
+    "upgrade.sh"
+  ],
+  "markdown": "# What's New in Kubernetes v1.6\n\n## High-Level Explanation\nKubernetes v1.6 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 511 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Feature Enhancements**: Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Urgent Upgrade Notes Enhancements**: Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion**: Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets.\n- **Networking, `nftables` Proxy & Traffic Observability**: Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules.\n- **CEL-Based Validating & Mutating Admission Policies**: Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Feature Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Urgent Upgrade Notes Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion** | Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage | CSI storage drivers and cloud block volumes | Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets |\n| **Networking, `nftables` Proxy & Traffic Observability** | High-throughput east-west microservices and latency-sensitive ingress traffic | Linux dataplane (`nftables`/`ipvs`) and cloud load balancers | Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules |\n| **CEL-Based Validating & Mutating Admission Policies** | Platform security guardrails, multi-tenant compliance policies, and default resource injectors | In-process `kube-apiserver` admission chain (replaces external webhook deployments) | Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts |\n| **API Server & etcd Watch/Cache Efficiency at Scale** | Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods | Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint | Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages |\n| **Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)** | Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads | High-density GPU/CPU batch pools and `kube-scheduler` queues | Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers |\n\n## 3. What Does the Jargon Mean?\n- **In-Place Pod Vertical Scaling (Resize)**: Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container. Why it matters: Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers.\n- **Gang Scheduling (`Workload` / `PodGroup`)**: An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group. Why it matters: Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity.\n- **ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)**: In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers. Why it matters: Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments.\n- **nftables `kube-proxy` Backend**: A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains. Why it matters: Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services.\n- **HPA Scale-to-Zero (`minReplicas: 0`)**: Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises. Why it matters: Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours.\n- **CSI (Container Storage Interface)**: The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers. Why it matters: Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Urgent Upgrade Notes**: Certificates API: * Users of the alpha certificates API should delete v1alpha1 CSRs from the API before upgrading and recreate them as v1beta1 CSR after upgrading.. ([#39772](https://github.com/kubernetes/kubernetes/pull/39772))\n- **Urgent Upgrade Notes**: Cluster Autoscaler: * If you are using (or planning to use) Cluster Autoscaler please wait for Kubernetes 1.6.1. In 1.6.0 Cluster Autoscaler may occasionally increase the size of the cluster a bit more than it. (Upstream release notes)\n- **Urgent Upgrade Notes**: Deployment now fully respects ControllerRef to avoid fighting over Pods and ReplicaSets. At the time of upgrade, you must not have Deployments with selectors that overlap, or else [ownership of ReplicaSets may. ([#42175](https://github.com/kubernetes/kubernetes/pull/42175))\n- **Urgent Upgrade Notes**: Federation: * The --dns-provider argument of 'kubefed init' is now mandatory and does not default to `google-clouddns`. To initialize a Federation control plane with Google Cloud DNS, use the following. ([#42092](https://github.com/kubernetes/kubernetes/pull/42092))\n- **Urgent Upgrade Notes**: Federation: * Cluster federation servers have changed the location in etcd where federated services are stored, so existing federated services must be deleted and recreated. Before upgrading, export all. ([#37770](https://github.com/kubernetes/kubernetes/pull/37770))\n- **Urgent Upgrade Notes**: Internal Storage Layer: * upgrade to etcd3 prior to upgrading to 1.6 OR explicitly specify `--storage-backend=etcd2 --storage-media-type=application/json` when starting the apiserver. (Upstream release notes)\n- **Urgent Upgrade Notes**: Node Components: * Kubelet with the Docker-CRI implementation. (Upstream release notes)\n- **Urgent Upgrade Notes**: Node Components:   * The Docker-CRI implementation is enabled by default. (Upstream release notes)\n- **Urgent Upgrade Notes**: Node Components:   * It is not compatible with containers created by older Kubelets. It is recommended to drain your node before upgrade. If you choose to perform an in-place upgrade, the Kubelet will. (Upstream release notes)\n- **Urgent Upgrade Notes**: Node Components:   * It is not compatible with CNI plugins that do not conform to the [error handling behavior in the. ([#43488](https://github.com/kubernetes/kubernetes/pull/43488))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Feature Enhancements ([#40355](https://github.com/kubernetes/kubernetes/pull/40355), [#38382](https://github.com/kubernetes/kubernetes/pull/38382), [#38871](https://github.com/kubernetes/kubernetes/pull/38871), [#38968](https://github.com/kubernetes/kubernetes/pull/38968))\n- **Previously**: Prior to v1.6, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by (#40355).\n- **Technical change**: Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod.\n- **Technical change**: kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together.\n- **Technical change**: Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to.\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Urgent Upgrade Notes Enhancements ([#38981](https://github.com/kubernetes/kubernetes/pull/38981), [#38121](https://github.com/kubernetes/kubernetes/pull/38121), [#39284](https://github.com/kubernetes/kubernetes/pull/39284), [#43488](https://github.com/kubernetes/kubernetes/pull/43488))\n- **Previously**: Prior to v1.6, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or (#38981).\n- **Technical change**: Scheduling:   * You can continue to use the alpha version of this feature (with one caveat -- see below), in which you specify affinity requests using Pod annotations, in 1.6 by including.\n- **Technical change**: Scheduling:   * Caveat: The alpha version no longer supports, and the beta version does not support, the \"empty `podAffinityTerm.namespaces` list means all namespaces\" behavior. In both alpha and.\n- **Technical change**: Scheduling:   * After your master is upgraded to 1.6, you will need to update your PodSpecs to set the `tolerations` field of the PodSpec and remove the `scheduler.alpha.kubernetes.io/tolerations`.\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 3. StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion ([#42128](https://github.com/kubernetes/kubernetes/pull/42128), [#42080](https://github.com/kubernetes/kubernetes/pull/42080), [#38418](https://github.com/kubernetes/kubernetes/pull/38418), [#40838](https://github.com/kubernetes/kubernetes/pull/40838))\n- **Previously**: Prior to v1.6, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.\n- **Technical change**: Volumes: * StorageClassName attribute has been added to PersistentVolume and PersistentVolumeClaim objects and should be used instead of annotation `volume.beta.kubernetes.io/storage-class`. The beta (#42128).\n- **Technical change**: Volumes:   * If you depend on the old behavior of volumes binding to existing pool of PersistentVolume objects then modify the StorageClass object and set.\n- **Technical change**: StatefulSet now respects ControllerRef to avoid fighting over Pods. At the time of upgrade, you must not have StatefulSets with selectors that overlap with any other controllers (such as (#42080).\n- **Technical change**: StatefulSet: * Fixes issue [#38418](https://github.com/kubernetes/kubernetes/pull/38418) which, under circumstance, could cause StatefulSet to deadlock..\n- **Operational impact**: Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets\n### 4. Networking, `nftables` Proxy & Traffic Observability ([#40585](https://github.com/kubernetes/kubernetes/pull/40585), [#42090](https://github.com/kubernetes/kubernetes/pull/42090), [#37720](https://github.com/kubernetes/kubernetes/pull/37720), [#39364](https://github.com/kubernetes/kubernetes/pull/39364))\n- **Previously**: Prior to v1.6, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.\n- **Technical change**: kube-proxy: * Remove outdated net.experimental.kubernetes.io/proxy-mode and net.beta.kubernetes.io/proxy-mode annotations from kube-proxy. (#40585).\n- **Technical change**: kube-proxy: * Clean up the kube-proxy container image by removing unnecessary packages and files. ([#42090](https://github.com/kubernetes/kubernetes/pull/42090).\n- **Technical change**: Service: * Fix Service Update on LoadBalancerSourceRanges Field ([#37720](https://github.com/kubernetes/kubernetes/pull/37720), [@freehan](https://github.com/freehan)).\n- **Technical change**: Services of type loadbalancer consume both loadbalancer and nodeport quota. ([#39364](https://github.com/kubernetes/kubernetes/pull/39364), [@zhouhaibing089](https://github.com/zhouhaibing089)).\n- **Operational impact**: Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules\n### 5. CEL-Based Validating & Mutating Admission Policies ([#37953](https://github.com/kubernetes/kubernetes/pull/37953), [#41931](https://github.com/kubernetes/kubernetes/pull/41931), [#41815](https://github.com/kubernetes/kubernetes/pull/41815), [#36765](https://github.com/kubernetes/kubernetes/pull/36765))\n- **Previously**: Prior to v1.6, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).\n- **Technical change**: Admission Control: * An `automountServiceAccountToken` field was added to ServiceAccount and PodSpec objects. If set to `false` on a pod spec, no service account token is automounted in the pod. If (#37953).\n- **Technical change**: Node Components: * [alpha] `--experimental-nvidia-gpus` flag is replaced by `Accelerators` alpha feature gate along with addition of support for multiple Nvidia GPUs.\n- **Technical change**: Service Catalog: - [alpha] Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods.\n- **Technical change**: Node Components: * [alpha] Critical Pods: When feature gate \"ExperimentalCriticalPodAnnotation\" is set to true, the system will guarantee scheduling and admission of pods with the following.\n- **Operational impact**: Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts\n### 6. API Server & etcd Watch/Cache Efficiency at Scale ([#38119](https://github.com/kubernetes/kubernetes/pull/38119), [#38186](https://github.com/kubernetes/kubernetes/pull/38186), [#41807](https://github.com/kubernetes/kubernetes/pull/41807), [#40039](https://github.com/kubernetes/kubernetes/pull/40039))\n- **Previously**: Prior to v1.6, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.\n- **Technical change**: Kubernetes now supports up to 5,000 nodes via etcd v3, which is enabled by default.\n- **Technical change**: Internal Storage Layer: * [stable] The internal storage layer for kubernetes cluster state has been updated to use etcd v3 by default. Existing clusters will have to plan for a data migration window..\n- **Technical change**: API Server: * The --long-running-request-regexp flag to kube-apiserver is deprecated and will be removed in a future release. Long-running requests are now detected based on specific verbs (watch (#38119).\n- **Technical change**: Generic API Server: * Remove genericapiserver.Options.MasterServiceNamespace ([#38186](https://github.com/kubernetes/kubernetes/pull/38186), [@sttts](https://github.com/sttts)).\n- **Operational impact**: Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages\n\n### Weekly / Patch Merge Pulse\n- Patch release `v1.6.9` ships 4 backported fixes and stability updates ([#50942](https://github.com/kubernetes/kubernetes/pull/50942), [#49725](https://github.com/kubernetes/kubernetes/pull/49725), [#49897](https://github.com/kubernetes/kubernetes/pull/49897))\n- Patch release `v1.6.8` ships 8 backported fixes and stability updates ([#49689](https://github.com/kubernetes/kubernetes/pull/49689), [#48875](https://github.com/kubernetes/kubernetes/pull/48875), [#44661](https://github.com/kubernetes/kubernetes/pull/44661))\n- Patch release `v1.6.7` ships 10 backported fixes and stability updates ([#48050](https://github.com/kubernetes/kubernetes/pull/48050), [#46267](https://github.com/kubernetes/kubernetes/pull/46267), [#48182](https://github.com/kubernetes/kubernetes/pull/48182))\n- Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature... ([#40355](https://github.com/kubernetes/kubernetes/pull/40355))\n- Scheduling: - **[beta]** [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and **[beta]** [pod... (Upstream release notes)\n- kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and... (Upstream release notes)\n- Federation: * **[beta]** `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in... (Upstream release notes)\n- The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights: (Upstream release notes)\n\n## 6. Where's the Proof?\n- **Feature** ([#40355](https://github.com/kubernetes/kubernetes/pull/40355)): Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by default. It's gated.\n- **Feature** (Upstream release notes): Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod.\n- **Feature** (Upstream release notes): kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together (for example kubeadm.\n- **Feature** (Upstream release notes): Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to federation components.\n- **Feature** (Upstream release notes): The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights:.\n- **Feature** (Upstream release notes): The [`kubefed` federation bootstrap tool](https://kubernetes.io/docs/tutorials/federation/set-up-cluster-federation-kubefed/) has also graduated to beta.\n- **Feature** ([#38382](https://github.com/kubernetes/kubernetes/pull/38382)): Pod: * Init containers have graduated to GA and now appear as a field.  The beta annotation value will still be respected and overrides the field value. ([#38382](https://github.com/kubernetes/kubernetes/pull/38382).\n- **Feature** ([#38871](https://github.com/kubernetes/kubernetes/pull/38871)): Scheduler: * Mark multi-scheduler graduation to beta and then v1. ([#38871](https://github.com/kubernetes/kubernetes/pull/38871), [@k82cn](https://github.com/k82cn)).\n- **Feature** (Upstream release notes): (https://kubernetes.io//docs/admin/authorization/rbac) has graduated to beta, and defines secure default roles for control plane, node, and controller components.\n- **Feature** (Upstream release notes): Various scheduling features have graduated to beta:.\n- **Feature** (Upstream release notes): Node Components: * [stable] Init containers have graduated to GA and now appear as a field. The beta annotation value will still be respected and overrides the field value.\n- **Feature** (Upstream release notes): Node Components:   - [beta] The Docker-CRI implementation is enabled by default in kubelet. You can disable it by --enable-cri=false. See [notes on the new.\n- **Feature** (Upstream release notes): RBAC: * [beta] The Docker-CRI implementation is Beta and is enabled by default in kubelet.  You can disable it by `--enable-cri=false`. See [notes on the new implementation].\n- **Urgent Upgrade Notes** ([#38981](https://github.com/kubernetes/kubernetes/pull/38981)): RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or `system:unauthenticated`..\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Feature]** Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by default. It's gated by controller-manager enable-taint-manager flag.. ([#40355](https://github.com/kubernetes/kubernetes/pull/40355))\n- **[Feature]** Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/). Node affinity/anti-affinity allow you to specify rules for restricting. (Upstream release notes)\n- **[Feature]** kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together (for example kubeadm v1.5 can't join a kubeadm v1.6 cluster). (Upstream release notes)\n- **[Feature]** Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to federation components. (Upstream release notes)\n- **[Feature]** The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights:. (Upstream release notes)\n- **[Feature]** The [`kubefed` federation bootstrap tool](https://kubernetes.io/docs/tutorials/federation/set-up-cluster-federation-kubefed/) has also graduated to beta. (Upstream release notes)\n- **[Feature]** Pod: * Init containers have graduated to GA and now appear as a field.  The beta annotation value will still be respected and overrides the field value. ([#38382](https://github.com/kubernetes/kubernetes/pull/38382), [@hodovska](https://github.com/hodovska)). ([#38382](https://github.com/kubernetes/kubernetes/pull/38382))\n- **[Feature]** Scheduler: * Mark multi-scheduler graduation to beta and then v1. ([#38871](https://github.com/kubernetes/kubernetes/pull/38871), [@k82cn](https://github.com/k82cn)). ([#38871](https://github.com/kubernetes/kubernetes/pull/38871))\n- **[Feature]** ABAC policies using `\"user\":\"*\"` or `\"group\":\"*\"` to match all users or groups will only match authenticated requests. To match unauthenticated requests, ABAC policies must explicitly specify `\"group\":\"system:unauthenticated\"` ([#38968](https://github.com/kubernetes/kubernetes/pull/38968). ([#38968](https://github.com/kubernetes/kubernetes/pull/38968))\n- **[Feature]** (https://kubernetes.io//docs/admin/authorization/rbac) has graduated to beta, and defines secure default roles for control plane, node, and controller components. (Upstream release notes)\n- **[Feature]** Various scheduling features have graduated to beta:. (Upstream release notes)\n- **[Feature]** Node Components: * [stable] Init containers have graduated to GA and now appear as a field. The beta annotation value will still be respected and overrides the field value. (Upstream release notes)\n- **[Feature]** Node Components:   - [beta] The Docker-CRI implementation is enabled by default in kubelet. You can disable it by --enable-cri=false. See [notes on the new. (Upstream release notes)\n- **[Feature]** RBAC: * [beta] The Docker-CRI implementation is Beta and is enabled by default in kubelet.  You can disable it by `--enable-cri=false`. See [notes on the new implementation]. (Upstream release notes)\n- **[Feature]** Other Notable Changes: * `--output-version` is ignored for all commands except `kubectl convert`.  This is consistent with the generic nature of `kubectl` CRUD commands and the previous removal of `--api-version`.  Specific versions can be specified in the resource field: `resource.version.group`. ([#41576](https://github.com/kubernetes/kubernetes/pull/41576))\n- **[Urgent Upgrade Notes]** RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or `system:unauthenticated`. Existing v1alpha1 bindings to the user `*` are automatically converted to the group. ([#38981](https://github.com/kubernetes/kubernetes/pull/38981))\n- **[Feature]** Volumes: * StorageClassName attribute has been added to PersistentVolume and PersistentVolumeClaim objects and should be used instead of annotation `volume.beta.kubernetes.io/storage-class`. The beta annotation is still working in this release, however it will be removed in a future release.. ([#42128](https://github.com/kubernetes/kubernetes/pull/42128))\n- **[Feature]** Volumes: * Alpha version of dynamic volume provisioning is removed in this release. Annotation ([#40000](https://github.com/kubernetes/kubernetes/pull/40000), [@jsafrane](https://github.com/jsafrane)). ([#40000](https://github.com/kubernetes/kubernetes/pull/40000))\n- **[Feature]** kubeadm: * Remove the --cloud-provider flag for beta init UX ([#41710](https://github.com/kubernetes/kubernetes/pull/41710), [@luxas](https://github.com/luxas)). ([#41710](https://github.com/kubernetes/kubernetes/pull/41710))\n- **[Feature]** kube-proxy: * Remove outdated net.experimental.kubernetes.io/proxy-mode and net.beta.kubernetes.io/proxy-mode annotations from kube-proxy. ([#40585](https://github.com/kubernetes/kubernetes/pull/40585), [@cblecker](https://github.com/cblecker)). ([#40585](https://github.com/kubernetes/kubernetes/pull/40585))\n- **[Urgent Upgrade Notes]** Scheduling:   * You can continue to use the alpha version of this feature (with one caveat -- see below), in which you specify affinity requests using Pod annotations, in 1.6 by including `AffinityInAnnotations=true` in `--feature-gates`, such as. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * Caveat: The alpha version no longer supports, and the beta version does not support, the \"empty `podAffinityTerm.namespaces` list means all namespaces\" behavior. In both alpha and beta it now means \"same namespace as the pod specifying this affinity rule.\". (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * After your master is upgraded to 1.6, you will need to update your PodSpecs to set the `tolerations` field of the PodSpec and remove the `scheduler.alpha.kubernetes.io/tolerations` annotation on the Pod. (It's not strictly necessary to remove the annotation, as it will have no. (Upstream release notes)\n- **[Feature]** Admission Control: * An `automountServiceAccountToken` field was added to ServiceAccount and PodSpec objects. If set to `false` on a pod spec, no service account token is automounted in the pod. If set to `false` on a service account, no service account token is automounted for that service account. ([#37953](https://github.com/kubernetes/kubernetes/pull/37953))\n- **[Urgent Upgrade Notes]** RBAC: * The `--authorization-rbac-super-user` flag (alpha in 1.5) is deprecated; the `system:masters` group has privileged access ([#38121](https://github.com/kubernetes/kubernetes/pull/38121), [@deads2k](https://github.com/deads2k)). ([#38121](https://github.com/kubernetes/kubernetes/pull/38121))\n- **[Urgent Upgrade Notes]** Service: * The 'endpoints.beta.kubernetes.io/hostnames-map' annotation is no longer supported.  Users can use the 'Endpoints.subsets[].addresses[].hostname' field instead. ([#39284](https://github.com/kubernetes/kubernetes/pull/39284), [@bowei](https://github.com/bowei)). ([#39284](https://github.com/kubernetes/kubernetes/pull/39284))\n- **[Feature]** API Server: * `--anonymous-auth` is enabled by default, unless the API server is started with the `AlwaysAllow` authorizer. ([#38706](https://github.com/kubernetes/kubernetes/pull/38706), [@deads2k](https://github.com/deads2k)). ([#38706](https://github.com/kubernetes/kubernetes/pull/38706))\n- **[Feature]** Scheduling: - [beta] [Taints and tolerations](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/). This feature allows you to specify rules for \"repelling\" pods from nodes by default, which enables use cases like dedicated nodes and reserving nodes with special features for pods. (Upstream release notes)\n- **[Feature]** Other Notable Changes: * `kube-up.sh`/`kube-down.sh` no longer force update gcloud for provider=gce|gke. ([#36292](https://github.com/kubernetes/kubernetes/pull/36292), [@jlowdermilk](https://github.com/jlowdermilk)). ([#36292](https://github.com/kubernetes/kubernetes/pull/36292))\n- **[Urgent Upgrade Notes]** Scheduling:   * You can remove the \"old\" taints (stored internally as annotations) at any time after the upgrade by doing `kubectl annotate nodes <node name> scheduler.alpha.kubernetes.io/taints-` (note the minus at the end, which means \"delete the taint with this key\"). (Upstream release notes)\n- **[Feature]** Updates to apply: * `apply` now supports explicitly clearing values by setting them to null ([#40630](https://github.com/kubernetes/kubernetes/pull/40630), [@liggitt](https://github.com/liggitt)). ([#40630](https://github.com/kubernetes/kubernetes/pull/40630))\n- **[Feature]** Pod Security Policy: * PodSecurityPolicy resource is now enabled by default in the extensions API group. ([#39743](https://github.com/kubernetes/kubernetes/pull/39743), [@pweil-](https://github.com/pweil-)). ([#39743](https://github.com/kubernetes/kubernetes/pull/39743))\n- **[Feature]** Node Components: * Bump GCI to gci-stable-56-9000-84-2. ([#41819](https://github.com/kubernetes/kubernetes/pull/41819), [@dchen1107](https://github.com/dchen1107)). ([#41819](https://github.com/kubernetes/kubernetes/pull/41819))\n- **[Feature]** GCE: * to gci-stable-56-9000-84-2 ([#41819](https://github.com/kubernetes/kubernetes/pull/41819), [@dchen1107](https://github.com/dchen1107)). ([#41819](https://github.com/kubernetes/kubernetes/pull/41819))\n- **[Feature]** Scheduling: - [alpha] Represent node problems \"not ready\" and \"unreachable\" using `NoExecute` taints. In combination with `tolerationSeconds` described below, this allows per-pod specification of how long to remain bound to a node that becomes unreachable or not ready, rather than using the default. (Upstream release notes)\n- **[Feature]** RBAC: * The `attributeRestrictions` field has been removed from the PolicyRule type in the rbac.authorization.k8s.io/v1alpha1 API. The field was not used by the RBAC authorizer. ([#39625](https://github.com/kubernetes/kubernetes/pull/39625), [@deads2k](https://github.com/deads2k)). ([#39625](https://github.com/kubernetes/kubernetes/pull/39625))\n- **[Feature]** API Server: * API fields that previously serialized null arrays as `null` and empty arrays as `[]` no longer distinguish between those values and always output `[]` when serializing to JSON. ([#43422](https://github.com/kubernetes/kubernetes/pull/43422), [@liggitt](https://github.com/liggitt)). ([#43422](https://github.com/kubernetes/kubernetes/pull/43422))\n- **[Feature]** Other Notable Changes: * Since `kubernetes.tar.gz` no longer includes client or server binaries, `cluster/kube-{up,down,push}.sh` now automatically download released binaries if they are missing. ([#38730](https://github.com/kubernetes/kubernetes/pull/38730), [@ixdy](https://github.com/ixdy)). ([#38730](https://github.com/kubernetes/kubernetes/pull/38730))\n- **[Feature]** Fluentd: * If `experimentalCriticalPodAnnotation` feature gate is set to true, fluentd pods will not be evicted by the kubelet. ([#41035](https://github.com/kubernetes/kubernetes/pull/41035), [@vishh](https://github.com/vishh)). ([#41035](https://github.com/kubernetes/kubernetes/pull/41035))\n- **[Feature]** Kubernetes now supports up to 5,000 nodes via etcd v3, which is enabled by default. (Upstream release notes)\n- **[Feature]** Various storage features have graduated to GA:. (Upstream release notes)\n- **[Feature]** Internal Storage Layer: * [stable] The internal storage layer for kubernetes cluster state has been updated to use etcd v3 by default. Existing clusters will have to plan for a data migration window.. (Upstream release notes)\n- **[Feature]** Volumes: * [stable] StorageClass API is promoted to v1 (storage.k8s.io/v1). (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Default storage classes are deployed during installation on Azure, AWS, GCE, OpenStack and vSphere. (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Added ability to populate environment variables from a configmap or secret. (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Support for user-written/run dynamic PV provisioners. The Kubernetes Incubator contains [a golang library and examples](https://github.com/kubernetes-incubator/external-storage). (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Volume plugin for ScaleIO enabling pods to seamlessly access and use data stored on Dell EMC ScaleIO volumes. (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Volume plugin for Portworx added capability to use [Portworx](http://www.portworx.com) as a storage provider for Kubernetes clusters. Portworx pools server capacity and turns servers or cloud instances into converged, highly available compute and storage nodes. (Upstream release notes)\n- **[Feature]** Volumes: * [stable] Add support to use NFSv3, NFSv4, and GlusterFS on GCE/GKE GCI image based clusters. (Upstream release notes)\n- **[Feature]** Docker 1.10.3 contains [backports provided by RedHat](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for known issues. (Upstream release notes)\n- **[Feature]** Other Notable Changes:   * The `taint` command will not function in a skewed 1.5 / 1.6 environment - client and server versions must match (See Action required section above). (Upstream release notes)\n- **[Urgent Upgrade Notes]** Node Components:   * The Docker-CRI implementation is enabled by default. (Upstream release notes)\n- **[Feature]** Node Components: * [alpha] `--experimental-nvidia-gpus` flag is replaced by `Accelerators` alpha feature gate along with addition of support for multiple Nvidia GPUs. (Upstream release notes)\n- **[Feature]** Scheduling: - [beta] The [multiple schedulers](https://kubernetes.io/docs/tutorials/clusters/multiple-schedulers/). This feature allows you to run multiple schedulers in parallel, each responsible for different sets of pods. When using multiple schedulers, the scheduler name is now specified in a. (Upstream release notes)\n- **[Feature]** Service Catalog: - [alpha] Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods. (Upstream release notes)\n- **[Feature]** Volumes: * Parameter keys in a StorageClass `parameters` map may not use the `kubernetes.io` or `k8s.io` namespaces. ([#41837](https://github.com/kubernetes/kubernetes/pull/41837), [@liggitt](https://github.com/liggitt)). ([#41837](https://github.com/kubernetes/kubernetes/pull/41837))\n- **[Urgent Upgrade Notes]** Node Components:   * It is not compatible with CNI plugins that do not conform to the [error handling behavior in the spec](https://github.com/containernetworking/cni/blob/master/SPEC.md#network-configuration-list-error-handling). The plugins are being updated to resolve this issue. ([#43488](https://github.com/kubernetes/kubernetes/pull/43488))\n- **[Feature]** Autoscaling: * HorizontalPodAutoscaler is no longer supported in extensions/v1beta1 version. Use autoscaling/v1 instead. ([#35782](https://github.com/kubernetes/kubernetes/pull/35782), [@piosz](https://github.com/piosz)). ([#35782](https://github.com/kubernetes/kubernetes/pull/35782))\n- **[Feature]** Taints and Tolerations: * Rescheduler uses taints in v1beta1 and will remove old ones (in version v1alpha1) right after its start. ([#43106](https://github.com/kubernetes/kubernetes/pull/43106), [@piosz](https://github.com/piosz)). ([#43106](https://github.com/kubernetes/kubernetes/pull/43106))\n- **[Feature]** API Server: * When using OIDC authentication and specifying --oidc-username-claim=email, an `\"email_verified\":true` claim must be returned from the identity provider. ([#36087](https://github.com/kubernetes/kubernetes/pull/36087), [@ericchiang](https://github.com/ericchiang)). ([#36087](https://github.com/kubernetes/kubernetes/pull/36087))\n- **[Feature]** API Server: * The --long-running-request-regexp flag to kube-apiserver is deprecated and will be removed in a future release. Long-running requests are now detected based on specific verbs (watch, proxy) or subresources (proxy, portforward, log, exec, attach).. ([#38119](https://github.com/kubernetes/kubernetes/pull/38119))\n- **[Feature]** Generic API Server: * Remove genericapiserver.Options.MasterServiceNamespace ([#38186](https://github.com/kubernetes/kubernetes/pull/38186), [@sttts](https://github.com/sttts)). ([#38186](https://github.com/kubernetes/kubernetes/pull/38186))\n- **[Feature]** client-go no longer imports GCP OAuth2 and OpenID Connect packages by default. ([#41532](https://github.com/kubernetes/kubernetes/pull/41532), [@ericchiang](https://github.com/ericchiang)). ([#41532](https://github.com/kubernetes/kubernetes/pull/41532))\n- **[Feature]** AWS: * Remove duplicate calls to DescribeInstance during volume operations ([#39842](https://github.com/kubernetes/kubernetes/pull/39842), [@gnufied](https://github.com/gnufied)). ([#39842](https://github.com/kubernetes/kubernetes/pull/39842))\n- **[Feature]** Azure: * Remove Azure Subnet RouteTable check ([#38334](https://github.com/kubernetes/kubernetes/pull/38334), [@mogthesprog](https://github.com/mogthesprog)). ([#38334](https://github.com/kubernetes/kubernetes/pull/38334))\n- **[Feature]** kubefed: * Create configmap for the cluster kube-dns when cluster joins and remove when it unjoins ([#39338](https://github.com/kubernetes/kubernetes/pull/39338), [@irfanurrehman](https://github.com/irfanurrehman)). ([#39338](https://github.com/kubernetes/kubernetes/pull/39338))\n- **[Feature]** Other Notable Changes: * Federated Ingress over GCE no longer requires separate firewall rules to be created for each cluster to circumvent flapping firewall health checks. ([#41942](https://github.com/kubernetes/kubernetes/pull/41942), [@csbell](https://github.com/csbell)). ([#41942](https://github.com/kubernetes/kubernetes/pull/41942))\n- **[Feature]** Updates to existing commands:   * kubectl describe no longer prints the last-applied-configuration annotation for secrets. ([#34664](https://github.com/kubernetes/kubernetes/pull/34664), [@ymqytw](https://github.com/ymqytw)). ([#34664](https://github.com/kubernetes/kubernetes/pull/34664))\n- **[Feature]** Updates to edit:   * No longer updates the last-applied-configuration annotation when --save-config is unspecified or false. ([#41924](https://github.com/kubernetes/kubernetes/pull/41924), [@ymqytw](https://github.com/ymqytw)). ([#41924](https://github.com/kubernetes/kubernetes/pull/41924))\n- **[Feature]** Other Notable Changes: * Allow drain --force to remove pods whose managing resource is deleted. ([#41864](https://github.com/kubernetes/kubernetes/pull/41864), [@marun](https://github.com/marun)). ([#41864](https://github.com/kubernetes/kubernetes/pull/41864))\n- **[Feature]** kube-proxy: * Clean up the kube-proxy container image by removing unnecessary packages and files. ([#42090](https://github.com/kubernetes/kubernetes/pull/42090), [@timstclair](https://github.com/timstclair)). ([#42090](https://github.com/kubernetes/kubernetes/pull/42090))\n- **[Feature]** GCE: * Remove support for debian masters in GCE kube-up. ([#41666](https://github.com/kubernetes/kubernetes/pull/41666), [@mikedanese](https://github.com/mikedanese)). ([#41666](https://github.com/kubernetes/kubernetes/pull/41666))\n- **[Feature]** GCE: * Remove support for trusty in GCE kube-up. ([#41670](https://github.com/kubernetes/kubernetes/pull/41670), [@mikedanese](https://github.com/mikedanese)). ([#41670](https://github.com/kubernetes/kubernetes/pull/41670))\n- **[Feature]** GCE: * GCI: Remove /var/lib/docker/network ([#37593](https://github.com/kubernetes/kubernetes/pull/37593), [@yujuhong](https://github.com/yujuhong)). ([#37593](https://github.com/kubernetes/kubernetes/pull/37593))\n- **[Feature]** OpenStack: * Remove unnecessary metrics (http/process/go) from being exposed by etcd-version-monitor ([#41807](https://github.com/kubernetes/kubernetes/pull/41807), [@shyamjvs](https://github.com/shyamjvs)). ([#41807](https://github.com/kubernetes/kubernetes/pull/41807))\n- **[Feature]** Fluentd: * Cleanup fluentd-gcp image: rebase on debian-base, switch to upstream packages, remove fluent-ui & rails ([#41998](https://github.com/kubernetes/kubernetes/pull/41998), [@timstclair](https://github.com/timstclair)). ([#41998](https://github.com/kubernetes/kubernetes/pull/41998))\n- **[Deprecation]** `federation/deploy/deploy.sh` was an interim solution introduced in Kubernetes v1.4 to simplify the federation control plane deployment experience. Now that we have `kubefed`, we are deprecating `deploy.sh` scripts. ([#38902](https://github.com/kubernetes/kubernetes/pull/38902). ([#38902](https://github.com/kubernetes/kubernetes/pull/38902))\n- **[Urgent Upgrade Notes]** Node Components:   * It is not compatible with containers created by older Kubelets. It is recommended to drain your node before upgrade. If you choose to perform an in-place upgrade, the Kubelet will automatically restart all Kubernetes-managed containers on the node. (Upstream release notes)\n- **[Feature]** Node Components:   - This feature can result in increase of Pod Deletion latency especially if the pod has a large filesystem footprint. (Upstream release notes)\n- **[Feature]** Autoscaling: * Introduces an new alpha version of the Horizontal Pod Autoscaler including expanded support for specifying metrics. ([#36033](https://github.com/kubernetes/kubernetes/pull/36033), [@DirectXMan12](https://github.com/DirectXMan12). ([#36033](https://github.com/kubernetes/kubernetes/pull/36033))\n- **[Feature]** Taints and Tolerations: * Add an alpha feature that makes NodeController set Taints instead of deleting Pods from not Ready Nodes. ([#41133](https://github.com/kubernetes/kubernetes/pull/41133), [@gmarek](https://github.com/gmarek)). ([#41133](https://github.com/kubernetes/kubernetes/pull/41133))\n- **[Feature]** Taints and Tolerations: * Forgiveness alpha version api definition ([#39469](https://github.com/kubernetes/kubernetes/pull/39469), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#39469](https://github.com/kubernetes/kubernetes/pull/39469))\n- **[Feature]** API Server: * Follow redirects for streaming requests (exec/attach/port-forward) in the apiserver by default (alpha -> beta). ([#40039](https://github.com/kubernetes/kubernetes/pull/40039), [@timstclair](https://github.com/timstclair)). ([#40039](https://github.com/kubernetes/kubernetes/pull/40039))\n- **[Feature]** kubeadm: * Rename some flags for beta UI and fixup some logic ([#42064](https://github.com/kubernetes/kubernetes/pull/42064), [@luxas](https://github.com/luxas)). ([#42064](https://github.com/kubernetes/kubernetes/pull/42064))\n- **[Feature]** GCE: * to gci-beta-56-9000-80-0 ([#41027](https://github.com/kubernetes/kubernetes/pull/41027), [@dchen1107](https://github.com/dchen1107)). ([#41027](https://github.com/kubernetes/kubernetes/pull/41027))\n- **[Feature]** OpenStack: * Bump up GLBC version from 0.9.0-beta to 0.9.1 ([#41037](https://github.com/kubernetes/kubernetes/pull/41037), [@bprashanth](https://github.com/bprashanth)). ([#41037](https://github.com/kubernetes/kubernetes/pull/41037))\n- **[Feature]** Fluentd was migrated to Daemon Set, which targets nodes with beta.kubernetes.io/fluentd-ds-ready=true label. If you use fluentd in your cluster please make sure that the nodes with version 1.6+ contains this label. ([#42931](https://github.com/kubernetes/kubernetes/pull/42931). ([#42931](https://github.com/kubernetes/kubernetes/pull/42931))\n- **[Urgent Upgrade Notes]** RBAC: * `v1beta1` RoleBinding/ClusterRoleBinding subjects changed `apiVersion` to `apiGroup` to fully-qualify a subject. ServiceAccount subjects default to an apiGroup of `\"\"`, User and Group subjects default to an apiGroup of `\"rbac.authorization.k8s.io\"`.. ([#41184](https://github.com/kubernetes/kubernetes/pull/41184))\n- **[Urgent Upgrade Notes]** Scheduling:   * Modify your PodSpecs that currently use the `scheduler.alpha.kubernetes.io/name` annotation on Pod, to instead use the `schedulerName` field in the PodSpec. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * Modify any custom scheduler(s) you have written so that they read the `schedulerName` field on Pod instead of the `scheduler.alpha.kubernetes.io/name` annotation. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * You can find out what taints you have in place on a node while you are still running Kubernetes 1.5 by doing `kubectl describe node <node name>`; the `Taints` section will show the taints you have in place. To see the taints that were created under 1.5 when you are running 1.6, do. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Volumes:   * If you depend on the old behavior of volumes binding to existing pool of PersistentVolume objects then modify the StorageClass object and set `storageclass.beta.kubernetes.io/is-default-class` to `false`. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Deployment now fully respects ControllerRef to avoid fighting over Pods and ReplicaSets. At the time of upgrade, you must not have Deployments with selectors that overlap, or else [ownership of ReplicaSets may. ([#42175](https://github.com/kubernetes/kubernetes/pull/42175))\n- **[Urgent Upgrade Notes]** Federation: * Cluster federation servers have changed the location in etcd where federated services are stored, so existing federated services must be deleted and recreated. Before upgrading, export all federated services from the federation server and delete the services. After upgrading the. ([#37770](https://github.com/kubernetes/kubernetes/pull/37770))\n- **[Urgent Upgrade Notes]** RBAC: * To create or update an RBAC RoleBinding or ClusterRoleBinding object, a user must: ([#39383](https://github.com/kubernetes/kubernetes/pull/39383), [@liggitt](https://github.com/liggitt)) 1. Be authorized to make the create or update API request 2. Be allowed to bind the referenced role. ([#39383](https://github.com/kubernetes/kubernetes/pull/39383))\n- **[Urgent Upgrade Notes]** StatefulSet now respects ControllerRef to avoid fighting over Pods. At the time of upgrade, you must not have StatefulSets with selectors that overlap with any other controllers (such as ReplicaSets), or else [ownership of Pods may. ([#42080](https://github.com/kubernetes/kubernetes/pull/42080))\n- **[Urgent Upgrade Notes]** Certificates API: * Users of the alpha certificates API should delete v1alpha1 CSRs from the API before upgrading and recreate them as v1beta1 CSR after upgrading. ([#39772](https://github.com/kubernetes/kubernetes/pull/39772), [@mikedanese](https://github.com/mikedanese)). ([#39772](https://github.com/kubernetes/kubernetes/pull/39772))\n- **[Urgent Upgrade Notes]** Internal Storage Layer: * upgrade to etcd3 prior to upgrading to 1.6 OR explicitly specify `--storage-backend=etcd2 --storage-media-type=application/json` when starting the apiserver. (Upstream release notes)\n- **[Feature]** using `application/vnd.kubernetes.protobuf` as the media storage type for 1.6 is default but not required. (Upstream release notes)\n- **[Feature]** Autoscaling: * Cluster Autoscaler respects Pod Disruption Budgets when removing a node. (Upstream release notes)\n- **[Feature]** Garbage Collector:   * deleteOptions.orphanDependents is going to be deprecated in 1.7. Please use deleteOptions.propagationPolicy instead. (Upstream release notes)\n- **[Feature]** kubeadm: * `kubeadm reset` will no longer drain nodes automatically.  This is because the credentials on nodes do not have permission to perform this operation.  We have documented an [alternate procedure](https://kubernetes.io/docs/getting-started-guides/kubeadm/#tear-down), driven from the API. (Upstream release notes)\n- **[Feature]** Updates to edit:   * Client-side conversion is no longer done, and the `--output-version` option is deprecated for `kubectl edit`. (Upstream release notes)\n- **[Feature]** Bug fixes:   * Passing multiple values separated by a comma in a single --from-literal flag is no longer supported. Please use multiple --from-literal flags to provide multiple values. (Upstream release notes)\n- **[Feature]** Node Components: * Kubelet: Remove the PLEG health check from /healthz, Kubelet will now report. (Upstream release notes)\n- **[Feature]** Support for Docker version 1.9.x has been removed. (Upstream release notes)\n- **[Feature]** Interaction with container runtimes is now through the CRI interface, enabling easier integration of runtimes with the kubelet. Docker remains the default runtime via Docker-CRI (which moves to beta). (Upstream release notes)\n- **[Feature]** (https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#node-affinity-beta-feature) and [pods](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-and-anti-affinity-beta-feature) now support affinity and anti-affinity. (Upstream release notes)\n- **[Feature]** Advanced scheduling can be performed with [taints and tolerations](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#taints-and-tolerations-beta-feature). (Upstream release notes)\n- **[Feature]** Autoscaling: * [alpha] The Horizontal Pod Autoscaler now supports drawing metrics through the API server aggregator. (Upstream release notes)\n- **[Feature]** Autoscaling: * [alpha] The Horizontal Pod Autoscaler now supports scaling on multiple, custom metrics. (Upstream release notes)\n- **[Feature]** DaemonSet: * [beta] Introduce the rolling update feature for DaemonSet. See [Performing a Rolling Update on a DaemonSet](https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/). (Upstream release notes)\n- **[Feature]** Deployment: * [beta] Deployments that cannot make progress in rolling out the newest version will now indicate via the API they are blocked ([docs](https://kubernetes.io/docs/user-guide/deployments/#deployment-status)). (Upstream release notes)\n- **[Feature]** kubeadm: * [beta] Introduces an API for clients to request TLS certificates from the API server. See the [tutorial](https://kubernetes.io/docs/tasks/tls/managing-tls-in-a-cluster). (Upstream release notes)\n- **[Feature]** kubeadm: * [beta] kubeadm is enhanced and improved with a baseline feature set and command line flags that are now marked as beta. Other parts of kubeadm, including subcommands under `kubeadm alpha`, are [still in alpha](https://kubernetes.io/docs/admin/kubeadm/).  Using it is considered safe. (Upstream release notes)\n- **[Feature]** kubeadm: * [alpha] New Bootstrap Token authentication and management method. Works well with kubeadm. kubeadm now supports managing tokens, including time based expiration, after the cluster is launched.  See [kubeadm reference docs](https://kubernetes.io/docs/admin/kubeadm/#manage-tokens) for. (Upstream release notes)\n- **[Feature]** kubeadm: * [alpha] Adds a new cloud-controller-manager binary that may be used for testing the new out-of-core cloudprovider flow. (Upstream release notes)\n- **[Feature]** Node Components:   - [alpha] Alpha support for other runtimes: [cri-o](https://github.com/kubernetes-incubator/cri-o/releases/tag/v0.1), [frakti](https://github.com/kubernetes/frakti/releases/tag/v0.1), [rkt](https://github.com/coreos/rkt/issues?q=is%3Aopen+is%3Aissue+label%3Aarea%2Fcri). (Upstream release notes)\n- **[Feature]** Node Components: * [beta] Node Problem Detector is beta (v0.3.0) now. New features added into node-problem-detector:v0.3.0:. (Upstream release notes)\n- **[Feature]** Node Components: * [alpha] Critical Pods: When feature gate \"ExperimentalCriticalPodAnnotation\" is set to true, the system will guarantee scheduling and admission of pods with the following annotation - `scheduler.alpha.kubernetes.io/critical-pod`. (Upstream release notes)\n- **[Feature]** RBAC: * [beta] RBAC API is promoted to v1beta1 (rbac.authorization.k8s.io/v1beta1), and defines default roles for control plane, node, and controller components. (Upstream release notes)\n- **[Feature]** Volumes: * [beta] Added support for mount options in persistent volumes. (Upstream release notes)\n- **[Feature]** Volumes: * [alpha] All in one volume proposal - a new volume driver capable of projecting secrets, configmaps, and downward API items into the same directory. (Upstream release notes)\n- **[Feature]** Pod: * A new field `terminationMessagePolicy` has been added to containers that allows a user to request `FallbackToLogsOnError`, which will read from the container's logs to populate the termination message if the user does not write to the termination message log file.  The termination message. ([#39341](https://github.com/kubernetes/kubernetes/pull/39341))\n- **[Feature]** Volumes:     * \"volume.alpha.kubernetes.io/storage-class\" does not have any special meaning. A default storage class. (Upstream release notes)\n- **[Feature]** Updates to apply: * Warn user when using `apply` on a resource lacking the `LastAppliedConfig` annotation ([#36672](https://github.com/kubernetes/kubernetes/pull/36672), [@ymqytw](https://github.com/ymqytw)). ([#36672](https://github.com/kubernetes/kubernetes/pull/36672))\n- **[Feature]** Other Notable Changes: * Fixed issues ([#39202](https://github.com/kubernetes/kubernetes/pull/39202)), ([#41041](https://github.com/kubernetes/kubernetes/pull/41041)) and ([#40941](https://github.com/kubernetes/kubernetes/pull/40941)) that caused the iSCSI connections to be prematurely closed when. ([#39202](https://github.com/kubernetes/kubernetes/pull/39202), [#41041](https://github.com/kubernetes/kubernetes/pull/41041))\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-beta.4](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-beta4). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-beta.3](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-beta3). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-beta.2](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-beta2). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-beta.1](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-beta1). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-alpha.3](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-alpha3). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-alpha.2](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-alpha2). (Upstream release notes)\n- **[Feature]** Previous Releases Included in v1.6.0: - [v1.6.0-alpha.1](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG.md#v160-alpha1) No notable changes for this release. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Node Components:   * Kubelet will now block node readiness until a CNI configuration file is present in `/etc/cni/net.d` or a given custom CNI configuration path. [This change](https://github.com/kubernetes/kubernetes/pull/43474) ensures kubelet does not start pods that require networking before. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Cluster Autoscaler: * If you are using (or planning to use) Cluster Autoscaler please wait for Kubernetes 1.6.1. In 1.6.0 Cluster Autoscaler may occasionally increase the size of the cluster a bit more than it is actually needed, when there are unschedulable pods, scale up is required and cloud. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Node Components: * The following deprecated kubelet flags are removed: `--config`, `--auth-path`, `--resource-container`, `--system-container`, `--reconcile-cidr`. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Node Components: * Remove the temporary fix for pre-1.0 mirror pods. Upgrade directly from pre-1.0 to 1.6 kubelet is not supported. (Upstream release notes)\n- **[Urgent Upgrade Notes]** kubectl: * Running `kubectl create secret` no longer accepts passing multiple values to a single --from-literal flag using comma separation. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Node Components: * Fluentd was migrated to Daemon Set, which targets nodes with beta.kubernetes.io/fluentd-ds-ready=true label. If you use fluentd in your cluster please make sure that the nodes with version 1.6+ contains this label. (Upstream release notes)\n- **[Urgent Upgrade Notes]** kubectl: * Running `kubectl taint` (alpha in 1.5) against a 1.6 server requires upgrading kubectl to version 1.6. (Upstream release notes)\n- **[Urgent Upgrade Notes]** kubectl: * Running `kubectl taint` (alpha in 1.5) against a 1.5 server requires a kubectl version of 1.5. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * The `--failure-domains` scheduler command line-argument is not supported in the beta version of the feature. (Upstream release notes)\n- **[Urgent Upgrade Notes]** Scheduling:   * You can find the PodSpec tolerations that were created as annotations (if any) in a controller definition by doing `kubectl get <controller kind> <controller name> -o yaml` and looking for the \"Annotation\" section with the annotation key `scheduler.alpha.kubernetes.io/tolerations`. (Upstream release notes)\n- **[Feature]** Admission Control: * Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods. ([#41931](https://github.com/kubernetes/kubernetes/pull/41931), [@jessfraz](https://github.com/jessfraz)). ([#41931](https://github.com/kubernetes/kubernetes/pull/41931))\n- **[Feature]** Certificates: * The CertificateSigningRequest API added the `extra` field to persist all information about the requesting user. This mirrors the fields in the SubjectAccessReview API used to check authorization. ([#41755](https://github.com/kubernetes/kubernetes/pull/41755). ([#41755](https://github.com/kubernetes/kubernetes/pull/41755))\n- **[Feature]** Certificates: * Native support for token based bootstrap flow.  This includes signing a well known ConfigMap in the `kube-public` namespace and cleaning out expired tokens. ([#36101](https://github.com/kubernetes/kubernetes/pull/36101), [@jbeda](https://github.com/jbeda)). ([#36101](https://github.com/kubernetes/kubernetes/pull/36101))\n- **[Feature]** Pod: * Fix issue with PodDisruptionBudgets in which `minAvailable` specified as a percentage did not work with StatefulSet Pods. ([#39454](https://github.com/kubernetes/kubernetes/pull/39454), [@foxish](https://github.com/foxish)). ([#39454](https://github.com/kubernetes/kubernetes/pull/39454))\n- **[Feature]** RBAC: * A user can now be authorized to bind a particular role by having permission to perform the `bind` verb on the referenced role ([#39383](https://github.com/kubernetes/kubernetes/pull/39383), [@liggitt](https://github.com/liggitt)). ([#39383](https://github.com/kubernetes/kubernetes/pull/39383))\n- **[Feature]** Generic API Server: * Fixes API compatibility issue with empty lists incorrectly returning a null `items` field instead of an empty array. ([#39834](https://github.com/kubernetes/kubernetes/pull/39834), [@liggitt](https://github.com/liggitt)). ([#39834](https://github.com/kubernetes/kubernetes/pull/39834))\n- **[Feature]** vSphere: * Reverts to looking up the current VM in vSphere using the machine's UUID, either obtained via sysfs or via the `vm-uuid` parameter in the cloud configuration file. ([#40892](https://github.com/kubernetes/kubernetes/pull/40892), [@robdaemon](https://github.com/robdaemon)). ([#40892](https://github.com/kubernetes/kubernetes/pull/40892))\n- **[Feature]** Create subcommands: - `can-i` to see if you can perform an action ([#41077](https://github.com/kubernetes/kubernetes/pull/41077), [@deads2k](https://github.com/deads2k)). ([#41077](https://github.com/kubernetes/kubernetes/pull/41077))\n- **[Feature]** Updates to apply: * `apply` falls back to generic 3-way JSON merge patch for Third Party Resource or unregistered types ([#40666](https://github.com/kubernetes/kubernetes/pull/40666), [@ymqytw](https://github.com/ymqytw)). ([#40666](https://github.com/kubernetes/kubernetes/pull/40666))\n- **[Feature]** Updates to edit: * `edit` now supports Third party resources and extension API servers. ([#41304](https://github.com/kubernetes/kubernetes/pull/41304), [@liggitt](https://github.com/liggitt)). ([#41304](https://github.com/kubernetes/kubernetes/pull/41304))\n- **[Feature]** Bug fixes: * Fixed a bug where the --server, --token, and --certificate-authority flags were not overriding the related in-cluster configs when provided in a `kubectl` call inside a cluster. ([#39006](https://github.com/kubernetes/kubernetes/pull/39006). ([#39006](https://github.com/kubernetes/kubernetes/pull/39006))\n- **[Feature]** GCE: * The kube-apiserver [basic audit log](https://kubernetes.io/docs/admin/audit/) can be enabled in GCE by exporting the environment variable `ENABLE_APISERVER_BASIC_AUDIT=true` before running `cluster/kube-up.sh`. This will log to `/var/log/kube-apiserver-audit.log` and use the same `logrotate`. ([#41211](https://github.com/kubernetes/kubernetes/pull/41211))\n- **[Feature]** OpenStack: * Do not daemonize `salt-minion` for the openstack-heat provider. ([#40722](https://github.com/kubernetes/kubernetes/pull/40722), [@micmro](https://github.com/micmro)). ([#40722](https://github.com/kubernetes/kubernetes/pull/40722))\n- **[Feature]** DNS: * `kube-dns` now runs using a separate `system:serviceaccount:kube-system:kube-dns` service account which is automatically bound to the correct RBAC permissions. ([#38816](https://github.com/kubernetes/kubernetes/pull/38816), [@deads2k](https://github.com/deads2k)). ([#38816](https://github.com/kubernetes/kubernetes/pull/38816))\n- **[Feature]** Fluentd: * On GCE, the apiserver audit log (`/var/log/kube-apiserver-audit.log`) will be sent through fluentd if enabled. It will go to the same place as `kube-apiserver.log`, but tagged as its own stream. ([#41360](https://github.com/kubernetes/kubernetes/pull/41360). ([#41360](https://github.com/kubernetes/kubernetes/pull/41360))\n- **[Urgent Upgrade Notes]** Node Components:   * If `kube-reserved` and/or `system-reserved` are specified, node allocatable will be enforced on all pods by default. To opt-out set `--enforce-node-allocatable=\u201d\u201d`. (Upstream release notes)\n- **[Deprecation]** Remove extensions/v1beta1 Jobs resource, and job/v1beta1 generator. ([#38614](https://github.com/kubernetes/kubernetes/pull/38614), [@soltysh](https://github.com/soltysh)). ([#38614](https://github.com/kubernetes/kubernetes/pull/38614))\n- **[Deprecation]** Cluster Provisioning Scripts: * The bash AWS deployment via kube-up.sh has been deprecated. See http://kubernetes.io/docs/getting-started-guides/aws/ for alternatives. ([#38772](https://github.com/kubernetes/kubernetes/pull/38772), [@zmerlynn](https://github.com/zmerlynn)). ([#38772](https://github.com/kubernetes/kubernetes/pull/38772))\n- **[Deprecation]** Cluster Provisioning Scripts: * Remove Azure kube-up as the Azure community has focused efforts elsewhere. ([#41672](https://github.com/kubernetes/kubernetes/pull/41672), [@mikedanese](https://github.com/mikedanese)). ([#41672](https://github.com/kubernetes/kubernetes/pull/41672))\n- **[Deprecation]** Cluster Provisioning Scripts: * Remove the deprecated vsphere kube-up. ([#39140](https://github.com/kubernetes/kubernetes/pull/39140), [@kerneltime](https://github.com/kerneltime)). ([#39140](https://github.com/kubernetes/kubernetes/pull/39140))\n- **[Deprecation]** Other Deprecations: * Remove cmd/kube-discovery from the tree since it's not necessary anymore ([#42070](https://github.com/kubernetes/kubernetes/pull/42070), [@luxas](https://github.com/luxas)). ([#42070](https://github.com/kubernetes/kubernetes/pull/42070))\n- **[Feature]** Pod: * Moved pod affinity and anti-affinity from annotations to api fields [#25319](https://github.com/kubernetes/kubernetes/pull/25319) ([#39478](https://github.com/kubernetes/kubernetes/pull/39478), [@rrati](https://github.com/rrati)). ([#25319](https://github.com/kubernetes/kubernetes/pull/25319), [#39478](https://github.com/kubernetes/kubernetes/pull/39478))\n- **[Feature]** StatefulSet: * Fixes issue [#38418](https://github.com/kubernetes/kubernetes/pull/38418) which, under circumstance, could cause StatefulSet to deadlock. ([#40838](https://github.com/kubernetes/kubernetes/pull/40838), [@kow3ns](https://github.com/kow3ns)). ([#38418](https://github.com/kubernetes/kubernetes/pull/38418), [#40838](https://github.com/kubernetes/kubernetes/pull/40838))\n- **[Urgent Upgrade Notes]** Federation: * The --dns-provider argument of 'kubefed init' is now mandatory and does not default to `google-clouddns`. To initialize a Federation control plane with Google Cloud DNS, use the following invocation: 'kubefed init --dns-provider=google-clouddns'. ([#42092](https://github.com/kubernetes/kubernetes/pull/42092))\n- **[Feature]** the ability to rollback to etcd2 can be preserved by setting the storage media type flag on `kube-apiserver` ``` --storage-media-type application/json ``` to continue to use `application/json` as the storage media type which can be changed to `application/vnd.kubernetes.protobuf` at a later time. (Upstream release notes)\n- **[Feature]** WARNING: A [known issue](https://github.com/kubernetes/kubernetes/issues/44041) in v1.6.0 causes `Pod.Spec.HostPid` (using the host PID namespace for the pod) to always be false. Please wait for v1.6.2, which will include a fix for this issue. (Upstream release notes)\n- **[Feature]** Node Components: * A new field `terminationMessagePolicy` has been added to containers that allows a user to request FallbackToLogsOnError, which will read from the container's logs to populate the termination message if the user does not write to the termination message log file. The termination. (Upstream release notes)\n- **[Feature]** kubeadm: * A new label and taint is used for marking the master. The label is `node-role.kubernetes.io/master=\"\"` and the taint has the effect `NoSchedule`. Tolerate the `node-role.kubernetes.io/master=\"\":NoSchedule` taint to schedule a workload on the master (a networking DaemonSet for example). (Upstream release notes)\n- **[Feature]** Updates to edit: * `edit` works as intended with apply and will not change the annotation. (Upstream release notes)\n- **[Deprecation]** kubeadm: * Quite a few flags been renamed or removed.  Those options that are removed as flags can still be accessed via the config file.  Most notably this includes external etcd settings and the option for setting the cloud provider on the API server.  The [kubeadm reference. (Upstream release notes)\n- **[Feature]** Admission Control: * Enable DefaultTolerationSeconds admission controller by default ([#41815](https://github.com/kubernetes/kubernetes/pull/41815), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#41815](https://github.com/kubernetes/kubernetes/pull/41815))\n- **[Feature]** Admission Control: * ResourceQuota ability to support default limited resources ([#36765](https://github.com/kubernetes/kubernetes/pull/36765), [@derekwaynecarr](https://github.com/derekwaynecarr)). ([#36765](https://github.com/kubernetes/kubernetes/pull/36765))\n- **[Feature]** Admission Control: * Add defaultTolerationSeconds admission controller ([#41414](https://github.com/kubernetes/kubernetes/pull/41414), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#41414](https://github.com/kubernetes/kubernetes/pull/41414))\n- **[Feature]** Admission Control: * Admission control support for versioned configuration files ([#39109](https://github.com/kubernetes/kubernetes/pull/39109), [@derekwaynecarr](https://github.com/derekwaynecarr)). ([#39109](https://github.com/kubernetes/kubernetes/pull/39109))\n- **[Feature]** Admission Control: * Ability to quota storage by storage class ([#34554](https://github.com/kubernetes/kubernetes/pull/34554), [@derekwaynecarr](https://github.com/derekwaynecarr)). ([#34554](https://github.com/kubernetes/kubernetes/pull/34554))\n- **[Feature]** Authentication: * The authentication.k8s.io API group was promoted to v1([#41058](https://github.com/kubernetes/kubernetes/pull/41058), [@liggitt](https://github.com/liggitt)). ([#41058](https://github.com/kubernetes/kubernetes/pull/41058))\n- **[Feature]** Authorization: * The authorization.k8s.io API group was promoted to v1 ([#40709](https://github.com/kubernetes/kubernetes/pull/40709), [@liggitt](https://github.com/liggitt)). ([#40709](https://github.com/kubernetes/kubernetes/pull/40709))\n- **[Feature]** Authorization: * The SubjectAccessReview API now passes subresource and resource name information to the authorizer to answer authorization queries. ([#40935](https://github.com/kubernetes/kubernetes/pull/40935), [@liggitt](https://github.com/liggitt)). ([#40935](https://github.com/kubernetes/kubernetes/pull/40935))\n- **[Feature]** Autoscaling: * Fixes an HPA-related panic due to division-by-zero. ([#39694](https://github.com/kubernetes/kubernetes/pull/39694), [@DirectXMan12](https://github.com/DirectXMan12)). ([#39694](https://github.com/kubernetes/kubernetes/pull/39694))\n- **[Feature]** ConfigMap: * Volumes and environment variables populated from ConfigMap and Secret objects can now tolerate the named source object or specific keys being missing, by adding `optional: true` to the volume or environment variable source specifications.. ([#39981](https://github.com/kubernetes/kubernetes/pull/39981))\n- **[Feature]** ConfigMap: * Allow pods to define multiple environment variables from a whole ConfigMap ([#36245](https://github.com/kubernetes/kubernetes/pull/36245), [@fraenkel](https://github.com/fraenkel)). ([#36245](https://github.com/kubernetes/kubernetes/pull/36245))\n- **[Feature]** CronJob: * Add configurable limits to CronJob resource to specify how many successful and failed jobs are preserved. ([#40932](https://github.com/kubernetes/kubernetes/pull/40932), [@peay](https://github.com/peay)). ([#40932](https://github.com/kubernetes/kubernetes/pull/40932))\n- **[Feature]** DaemonSet now respects ControllerRef to avoid fighting over Pods. ([#42173](https://github.com/kubernetes/kubernetes/pull/42173), [@enisoc](https://github.com/enisoc)). ([#42173](https://github.com/kubernetes/kubernetes/pull/42173))\n- **[Feature]** DaemonSet: * Make DaemonSet respect critical pods annotation when scheduling. ([#42028](https://github.com/kubernetes/kubernetes/pull/42028), [@janetkuo](https://github.com/janetkuo)). ([#42028](https://github.com/kubernetes/kubernetes/pull/42028))\n- **[Feature]** DaemonSet: * Implement the update feature for DaemonSet. ([#41116](https://github.com/kubernetes/kubernetes/pull/41116), [@lukaszo](https://github.com/lukaszo)). ([#41116](https://github.com/kubernetes/kubernetes/pull/41116))\n- **[Feature]** DaemonSet: * Make DaemonSets survive taint-based evictions when nodes turn unreachable/notReady. ([#41896](https://github.com/kubernetes/kubernetes/pull/41896), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#41896](https://github.com/kubernetes/kubernetes/pull/41896))\n- **[Feature]** DaemonSet: * Make DaemonSet controller respect node taints and pod tolerations. ([#41172](https://github.com/kubernetes/kubernetes/pull/41172), [@janetkuo](https://github.com/janetkuo)). ([#41172](https://github.com/kubernetes/kubernetes/pull/41172))\n- **[Feature]** DaemonSet controller actively kills failed pods (to recreate them) ([#40330](https://github.com/kubernetes/kubernetes/pull/40330), [@janetkuo](https://github.com/janetkuo)). ([#40330](https://github.com/kubernetes/kubernetes/pull/40330))\n- **[Feature]** DaemonSet ObservedGeneration ([#39157](https://github.com/kubernetes/kubernetes/pull/39157), [@lukaszo](https://github.com/lukaszo)). ([#39157](https://github.com/kubernetes/kubernetes/pull/39157))\n- **[Feature]** Deployment: * Add ready replicas in Deployments ([#37959](https://github.com/kubernetes/kubernetes/pull/37959), [@kargakis](https://github.com/kargakis)). ([#37959](https://github.com/kubernetes/kubernetes/pull/37959))\n- **[Feature]** Deployment: * Introduce apps/v1beta1.Deployments resource with modified defaults compared to extensions/v1beta1.Deployments. ([#39683](https://github.com/kubernetes/kubernetes/pull/39683), [@soltysh](https://github.com/soltysh)). ([#39683](https://github.com/kubernetes/kubernetes/pull/39683))\n- **[Feature]** Deployment: * Introduce new generator for apps/v1beta1 deployments ([#42362](https://github.com/kubernetes/kubernetes/pull/42362), [@soltysh](https://github.com/soltysh)). ([#42362](https://github.com/kubernetes/kubernetes/pull/42362))\n- **[Feature]** Node: * Set all node conditions to Unknown when node is unreachable ([#36592](https://github.com/kubernetes/kubernetes/pull/36592), [@andrewsykim](https://github.com/andrewsykim)). ([#36592](https://github.com/kubernetes/kubernetes/pull/36592))\n- **[Feature]** Pod: * Node affinity has moved from annotations to api fields in the pod spec.  Node affinity that is defined in the annotations will be ignored. ([#37299](https://github.com/kubernetes/kubernetes/pull/37299), [@rrati](https://github.com/rrati)). ([#37299](https://github.com/kubernetes/kubernetes/pull/37299))\n- **[Feature]** Pod: * Add QoS pod status field ([#37968](https://github.com/kubernetes/kubernetes/pull/37968), [@sjenning](https://github.com/sjenning)). ([#37968](https://github.com/kubernetes/kubernetes/pull/37968))\n- **[Feature]** ReplicaSet has onwer ref of the Deployment that created it ([#35676](https://github.com/kubernetes/kubernetes/pull/35676), [@krmayankk](https://github.com/krmayankk)). ([#35676](https://github.com/kubernetes/kubernetes/pull/35676))\n- **[Feature]** Secrets: * Populate environment variables from a secrets. ([#39446](https://github.com/kubernetes/kubernetes/pull/39446), [@fraenkel](https://github.com/fraenkel)). ([#39446](https://github.com/kubernetes/kubernetes/pull/39446))\n- **[Feature]** Secrets: * Added a new secret type \"bootstrap.kubernetes.io/token\" for dynamically creating TLS bootstrapping bearer tokens. ([#41281](https://github.com/kubernetes/kubernetes/pull/41281), [@ericchiang](https://github.com/ericchiang)). ([#41281](https://github.com/kubernetes/kubernetes/pull/41281))\n- **[Feature]** Service: * Endpoints, that tolerate unready Pods, are now listing Pods in state Terminating as well ([#37093](https://github.com/kubernetes/kubernetes/pull/37093), [@simonswine](https://github.com/simonswine)). ([#37093](https://github.com/kubernetes/kubernetes/pull/37093))\n- **[Feature]** Service: * Fix Service Update on LoadBalancerSourceRanges Field ([#37720](https://github.com/kubernetes/kubernetes/pull/37720), [@freehan](https://github.com/freehan)). ([#37720](https://github.com/kubernetes/kubernetes/pull/37720))\n- **[Feature]** Service: * Bug fix. Incoming UDP packets not reach newly deployed services ([#32561](https://github.com/kubernetes/kubernetes/pull/32561), [@zreigz](https://github.com/zreigz)). ([#32561](https://github.com/kubernetes/kubernetes/pull/32561))\n- **[Feature]** Services of type loadbalancer consume both loadbalancer and nodeport quota. ([#39364](https://github.com/kubernetes/kubernetes/pull/39364), [@zhouhaibing089](https://github.com/zhouhaibing089)). ([#39364](https://github.com/kubernetes/kubernetes/pull/39364))\n- **[Feature]** StatefulSet: * Fix zone placement heuristics so that multiple mounts in a StatefulSet pod are created in the same zone ([#40910](https://github.com/kubernetes/kubernetes/pull/40910), [@justinsb](https://github.com/justinsb)). ([#40910](https://github.com/kubernetes/kubernetes/pull/40910))\n- **[Feature]** StatefulSet:   * Mediates issue [#36859](https://github.com/kubernetes/kubernetes/pull/36859). StatefulSet only acts on Pods whose identity matches the StatefulSet, providing a partial mediation for overlapping controllers. ([#36859](https://github.com/kubernetes/kubernetes/pull/36859))\n- **[Feature]** Taints and Tolerations: * Make tolerations respect wildcard key ([#39914](https://github.com/kubernetes/kubernetes/pull/39914), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#39914](https://github.com/kubernetes/kubernetes/pull/39914))\n- **[Feature]** Volumes: * Add storage.k8s.io/v1 API ([#40088](https://github.com/kubernetes/kubernetes/pull/40088), [@jsafrane](https://github.com/jsafrane)). ([#40088](https://github.com/kubernetes/kubernetes/pull/40088))\n- **[Feature]** Volumes: * Reduce verbosity of volume reconciler when attaching volumes ([#36900](https://github.com/kubernetes/kubernetes/pull/36900), [@codablock](https://github.com/codablock)). ([#36900](https://github.com/kubernetes/kubernetes/pull/36900))\n- **[Feature]** Volumes: * We change the default attach_detach_controller sync period to 1 minute to reduce the query frequency through cloud provider to check whether volumes are attached or not. ([#41363](https://github.com/kubernetes/kubernetes/pull/41363), [@jingxu97](https://github.com/jingxu97)). ([#41363](https://github.com/kubernetes/kubernetes/pull/41363))\n- **[Feature]** API Server:   * `--basic-auth-file` supports optionally specifying groups in the fourth column of the file ([#39651](https://github.com/kubernetes/kubernetes/pull/39651), [@liggitt](https://github.com/liggitt)). ([#39651](https://github.com/kubernetes/kubernetes/pull/39651))\n- **[Feature]** API Server: * API server now has two separate limits for read-only and mutating inflight requests. ([#36064](https://github.com/kubernetes/kubernetes/pull/36064), [@gmarek](https://github.com/gmarek)). ([#36064](https://github.com/kubernetes/kubernetes/pull/36064))\n- **[Feature]** API Server: * Restored normalization of custom `--etcd-prefix` when `--storage-backend` is set to etcd3 ([#42506](https://github.com/kubernetes/kubernetes/pull/42506), [@liggitt](https://github.com/liggitt)). ([#42506](https://github.com/kubernetes/kubernetes/pull/42506))\n- **[Feature]** API Server: * Updating apiserver to return http status code 202 for a delete request when the resource is not immediately deleted because of user requesting cascading deletion using DeleteOptions.OrphanDependents=false. ([#41165](https://github.com/kubernetes/kubernetes/pull/41165). ([#41165](https://github.com/kubernetes/kubernetes/pull/41165))\n- **[Feature]** API Server: * Use full package path for definition name in OpenAPI spec ([#40124](https://github.com/kubernetes/kubernetes/pull/40124), [@mbohlool](https://github.com/mbohlool)). ([#40124](https://github.com/kubernetes/kubernetes/pull/40124))\n- **[Feature]** API Server: * Add 'X-Content-Type-Options: nosniff\" to some error messages ([#37190](https://github.com/kubernetes/kubernetes/pull/37190), [@brendandburns](https://github.com/brendandburns)). ([#37190](https://github.com/kubernetes/kubernetes/pull/37190))\n- **[Feature]** API Server: * Fixes bug in resolving client-requested API versions ([#38533](https://github.com/kubernetes/kubernetes/pull/38533), [@DirectXMan12](https://github.com/DirectXMan12)). ([#38533](https://github.com/kubernetes/kubernetes/pull/38533))\n- **[Feature]** API Server: * Replace glog.Fatals with fmt.Errorfs ([#38175](https://github.com/kubernetes/kubernetes/pull/38175), [@sttts](https://github.com/sttts)). ([#38175](https://github.com/kubernetes/kubernetes/pull/38175))\n- **[Feature]** API Server: * Pipe get options to storage ([#37693](https://github.com/kubernetes/kubernetes/pull/37693), [@wojtek-t](https://github.com/wojtek-t)). ([#37693](https://github.com/kubernetes/kubernetes/pull/37693))\n- **[Feature]** API Server: * if kube-apiserver is started with `--storage-backend=etcd2`, the media type `application/json` is used. ([#43122](https://github.com/kubernetes/kubernetes/pull/43122), [@liggitt](https://github.com/liggitt)). ([#43122](https://github.com/kubernetes/kubernetes/pull/43122))\n- **[Feature]** API Server: * Generate OpenAPI definition for inlined types ([#39466](https://github.com/kubernetes/kubernetes/pull/39466), [@mbohlool](https://github.com/mbohlool)). ([#39466](https://github.com/kubernetes/kubernetes/pull/39466))\n- **[Feature]** API Server Aggregator: * Rename kubernetes-discovery to kube-aggregator ([#39619](https://github.com/kubernetes/kubernetes/pull/39619), [@deads2k](https://github.com/deads2k)). ([#39619](https://github.com/kubernetes/kubernetes/pull/39619))\n- **[Feature]** API Server Aggregator: * Fix connection upgrades through kubernetes-discovery ([#38724](https://github.com/kubernetes/kubernetes/pull/38724), [@deads2k](https://github.com/deads2k)). ([#38724](https://github.com/kubernetes/kubernetes/pull/38724))\n- **[Feature]** Generic API Server: * Move pkg/api/rest into genericapiserver ([#39948](https://github.com/kubernetes/kubernetes/pull/39948), [@sttts](https://github.com/sttts)). ([#39948](https://github.com/kubernetes/kubernetes/pull/39948))\n- **[Feature]** Generic API Server: * Move non-generic apiserver code out of the generic packages ([#38191](https://github.com/kubernetes/kubernetes/pull/38191), [@sttts](https://github.com/sttts)). ([#38191](https://github.com/kubernetes/kubernetes/pull/38191))\n- **[Feature]** Generic API Server: * Re-add /healthz/ping handler in genericapiserver ([#38603](https://github.com/kubernetes/kubernetes/pull/38603), [@sttts](https://github.com/sttts)). ([#38603](https://github.com/kubernetes/kubernetes/pull/38603))\n- **[Feature]** Generic API Server: * genericapiserver: cut off more dependencies \u2013 episode 3 ([#40426](https://github.com/kubernetes/kubernetes/pull/40426), [@sttts](https://github.com/sttts)). ([#40426](https://github.com/kubernetes/kubernetes/pull/40426))\n- **[Feature]** Generic API Server: * genericapiserver: more dependency cutoffs ([#40216](https://github.com/kubernetes/kubernetes/pull/40216), [@sttts](https://github.com/sttts)). ([#40216](https://github.com/kubernetes/kubernetes/pull/40216))\n- **[Feature]** Generic API Server: * genericapiserver: cut off kube pkg/version dependency ([#39943](https://github.com/kubernetes/kubernetes/pull/39943), [@sttts](https://github.com/sttts)). ([#39943](https://github.com/kubernetes/kubernetes/pull/39943))\n- **[Feature]** Generic API Server: * genericapiserver: cut off pkg/serviceaccount dependency ([#39945](https://github.com/kubernetes/kubernetes/pull/39945), [@sttts](https://github.com/sttts)). ([#39945](https://github.com/kubernetes/kubernetes/pull/39945))\n- **[Feature]** Generic API Server: * genericapiserver: cut off pkg/apis/extensions and pkg/storage dependencies ([#39946](https://github.com/kubernetes/kubernetes/pull/39946), [@sttts](https://github.com/sttts)). ([#39946](https://github.com/kubernetes/kubernetes/pull/39946))\n- **[Feature]** Generic API Server: * genericapiserver: cut off certificates api dependency ([#39947](https://github.com/kubernetes/kubernetes/pull/39947), [@sttts](https://github.com/sttts)). ([#39947](https://github.com/kubernetes/kubernetes/pull/39947))\n- **[Feature]** Generic API Server: * genericapiserver: extract CA cert from server cert and SNI cert chains ([#39022](https://github.com/kubernetes/kubernetes/pull/39022), [@sttts](https://github.com/sttts)). ([#39022](https://github.com/kubernetes/kubernetes/pull/39022))\n- **[Feature]** Generic API Server: * genericapiserver: turn APIContainer.SecretRoutes into a real ServeMux ([#38826](https://github.com/kubernetes/kubernetes/pull/38826), [@sttts](https://github.com/sttts)). ([#38826](https://github.com/kubernetes/kubernetes/pull/38826))\n- **[Feature]** Generic API Server: * genericapiserver: unify swagger and openapi in config ([#38690](https://github.com/kubernetes/kubernetes/pull/38690), [@sttts](https://github.com/sttts)). ([#38690](https://github.com/kubernetes/kubernetes/pull/38690))\n- **[Feature]** Client: * Use Prometheus instrumentation conventions ([#36704](https://github.com/kubernetes/kubernetes/pull/36704), [@fabxc](https://github.com/fabxc)). ([#36704](https://github.com/kubernetes/kubernetes/pull/36704))\n- **[Feature]** Clients now use the `?watch=true` parameter to make watch API calls, instead of the `/watch/` path prefix ([#41722](https://github.com/kubernetes/kubernetes/pull/41722), [@liggitt](https://github.com/liggitt)). ([#41722](https://github.com/kubernetes/kubernetes/pull/41722))\n- **[Feature]** Client: * Move private key parsing from serviceaccount/jwt.go to client-go/util/cert ([#40907](https://github.com/kubernetes/kubernetes/pull/40907), [@cblecker](https://github.com/cblecker)). ([#40907](https://github.com/kubernetes/kubernetes/pull/40907))\n- **[Feature]** Client: * Caching added to the OIDC client auth plugin to fix races and reduce the time kubectl commands using this plugin take by several seconds. ([#38167](https://github.com/kubernetes/kubernetes/pull/38167), [@ericchiang](https://github.com/ericchiang)). ([#38167](https://github.com/kubernetes/kubernetes/pull/38167))\n- **[Feature]** Client: * Fix resync goroutine leak in ListAndWatch ([#35672](https://github.com/kubernetes/kubernetes/pull/35672), [@tatsuhiro-t](https://github.com/tatsuhiro-t)). ([#35672](https://github.com/kubernetes/kubernetes/pull/35672))\n- **[Feature]** client-go: * The main repository does not keep multiple releases of clientsets anymore. Please find previous releases at https://github.com/kubernetes/client-go ([#38154](https://github.com/kubernetes/kubernetes/pull/38154), [@caesarxuchao](https://github.com/caesarxuchao)). ([#38154](https://github.com/kubernetes/kubernetes/pull/38154))\n- **[Feature]** client-go: * Support whitespace in command path for gcp auth plugin ([#41653](https://github.com/kubernetes/kubernetes/pull/41653), [@jlowdermilk](https://github.com/jlowdermilk)). ([#41653](https://github.com/kubernetes/kubernetes/pull/41653))\n- **[Feature]** client-go: * Added bool type support for jsonpath. ([#39063](https://github.com/kubernetes/kubernetes/pull/39063), [@xingzhou](https://github.com/xingzhou)). ([#39063](https://github.com/kubernetes/kubernetes/pull/39063))\n- **[Feature]** client-go: * Preventing nil pointer reference in client_config ([#40508](https://github.com/kubernetes/kubernetes/pull/40508), [@vjsamuel](https://github.com/vjsamuel)). ([#40508](https://github.com/kubernetes/kubernetes/pull/40508))\n- **[Feature]** client-go: * Prevent hotloops on error conditions, which could fill up the disk faster than log rotation can free space. ([#40497](https://github.com/kubernetes/kubernetes/pull/40497), [@lavalamp](https://github.com/lavalamp)). ([#40497](https://github.com/kubernetes/kubernetes/pull/40497))\n- **[Feature]** AWS: * Allow to running the master with a different AWS account or even on a different cloud provider than the nodes. ([#39996](https://github.com/kubernetes/kubernetes/pull/39996), [@scheeles](https://github.com/scheeles)). ([#39996](https://github.com/kubernetes/kubernetes/pull/39996))\n- **[Feature]** AWS: * Support shared tag `kubernetes.io/cluster/<clusterid>` ([#41695](https://github.com/kubernetes/kubernetes/pull/41695), [@justinsb](https://github.com/justinsb)). ([#41695](https://github.com/kubernetes/kubernetes/pull/41695))\n- **[Feature]** AWS: * Do not consider master instance zones for dynamic volume creation ([#41702](https://github.com/kubernetes/kubernetes/pull/41702), [@justinsb](https://github.com/justinsb)). ([#41702](https://github.com/kubernetes/kubernetes/pull/41702))\n- **[Feature]** AWS: * Fix AWS device allocator to only use valid device names ([#41455](https://github.com/kubernetes/kubernetes/pull/41455), [@gnufied](https://github.com/gnufied)). ([#41455](https://github.com/kubernetes/kubernetes/pull/41455))\n- **[Feature]** AWS: * Trust region if found from AWS metadata ([#38880](https://github.com/kubernetes/kubernetes/pull/38880), [@justinsb](https://github.com/justinsb)). ([#38880](https://github.com/kubernetes/kubernetes/pull/38880))\n- **[Feature]** AWS: * Recognize eu-west-2 region ([#38746](https://github.com/kubernetes/kubernetes/pull/38746), [@justinsb](https://github.com/justinsb)). ([#38746](https://github.com/kubernetes/kubernetes/pull/38746))\n- **[Feature]** AWS: * Recognize ca-central-1 region ([#38410](https://github.com/kubernetes/kubernetes/pull/38410), [@justinsb](https://github.com/justinsb)). ([#38410](https://github.com/kubernetes/kubernetes/pull/38410))\n- **[Feature]** AWS: * Add sequential allocator for device names. ([#38818](https://github.com/kubernetes/kubernetes/pull/38818), [@jsafrane](https://github.com/jsafrane)). ([#38818](https://github.com/kubernetes/kubernetes/pull/38818))\n- **[Feature]** Azure: * Fix failing load balancers in Azure ([#40405](https://github.com/kubernetes/kubernetes/pull/40405), [@codablock](https://github.com/codablock)). ([#40405](https://github.com/kubernetes/kubernetes/pull/40405))\n- **[Feature]** Azure: * Reduce time needed to attach Azure disks ([#40066](https://github.com/kubernetes/kubernetes/pull/40066), [@codablock](https://github.com/codablock)). ([#40066](https://github.com/kubernetes/kubernetes/pull/40066))\n- **[Feature]** Azure: * Add support for Azure Container Registry, update Azure dependencies ([#37783](https://github.com/kubernetes/kubernetes/pull/37783), [@brendandburns](https://github.com/brendandburns)). ([#37783](https://github.com/kubernetes/kubernetes/pull/37783))\n- **[Feature]** Azure: * Allow backendpools in Azure Load Balancers which are not owned by cloud provider ([#36882](https://github.com/kubernetes/kubernetes/pull/36882), [@codablock](https://github.com/codablock)). ([#36882](https://github.com/kubernetes/kubernetes/pull/36882))\n- **[Feature]** GCE: * On GCI by default logrotate is disabled for application containers in favor of rotation mechanism provided by docker logging driver. ([#40634](https://github.com/kubernetes/kubernetes/pull/40634), [@crassirostris](https://github.com/crassirostris)). ([#40634](https://github.com/kubernetes/kubernetes/pull/40634))\n- **[Feature]** GKE: * New GKE certificates controller. ([#41160](https://github.com/kubernetes/kubernetes/pull/41160), [@pipejakob](https://github.com/pipejakob)). ([#41160](https://github.com/kubernetes/kubernetes/pull/41160))\n- **[Feature]** vSphere: * Fix for detach volume when node is not present/ powered off ([#40118](https://github.com/kubernetes/kubernetes/pull/40118), [@BaluDontu](https://github.com/BaluDontu)). ([#40118](https://github.com/kubernetes/kubernetes/pull/40118))\n- **[Feature]** vSphere: * Adding vmdk file extension for vmDiskPath in vsphere DeleteVolume ([#40538](https://github.com/kubernetes/kubernetes/pull/40538), [@divyenpatel](https://github.com/divyenpatel)). ([#40538](https://github.com/kubernetes/kubernetes/pull/40538))\n- **[Feature]** vSphere: * Changed default scsi controller type in vSphere Cloud Provider ([#38426](https://github.com/kubernetes/kubernetes/pull/38426), [@abrarshivani](https://github.com/abrarshivani)). ([#38426](https://github.com/kubernetes/kubernetes/pull/38426))\n- **[Feature]** vSphere: * Fixes NotAuthenticated errors that appear in the kubelet and kube-controller-manager due to never logging in to vSphere ([#36169](https://github.com/kubernetes/kubernetes/pull/36169), [@robdaemon](https://github.com/robdaemon)). ([#36169](https://github.com/kubernetes/kubernetes/pull/36169))\n- **[Feature]** vSphere: * Fix panic in vSphere cloud provider ([#38423](https://github.com/kubernetes/kubernetes/pull/38423), [@BaluDontu](https://github.com/BaluDontu)). ([#38423](https://github.com/kubernetes/kubernetes/pull/38423))\n- **[Feature]** vSphere: * Fix space issue in volumePath with vSphere Cloud Provider ([#38338](https://github.com/kubernetes/kubernetes/pull/38338), [@BaluDontu](https://github.com/BaluDontu)). ([#38338](https://github.com/kubernetes/kubernetes/pull/38338))\n- **[Feature]** kubefed: * Flag cleanup ([#41335](https://github.com/kubernetes/kubernetes/pull/41335), [@irfanurrehman](https://github.com/irfanurrehman)). ([#41335](https://github.com/kubernetes/kubernetes/pull/41335))\n- **[Feature]** kubefed: * Support configuring dns-provider ([#40528](https://github.com/kubernetes/kubernetes/pull/40528), [@shashidharatd](https://github.com/shashidharatd)). ([#40528](https://github.com/kubernetes/kubernetes/pull/40528))\n- **[Feature]** kubefed: * Bug fix relating kubeconfig path in kubefed init ([#41410](https://github.com/kubernetes/kubernetes/pull/41410), [@irfanurrehman](https://github.com/irfanurrehman)). ([#41410](https://github.com/kubernetes/kubernetes/pull/41410))\n- **[Feature]** kubefed: * Add override flags options to kubefed init ([#40917](https://github.com/kubernetes/kubernetes/pull/40917), [@irfanurrehman](https://github.com/irfanurrehman)). ([#40917](https://github.com/kubernetes/kubernetes/pull/40917))\n- **[Feature]** kubefed: * Add option to expose federation apiserver on nodeport service ([#40516](https://github.com/kubernetes/kubernetes/pull/40516), [@shashidharatd](https://github.com/shashidharatd)). ([#40516](https://github.com/kubernetes/kubernetes/pull/40516))\n- **[Feature]** kubefed: * Add option to disable persistence storage for etcd ([#40862](https://github.com/kubernetes/kubernetes/pull/40862), [@shashidharatd](https://github.com/shashidharatd)). ([#40862](https://github.com/kubernetes/kubernetes/pull/40862))\n- **[Feature]** kubefed init creates a service account for federation controller manager in the federation-system namespace and binds that service account to the federation-system:federation-controller-manager role that has read and list access on secrets in the federation-system namespace. . ([#40392](https://github.com/kubernetes/kubernetes/pull/40392))\n- **[Feature]** kubefed: * Implement dry run support in kubefed init ([#36447](https://github.com/kubernetes/kubernetes/pull/36447), [@irfanurrehman](https://github.com/irfanurrehman)). ([#36447](https://github.com/kubernetes/kubernetes/pull/36447))\n- **[Feature]** kubefed: * Make federation etcd PVC size configurable ([#36310](https://github.com/kubernetes/kubernetes/pull/36310), [@irfanurrehman](https://github.com/irfanurrehman)). ([#36310](https://github.com/kubernetes/kubernetes/pull/36310))\n- **[Feature]** Other Notable Changes: * Add support for finalizers in federated configmaps (deletes configmaps from underlying clusters). ([#40464](https://github.com/kubernetes/kubernetes/pull/40464), [@csbell](https://github.com/csbell)). ([#40464](https://github.com/kubernetes/kubernetes/pull/40464))\n- **[Feature]** Other Notable Changes: * Add support for DeleteOptions.OrphanDependents for federated services. Setting it to false while deleting a federated service also deletes the corresponding services from all registered clusters. ([#36390](https://github.com/kubernetes/kubernetes/pull/36390). ([#36390](https://github.com/kubernetes/kubernetes/pull/36390))\n- **[Feature]** Other Notable Changes: * Add `--controllers` flag to federation controller manager for enable/disable federation ingress controller ([#36643](https://github.com/kubernetes/kubernetes/pull/36643), [@kzwang](https://github.com/kzwang)). ([#36643](https://github.com/kubernetes/kubernetes/pull/36643))\n- **[Feature]** Other Notable Changes: * Stop deleting services from underlying clusters when federated service is deleted. ([#37353](https://github.com/kubernetes/kubernetes/pull/37353), [@nikhiljindal](https://github.com/nikhiljindal)). ([#37353](https://github.com/kubernetes/kubernetes/pull/37353))\n- **[Feature]** Other Notable Changes: * Expose autoscaling apis through federation api server ([#38976](https://github.com/kubernetes/kubernetes/pull/38976), [@irfanurrehman](https://github.com/irfanurrehman)). ([#38976](https://github.com/kubernetes/kubernetes/pull/38976))\n- **[Feature]** Other Notable Changes: * Federation: Add `batch/jobs` API objects to federation-apiserver ([#35943](https://github.com/kubernetes/kubernetes/pull/35943), [@jianhuiz](https://github.com/jianhuiz)). ([#35943](https://github.com/kubernetes/kubernetes/pull/35943))\n- **[Feature]** Other Notable Changes: * Add logging of route53 calls ([#39964](https://github.com/kubernetes/kubernetes/pull/39964), [@justinsb](https://github.com/justinsb)). ([#39964](https://github.com/kubernetes/kubernetes/pull/39964))\n- **[Feature]** Garbage Collector: * Added foreground garbage collection: the owner object will not be deleted until all its dependents are deleted by the garbage collector. Please checkout the [user doc](https://kubernetes.io/docs/concepts/abstractions/controllers/garbage-collection/) for details.. ([#38676](https://github.com/kubernetes/kubernetes/pull/38676))\n- **[Feature]** kubeadm: * Hook up kubeadm against the BootstrapSigner ([#41417](https://github.com/kubernetes/kubernetes/pull/41417), [@luxas](https://github.com/luxas)). ([#41417](https://github.com/kubernetes/kubernetes/pull/41417))\n- **[Feature]** kubeadm: * Insecure access to the API Server at localhost:8080 will be turned off in v1.6 when using kubeadm ([#42066](https://github.com/kubernetes/kubernetes/pull/42066), [@luxas](https://github.com/luxas)). ([#42066](https://github.com/kubernetes/kubernetes/pull/42066))\n- **[Feature]** kubeadm: * Flag --use-kubernetes-version for kubeadm init renamed to --kubernetes-version ([#41820](https://github.com/kubernetes/kubernetes/pull/41820), [@kad](https://github.com/kad)). ([#41820](https://github.com/kubernetes/kubernetes/pull/41820))\n- **[Feature]** kubeadm: * Fixed an SELinux issue in kubeadm on Docker 1.12+ by moving etcd SELinux options from container to pod. ([#40682](https://github.com/kubernetes/kubernetes/pull/40682), [@dgoodwin](https://github.com/dgoodwin)). ([#40682](https://github.com/kubernetes/kubernetes/pull/40682))\n- **[Feature]** kubeadm: * Add authorization mode to kubeadm ([#39846](https://github.com/kubernetes/kubernetes/pull/39846), [@andrewrynhard](https://github.com/andrewrynhard)). ([#39846](https://github.com/kubernetes/kubernetes/pull/39846))\n- **[Feature]** kubeadm: * Refactor the certificate and kubeconfig code in the kubeadm binary into two phases ([#39280](https://github.com/kubernetes/kubernetes/pull/39280), [@luxas](https://github.com/luxas)). ([#39280](https://github.com/kubernetes/kubernetes/pull/39280))\n- **[Feature]** kubeadm: * Added kubeadm commands to manage bootstrap tokens and the duration they are valid for. ([#35805](https://github.com/kubernetes/kubernetes/pull/35805), [@dgoodwin](https://github.com/dgoodwin)). ([#35805](https://github.com/kubernetes/kubernetes/pull/35805))\n- **[Feature]** New Commands: - `apply set-last-applied` *updates the applied-applied-configuration annotation* ([#41694](https://github.com/kubernetes/kubernetes/pull/41694), [@shiywang](https://github.com/shiywang)). ([#41694](https://github.com/kubernetes/kubernetes/pull/41694))\n- **[Feature]** New Commands: - `kubectl apply view-last-applied` *viewing the last configuration file applied* ([#41146](https://github.com/kubernetes/kubernetes/pull/41146), [@shiywang](https://github.com/shiywang)). ([#41146](https://github.com/kubernetes/kubernetes/pull/41146))\n- **[Feature]** Create subcommands:   - `create poddisruptionbudget` ([#36646](https://github.com/kubernetes/kubernetes/pull/36646), [@kargakis](https://github.com/kargakis)). ([#36646](https://github.com/kubernetes/kubernetes/pull/36646))\n- **[Feature]** Create subcommands:   - `create clusterrole` ([#41538](https://github.com/kubernetes/kubernetes/pull/41538), [@xingzhou](https://github.com/xingzhou)). ([#41538](https://github.com/kubernetes/kubernetes/pull/41538))\n- **[Feature]** Create subcommands:   - `create role` ([#39852](https://github.com/kubernetes/kubernetes/pull/39852), [@xingzhou](https://github.com/xingzhou)). ([#39852](https://github.com/kubernetes/kubernetes/pull/39852))\n- **[Feature]** Create subcommands:   - `create clusterrolebinding` ([#37098](https://github.com/kubernetes/kubernetes/pull/37098), [@deads2k](https://github.com/deads2k)). ([#37098](https://github.com/kubernetes/kubernetes/pull/37098))\n- **[Feature]** Create subcommands:   - `create service externalname` ([#34789](https://github.com/kubernetes/kubernetes/pull/34789), [@adohe](https://github.com/adohe)). ([#34789](https://github.com/kubernetes/kubernetes/pull/34789))\n- **[Feature]** Create subcommands: - `set selector` - update selector labels ([#38966](https://github.com/kubernetes/kubernetes/pull/38966), [@kargakis](https://github.com/kargakis)). ([#38966](https://github.com/kubernetes/kubernetes/pull/38966))\n- **[Feature]** Updates to existing commands:   * Import a numeric ordering sorting library and use it in the sorting printer. ([#40746](https://github.com/kubernetes/kubernetes/pull/40746), [@matthyx](https://github.com/matthyx)). ([#40746](https://github.com/kubernetes/kubernetes/pull/40746))\n- **[Feature]** Updates to existing commands:   * DaemonSet get and describe show status fields.  ([#42843](https://github.com/kubernetes/kubernetes/pull/42843), [@janetkuo](https://github.com/janetkuo)). ([#42843](https://github.com/kubernetes/kubernetes/pull/42843))\n- **[Feature]** Updates to existing commands:   * Pods describe shows tolerationSeconds ([#42162](https://github.com/kubernetes/kubernetes/pull/42162), [@kevin-wangzefeng](https://github.com/kevin-wangzefeng)). ([#42162](https://github.com/kubernetes/kubernetes/pull/42162))\n- **[Feature]** Updates to existing commands:   * Node describe contains closing paren ([#39217](https://github.com/kubernetes/kubernetes/pull/39217), [@luksa](https://github.com/luksa)). ([#39217](https://github.com/kubernetes/kubernetes/pull/39217))\n- **[Feature]** Updates to existing commands:   * Display pod node selectors with kubectl describe. ([#36396](https://github.com/kubernetes/kubernetes/pull/36396), [@aveshagarwal](https://github.com/aveshagarwal)). ([#36396](https://github.com/kubernetes/kubernetes/pull/36396))\n- **[Feature]** Updates to existing commands:   * Add Version to the resource printer for 'get nodes' ([#37943](https://github.com/kubernetes/kubernetes/pull/37943), [@ailusazh](https://github.com/ailusazh)). ([#37943](https://github.com/kubernetes/kubernetes/pull/37943))\n- **[Feature]** Updates to existing commands:   * Added support for printing in all supported `--output` formats to `kubectl create ...` and `kubectl apply ...` ([#38112](https://github.com/kubernetes/kubernetes/pull/38112), [@juanvallejo](https://github.com/juanvallejo)). ([#38112](https://github.com/kubernetes/kubernetes/pull/38112))\n- **[Feature]** Updates to existing commands:   * Add three more columns to `kubectl get deploy -o wide` output. ([#39240](https://github.com/kubernetes/kubernetes/pull/39240), [@xingzhou](https://github.com/xingzhou)). ([#39240](https://github.com/kubernetes/kubernetes/pull/39240))\n- **[Feature]** Updates to existing commands:   * Fix kubectl get -f <file> -o <nondefault printer> so it prints all items in the file ([#39038](https://github.com/kubernetes/kubernetes/pull/39038), [@ncdc](https://github.com/ncdc)). ([#39038](https://github.com/kubernetes/kubernetes/pull/39038))\n- **[Feature]** Updates to existing commands:   * Completed pods should not be hidden when requested by name via `kubectl get`. ([#42216](https://github.com/kubernetes/kubernetes/pull/42216), [@smarterclayton](https://github.com/smarterclayton)). ([#42216](https://github.com/kubernetes/kubernetes/pull/42216))\n- **[Feature]** Updates to existing commands:   * Improve formatting of EventSource in kubectl get and kubectl describe ([#40073](https://github.com/kubernetes/kubernetes/pull/40073), [@matthyx](https://github.com/matthyx)). ([#40073](https://github.com/kubernetes/kubernetes/pull/40073))\n- **[Feature]** Updates to existing commands: * Attach now supports multiple types ([#40365](https://github.com/kubernetes/kubernetes/pull/40365), [@shiywang](https://github.com/shiywang)). ([#40365](https://github.com/kubernetes/kubernetes/pull/40365))\n- **[Feature]** Updates to existing commands: * Create now accepts the label selector flag for filtering objects to create ([#40057](https://github.com/kubernetes/kubernetes/pull/40057), [@MrHohn](https://github.com/MrHohn)). ([#40057](https://github.com/kubernetes/kubernetes/pull/40057))\n- **[Feature]** Updates to existing commands: * Top now accepts short forms for \"node\" and \"pod\" (\"no\", \"po\") ([#39218](https://github.com/kubernetes/kubernetes/pull/39218), [@luksa](https://github.com/luksa)). ([#39218](https://github.com/kubernetes/kubernetes/pull/39218))\n- **[Feature]** Updates to existing commands: * Begin paths for internationalization in kubectl ([#36802](https://github.com/kubernetes/kubernetes/pull/36802), [@brendandburns](https://github.com/brendandburns)). ([#36802](https://github.com/kubernetes/kubernetes/pull/36802))\n- **[Feature]** Updates to existing commands:   * Add initial french translations for kubectl ([#40645](https://github.com/kubernetes/kubernetes/pull/40645), [@brendandburns](https://github.com/brendandburns)). ([#40645](https://github.com/kubernetes/kubernetes/pull/40645))\n- **[Feature]** Updates to apply: * New command `apply set-last-applied` *updates the applied-applied-configuration annotation* ([#41694](https://github.com/kubernetes/kubernetes/pull/41694), [@shiywang](https://github.com/shiywang)). ([#41694](https://github.com/kubernetes/kubernetes/pull/41694))\n- **[Feature]** Updates to apply: * New command `apply view-last-applied` *command for viewing the last configuration file applied* ([#41146](https://github.com/kubernetes/kubernetes/pull/41146), [@shiywang](https://github.com/shiywang)). ([#41146](https://github.com/kubernetes/kubernetes/pull/41146))\n- **[Feature]** Updates to apply: * PATCH (i.e. apply and edit) now supports merging lists of primitives ([#38665](https://github.com/kubernetes/kubernetes/pull/38665), [@ymqytw](https://github.com/ymqytw)). ([#38665](https://github.com/kubernetes/kubernetes/pull/38665))\n- **[Feature]** Bug fixes: * Fixed --save-config in create subcommand to save the annotation ([#40289](https://github.com/kubernetes/kubernetes/pull/40289), [@xilabao](https://github.com/xilabao)). ([#40289](https://github.com/kubernetes/kubernetes/pull/40289))\n- **[Feature]** Bug fixes: * Fixed an issue where 'kubectl get --sort-by=' would return an error if the specified fields in sort were not specified in one or more of the returned objects. ([#40541](https://github.com/kubernetes/kubernetes/pull/40541), [@fabianofranz](https://github.com/fabianofranz)). ([#40541](https://github.com/kubernetes/kubernetes/pull/40541))\n\n**Key Feature Gates / API Identifiers**: `affinity`, `kubefed`, `kube-dns`, `kubeadm`, `kubectl`, `resource.version.group`, `jobs.v1.batch`, `podAffinityTerm.namespaces`, `tolerations`, `automountServiceAccountToken`, `false`, `AlwaysAllow`, `NoExecute`, `tolerationSeconds`, `taints`, `kube-up.sh`, `kube-down.sh`, `apply`, `attributeRestrictions`, `null`, `kubernetes.tar.gz`, `experimentalCriticalPodAnnotation`, `taint`, `Accelerators`, `schedulerName`, `PodPreset`, `parameters`, `kubernetes.io`, `k8s.io`, `deploy.sh`, `v1beta1`, `apiVersion`, `apiGroup`, `Taints`, `terminationMessagePolicy`, `FallbackToLogsOnError`, `LastAppliedConfig`, `type`, `Ready`, `status`",
+  "eval": {
+    "variant": "v5_progressive_clarity_engine",
+    "project": "kubernetes",
+    "version": "v1.6",
+    "headline_salience_recall": 0.875,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 1.0,
+    "cluster_diversity_score": 0.9599,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.9664,
+    "matched_spotlights": "7/8",
+    "cited_prs_count": 338,
+    "cited_keps_count": 0
+  },
+  "published_date": "2017-03-28",
+  "total_raw_items": 511
+}

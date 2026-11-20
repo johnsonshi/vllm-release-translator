@@ -1,0 +1,66 @@
+{
+  "project": "kubernetes",
+  "version": "v1.16",
+  "blog_title": "Kubernetes 1.16: Custom Resources, Overhauled Metrics, and Volume Extensions",
+  "release_date": "2019-09-18",
+  "reported_enhancements_count": 31,
+  "spotlight_count": 6,
+  "spotlights": [
+    {
+      "heading": "Beta: Enhancing the workload identity options for Windows containers",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Active Directory Group Managed Service Account (GMSA) support is graduating to beta and certain annotations that were introduced with the alpha support are being deprecated. GMSA is a specific type of Active Directory account that enables Windows containers to carry an identity across the network and communicate with other resources. Windows containers can now gain authenticated access to external resources. In addition, GMSA provides automatic password management, simplified service principal name (SPN) management, and the ability to delegate the management to other administrators across mult"
+    },
+    {
+      "heading": "Alpha: Improvements to setup & node join experience with kubeadm",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introducing alpha support for kubeadm, enabling Kubernetes users to easily join (and reset) Windows worker nodes to an existing cluster the same way they do for Linux nodes. Users can utilize kubeadm to prepare and add a Windows node to cluster. When the operations are complete, the node will be in a Ready state and able to run Windows containers. In addition, we will also provide a set of Windows-specific scripts to enable the installation of prerequisites and CNIs ahead of joining the node to the cluster."
+    },
+    {
+      "heading": "Alpha: Introducing support for Container Storage Interface (CSI)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introducing CSI plugin support for out-of-tree providers, enabling Windows nodes in a Kubernetes cluster to leverage persistent storage capabilities for Windows-based workloads. This significantly expands the storage options of Windows workloads, adding onto a list that included FlexVolume and in-tree storage plugins. This capability is achieved through a host OS proxy that enables the execution of privileged operations on the Windows node on behalf of containers."
+    },
+    {
+      "heading": "Providing Greater Scalability",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "A key goal for EndpointSlices is to enable greater scalability for Kubernetes Services. With the existing Endpoints API, a single instance must include network endpoints representing all pods matching a Service. As Services start to scale to thousands of pods, the corresponding Endpoints resources become quite large. Simply adding or removing one endpoint from a Service at this scale can be quite costly. As the Endpoints instance is updated, every piece of code watching Endpoints will need to be sent a full copy of the resource. With kube-proxy running on every node in a cluster, a copy needs "
+    },
+    {
+      "heading": "Providing Greater Extensibility",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "A second goal for EndpointSlices was to provide a resource that would be highly extensible and useful across a wide variety of use cases. One of the key additions with EndpointSlices involves a new topology attribute. By default, this will be populated with the existing topology labels used throughout Kubernetes indicating attributes such as region and zone. Of course, this field can be populated with custom labels as well for more specialized use cases.  EndpointSlices also include greater flexibility for address types. Each contains a list of addresses. An initial use case for multiple addre"
+    },
+    {
+      "heading": "More About Endpoint Slices",
+      "stage": "Unspecified",
+      "keps": [
+        "693"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "EndpointSlices are an alpha feature in Kubernetes 1.16 and not enabled by default. The Endpoints API will continue to be enabled by default, but we\u2019re working to move the largest Endpoints consumers to the new EndpointSlice API. Notably, kube-proxy in Kubernetes 1.16 includes alpha support for EndpointSlices.  The official Kubernetes documentation contains more information about EndpointSlices as well as how to enable them in your cluster. There\u2019s also a [great KubeCon talk](https://www.youtube.com/watch?v=Y5JOCCbJ_Fg) that provides more background on the initial rationale for developing this "
+    }
+  ],
+  "ground_truth_keps": [
+    "693"
+  ],
+  "ground_truth_identifiers": [
+    "Deployment"
+  ]
+}

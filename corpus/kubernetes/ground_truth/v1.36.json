@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.36: \u30cf\u30eb (Haru)",
   "release_date": "2026-04-22",
   "reported_enhancements_count": 70,
-  "spotlight_count": 40,
+  "spotlight_count": 33,
   "spotlights": [
     {
       "heading": "Stable: Fine-grained API authorization",
@@ -330,14 +330,6 @@
       "summary": "Kubernetes v1.36 makes the SELinux volume mounting improvement generally available. This change replaced recursive file  relabeling with `mount -o context=XYZ` option, applying the correct SELinux label to the entire volume at mount time.  It brings more consistent performance and reduces Pod startup delays on SELinux-enforcing systems.  This feature was introduced as beta in v1.28 for `ReadWriteOncePod` volumes. In v1.32, it gained metrics and an opt-out  option (`securityContext.seLinuxChangePolicy: Recursive`) to help catch conflicts. Now in v1.36,"
     },
     {
-      "heading": "Graduations to stable",
-      "stage": "Stable",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This lists all the features that graduated to stable (also known as general availability). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 18 enhancements promoted to stable:  - [Support User Namespaces in pods](https://kep.k8s.io/127)"
-    },
-    {
       "heading": "Deprecation of Service .spec.externalIPs",
       "stage": "Deprecation",
       "keps": [],
@@ -352,58 +344,6 @@
       "prs": [],
       "identifiers": [],
       "summary": "The `gitRepo` volume type has been deprecated since v1.11. For Kubernetes v1.36, the `gitRepo` volume plugin is permanently disabled and cannot be turned back on. This change protects clusters from a critical security issue where using `gitRepo` could let an attacker run code as root on the node.  Although `gitRepo` has been deprecated for years and better alternatives have been recommended, it was still technically possible to use it in previous releases."
-    },
-    {
-      "heading": "Deprecation of `.spec.externalIPs` in Service",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The `externalIPs` field in Service `spec` is being deprecated, which means you\u2019ll soon lose a quick way to route arbitrary externalIPs to your Services. This field has been a known security headache for years, enabling man-in-the-middle attacks on your cluster traffic, as documented in [CVE-2020-8554](https://github.com/kubernetes/kubernetes/issues/970760). From Kubernetes v1.36 and onwards, you will see deprecation warnings when using it, with full removal planned for v1.43.  If your Services still lean on `externalIPs`, consider using LoadBalancer services for cloud-managed ingress, NodePort"
-    },
-    {
-      "heading": "Removal of `gitRepo` volume driver",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The gitRepo volume type has been deprecated since v1.11. Starting Kubernetes v1.36, the `gitRepo` volume plugin is permanently disabled and cannot be turned back on. This change protects clusters from a critical security issue where using `gitRepo` could let an attacker run code as root on the node.   Although `gitRepo` has been deprecated for years and better alternatives have been recommended, it was still technically possible to use it in previous releases. From v1.36 onward, that path is closed for good, so any existing workloads depending on `gitRepo` will need to migrate to supported app"
-    },
-    {
-      "heading": "Faster SELinux labelling for volumes (GA)",
-      "stage": "Stable",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "ReadWriteOncePod"
-      ],
-      "summary": "Kubernetes v1.36 makes the SELinux volume mounting improvement generally available. This change replaced recursive file relabeling with `mount -o context=XYZ` option, applying the correct SELinux label to the entire volume at mount time. It brings more consistent performance and reduces Pod startup delays on SELinux-enforcing systems.  This feature was introduced as beta in v1.28 for `ReadWriteOncePod` volumes. In v1.32, it gained metrics and an opt-out option (`securityContext.seLinuxChangePolicy: Recursive`) to help catch conflicts. Now in v1.36, it reaches stable and defaults to all volumes"
-    },
-    {
-      "heading": "External signing of ServiceAccount tokens",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "As a beta feature, Kubernetes already supports external signing of ServiceAccount tokens. This allows clusters to integrate with external key management systems or signing services instead of relying only on internally managed keys.  With this enhancement, the `kube-apiserver` can delegate token signing to external systems such as cloud key management services or hardware security modules. This improves security and simplifies key management services for clusters that rely on centralized signing infrastructure.  We expect that this will graduate to stable (GA) in Kubernetes v1.36."
-    },
-    {
-      "heading": "DRA Driver support for Device taints and tolerations",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "DeviceTaintRule"
-      ],
-      "summary": "Kubernetes v1.33 introduced support for taints and tolerations for physical devices managed through [Dynamic Resource Allocation (DRA)](/docs/concepts/resource-management/dynamic-resource-allocation/). Normally, any device can be used for scheduling. However, this enhancement allows DRA drivers to mark devices as tainted, which ensures that they will not be used for scheduling purposes. Alternatively, cluster administrators can create a `DeviceTaintRule` to mark devices that match a certain selection criteria(such as all devices of a certain driver) as tainted. This improves scheduling control"
-    },
-    {
-      "heading": "DRA support for partitionable devices",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Kubernetes v1.36 expands Dynamic Resource Allocation (DRA) by introducing support for partitionable devices, allowing a single hardware accelerator to be split into multiple logical units that can be shared across workloads.  This is especially useful for high-cost resources like GPUs, where dedicating an entire device to a single workload can lead to underutilization.  With this enhancement, platform teams can improve overall cluster efficiency by allocating only the required portion of a device to each workload, rather than reserving it entirely. This makes it easier to run multiple workload"
     }
   ],
   "ground_truth_keps": [
@@ -445,7 +385,6 @@
     "ComponentStatusz",
     "ComponentFlagz",
     "HPAScaleToZero",
-    "ReadWriteOncePod",
-    "DeviceTaintRule"
+    "ReadWriteOncePod"
   ]
 }

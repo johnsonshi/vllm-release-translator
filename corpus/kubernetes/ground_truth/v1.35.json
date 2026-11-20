@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.35: Timbernetes (The World Tree Release)",
   "release_date": "2025-12-17",
   "reported_enhancements_count": 60,
-  "spotlight_count": 41,
+  "spotlight_count": 31,
   "spotlights": [
     {
       "heading": "Stable: In-place update of Pod resources",
@@ -323,14 +323,6 @@
       "summary": "Kubernetes v1.35 changes the way that clients are allowed to interpret [resource versions](/docs/reference/using-api/api-concepts/#resource-versions).  Before v1.35, the only supported comparison that clients could make was to check for string equality: if two resource versions were equal, they were the same. Clients could also provide a resource version to the API server and ask the control plane to do internal comparisons, such as streaming all events since a particular resource version.  In v1.35, all in-tree resource versions meet a new stricter definition: the values are a special form of"
     },
     {
-      "heading": "Graduations to stable",
-      "stage": "Stable",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This lists all the features that graduated to stable (also known as *general availability*). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 15 enhancements promoted to stable:  * [Add CPUManager policy option to restrict reservedSystemCPUs to system daemons and interrupt processing](https://kep.k8s.io/4540) * [Pod Generation](https://kep.k8s.io/5067)"
-    },
-    {
       "heading": "Deprecations, removals and community updates",
       "stage": "Deprecation",
       "keps": [],
@@ -340,84 +332,6 @@
         "Ready"
       ],
       "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones to improve the project's overall health. See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process. Kubernetes v1.35 includes a couple of deprecations.  #### Ingress NGINX retirement"
-    },
-    {
-      "heading": "cgroup v1 support",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "On Linux nodes, container runtimes typically rely on cgroups (short for \"control groups\"). Support for using cgroup v2 has been stable in Kubernetes since v1.25, providing an alternative to the original v1 cgroup support. While cgroup v1 provided the initial resource control mechanism, it suffered from well-known inconsistencies and limitations. Adding support for cgroup v2 allowed use of a unified control group hierarchy, improved resource isolation, and served as the foundation for modern features, making legacy cgroup v1 support ready for removal. The removal of cgroup v1 support will only "
-    },
-    {
-      "heading": "Deprecation of ipvs mode in kube-proxy",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "Many releases ago, the Kubernetes project implemented an [ipvs](/docs/reference/networking/virtual-ips/#proxy-mode-ipvs) mode in `kube-proxy`. It was adopted as a way to provide high-performance service load balancing, with better performance than the existing `iptables` mode. However, maintaining feature parity between ipvs and other kube-proxy modes became difficult, due to technical complexity and diverging requirements. This created significant technical debt and made the ipvs backend impractical to support alongside newer networking capabilities.  The Kubernetes project intends to depreca"
-    },
-    {
-      "heading": "Kubernetes is deprecating containerd v1.y support",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "While Kubernetes v1.35 still supports containerd 1.7 and other LTS releases of containerd, as a consequence of automated cgroup driver detection, the Kubernetes SIG Node community has formally agreed upon a final support timeline for containerd v1.X. Kubernetes v1.35 is the last release to offer this support (aligned with containerd 1.7 EOL).   This is a final warning that if you are using containerd 1.X, you must switch to 2.0 or later before upgrading Kubernetes to the next version. You are able to monitor the `kubelet_cri_losing_support` metric to determine if any nodes in your cluster are "
-    },
-    {
-      "heading": "Node declared features",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "When scheduling Pods, Kubernetes uses node labels, taints, and tolerations to match workload requirements with node capabilities. However, managing feature compatibility becomes challenging during cluster upgrades due to version skew between the control plane and nodes. This can lead to Pods being scheduled on nodes that lack required features, resulting in runtime failures.  The _node declared features_ framework will introduce a standard mechanism for nodes to declare their supported Kubernetes features. With the new alpha feature enabled, a Node reports the features it can support, publishi"
-    },
-    {
-      "heading": "In-place update of Pod resources",
-      "stage": "Stable",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "UpdateContainerResources",
-        "ContainerStatus"
-      ],
-      "summary": "Kubernetes is graduating in-place updates for Pod resources to General Availability (GA). This feature allows users to adjust `cpu` and `memory` resources without restarting Pods or Containers. Previously, such modifications required recreating Pods, which could disrupt workloads, particularly for stateful or batch applications. Previous Kubernetes releases already allowed you to change infrastructure resources settings (requests and limits) for existing Pods. This allows for smoother [vertical scaling](/docs/concepts/workloads/autoscaling/vertical-pod-autoscale/), improves efficiency, and can"
-    },
-    {
-      "heading": "Pod certificates",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "When running microservices, Pods often require a strong cryptographic identity to authenticate with each other using mutual TLS (mTLS). While Kubernetes provides Service Account tokens, these are designed for authenticating to the API server, not for general-purpose workload identity.   Before this enhancement, operators had to rely on complex, external projects like SPIFFE/SPIRE or cert-manager to provision and rotate certificates for their workloads. But what if you could  issue a unique, short-lived certificate to your Pods natively and automatically? KEP-4317 is designed to enable such nat"
-    },
-    {
-      "heading": "Numeric values for taints",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "Equal",
-        "Exists"
-      ],
-      "summary": "Kubernetes is enhancing [taints and tolerations](/docs/concepts/scheduling-eviction/taint-and-toleration/) by adding numeric comparison operators, such as `Gt` (Greater Than) and `Lt` (Less Than).  Previously, tolerations supported only exact (`Equal`) or existence (`Exists`) matches, which were not suitable for numeric properties such as reliability SLAs.  With this change, a Pod can use a toleration to \"opt-in\" to nodes that meet a specific numeric threshold. For example, a Pod can require a Node with an SLA taint value greater than 950 (`operator: Gt`, `value: \"950\"`)."
-    },
-    {
-      "heading": "User namespaces",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "When running Pods, you can use `securityContext` to drop privileges, but containers inside the pod often still run as root (UID 0). This simplicity poses a significant challenge, as that container UID 0 maps directly to the host's root user.   Before this enhancement, a container breakout vulnerability could grant an attacker full root access to the node. But what if you could dynamically remap the container's root user to a safe, unprivileged user on the host? KEP-127 specifically allows such native support for Linux User Namespaces. It opens up various possibilities for pod security by isola"
-    },
-    {
-      "heading": "Support for mounting OCI images as volumes",
-      "stage": "Unspecified",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "When provisioning a Pod, you often need to bundle data, binaries, or configuration files for your containers. Before this enhancement, people often included that kind of data directly into the main container image, or required a custom init container to download and unpack files into an `emptyDir`. You can still take either of those approaches, of course.  But what if you could populate a volume directly from a data-only artifact in an OCI registry, just like pulling a container image? Kubernetes v1.31 added support for the `image` volume type, allowing Pods to pull and unpack OCI container im"
     }
   ],
   "ground_truth_keps": [
@@ -465,10 +379,6 @@
     "ConstrainedImpersonation",
     "MutablePodResourcesForSuspendedJobs",
     "NotReady",
-    "Ready",
-    "UpdateContainerResources",
-    "ContainerStatus",
-    "Equal",
-    "Exists"
+    "Ready"
   ]
 }

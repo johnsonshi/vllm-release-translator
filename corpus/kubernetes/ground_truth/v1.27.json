@@ -1,0 +1,184 @@
+{
+  "project": "kubernetes",
+  "version": "v1.27",
+  "blog_title": "Kubernetes v1.27: Chill Vibes",
+  "release_date": "2023-04-11",
+  "reported_enhancements_count": null,
+  "spotlight_count": 12,
+  "spotlights": [
+    {
+      "heading": "Freeze `k8s.gcr.io` image registry",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Replacing the old image registry, [k8s.gcr.io](https://cloud.google.com/container-registry/) with [registry.k8s.io](https://github.com/kubernetes/registry.k8s.io) which has been generally available for several months. The Kubernetes project created and runs the `registry.k8s.io` image registry, which is fully controlled by the community. This means that the old registry `k8s.gcr.io` will be frozen and no further images for Kubernetes and related sub-projects will be published to the old registry.   What does this change mean for contributors?  * If you are a maintainer of a sub-project, you wi"
+    },
+    {
+      "heading": "`SeccompDefault` graduates to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "RuntimeDefault",
+        "Unconfined"
+      ],
+      "summary": "To use seccomp profile defaulting, you must run the kubelet with the `--seccomp-default` [command line flag](/docs/reference/command-line-tools-reference/kubelet) enabled for each node where you want to use it.  If enabled, the kubelet will use the `RuntimeDefault` seccomp profile by default, which is defined by the container runtime, instead of using the `Unconfined` (seccomp disabled) mode. The default profiles aim to provide a strong set of security defaults while preserving the functionality of the workload. It is possible that the default profiles differ between container runtimes and the"
+    },
+    {
+      "heading": "Mutable scheduling directives for Jobs graduates to GA",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This was introduced in v1.22 and started as a beta level, now it's stable. In most cases a parallel job will want the pods to run with constraints, like all in the same zone, or all either on GPU model x or y but not a mix of both. The `suspend` field is the first step towards achieving those semantics. `suspend` allows a custom queue controller to decide when a job should start. However, once a job is unsuspended, a custom queue controller has no influence on where the pods of a job will actually land.  This feature allows updating a Job's scheduling directives before it starts, which gives c"
+    },
+    {
+      "heading": "DownwardAPIHugePages graduates to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes v1.20, support for `requests.hugepages-<pagesize>` and `limits.hugepages-<pagesize>` was added to the [downward API](/docs/concepts/workloads/pods/downward-api/) to be consistent with other resources like cpu, memory, and ephemeral storage. This feature graduates to stable in this release. You can find more details in the KEP: [Downward API HugePages](https://github.com/kubernetes/enhancements/tree/master/keps/sig-node/2053-downward-api-hugepages)."
+    },
+    {
+      "heading": "Pod Scheduling Readiness goes to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Upon creation, Pods are ready for scheduling. Kubernetes scheduler does its due diligence to find nodes to place all pending Pods. However, in a real-world case, some Pods may stay in a _missing-essential-resources_ state for a long period. These Pods actually churn the scheduler (and downstream integrators like Cluster Autoscaler) in an unnecessary manner.  By specifying/removing a Pod's `.spec.schedulingGates`, you can control when a Pod is ready to be considered for scheduling.  The `schedulingGates` field contains a list of strings, and each string literal is perceived as a criteria that m"
+    },
+    {
+      "heading": "Node log access via Kubernetes API",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NodeLogQuery"
+      ],
+      "summary": "This feature helps cluster administrators debug issues with services running on nodes by allowing them to query service logs. To use this feature, ensure that the `NodeLogQuery` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) is enabled on that node, and that the kubelet configuration options `enableSystemLogHandler` and `enableSystemLogQuery` are both set to true.  On Linux, we assume that service logs are available via journald. On Windows, we assume that service logs are available in the application log provider. You can also fetch logs from the `/var/log/` and `"
+    },
+    {
+      "heading": "ReadWriteOncePod PersistentVolume access mode goes to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ReadWriteOncePod",
+        "Unschedulable"
+      ],
+      "summary": "Kubernetes `v1.22` introduced a new access mode `ReadWriteOncePod` for [PersistentVolumes](/docs/concepts/storage/persistent-volumes/#persistent-volumes) (PVs) and [PersistentVolumeClaims](/docs/concepts/storage/persistent-volumes/#persistentvolumeclaims) (PVCs). This access mode enables you to restrict volume access to a single pod in the cluster, ensuring that only one pod can write to the volume at a time. This can be particularly useful for stateful workloads that require single-writer access to storage.  The ReadWriteOncePod beta adds support for [scheduler preemption](/docs/concepts/sche"
+    },
+    {
+      "heading": "Respect PodTopologySpread after rolling upgrades",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "`matchLabelKeys` is a list of pod label keys used to select the pods over which spreading will be calculated. The keys are used to lookup values from the pod labels. Those key-value labels are ANDed with `labelSelector` to select the group of existing pods over which spreading will be calculated for the incoming pod. Keys that don't exist in the pod labels will be ignored. A null or empty list means only match against the `labelSelector`.  With `matchLabelKeys`, users don't need to update the `pod.spec` between different revisions. The controller/operator just needs to set different values to "
+    },
+    {
+      "heading": "Faster SELinux volume relabeling using mounts",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "SELinuxMount",
+        "ReadWriteOncePod"
+      ],
+      "summary": "In this release, how SELinux labels are applied to volumes used by Pods is graduating to beta. This feature speeds up container startup by mounting volumes with the correct SELinux label instead of changing each file on the volumes recursively. Linux kernel with SELinux support allows the first mount of a volume to set SELinux label on the whole volume using `-o context=` mount option. This way, all files will have assigned the given label in a constant time, without recursively walking through the whole volumes.  The `context` mount option cannot be applied to bind mounts or re-mounts of alre"
+    },
+    {
+      "heading": "Robust VolumeManager reconstruction goes to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NewVolumeManagerReconstruction",
+        "SELinuxMountReadWriteOncePod"
+      ],
+      "summary": "This is a volume manager refactoring that allows the kubelet to populate additional information about how existing volumes are mounted during the kubelet startup. In general, this makes volume cleanup more robust.  If you enable the `NewVolumeManagerReconstruction` feature gate on a node, you'll get enhanced discovery of mounted volumes during kubelet startup.  Before Kubernetes v1.25, the kubelet used different default behavior for discovering mounted volumes during the kubelet startup. If you disable this feature gate (it's enabled by default), you select the legacy discovery behavior."
+    },
+    {
+      "heading": "Mutable Pod Scheduling Directives goes to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This allows mutating a pod that is blocked on a scheduling readiness gate with a more constrained node affinity/selector. It gives the ability to mutate a pods scheduling directives before it is allowed to be scheduled and gives an external resource controller the ability to influence pod placement while at the same time offload actual pod-to-node assignment to kube-scheduler.  This opens the door for a new pattern of adding scheduling features to Kubernetes.  Specifically, building lightweight schedulers that implement features not supported by kube-scheduler, while relying on the existing ku"
+    },
+    {
+      "heading": "Feature graduations and deprecations in Kubernetes v1.27",
+      "stage": "Stable",
+      "keps": [
+        "2227",
+        "3140",
+        "1748",
+        "2885",
+        "693",
+        "2727",
+        "2238",
+        "2896",
+        "3744"
+      ],
+      "prs": [
+        "108445",
+        "114947",
+        "112797",
+        "113534",
+        "111411",
+        "113710",
+        "110410",
+        "111258",
+        "111402",
+        "111513",
+        "110868",
+        "110896",
+        "111229",
+        "111194"
+      ],
+      "identifiers": [
+        "ControllerManagerLeaderMigration",
+        "CSIInlineVolume",
+        "EphemeralContainers",
+        "LocalStorageCapacityIsolation",
+        "NetworkPolicyEndPort",
+        "StatefulSetMinReadySeconds",
+        "IdentifyPodOS",
+        "DaemonSetUpdateSurge"
+      ],
+      "summary": "### Graduations to stable  This release includes a total of 9 enhancements promoted to Stable:  * [Default container annotation that to be used by kubectl](https://github.com/kubernetes/enhancements/issues/2227) * [TimeZone support in CronJob](https://github.com/kubernetes/enhancements/issues/3140)"
+    }
+  ],
+  "ground_truth_keps": [
+    "2227",
+    "3140",
+    "1748",
+    "2885",
+    "693",
+    "2727",
+    "2238",
+    "2896",
+    "3744"
+  ],
+  "ground_truth_identifiers": [
+    "SeccompDefault",
+    "RuntimeDefault",
+    "Unconfined",
+    "NodeLogQuery",
+    "ReadWriteOncePod",
+    "Unschedulable",
+    "SELinuxMount",
+    "NewVolumeManagerReconstruction",
+    "SELinuxMountReadWriteOncePod",
+    "ControllerManagerLeaderMigration",
+    "CSIInlineVolume",
+    "EphemeralContainers",
+    "LocalStorageCapacityIsolation",
+    "NetworkPolicyEndPort",
+    "StatefulSetMinReadySeconds",
+    "IdentifyPodOS",
+    "DaemonSetUpdateSurge"
+  ]
+}

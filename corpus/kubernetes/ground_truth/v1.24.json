@@ -1,0 +1,166 @@
+{
+  "project": "kubernetes",
+  "version": "v1.24",
+  "blog_title": "Kubernetes 1.24: Stargazer",
+  "release_date": "2022-05-03",
+  "reported_enhancements_count": 46,
+  "spotlight_count": 13,
+  "spotlights": [
+    {
+      "heading": "Dockershim Removed from kubelet",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "After its deprecation in v1.20, the dockershim component has been removed from the kubelet in Kubernetes v1.24. From v1.24 onwards, you will need to either use one of the other [supported runtimes](/docs/setup/production-environment/container-runtimes/) (such as containerd or CRI-O)  or use cri-dockerd if you are relying on Docker Engine as your container runtime.  For more information about ensuring your cluster is ready for this removal, please  see [this guide](/blog/2022/03/31/ready-for-dockershim-removal/)."
+    },
+    {
+      "heading": "Beta APIs Off by Default",
+      "stage": "Beta",
+      "keps": [
+        "3136"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[New beta APIs will not be enabled in clusters by default](https://github.com/kubernetes/enhancements/issues/3136).  Existing beta APIs and new versions of existing beta APIs will continue to be enabled by default."
+    },
+    {
+      "heading": "Signing Release Artifacts",
+      "stage": "Unspecified",
+      "keps": [
+        "3031",
+        "3027"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Release artifacts are [signed](https://github.com/kubernetes/enhancements/issues/3031) using [cosign](https://github.com/sigstore/cosign)  signatures, and there is experimental support for [verifying image signatures](/docs/tasks/administer-cluster/verify-signed-artifacts/).  Signing and verification of release artifacts is part of [increasing software supply chain security for the Kubernetes release process](https://github.com/kubernetes/enhancements/issues/3027)."
+    },
+    {
+      "heading": "OpenAPI v3",
+      "stage": "Unspecified",
+      "keps": [
+        "2896"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes 1.24 offers beta support for publishing its APIs in the [OpenAPI v3 format](https://github.com/kubernetes/enhancements/issues/2896)."
+    },
+    {
+      "heading": "Storage Capacity and Volume Expansion Are Generally Available",
+      "stage": "Unspecified",
+      "keps": [
+        "1472",
+        "284"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Storage capacity tracking](https://github.com/kubernetes/enhancements/issues/1472)  supports exposing currently available storage capacity via [CSIStorageCapacity objects](/docs/concepts/storage/storage-capacity/#api)  and enhances scheduling of pods that use CSI volumes with late binding.  [Volume expansion](https://github.com/kubernetes/enhancements/issues/284) adds support  for resizing existing persistent volumes."
+    },
+    {
+      "heading": "NonPreemptingPriority to Stable",
+      "stage": "Stable",
+      "keps": [
+        "902"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature adds [a new option to PriorityClasses](https://github.com/kubernetes/enhancements/issues/902),  which can enable or disable pod preemption."
+    },
+    {
+      "heading": "Storage Plugin Migration",
+      "stage": "Unspecified",
+      "keps": [
+        "625",
+        "1490",
+        "1489"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Work is underway to [migrate the internals of in-tree storage plugins](https://github.com/kubernetes/enhancements/issues/625) to call out to CSI Plugins while maintaining the original API. The [Azure Disk](https://github.com/kubernetes/enhancements/issues/1490) and [OpenStack Cinder](https://github.com/kubernetes/enhancements/issues/1489) plugins have both been migrated."
+    },
+    {
+      "heading": "gRPC Probes Graduate to Beta",
+      "stage": "Beta",
+      "keps": [
+        "2727"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "With Kubernetes 1.24, the [gRPC probes functionality](https://github.com/kubernetes/enhancements/issues/2727)  has entered beta and is available by default. You can now [configure startup, liveness, and readiness probes](/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#configure-probes) for your gRPC app  natively within Kubernetes without exposing an HTTP endpoint or using an extra executable."
+    },
+    {
+      "heading": "Kubelet Credential Provider Graduates to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Originally released as Alpha in Kubernetes 1.20, the kubelet's support for [image credential providers](/docs/tasks/kubelet-credential-provider/kubelet-credential-provider/) has now graduated to Beta. This allows the kubelet to dynamically retrieve credentials for a container image registry using exec plugins rather than storing credentials on the node's filesystem."
+    },
+    {
+      "heading": "Contextual Logging in Alpha",
+      "stage": "Alpha",
+      "keps": [
+        "3077"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes 1.24 has introduced [contextual logging](https://github.com/kubernetes/enhancements/issues/3077)  that enables the caller of a function to control all aspects of logging (output formatting, verbosity, additional values, and names)."
+    },
+    {
+      "heading": "Avoiding Collisions in IP allocation to Services",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ClusterIP"
+      ],
+      "summary": "Kubernetes 1.24 introduces a new opt-in feature that allows you to soft-reserve a range for static IP address assignments to Services. With the manual enablement of this feature, the cluster will prefer automatic assignment from  the pool of Service IP addresses, thereby reducing the risk of collision.   A Service `ClusterIP` can be assigned:"
+    },
+    {
+      "heading": "Dynamic Kubelet Configuration is Removed from the Kubelet",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "After being deprecated in Kubernetes 1.22, Dynamic Kubelet Configuration has been removed from the kubelet. The feature will be removed from the API server in Kubernetes 1.26."
+    },
+    {
+      "heading": "Major Changes",
+      "stage": "Beta",
+      "keps": [
+        "2221",
+        "3136"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This release saw two major changes:   * [Dockershim Removal](https://github.com/kubernetes/enhancements/issues/2221) * [Beta APIs are off by Default](https://github.com/kubernetes/enhancements/issues/3136)"
+    }
+  ],
+  "ground_truth_keps": [
+    "3136",
+    "3031",
+    "3027",
+    "2896",
+    "1472",
+    "284",
+    "902",
+    "625",
+    "1490",
+    "1489",
+    "2727",
+    "3077",
+    "177",
+    "688",
+    "1904",
+    "1959",
+    "2214",
+    "2232",
+    "2249",
+    "2436",
+    "2784",
+    "2221"
+  ],
+  "ground_truth_identifiers": [
+    "ClusterIP"
+  ]
+}

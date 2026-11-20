@@ -1,0 +1,60 @@
+{
+  "project": "kubernetes",
+  "version": "v1.11",
+  "blog_title": "Kubernetes 1.11: In-Cluster Load Balancing and CoreDNS Plugin Graduate to General Availability",
+  "release_date": "2018-06-27",
+  "reported_enhancements_count": null,
+  "spotlight_count": 6,
+  "spotlights": [
+    {
+      "heading": "IPVS-Based In-Cluster Service Load Balancing Graduates to General Availability",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In this release, [IPVS-based in-cluster service load balancing](https://github.com/kubernetes/features/issues/265) has moved to stable. IPVS (IP Virtual Server) provides high-performance in-kernel load balancing, with a simpler programming interface than iptables. This change delivers better network throughput, better programming latency, and higher scalability limits for the cluster-wide distributed load-balancer that comprises the Kubernetes Service model. IPVS is not yet the default but clusters can begin to use it for production traffic."
+    },
+    {
+      "heading": "CoreDNS Promoted to General Availability",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[CoreDNS](https://coredns.io) is now available as a [cluster DNS add-on option](https://github.com/kubernetes/features/issues/427), and is the default when using kubeadm. CoreDNS is a flexible, extensible authoritative DNS server and directly integrates with the Kubernetes API. CoreDNS has fewer moving parts than the previous DNS server, since it\u2019s a single executable and a single process, and supports flexible use cases by creating custom DNS entries. It\u2019s also written in Go making it memory-safe. You can learn more about CoreDNS [here](https://youtu.be/dz9S7R8r5gw)."
+    },
+    {
+      "heading": "Dynamic Kubelet Configuration Moves to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature makes it possible for new Kubelet configurations to be rolled out in a live cluster. Currently, Kubelets are configured via command-line flags, which makes it difficult to update Kubelet configurations in a running cluster. With this beta feature, users can configure Kubelets in a live cluster via the API server."
+    },
+    {
+      "heading": "Custom Resource Definitions Can Now Define Multiple Versions",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Custom Resource Definitions are no longer restricted to defining a single version of the custom resource, a restriction that was difficult to work around. Now, with this beta [feature](https://github.com/kubernetes/features/issues/544), multiple versions of the resource can be defined. In the future, this will be expanded to support some automatic conversions; for now, this feature allows custom resource authors to \u201cpromote with safe changes, e.g. v1beta1 to v1,\u201d and to create a migration path for resources which do have changes.  Custom Resource Definitions now also support [\"status\" and \"sca"
+    },
+    {
+      "heading": "Enhancements to CSI",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Container Storage Interface (CSI) has been a major topic over the last few releases. After moving to [beta in 1.10](https://github.com/container-storage-interface/spec/blob/master/spec.md), the 1.11 release continues enhancing CSI with a number of features. The 1.11 release adds alpha support for raw block volumes to CSI, integrates CSI with the new kubelet plugin registration mechanism, and makes it easier to pass secrets to CSI plugins."
+    },
+    {
+      "heading": "New Storage Features",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for [online resizing of Persistent Volumes](https://github.com/kubernetes/features/issues/284) has been introduced as an alpha feature. This enables users to increase the size of PVs without having to terminate pods and unmount volume first. The user will update the PVC to request a new size and kubelet will resize the file system for the PVC.  Support for [dynamic maximum volume count](https://github.com/kubernetes/features/issues/554) has been introduced as an alpha feature. This new feature enables in-tree volume plugins to specify the maximum number of volumes that can be attached "
+    }
+  ],
+  "ground_truth_keps": [],
+  "ground_truth_identifiers": []
+}

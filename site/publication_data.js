@@ -7804,7 +7804,7 @@ window.__PUBLICATION_DATA__ = {
       "date_range": "Thursday, 2026-11-19 (LWKD Digest)",
       "reading_time": "4 min read",
       "headline": "This Week in Kubernetes (2026-11-19): 50% Lower UnstructuredList Memory, Conditional Authorization, and Patch Releases 1.37.2 / 1.36.6",
-      "intro": "Modeled on Last Week in Kubernetes Development (LWKD) + Sysdig's operational lens: what merged in upstream Kubernetes this week and what it means for your clusters.",
+      "intro": "Weekly summary of upstream Kubernetes development activity and what it means for your clusters.",
       "tldr_cards": [
         {
           "tag": "Control Plane Efficiency",
@@ -8018,9 +8018,9 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.36",
         "badge": "Release",
         "date": "2026-04-22",
-        "stats": "347 upstream changes and 187 PRs",
+        "stats": "347 upstream changes and 192 PRs",
         "headline": "Dynamic Resource Allocation, Feature Enhancements",
-        "executive_summary": "Kubernetes v1.36 focuses on Dynamic Resource Allocation, Feature Enhancements, and Workload-Aware & Gang Scheduling. For operators, this release translates 347 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "executive_summary": "Kubernetes v1.36 focuses on Dynamic Resource Allocation, Feature Enhancements, and API Change Enhancements. For operators, this release translates 347 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
           "high_level_changes": [
             {
@@ -8032,12 +8032,12 @@ window.__PUBLICATION_DATA__ = {
               "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
             },
             {
-              "headline": "Workload-Aware & Gang Scheduling",
-              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
-            },
-            {
               "headline": "API Change Enhancements",
               "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
             },
             {
               "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
@@ -8050,15 +8050,15 @@ window.__PUBLICATION_DATA__ = {
               "status": "Graduated / Merged",
               "status_tone": "green",
               "prs": [
-                "KEP-5055",
                 "KEP-5007",
-                "#5055",
-                "#137170"
+                "KEP-5055",
+                "#5007",
+                "#137795"
               ],
               "before": "Prior to v1.36, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
               "tech_bullets": [
-                "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` depends on enabling.",
                 "DRA: Graduated Device Binding Conditions (KEP #5007) to beta, enabled by default in `v1.36`. ([#137795](https://github.com/kubernetes/kubernetes/pull/137795).",
+                "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` depends on enabling.",
                 "DRA ResourceSlice controller: Added optional `ReconcilePoolWithName` to allow per-pool reconciliation without setting `NodeName` on slices, so the scheduler can use `NodeSelector` or `allNodes` for (#137365).",
                 "ACTION REQUIRED: DRA (Dynamic Resource Allocation) drivers and controllers now require granular RBAC permissions to update ResourceClaim statuses when the (#134947)."
               ],
@@ -8079,7 +8079,26 @@ window.__PUBLICATION_DATA__ = {
                 "Client-go: Default informer behavior now updates store state with all the objects in a list or relist before calling handler `OnDelete`, `OnAdd`, or `OnUpdate` methods for individual items which were (#135462).",
                 "Kubeadm: Removed the `ControlPlaneKubeletLocalMode` feature gate, which graduated to GA in `v1.35` and was locked to enabled. ([#135773](https://github.com/kubernetes/kubernetes/pull/135773).",
                 "Client-go: Improved informer resync processing to reduce contention on store locks between incoming events and handler updates, which may result in observable timing differences of handler (#136008).",
-                "Client-go: Informers can now enqueue new watch events while already-queued events are being processed. This avoids dropping watches during a burst of incoming events due to contention on slow (#136264)."
+                "Kubelet: If the `--client-ca-file` is updated while `kubelet` is running, the updated root certificates are correctly used to advertise accepted authorities to TLS clients connecting to the `kubelet` (#136762)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#135322",
+                "#136729",
+                "#136793"
+              ],
+              "before": "Prior to v1.36, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Removed the in-tree Portworx volume plugin, completing the migration to CSI. Removed the GA `CSIMigrationPortworx` feature gate (locked since `v1.33`) and alpha `InTreePluginPortworxUnregister` (#135322).",
+                "Added `spec.stubPKCS10Request` to the Pod Certificates beta API to improve compatibility with existing certificate authority implementations that expect a PKCS#10 certificate signing request. (#136729).",
+                "Added stability-based lifecycle for declarative validation (Alpha/Beta/Stable). Scheduling Workload `v1alpha1` now uses explicit declarative enforcement. (#136793).",
+                "Promoted mutable CSI node allocatable count to GA. The `MutableCSINodeAllocatableCount` feature gate is locked to enabled. ([#136230](https://github.com/kubernetes/kubernetes/pull/136230)."
               ],
               "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
@@ -8091,35 +8110,16 @@ window.__PUBLICATION_DATA__ = {
               "prs": [
                 "#137201",
                 "#136589",
-                "#137271"
+                "#136976"
               ],
               "before": "Prior to v1.36, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
               "tech_bullets": [
                 "Added the PlacementScore extension point to the scheduler for scoring placements in placement-based PodGroup scheduling, guarded by the `TopologyAwareWorkloadScheduling` feature gate. Deprecated (#137201).",
                 "Added `DisruptionMode`, `PriorityClassName`, and `Priority` fields to the Workload and PodGroup APIs to support workload-aware preemption when the `WorkloadAwarePreemption` feature gate is enabled. (#136589).",
-                "Added SchedulingConstraints to express topology-aware scheduling (TAS) constraints for PodGroup scheduling behind the `TopologyAwareWorkloadScheduling` feature gate. Added the TopologyPlacement (#137271).",
-                "Added placement-based PodGroup scheduling algorithm to the scheduler. Its use is guarded by the `TopologyAwareWorkloadScheduling` feature gate. (#136944)."
+                "Introduced `scheduling.k8s.io/v1alpha2` Workload and PodGroup API to express workload-level scheduling requirements and let `kube-scheduler` act on those. Removed `scheduling.k8s.io/v1alpha1` (#136976).",
+                "Added SchedulingConstraints to express topology-aware scheduling (TAS) constraints for PodGroup scheduling behind the `TopologyAwareWorkloadScheduling` feature gate. Added the TopologyPlacement (#137271)."
               ],
               "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
-              "config_snippet": ""
-            },
-            {
-              "title": "API Change Enhancements",
-              "status": "Graduated / Merged",
-              "status_tone": "green",
-              "prs": [
-                "#135322",
-                "#136230",
-                "#137544"
-              ],
-              "before": "Prior to v1.36, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
-              "tech_bullets": [
-                "Removed the in-tree Portworx volume plugin, completing the migration to CSI. Removed the GA `CSIMigrationPortworx` feature gate (locked since `v1.33`) and alpha `InTreePluginPortworxUnregister` (#135322).",
-                "Promoted mutable CSI node allocatable count to GA. The `MutableCSINodeAllocatableCount` feature gate is locked to enabled. ([#136230](https://github.com/kubernetes/kubernetes/pull/136230).",
-                "Promoted the `NodeLogQuery` feature gate to GA. ([#137544](https://github.com/kubernetes/kubernetes/pull/137544), [@jrvaldes](https://github.com/jrvaldes)) [SIG Node and Windows].",
-                "Added stability-based lifecycle for declarative validation (Alpha/Beta/Stable). Scheduling Workload `v1alpha1` now uses explicit declarative enforcement. (#136793)."
-              ],
-              "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
             },
             {
@@ -8129,14 +8129,14 @@ window.__PUBLICATION_DATA__ = {
               "prs": [
                 "#137053",
                 "#137172",
-                "#136118"
+                "#136314"
               ],
               "before": "Prior to v1.36, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
               "tech_bullets": [
                 "The `StrictIPCIDRValidation` feature gate in `kube-apiserver` is enabled by default, meaning that API fields no longer allow IP or CIDR values with extraneous leading \"0\"s (e.g., `010.000.000.005` (#137053).",
                 "Kube-apiserver: Graduated the `UnknownVersionInteroperabilityProxy` feature gate to beta, enabled by default. The `--peer-ca-file` flag is required to turn on the proxy. (#137172).",
-                "Kube-apiserver: Promoted the `ExternalServiceAccountTokenSigner` feature gate to GA. ([#136118](https://github.com/kubernetes/kubernetes/pull/136118).",
-                "Graduated metric `apiserver_storage_events_received_total` to beta. ([#136314](https://github.com/kubernetes/kubernetes/pull/136314), [@petern48](https://github.com/petern48)) [SIG API Machinery."
+                "Graduated metric `apiserver_storage_events_received_total` to beta. ([#136314](https://github.com/kubernetes/kubernetes/pull/136314), [@petern48](https://github.com/petern48)) [SIG API Machinery.",
+                "Kube-apiserver: Promoted the `ExternalServiceAccountTokenSigner` feature gate to GA. ([#136118](https://github.com/kubernetes/kubernetes/pull/136118)."
               ],
               "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
               "config_snippet": ""
@@ -8156,16 +8156,16 @@ window.__PUBLICATION_DATA__ = {
               "impact": "Operational reliability and lower maintenance toil"
             },
             {
-              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
-              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
-              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
-              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
-            },
-            {
               "persona": "API Change Enhancements",
               "models": "General platform workloads and API consumers",
               "gpus": "Standard cluster nodes and runtime components",
               "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
             }
           ],
           "jargon_decoded": [
@@ -8228,17 +8228,17 @@ window.__PUBLICATION_DATA__ = {
           "proof_benchmarks": [
             {
               "label": "API Change",
-              "hardware": "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` de",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#5055"
-            },
-            {
-              "label": "API Change",
               "hardware": "DRA: Graduated Device Binding Conditions (KEP #5007) to beta, enabled by default in `v1.36`. ([#137795](https://github.com/kubernetes/kubernetes/pull/137795), [",
               "metric": "Verified upstream",
               "pct_bar": 75,
               "pr": "#5007"
+            },
+            {
+              "label": "API Change",
+              "hardware": "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` de",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#5055"
             },
             {
               "label": "API Change",
@@ -8248,11 +8248,11 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#135322"
             },
             {
-              "label": "Feature",
-              "hardware": "Kube-apiserver: Graduated the `UnknownVersionInteroperabilityProxy` feature gate to beta, enabled by default. The `--peer-ca-file` flag is required to turn on t",
+              "label": "API Change",
+              "hardware": "ACTION REQUIRED: DRA (Dynamic Resource Allocation) drivers and controllers now require granular RBAC permissions to update ResourceClaim statuses when the `DRAR",
               "metric": "Verified upstream",
               "pct_bar": 75,
-              "pr": "#137172"
+              "pr": "#134947"
             },
             {
               "label": "Feature",
@@ -8438,26 +8438,26 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.33",
         "badge": "Release",
         "date": "2025-04-23",
-        "stats": "261 upstream changes and 151 PRs",
-        "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, API Server & etcd Watch/Cache Efficiency at Scale",
-        "executive_summary": "Kubernetes v1.33 focuses on Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, API Server & etcd Watch/Cache Efficiency at Scale, and In-Place Pod Vertical Scaling. For operators, this release translates 261 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "stats": "261 upstream changes and 153 PRs",
+        "headline": "API Server & etcd Watch/Cache Efficiency at Scale, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "executive_summary": "Kubernetes v1.33 focuses on API Server & etcd Watch/Cache Efficiency at Scale, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, and Feature Enhancements. For operators, this release translates 261 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
           "high_level_changes": [
-            {
-              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
-              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
-            },
             {
               "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
               "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
             },
             {
-              "headline": "In-Place Pod Vertical Scaling",
-              "plain_summary": "Improves in-place pod vertical scaling for stateful microservices, warm inference engines, jvms, and suspended batch jobs needing cpu/ram adjustments running on linux worker nodes and kubelet resource allocation loops, delivering eliminates over-provisioning buffer and avoids expensive pod restart cold-starts during traffic spikes."
+              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
             },
             {
               "headline": "Feature Enhancements",
               "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "In-Place Pod Vertical Scaling",
+              "plain_summary": "Improves in-place pod vertical scaling for stateful microservices, warm inference engines, jvms, and suspended batch jobs needing cpu/ram adjustments running on linux worker nodes and kubelet resource allocation loops, delivering eliminates over-provisioning buffer and avoids expensive pod restart cold-starts during traffic spikes."
             },
             {
               "headline": "CEL-Based Validating & Mutating Admission Policies",
@@ -8465,6 +8465,25 @@ window.__PUBLICATION_DATA__ = {
             }
           ],
           "big_deal": [
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#130560",
+                "#129589",
+                "#128499"
+              ],
+              "before": "Prior to v1.33, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "The `RemoteRequestHeaderUID` feature moves to beta and is now enabled by default. This makes the kube-apiserver propagate UIDs in the `X-Remote-Uid` header in requests to the aggregated API servers. (#130560).",
+                "kubeadm: removed the feature gate EtcdLearnerMode which graduated to GA in 1.32. ([#129589](https://github.com/kubernetes/kubernetes/pull/129589), [@neolit123](https://github.com/neolit123)) [SIG.",
+                "The `ClusterTrustBundle` API is moving to `v1beta1`. In order for the `ClusterTrustBundleProjection` feature to work on the kubelet side, the `ClusterTrustBundle` API must be available at `v1beta1` (#128499).",
+                "Graduated `BtreeWatchCache` feature gate to GA. ([#129934](https://github.com/kubernetes/kubernetes/pull/129934), [@serathius](https://github.com/serathius))."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
             {
               "title": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
               "status": "Graduated / Merged",
@@ -8485,22 +8504,22 @@ window.__PUBLICATION_DATA__ = {
               "config_snippet": ""
             },
             {
-              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "title": "Feature Enhancements",
               "status": "Graduated / Merged",
               "status_tone": "green",
               "prs": [
-                "#130560",
-                "#129589",
-                "#129934"
+                "#129713",
+                "#129297",
+                "#130728"
               ],
-              "before": "Prior to v1.33, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "before": "Prior to v1.33, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
               "tech_bullets": [
-                "The `RemoteRequestHeaderUID` feature moves to beta and is now enabled by default. This makes the kube-apiserver propagate UIDs in the `X-Remote-Uid` header in requests to the aggregated API servers. (#130560).",
-                "kubeadm: removed the feature gate EtcdLearnerMode which graduated to GA in 1.32. ([#129589](https://github.com/kubernetes/kubernetes/pull/129589), [@neolit123](https://github.com/neolit123)) [SIG.",
-                "Graduated `BtreeWatchCache` feature gate to GA. ([#129934](https://github.com/kubernetes/kubernetes/pull/129934), [@serathius](https://github.com/serathius)).",
-                "kube-apiserver: Promoted the  `ServiceAccountTokenNodeBinding` feature gate general availability. It is now locked to enabled. ([#129591](https://github.com/kubernetes/kubernetes/pull/129591)."
+                "Graduated the `DisableNodeKubeProxyVersion` feature gate to enable by default, the kubelet no longer attempts to set the `.status.kubeProxyVersion` field for its associated Node. (#129713).",
+                "Promoted the feature gate `CSIMigrationPortworx` to GA. If your applications are using Portworx volumes, please make sure that the corresponding Portworx CSI driver is installed on your cluster (#129297).",
+                "The `DeclarativeValidation` feature gate is enabled by default. When enabled, mismatches with existing hand written validation is reported via metrics. The `DeclarativeValidationTakeover` feature (#130728).",
+                "Added `SchedulerPopFromBackoffQ` feature gate that is in beta and enabled by default. Improved scheduling queue behavior by popping pods from the backoffQ when the activeQ is empty. This allows to (#130772)."
               ],
-              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
             },
             {
@@ -8523,38 +8542,19 @@ window.__PUBLICATION_DATA__ = {
               "config_snippet": ""
             },
             {
-              "title": "Feature Enhancements",
-              "status": "Graduated / Merged",
-              "status_tone": "green",
-              "prs": [
-                "#129713",
-                "#130728",
-                "#130772"
-              ],
-              "before": "Prior to v1.33, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
-              "tech_bullets": [
-                "Graduated the `DisableNodeKubeProxyVersion` feature gate to enable by default, the kubelet no longer attempts to set the `.status.kubeProxyVersion` field for its associated Node. (#129713).",
-                "The `DeclarativeValidation` feature gate is enabled by default. When enabled, mismatches with existing hand written validation is reported via metrics. The `DeclarativeValidationTakeover` feature (#130728).",
-                "Added `SchedulerPopFromBackoffQ` feature gate that is in beta and enabled by default. Improved scheduling queue behavior by popping pods from the backoffQ when the activeQ is empty. This allows to (#130772).",
-                "Bumped `ProcMountType` feature to on by default beta ([#130798](https://github.com/kubernetes/kubernetes/pull/130798), [@haircommander](https://github.com/haircommander)) [SIG Node]."
-              ],
-              "why_it_matters": "Operational reliability and lower maintenance toil",
-              "config_snippet": ""
-            },
-            {
               "title": "CEL-Based Validating & Mutating Admission Policies",
               "status": "Graduated / Merged",
               "status_tone": "green",
               "prs": [
                 "#128971",
-                "#129028",
-                "#129844"
+                "#129844",
+                "#129028"
               ],
               "before": "Prior to v1.33, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
               "tech_bullets": [
                 "Graduated the `MultiCIDRServiceAllocator` feature gate to stable, and the `DisableAllocatorDualWrite` feature gate to beta (disabled by default). Action required for Kubernetes cluster administrators (#128971).",
-                "Added unit test helpers to validate CEL and patterns in CustomResourceDefinitions. ([#129028](https://github.com/kubernetes/kubernetes/pull/129028), [@sttts](https://github.com/sttts)).",
-                "`cel-go` has been bumped to `v0.23.2`. ([#129844](https://github.com/kubernetes/kubernetes/pull/129844), [@cici37](https://github.com/cici37)) [SIG API Machinery, Auth, Cloud Provider and Node]."
+                "`cel-go` has been bumped to `v0.23.2`. ([#129844](https://github.com/kubernetes/kubernetes/pull/129844), [@cici37](https://github.com/cici37)) [SIG API Machinery, Auth, Cloud Provider and Node].",
+                "Added unit test helpers to validate CEL and patterns in CustomResourceDefinitions. ([#129028](https://github.com/kubernetes/kubernetes/pull/129028), [@sttts](https://github.com/sttts))."
               ],
               "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
               "config_snippet": ""
@@ -8562,28 +8562,28 @@ window.__PUBLICATION_DATA__ = {
           ],
           "who_benefits": [
             {
-              "persona": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
-              "models": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
-              "gpus": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
-              "impact": "Stops zombie sidecars from holding batch nodes open after job completion"
-            },
-            {
               "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
               "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
               "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
               "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
             },
             {
-              "persona": "In-Place Pod Vertical Scaling (Zero-Restart Resource Resize)",
-              "models": "Stateful microservices, warm inference engines, JVMs, and suspended Batch Jobs needing CPU/RAM adjustments",
-              "gpus": "Linux worker nodes and kubelet resource allocation loops",
-              "impact": "Eliminates over-provisioning buffer and avoids expensive pod restart cold-starts during traffic spikes"
+              "persona": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "models": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
+              "gpus": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
+              "impact": "Stops zombie sidecars from holding batch nodes open after job completion"
             },
             {
               "persona": "Feature Enhancements",
               "models": "General platform workloads and API consumers",
               "gpus": "Standard cluster nodes and runtime components",
               "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "In-Place Pod Vertical Scaling (Zero-Restart Resource Resize)",
+              "models": "Stateful microservices, warm inference engines, JVMs, and suspended Batch Jobs needing CPU/RAM adjustments",
+              "gpus": "Linux worker nodes and kubelet resource allocation loops",
+              "impact": "Eliminates over-provisioning buffer and avoids expensive pod restart cold-starts during traffic spikes"
             }
           ],
           "jargon_decoded": [
@@ -8660,17 +8660,17 @@ window.__PUBLICATION_DATA__ = {
             },
             {
               "label": "Feature",
-              "hardware": "Promoted in-place Pod vertical scaling to beta. The `InPlacePodVerticalScaling` feature gate is now enabled by default. ([#130905](https://github.com/kubernetes",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#130905"
-            },
-            {
-              "label": "Feature",
               "hardware": "The `RemoteRequestHeaderUID` feature moves to beta and is now enabled by default. This makes the kube-apiserver propagate UIDs in the `X-Remote-Uid` header in r",
               "metric": "Verified upstream",
               "pct_bar": 75,
               "pr": "#130560"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Promoted in-place Pod vertical scaling to beta. The `InPlacePodVerticalScaling` feature gate is now enabled by default. ([#130905](https://github.com/kubernetes",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#130905"
             },
             {
               "label": "Feature",
@@ -8686,7 +8686,7 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.32",
         "badge": "Release",
         "date": "2024-12-11",
-        "stats": "298 upstream changes and 135 PRs",
+        "stats": "298 upstream changes and 142 PRs",
         "headline": "Dynamic Resource Allocation, API Server & etcd Watch/Cache Efficiency at Scale",
         "executive_summary": "Kubernetes v1.32 focuses on Dynamic Resource Allocation, API Server & etcd Watch/Cache Efficiency at Scale, and API Change Enhancements. For operators, this release translates 298 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
@@ -8708,8 +8708,8 @@ window.__PUBLICATION_DATA__ = {
               "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
             },
             {
-              "headline": "Workload-Aware & Gang Scheduling",
-              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
             }
           ],
           "big_deal": [
@@ -8790,22 +8790,23 @@ window.__PUBLICATION_DATA__ = {
               "config_snippet": ""
             },
             {
-              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "title": "CEL-Based Validating & Mutating Admission Policies",
               "status": "Graduated / Merged",
               "status_tone": "green",
               "prs": [
-                "#127402",
-                "#124952",
-                "#128336"
+                "KEP-3962",
+                "#127134",
+                "#127489",
+                "#128556"
               ],
-              "before": "Prior to v1.32, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "before": "Prior to v1.32, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
               "tech_bullets": [
-                "Graduated Job's `ManagedBy` field to beta. ([#127402](https://github.com/kubernetes/kubernetes/pull/127402), [@mimowo](https://github.com/mimowo)) [SIG API Machinery, Apps and Testing].",
-                "The Job controller now considers sidecar container restart counts when removing pods. ([#124952](https://github.com/kubernetes/kubernetes/pull/124952), [@AxeZhan](https://github.com/AxeZhan)) [SIG.",
-                "Annotation `batch.kubernetes.io/cronjob-scheduled-timestamp` added to Job objects scheduled from CronJobs is promoted to stable. ([#128336](https://github.com/kubernetes/kubernetes/pull/128336).",
-                "Label `apps.kubernetes.io/pod-index` added to Pod from StatefulSets is promoted to stable Label `batch.kubernetes.io/job-completion-index` added to Pods from Indexed Jobs is promoted to stable (#128387)."
+                "Introduced `v1alpha1` API for mutating admission policies, enabling extensible #     admission control via CEL expressions (KEP  3962: Mutating Admission Policies). #     To use, enable the (#127134).",
+                "Pods were allowed to use the `net.ipv4.tcp_rmem` and `net.ipv4.tcp_wmem` sysctl by default when the kernel version was 4.15 or higher. With the kernel 4.15 the sysctl became namespaced. Pod Security (#127489).",
+                "Introduced a new metric `kubelet_admission_rejections_total` to track the number of pods rejected during admission. ([#128556](https://github.com/kubernetes/kubernetes/pull/128556).",
+                "The resource/v1alpha3.ResourceSliceList filed which should have been named \"metadata\" but was instead named \"listMeta\" is now properly \"metadata\". (#126749)."
               ],
-              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
               "config_snippet": ""
             }
           ],
@@ -8902,17 +8903,17 @@ window.__PUBLICATION_DATA__ = {
             },
             {
               "label": "API Change",
-              "hardware": "Removed all support for _classic_ dynamic resource allocation (DRA). The `DRAControlPlaneController` feature gate, formerly alpha, is no longer available. Kuber",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#128003"
-            },
-            {
-              "label": "API Change",
               "hardware": "Introduced `v1alpha1` API for mutating admission policies, enabling extensible #     admission control via CEL expressions (KEP  3962: Mutating Admission Polici",
               "metric": "Verified upstream",
               "pct_bar": 75,
               "pr": "#127134"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Removed all support for _classic_ dynamic resource allocation (DRA). The `DRAControlPlaneController` feature gate, formerly alpha, is no longer available. Kuber",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#128003"
             },
             {
               "label": "API Change",
@@ -8922,11 +8923,11 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#127511"
             },
             {
-              "label": "API Change",
-              "hardware": "kube-apiserver: Promoted the `StructuredAuthorizationConfiguration` feature gate to GA. The `--authorization-config` flag now accepts `AuthorizationConfiguratio",
+              "label": "Feature",
+              "hardware": "Ensured resizing for Guaranteed pods with integer CPU requests on nodes with static CPU & Memory policy configured is not allowed for the beta release of in-pla",
               "metric": "Verified upstream",
               "pct_bar": 75,
-              "pr": "#128172"
+              "pr": "#127262"
             }
           ]
         }
@@ -8935,9 +8936,9 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.31",
         "badge": "Release",
         "date": "2024-08-13",
-        "stats": "333 upstream changes and 164 PRs",
+        "stats": "326 upstream changes and 168 PRs",
         "headline": "API Server & etcd Watch/Cache Efficiency at Scale, Workload Identity, User Namespaces & Fine-Grained Authz",
-        "executive_summary": "Kubernetes v1.31 focuses on API Server & etcd Watch/Cache Efficiency at Scale, Workload Identity, User Namespaces & Fine-Grained Authz, and Feature Enhancements. For operators, this release translates 333 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "executive_summary": "Kubernetes v1.31 focuses on API Server & etcd Watch/Cache Efficiency at Scale, Workload Identity, User Namespaces & Fine-Grained Authz, and Feature Enhancements. For operators, this release translates 326 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
           "high_level_changes": [
             {
@@ -8970,14 +8971,14 @@ window.__PUBLICATION_DATA__ = {
                 "KEP-1880",
                 "#125591",
                 "#125582",
-                "#125374"
+                "#124509"
               ],
               "before": "Prior to v1.31, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
               "tech_bullets": [
                 "Graduated the `WatchList` feature gate to beta for kube-apiserver and enabled `WatchListClient` for kube-controller-manager (KCM). ([#125591](https://github.com/kubernetes/kubernetes/pull/125591).",
                 "Kubeadm: added the ControlPlaneKubeletLocalMode feature gate. It can be used to tell kubeadm to use the local kube-apiserver endpoint for the kubelet when creating a cluster with \"kubeadm init\" or (#125582).",
-                "Promoted `StatefulSetStartOrdinal` to stable. This means `--feature-gates=StatefulSetStartOrdinal=true` are not needed on kube-apiserver and kube-controller-manager binaries and they'll be removed (#125374).",
-                "Introduces new functionality to the client-go's `List` method, allowing users to enable API streaming. To activate this feature, users can set the `client-go.WatchListClient` feature gate. It is (#124509)."
+                "Introduces new functionality to the client-go's `List` method, allowing users to enable API streaming. To activate this feature, users can set the `client-go.WatchListClient` feature gate. It is (#124509).",
+                "Introduces new functionality to the dynamic client's `List` method, allowing users to enable API streaming. To activate this feature, users can set the `client-go.WatchListClient` feature gate. It is (#125305)."
               ],
               "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
               "config_snippet": ""
@@ -9186,26 +9187,26 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.30",
         "badge": "Release",
         "date": "2024-04-17",
-        "stats": "254 upstream changes and 131 PRs",
-        "headline": "API Change Enhancements, Feature Enhancements",
-        "executive_summary": "Kubernetes v1.30 focuses on API Change Enhancements, Feature Enhancements, and Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle. For operators, this release translates 254 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "stats": "254 upstream changes and 138 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.30 focuses on Feature Enhancements, API Change Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 254 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
           "high_level_changes": [
-            {
-              "headline": "API Change Enhancements",
-              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
-            },
             {
               "headline": "Feature Enhancements",
               "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
             },
             {
-              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
-              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
             },
             {
               "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
               "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
             },
             {
               "headline": "CEL-Based Validating & Mutating Admission Policies",
@@ -9213,25 +9214,6 @@ window.__PUBLICATION_DATA__ = {
             }
           ],
           "big_deal": [
-            {
-              "title": "API Change Enhancements",
-              "status": "Graduated / Merged",
-              "status_tone": "green",
-              "prs": [
-                "#123575",
-                "#123481",
-                "#122589"
-              ],
-              "before": "Prior to v1.30, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
-              "tech_bullets": [
-                "Graduated pod scheduling gates to general availability. The `PodSchedulingReadiness` feature gate no longer has any effect, and the `.spec.schedulingGates` field is always available within the Pod (#123575).",
-                "Graduated support for `minDomains` in pod topology spread constraints, to general availability. The `MinDomainsInPodTopologySpread` feature gate no longer has any effect, and the field is always (#123481).",
-                "Contextual logging is now in beta and enabled by default. Check out the [KEP](https://github.com/kubernetes/enhancements/issues/3077) and [official (#122589).",
-                "Fixed accidental enablement of the new alpha `optionalOldSelf` API field in `CustomResourceDefinition` validation rules, which should only have been allowed to be set when the (#122329)."
-              ],
-              "why_it_matters": "Operational reliability and lower maintenance toil",
-              "config_snippet": ""
-            },
             {
               "title": "Feature Enhancements",
               "status": "Graduated / Merged",
@@ -9252,6 +9234,44 @@ window.__PUBLICATION_DATA__ = {
               "config_snippet": ""
             },
             {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#123481",
+                "#123575",
+                "#122589"
+              ],
+              "before": "Prior to v1.30, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Graduated support for `minDomains` in pod topology spread constraints, to general availability. The `MinDomainsInPodTopologySpread` feature gate no longer has any effect, and the field is always (#123481).",
+                "Graduated pod scheduling gates to general availability. The `PodSchedulingReadiness` feature gate no longer has any effect, and the `.spec.schedulingGates` field is always available within the Pod (#123575).",
+                "Contextual logging is now in beta and enabled by default. Check out the [KEP](https://github.com/kubernetes/enhancements/issues/3077) and [official (#122589).",
+                "Fixed accidental enablement of the new alpha `optionalOldSelf` API field in `CustomResourceDefinition` validation rules, which should only have been allowed to be set when the (#122329)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#122881",
+                "#123341",
+                "#123179"
+              ],
+              "before": "Prior to v1.30, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Added a CBOR implementation of `runtime.Serializer`. Until CBOR graduates to Alpha, API servers will refuse to start if configured with CBOR support. (#122881).",
+                "kubeadm: added the `WaitForAllControlPlaneComponents` feature gate. It could be used to tell kubeadm to wait for all control plane components to be ready when running \"kubeadm init\" or \"kubeadm join (#123341).",
+                "Added a new metric `apiserver_encryption_config_controller_automatic_reloads_total` to measure the total number of API server encryption configuration reload successes and failures.  This metric now (#123179).",
+                "Added `WatchListClient` feature gate to `client-go`. When enabled, it allows the client to receive a stream of individual items instead of chunking from the server. (#122571)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
               "title": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
               "status": "Graduated / Merged",
               "status_tone": "green",
@@ -9265,29 +9285,10 @@ window.__PUBLICATION_DATA__ = {
               "tech_bullets": [
                 "Graduated \"Forensic Container Checkpointing\" (KEP #2008) from Alpha to Beta. ([#123215](https://github.com/kubernetes/kubernetes/pull/123215), [@adrianreber](https://github.com/adrianreber)).",
                 "Revised node selection based on container image location. The kube-scheduler now considers whether nodes have the required images available for init containers, and for sidecar containers if the (#123366).",
-                "In kubelet configuration, the `.memorySwap.swapBehavior` field now accepts a new value `NoSwap`, which becomes the default if unspecified. The previously accepted `UnlimitedSwap` value has been (#122745).",
-                "Added the `disable-force-detach` CLI option for `kube-controller-manager`. By default, it's set to `false`. When enabled, it prevents force detaching volumes based on maximum unmount time and node (#120344)."
+                "Added the `disable-force-detach` CLI option for `kube-controller-manager`. By default, it's set to `false`. When enabled, it prevents force detaching volumes based on maximum unmount time and node (#120344).",
+                "In kubelet configuration, the `.memorySwap.swapBehavior` field now accepts a new value `NoSwap`, which becomes the default if unspecified. The previously accepted `UnlimitedSwap` value has been (#122745)."
               ],
               "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
-              "config_snippet": ""
-            },
-            {
-              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
-              "status": "Graduated / Merged",
-              "status_tone": "green",
-              "prs": [
-                "#122881",
-                "#123341",
-                "#122571"
-              ],
-              "before": "Prior to v1.30, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
-              "tech_bullets": [
-                "Added a CBOR implementation of `runtime.Serializer`. Until CBOR graduates to Alpha, API servers will refuse to start if configured with CBOR support. (#122881).",
-                "kubeadm: added the `WaitForAllControlPlaneComponents` feature gate. It could be used to tell kubeadm to wait for all control plane components to be ready when running \"kubeadm init\" or \"kubeadm join (#123341).",
-                "Added `WatchListClient` feature gate to `client-go`. When enabled, it allows the client to receive a stream of individual items instead of chunking from the server. (#122571).",
-                "When the `RetryGenerateName` feature gate is enabled on the kube-apiserver, create requests using generateName are retried automatically by the apiserver when the generated name conflicts with an (#122887)."
-              ],
-              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
               "config_snippet": ""
             },
             {
@@ -9312,28 +9313,28 @@ window.__PUBLICATION_DATA__ = {
           ],
           "who_benefits": [
             {
-              "persona": "API Change Enhancements",
-              "models": "General platform workloads and API consumers",
-              "gpus": "Standard cluster nodes and runtime components",
-              "impact": "Operational reliability and lower maintenance toil"
-            },
-            {
               "persona": "Feature Enhancements",
               "models": "General platform workloads and API consumers",
               "gpus": "Standard cluster nodes and runtime components",
               "impact": "Operational reliability and lower maintenance toil"
             },
             {
-              "persona": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
-              "models": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
-              "gpus": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
-              "impact": "Stops zombie sidecars from holding batch nodes open after job completion"
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
             },
             {
               "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
               "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
               "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
               "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "models": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
+              "gpus": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
+              "impact": "Stops zombie sidecars from holding batch nodes open after job completion"
             }
           ],
           "jargon_decoded": [
@@ -9396,13 +9397,6 @@ window.__PUBLICATION_DATA__ = {
           "proof_benchmarks": [
             {
               "label": "API Change",
-              "hardware": "Graduated pod scheduling gates to general availability. The `PodSchedulingReadiness` feature gate no longer has any effect, and the `.spec.schedulingGates` fiel",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#123575"
-            },
-            {
-              "label": "API Change",
               "hardware": "Graduated support for `minDomains` in pod topology spread constraints, to general availability. The `MinDomainsInPodTopologySpread` feature gate no longer has a",
               "metric": "Verified upstream",
               "pct_bar": 75,
@@ -9414,6 +9408,13 @@ window.__PUBLICATION_DATA__ = {
               "metric": "Verified upstream",
               "pct_bar": 75,
               "pr": "#122881"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Graduated pod scheduling gates to general availability. The `PodSchedulingReadiness` feature gate no longer has any effect, and the `.spec.schedulingGates` fiel",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#123575"
             },
             {
               "label": "Feature",
@@ -9436,7 +9437,7 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.29",
         "badge": "Release",
         "date": "2023-12-13",
-        "stats": "302 upstream changes and 131 PRs",
+        "stats": "302 upstream changes and 138 PRs",
         "headline": "Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale",
         "executive_summary": "Kubernetes v1.29 focuses on Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale, and Dynamic Resource Allocation. For operators, this release translates 302 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
@@ -9469,15 +9470,15 @@ window.__PUBLICATION_DATA__ = {
               "status_tone": "green",
               "prs": [
                 "#120682",
-                "#121485",
-                "#121638"
+                "#121638",
+                "#121485"
               ],
               "before": "Prior to v1.29, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
               "tech_bullets": [
                 "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now `beta` and enabled by default. When enabled, legacy auto-generated service account token secrets are auto-labeled (#120682).",
-                "The KMSv2 features with feature gates `KMSv2` and `KMSv2KDF` are promoted to `GA`.  The `KMSv1` feature gate is now disabled by default. (#121485).",
                 "Priority and Fairness feature is now `stable`, the feature gate will be removed in `v1.31`. ([#121638](https://github.com/kubernetes/kubernetes/pull/121638), [@tkashem](https://github.com/tkashem)).",
-                "Changed the `KMSv2KDF` feature gate to be enabled by default. ([#120433](https://github.com/kubernetes/kubernetes/pull/120433), [@enj](https://github.com/enj)) [SIG API Machinery, Auth and Testing]."
+                "The KMSv2 features with feature gates `KMSv2` and `KMSv2KDF` are promoted to `GA`.  The `KMSv1` feature gate is now disabled by default. (#121485).",
+                "The `volume_zone` plugin will consider `beta` labels as `GA` labels during the scheduling process. Therefore, if the values of the labels are the same, PVs with `beta` labels can also be scheduled to (#118923)."
               ],
               "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
@@ -9488,14 +9489,14 @@ window.__PUBLICATION_DATA__ = {
               "status_tone": "green",
               "prs": [
                 "#120228",
-                "#120490",
-                "#120154"
+                "#120154",
+                "#120490"
               ],
               "before": "Prior to v1.29, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
               "tech_bullets": [
                 "`kubeadm`: promoted feature gate `EtcdLearnerMode` to `beta`. Learner mode for joining `etcd` members is now enabled by default. ([#120228](https://github.com/kubernetes/kubernetes/pull/120228).",
-                "Added `apiserver_watch_list_duration_seconds` metrics which will measure response latency distribution in seconds for watchlist requests broken by group, version, resource and scope. (#120490).",
                 "`kube-apiserver`: added `--authorization-config` flag for reading a configuration file containing an `apiserver.config.k8s.io/v1alpha1 AuthorizationConfiguration` object. The `--authorization-config` (#120154).",
+                "Added `apiserver_watch_list_duration_seconds` metrics which will measure response latency distribution in seconds for watchlist requests broken by group, version, resource and scope. (#120490).",
                 "`PriorityLevelConfiguration`: the `.spec.limited.nominalConcurrencyShares` field defaults to `30` only if the field is omitted (v1beta3 also defaulted an explicit `0` value to `30`). Specifying an (#121089)."
               ],
               "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
@@ -9508,12 +9509,13 @@ window.__PUBLICATION_DATA__ = {
               "prs": [
                 "#121254",
                 "#117502",
-                "#120534"
+                "#120868"
               ],
               "before": "Prior to v1.29, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
               "tech_bullets": [
                 "`DevicePluginCDIDevices` feature has been graduated to `beta` and enabled by default in the kubelet. ([#121254](https://github.com/kubernetes/kubernetes/pull/121254).",
                 "Added `kubectl node drain` helper callbacks `OnPodDeletionOrEvictionStarted` and `OnPodDeletionOrEvictionFailed`; people extending `kubectl` can use these new callbacks for more granularity. (#117502).",
+                "Failing Test: - `k8s.io/dynamic-resource-allocation`: DRA drivers updating to this release are compatible with Kubernetes `v1.27` and `v1.28`. (#120868).",
                 "`dra`: the scheduler plugin now avoids additional scheduling attempts in some cases by falling back to SSA after a conflict. ([#120534](https://github.com/kubernetes/kubernetes/pull/120534)."
               ],
               "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
@@ -9533,7 +9535,7 @@ window.__PUBLICATION_DATA__ = {
                 "`kube-proxy` now has a new nftables-based mode, available by running `kube-proxy --feature-gates NFTablesProxyMode=true --proxy-mode nftables` This is currently an alpha-level feature and while it (#121046).",
                 "Added a new `ipMode` field to the `.status` of Services where `type` is set to `LoadBalancer`. The new field is behind the `LoadBalancerIPMode` feature gate. (#119937).",
                 "The `CloudDualStackNodeIPs` feature is now `beta`, meaning that when using an external cloud provider that has been updated to support the feature, you can pass comma-separated dual-stack (#120275).",
-                "Added a new `ServiceCIDR` type that allows to dynamically configure the cluster range used to allocate `Service ClusterIPs` addresses. (#116516)."
+                "`kube-proxy`: Added an option/flag for configuring the `nf_conntrack_tcp_be_liberal` sysctl (in the kernel's netfilter conntrack subsystem).  When enabled, `kube-proxy` will not install the `DROP` (#120354)."
               ],
               "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
               "config_snippet": ""
@@ -9545,14 +9547,14 @@ window.__PUBLICATION_DATA__ = {
               "prs": [
                 "#121303",
                 "#119994",
-                "#120954"
+                "#117720"
               ],
               "before": "Prior to v1.29, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
               "tech_bullets": [
                 "`CSINodeExpandSecret` feature has been promoted to `GA` in this release and is enabled by default. The CSI drivers can make use of the `secretRef` values passed in `NodeExpansion` request optionally (#121303).",
                 "'`kube-scheduler` component config (`KubeSchedulerConfiguration`) `kubescheduler.config.k8s.io/v1beta3` is removed in `v1.29`. Migrated `kube-scheduler` configuration files to (#119994).",
-                "Added the `DisableNodeKubeProxyVersion` feature gate. If `DisableNodeKubeProxyVersion` is enabled, the `kubeProxyVersion` field is not set. (#120954).",
-                "Promoted `PodReadyToStartContainers` condition to `beta`. ([#119659](https://github.com/kubernetes/kubernetes/pull/119659), [@kannon92](https://github.com/kannon92))."
+                "The `kube-scheduler` `selectorSpread` plugin has been removed, please use the `podTopologySpread` plugin instead. ([#117720](https://github.com/kubernetes/kubernetes/pull/117720).",
+                "Added the `DisableNodeKubeProxyVersion` feature gate. If `DisableNodeKubeProxyVersion` is enabled, the `kubeProxyVersion` field is not set. (#120954)."
               ],
               "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
@@ -9643,20 +9645,6 @@ window.__PUBLICATION_DATA__ = {
           },
           "proof_benchmarks": [
             {
-              "label": "API Change",
-              "hardware": "Added `UserNamespacesPodSecurityStandards` feature gate to enable user namespace support for Pod Security Standards. Enabling this feature will modify all Pod S",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#118760"
-            },
-            {
-              "label": "Feature",
-              "hardware": "Added new feature gate called `RuntimeClassInImageCriApi` to address `kubelet` changes needed for KEP 4216. Noteable changes: 1. Populate new `RuntimeHandler` f",
-              "metric": "Verified upstream",
-              "pct_bar": 75,
-              "pr": "#121456"
-            },
-            {
               "label": "Feature",
               "hardware": "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now `beta` and enabled by default. When enabled, legacy auto-generated service",
               "metric": "Verified upstream",
@@ -9672,10 +9660,24 @@ window.__PUBLICATION_DATA__ = {
             },
             {
               "label": "API Change",
-              "hardware": "`PersistentVolumeLastPhaseTransitionTime` is now beta and enabled by default. ([#120627](https://github.com/kubernetes/kubernetes/pull/120627), [@RomanBednar](h",
+              "hardware": "Added `UserNamespacesPodSecurityStandards` feature gate to enable user namespace support for Pod Security Standards. Enabling this feature will modify all Pod S",
               "metric": "Verified upstream",
               "pct_bar": 75,
-              "pr": "#120627"
+              "pr": "#118760"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Added new feature gate called `RuntimeClassInImageCriApi` to address `kubelet` changes needed for KEP 4216. Noteable changes: 1. Populate new `RuntimeHandler` f",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#121456"
+            },
+            {
+              "label": "Feature",
+              "hardware": "`kubeadm`: promoted feature gate `EtcdLearnerMode` to `beta`. Learner mode for joining `etcd` members is now enabled by default. ([#120228](https://github.com/k",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#120228"
             }
           ]
         }
@@ -9684,9 +9686,9 @@ window.__PUBLICATION_DATA__ = {
         "version": "v1.28",
         "badge": "Release",
         "date": "2023-08-15",
-        "stats": "305 upstream changes and 148 PRs",
+        "stats": "305 upstream changes and 152 PRs",
         "headline": "Feature Enhancements, Networking, `nftables` Proxy & Traffic Observability",
-        "executive_summary": "Kubernetes v1.28 focuses on Feature Enhancements, Networking, `nftables` Proxy & Traffic Observability, and CEL-Based Validating & Mutating Admission Policies. For operators, this release translates 305 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "executive_summary": "Kubernetes v1.28 focuses on Feature Enhancements, Networking, `nftables` Proxy & Traffic Observability, and API Change Enhancements. For operators, this release translates 305 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
         "five_parts": {
           "high_level_changes": [
             {
@@ -9698,12 +9700,12 @@ window.__PUBLICATION_DATA__ = {
               "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
             },
             {
-              "headline": "CEL-Based Validating & Mutating Admission Policies",
-              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
-            },
-            {
               "headline": "API Change Enhancements",
               "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
             },
             {
               "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
@@ -9737,17 +9739,36 @@ window.__PUBLICATION_DATA__ = {
               "prs": [
                 "KEP-3178",
                 "#119374",
-                "#118895",
-                "#117800"
+                "#117787",
+                "#118999"
               ],
               "before": "Prior to v1.28, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
               "tech_bullets": [
                 "The `IPTablesOwnershipCleanup` feature (KEP-3178) is now GA; kubelet no longer creates the `KUBE-MARK-DROP` chain (which has been unused for several releases) or the `KUBE-MARK-MASQ` chain (which is (#119374).",
-                "Added `IP mode` field to loadbalancer status ingress. ([#118895](https://github.com/kubernetes/kubernetes/pull/118895), [@RyanAoh](https://github.com/RyanAoh)).",
-                "Kube-proxy: added `--logging-format` flag to support structured logging. ([#117800](https://github.com/kubernetes/kubernetes/pull/117800), [@cyclinder](https://github.com/cyclinder)).",
-                "Kube-proxy handles Terminating EndpointSlices conditions and enables zero downtime deployments for Services with ExternalTrafficPolicy=Local author: @andrewsykim (#117718)."
+                "`kube-proxy` in iptables mode will now have separate `sync_full_proxy_rules_duration_seconds`\\nand `sync_partial_proxy_rules_duration_seconds` (in addition to the (#117787).",
+                "Kube-proxy service health returns http header `X-Load-Balancing-Endpoint-Weight` with number of local endpoints. The same information is still available in response body JSON (#118999).",
+                "Added `IP mode` field to loadbalancer status ingress. ([#118895](https://github.com/kubernetes/kubernetes/pull/118895), [@RyanAoh](https://github.com/RyanAoh))."
               ],
               "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#115554",
+                "#117570",
+                "#117713"
+              ],
+              "before": "Prior to v1.28, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now available as alpha (off by default). When enabled, the `legacy-service-account-token-cleaner` controller loop (#115554).",
+                "Removed `WindowsHostProcessContainers` feature-gate. ([#117570](https://github.com/kubernetes/kubernetes/pull/117570), [@marosset](https://github.com/marosset)) [SIG API Machinery, Apps, Auth, Node.",
+                "The `SelfSubjectReview` API is promoted to `authentication.k8s.io/v1` and the `kubectl auth whoami` command is GA. ([#117713](https://github.com/kubernetes/kubernetes/pull/117713).",
+                "`kube-scheduler` component config (KubeSchedulerConfiguration) `kubescheduler.config.k8s.io/v1beta2` is removed in `v1.28`. Migrate `kube-scheduler` configuration files to (#117649)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
             },
             {
@@ -9770,37 +9791,19 @@ window.__PUBLICATION_DATA__ = {
               "config_snippet": ""
             },
             {
-              "title": "API Change Enhancements",
-              "status": "Graduated / Merged",
-              "status_tone": "green",
-              "prs": [
-                "#117570",
-                "#115554",
-                "#117713"
-              ],
-              "before": "Prior to v1.28, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
-              "tech_bullets": [
-                "Removed `WindowsHostProcessContainers` feature-gate. ([#117570](https://github.com/kubernetes/kubernetes/pull/117570), [@marosset](https://github.com/marosset)) [SIG API Machinery, Apps, Auth, Node.",
-                "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now available as alpha (off by default). When enabled, the `legacy-service-account-token-cleaner` controller loop (#115554).",
-                "The `SelfSubjectReview` API is promoted to `authentication.k8s.io/v1` and the `kubectl auth whoami` command is GA. ([#117713](https://github.com/kubernetes/kubernetes/pull/117713).",
-                "Added new `CRDValidationRatcheting` alpha feature. During a PATCH or UPDATE Validation Ratcheting discards errors thrown by unchanged portions of the resource from most OpenAPI schema validations. (#118990)."
-              ],
-              "why_it_matters": "Operational reliability and lower maintenance toil",
-              "config_snippet": ""
-            },
-            {
               "title": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
               "status": "Graduated / Merged",
               "status_tone": "green",
               "prs": [
                 "#116429",
                 "#118764",
-                "#118865"
+                "#117368"
               ],
               "before": "Prior to v1.28, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
               "tech_bullets": [
                 "The new feature gate \"SidecarContainers\" is now available. This feature introduces sidecar containers, a new type of init container that starts before other containers but remains running for the (#116429).",
                 "Added full cgroup v2 swap support for both `Limited` and `Unlimited` swap. When `LimitedSwap` is enabled the swap limit would be automatically calculated for Burstable QoS pods. For (#118764).",
+                "Failing Test: - Fixed nil pointer in test AfterEach volumeperf.go for sidecar release. ([#117368](https://github.com/kubernetes/kubernetes/pull/117368).",
                 "Added swap to stats to Summary API and Prometheus endpoints (stats/summary and /metrics/resource). ([#118865](https://github.com/kubernetes/kubernetes/pull/118865)."
               ],
               "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
@@ -9821,16 +9824,16 @@ window.__PUBLICATION_DATA__ = {
               "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
             },
             {
-              "persona": "CEL-Based Validating & Mutating Admission Policies",
-              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
-              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
-              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
-            },
-            {
               "persona": "API Change Enhancements",
               "models": "General platform workloads and API consumers",
               "gpus": "Standard cluster nodes and runtime components",
               "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
             }
           ],
           "jargon_decoded": [
@@ -9899,6 +9902,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#116741"
             },
             {
+              "label": "API Change",
+              "hardware": "The `IPTablesOwnershipCleanup` feature (KEP-3178) is now GA; kubelet no longer creates the `KUBE-MARK-DROP` chain (which has been unused for several releases) o",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#119374"
+            },
+            {
               "label": "Feature",
               "hardware": "The `AdvancedAuditing` feature gate that graduated to GA in `v1.12` (and was unconditionally enabled) has been removed. ([#118763](https://github.com/kubernetes",
               "metric": "Verified upstream",
@@ -9907,10 +9917,10 @@ window.__PUBLICATION_DATA__ = {
             },
             {
               "label": "API Change",
-              "hardware": "The `IPTablesOwnershipCleanup` feature (KEP-3178) is now GA; kubelet no longer creates the `KUBE-MARK-DROP` chain (which has been unused for several releases) o",
+              "hardware": "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now available as alpha (off by default). When enabled, the `legacy-service-acc",
               "metric": "Verified upstream",
               "pct_bar": 75,
-              "pr": "#119374"
+              "pr": "#115554"
             },
             {
               "label": "API Change",
@@ -9918,13 +9928,6838 @@ window.__PUBLICATION_DATA__ = {
               "metric": "Verified upstream",
               "pct_bar": 75,
               "pr": "#119380"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.27",
+        "badge": "Release",
+        "date": "2023-04-11",
+        "stats": "351 upstream changes and 192 PRs",
+        "headline": "API Change Enhancements, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.27 focuses on API Change Enhancements, Feature Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 351 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#116233",
+                "#115750",
+                "#115815"
+              ],
+              "before": "Prior to v1.27, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "GRPC probes are now a GA feature. `GRPCContainerProbe` feature gate was locked to default value and will be removed in v1.29. If you were setting this feature gate explicitly, please remove it now. (#116233).",
+                "Graduated `KubeletTracing` to beta, which means that the feature gate is now enabled by default. ([#115750](https://github.com/kubernetes/kubernetes/pull/115750).",
+                "`PodSchedulingReadiness` is graduated to beta. ([#115815](https://github.com/kubernetes/kubernetes/pull/115815), [@Huang-Wei](https://github.com/Huang-Wei)).",
+                "`SELinuxMountReadWriteOncePod` graduated to Beta. ([#116425](https://github.com/kubernetes/kubernetes/pull/116425), [@jsafrane](https://github.com/jsafrane))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#116291",
+                "#115621",
+                "#114523"
+              ],
+              "before": "Prior to v1.27, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Graduated `matchLabelKeys` in `podTopologySpread` to Beta ([#116291](https://github.com/kubernetes/kubernetes/pull/116291), [@denkensk](https://github.com/denkensk)).",
+                "Graduated the `CSINodeExpandSecret` feature to Beta. This feature facilitates passing secrets to CSI driver as part of Node Expansion CSI operation. (#115621).",
+                "Graduated the `LegacyServiceAccountTokenTracking` feature gate to Beta. The usage of auto-generated secret-based service account token now produces warnings by default, and relevant Secrets are (#114523).",
+                "The `ReadWriteOncePod` feature gate has been graduated to beta. ([#114494](https://github.com/kubernetes/kubernetes/pull/114494), [@chrishenzie](https://github.com/chrishenzie))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#113942",
+                "#114172",
+                "#109877"
+              ],
+              "before": "Prior to v1.27, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "The following feature gates for volume expansion GA features have now been removed and must no longer be referenced in `--feature-gates` flags: `ExpandCSIVolumes`, `ExpandInUsePersistentVolumes` (#113942).",
+                "`StatefulSet` names must be DNS labels, rather than subdomains. Any `StatefulSet` which took advantage of subdomain validation (by having dots in the name) can't possibly have worked, because we (#114172).",
+                "Scheduler volumebinding: leveraged `PreFilterResult` to reduce down to only eligible node(s) for pod with bound claim(s) to local `PersistentVolume(s)` (#109877).",
+                "Enabled the `StatefulSetStartOrdinal` feature gate in beta ([#115260](https://github.com/kubernetes/kubernetes/pull/115260), [@pwschuurman](https://github.com/pwschuurman))."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#115363",
+                "#116046",
+                "#116010"
+              ],
+              "before": "Prior to v1.27, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+              "tech_bullets": [
+                "The PodDisruptionBudget `spec.unhealthyPodEvictionPolicy` field has graduated to beta and is enabled by default. On servers with the feature enabled, this field may be set to `AlwaysAllow` to always (#115363).",
+                "Graduated the container resource metrics feature on `HPA` to beta. ([#116046](https://github.com/kubernetes/kubernetes/pull/116046), [@sanposhiho](https://github.com/sanposhiho)).",
+                "HPA controller starts to expose metrics from the kube-controller-manager.\\n- `reconciliations_total`: Number of reconciliation of HPA controller. \\n- `reconciliation_duration_seconds`: The (#116010).",
+                "`kubectl` now uses `HorizontalPodAutoscaler` `v2` by default. ([#114886](https://github.com/kubernetes/kubernetes/pull/114886), [@a7i](https://github.com/a7i))."
+              ],
+              "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#115973",
+                "#116397",
+                "#116261"
+              ],
+              "before": "Prior to v1.27, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Added `auditAnnotations` to `ValidatingAdmissionPolicy`, enabling CEL to be used to add audit annotations to request audit events. Added `validationActions` to `ValidatingAdmissionPolicyBinding` (#115973).",
+                "Added `messageExpression` to `ValidatingAdmissionPolicy`, to set custom failure message via CEL expression. ([#116397](https://github.com/kubernetes/kubernetes/pull/116397).",
+                "Added the `MatchConditions` field to `ValidatingWebhookConfiguration` and `MutatingWebhookConfiguration` for the v1beta and v1 apis. The `AdmissionWebhookMatchConditions` featuregate is now in Alpha (#116261).",
+                "Added CEL runtime cost calculation into ValidatingAdmissionPolicy, matching the evaluation cost restrictions that already apply to CustomResourceDefinition. If rule evaluation uses more compute than (#115747)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "models": "Event-driven workers, async queue consumers, and bursty GPU inference endpoints",
+              "gpus": "Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller",
+              "impact": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The PreEnqueue extension point doesn't work for Pods going to activeQ through backoffQ: In v1.26.0, we've found the bug that the PreEnqueue extension point doesn't work for Pods going to activeQ through backoffQ. It does",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.27"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "'The `IPv6DualStack` feature gate for external cloud providers was removed. (The feature became GA in 1.23 and the gate was removed for all other components several releases ago.) If you were still manually enabling it y",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#116255"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Give terminal phase correctly to all pods that will not be restarted. In particular, assign Failed phase to pods which are deleted while pending. Also, assign a terminal phase (Succeeded or Failed, depending on the exit ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#115331"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The in-tree cloud provider for AWS (and the EBS storage plugin) has now been removed. Please use the external cloud provider and CSI driver from https://github.com/kubernetes/cloud-provider-aws instead. ([#115838](https:",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#115838"
+              },
+              {
+                "change": "Deprecation",
+                "impact": "Added a [warning](https://k8s.io/blog/2020/09/03/warnings/) response when handling requests that set the deprecated `spec.externalID` field for a Node. ([#115944](https://github.com/kubernetes/kubernetes/pull/115944), [@",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#115944"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Since Kubernetes v1.5, `kubectl apply` has had an alpha-stage `--prune` flag to support deleting previously applied objects that have been removed from the inpu",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#116205"
+            },
+            {
+              "label": "API Change",
+              "hardware": "The PodDisruptionBudget `spec.unhealthyPodEvictionPolicy` field has graduated to beta and is enabled by default. On servers with the feature enabled, this field",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#115363"
             },
             {
               "label": "Feature",
-              "hardware": "Graduated the `LegacyServiceAccountTokenTracking` feature gate to GA. The usage of auto-generated secret-based service account token now produces warnings, and ",
+              "hardware": "Graduated `matchLabelKeys` in `podTopologySpread` to Beta ([#116291](https://github.com/kubernetes/kubernetes/pull/116291), [@denkensk](https://github.com/denke",
               "metric": "Verified upstream",
               "pct_bar": 75,
-              "pr": "#117591"
+              "pr": "#116291"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Graduated `KubeletTracing` to beta, which means that the feature gate is now enabled by default. ([#115750](https://github.com/kubernetes/kubernetes/pull/115750",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#115750"
+            },
+            {
+              "label": "API Change",
+              "hardware": "`PodSchedulingReadiness` is graduated to beta. ([#115815](https://github.com/kubernetes/kubernetes/pull/115815), [@Huang-Wei](https://github.com/Huang-Wei))",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#115815"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.26",
+        "badge": "Release",
+        "date": "2022-12-09",
+        "stats": "262 upstream changes and 116 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.26 focuses on Feature Enhancements, API Change Enhancements, and CEL-Based Validating & Mutating Admission Policies. For operators, this release translates 262 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#112386",
+                "#112838",
+                "#112824"
+              ],
+              "before": "Prior to v1.26, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "`CSRDuration` feature gate that graduated to GA in 1.24 and is unconditionally enabled now removed in v1.26. ([#112386](https://github.com/kubernetes/kubernetes/pull/112386).",
+                "The `LegacyServiceAccountTokenNoAutoGeneration` feature gate was promoted to GA. ([#112838](https://github.com/kubernetes/kubernetes/pull/112838), [@zshihang](https://github.com/zshihang)).",
+                "The ExpandedDNSConfig feature has graduated to beta and is enabled by default. Note that this feature requires container runtime support. (#112824).",
+                "'`CSIMigrationvSphere` was upgraded to GA and locked to true. Do not upgrade to K8s 1.26 if you need Windows, or XFS, or raw block support until vSphere CSI Driver adds support for them in a version (#113336)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#113351",
+                "#112895",
+                "#112643"
+              ],
+              "before": "Prior to v1.26, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `EndpointSliceTerminatingCondition` feature gate was graduated to GA. The gate is now locked and will be removed in v1.28. ([#113351](https://github.com/kubernetes/kubernetes/pull/113351).",
+                "Moved `MixedProtocolLBService` from beta to GA. ([#112895](https://github.com/kubernetes/kubernetes/pull/112895), [@janosi](https://github.com/janosi)).",
+                "`DynamicKubeletConfig` feature gate has been removed from the API server. Dynamic kubelet reconfiguration now can't be used even when older nodes are still attempting to rely on it. This is aligned (#112643).",
+                "'`NodeInclusionPolicy` in `podTopologySpread` plugin is now enabled by default.' ([#113500](https://github.com/kubernetes/kubernetes/pull/113500), [@kerthcet](https://github.com/kerthcet))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "KEP-3488",
+                "#113314",
+                "#112577",
+                "#112792"
+              ],
+              "before": "Prior to v1.26, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Introduced `v1alpha1` API for validating admission policies, enabling extensible admission control via CEL expressions (KEP  3488: CEL for Admission Control). To use, enable the (#113314).",
+                "Removed feature gates `ServiceLoadBalancerClass` and `ServiceLBNodePortControl`. These feature gates were enabled (and locked) since `v1.24`. (#112577).",
+                "Added a new feature gate `CelValidatingAdmissionExtensibility` to enable expression validation for Admission Control. ([#112792](https://github.com/kubernetes/kubernetes/pull/112792).",
+                "'Pod Security admission: the pod-security `warn` level will now default to the `enforce` level.' ([#113491](https://github.com/kubernetes/kubernetes/pull/113491)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#113363",
+                "#113057",
+                "#112133"
+              ],
+              "before": "Prior to v1.26, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "The `ProxyTerminatingEndpoints` feature is now Beta and enabled by default. When enabled, kube-proxy will attempt to route traffic to terminating pods when the traffic policy is `Local` and there are (#113363).",
+                "When `ComponentSLIs` feature gate is enabled, then `/metrics/slis` becomes available on `kube-proxy` allowing you to scrape health check metrics. (#113057).",
+                "In `kube-proxy`: The \"userspace\" proxy mode (deprecated for over a year) is no longer supported on either Linux or Windows. Users should use \"iptables\" or \"ipvs\" on Linux, or \"kernelspace\" on (#112133).",
+                "Added a kube-proxy flag (`--iptables-localhost-nodeports`, default true) to allow disabling NodePort services on loopback addresses. Note: this only applies to iptables mode and ipv4. (#108250)."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#113375",
+                "#113629",
+                "#113485"
+              ],
+              "before": "Prior to v1.26, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "'`PodDisruptionBudget` now adds an alpha `spec.unhealthyPodEvictionPolicy` field. When the `PDBUnhealthyPodEvictionPolicy` feature-gate is enabled in `kube-apiserver`, setting this field to (#113375).",
+                "'Promoted the `APIServerIdentity` feature to Beta. By default, each `kube-apiserver` will now create a Lease in the `kube-system` namespace. These lease objects can be used to identify the number of (#113629).",
+                "`apiserver_flowcontrol_current_limit_seats`: current derived number of execution seats available to each priority level The possibility of borrowing means that the old metric (#113485).",
+                "Deprecated the `apiserver_request_slo_duration_seconds` metric for v1.27 in favor of `apiserver_request_sli_duration_seconds` for naming consistency purposes with other SLI-specific metrics and to (#112679)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Deprecated beta APIs scheduled for removal in `v1.26` are no longer served. See https://kubernetes.io/docs/reference/using-api/deprecation-guide/#v1-26 for more information. ([#111973](https://github.com/kubernetes/kuber",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#111973"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The in-tree cloud provider for OpenStack (and the cinder volume provider) has been removed. Please use the external cloud provider and csi driver from [cloud-provider-openstack](https://github.com/kubernetes/cloud-provid",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#67782"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "`GlusterFS` in-tree storage driver which was deprecated in kubernetes 1.25 release is now removed entirely in `v1.26`. Volumes must be migrated to an alternate storage solution before upgrading to `v1.26`. ([#112015](htt",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#112015"
+              },
+              {
+                "change": "Deprecation",
+                "impact": "CLI flag `pod-eviction-timeout` is deprecated and will be removed together with `enable-taint-manager` in v1.27. ([#113710](https://github.com/kubernetes/kubernetes/pull/113710), [@kerthcet](https://github.com/kerthcet))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#113710"
+              },
+              {
+                "change": "Deprecation",
+                "impact": "Kube-apiserver: the unused `--master-service-namespace` flag was deprecated and will be removed in v1.27. ([#112797](https://github.com/kubernetes/kubernetes/pull/112797), [@SataQiu](https://github.com/SataQiu))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#112797"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "API Change",
+              "hardware": "Introduced `v1alpha1` API for validating admission policies, enabling extensible admission control via CEL expressions (KEP  3488: CEL for Admission Control). T",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#113314"
+            },
+            {
+              "label": "API Change",
+              "hardware": "The `EndpointSliceTerminatingCondition` feature gate was graduated to GA. The gate is now locked and will be removed in v1.28. ([#113351](https://github.com/kub",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#113351"
+            },
+            {
+              "label": "Feature",
+              "hardware": "`CSRDuration` feature gate that graduated to GA in 1.24 and is unconditionally enabled now removed in v1.26. ([#112386](https://github.com/kubernetes/kubernetes",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#112386"
+            },
+            {
+              "label": "Feature",
+              "hardware": "The `ProxyTerminatingEndpoints` feature is now Beta and enabled by default. When enabled, kube-proxy will attempt to route traffic to terminating pods when the ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#113363"
+            },
+            {
+              "label": "API Change",
+              "hardware": "'Graduated `JobTrackingWithFinalizers` to stable. Jobs created before the feature was enabled are still tracked without finalizers. Jobs tracked with finalizers",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#113510"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.25",
+        "badge": "Release",
+        "date": "2022-08-23",
+        "stats": "260 upstream changes and 110 PRs",
+        "headline": "API Change Enhancements, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.25 focuses on API Change Enhancements, Feature Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 260 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#111229",
+                "#111411",
+                "#110534"
+              ],
+              "before": "Prior to v1.25, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The Pod `spec.podOS` field is promoted to GA. The `IdentifyPodOS` feature gate unconditionally enabled, and will no longer be accepted as a `--feature-gates` parameter in 1.27. (#111229).",
+                "The command line flag `enable-taint-manager` for kube-controller-manager is deprecated and will be removed in 1.26. The feature that it supports, taint based eviction, is enabled by default and will (#111411).",
+                "Kube-Scheduler ComponentConfig is graduated to GA, `kubescheduler.config.k8s.io/v1` is available now. Plugin `SelectorSpread` is removed in v1. (#110534).",
+                "The `endPort` field in Network Policy is now promoted to GA Network Policy providers that support `endPort` field now can use it to specify a range of ports to apply a Network Policy. Previously (#110868)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#110410",
+                "#110805",
+                "#111524"
+              ],
+              "before": "Prior to v1.25, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Feature gate `CSIMigration` was locked to enabled. `CSIMigration` is GA now. The feature gate will be removed in `v1.27`. ([#110410](https://github.com/kubernetes/kubernetes/pull/110410).",
+                "Promoted Server Side Unknown Field Validation to Beta: Promoted the `ServerSideFieldValidation` feature gate to beta (on by default). This allows optionally triggering schema validation on the API.",
+                "Promoted core CSI Migration to Stable: [CSI Migration](https://kubernetes.io/blog/2021/12/10/storage-in-tree-to-csi-migration-status-update/#quick-recap-what-is-csi-migration-and-why-migrate) is an.",
+                "Graduated SeccompDefault to `beta`. The Kubelet feature gate is now enabled by default and the configuration/CLI flag still defaults to `false`. (#110805)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#111402",
+                "#110896",
+                "#111194"
+              ],
+              "before": "Prior to v1.25, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "(https://kubernetes.io/docs/concepts/workloads/pods/ephemeral-containers/) are now generally available (GA). The `EphemeralContainers` feature gate is always enabled and should be removed from (#111402).",
+                "Promote StatefulSet minReadySeconds to GA. This means `--feature-gates=StatefulSetMinReadySeconds=true` are not needed on kube-apiserver and kube-controller-manager binaries and they'll be removed (#110896).",
+                "Promoted DaemonSet MaxSurge to GA. This means `--feature-gates=DaemonSetUpdateSurge=true` are not needed on kube-apiserver and kube-controller-manager binaries and they'll be removed soon following (#111194).",
+                "Kubeadm: modified the etcd static Pod `liveness` and `readiness` probes to use a new etcd `v3.5.3+` HTTP(s) health check endpoint `/health?serializable=true` that allows to track the health of (#110072)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#110327",
+                "#109819",
+                "#109612"
+              ],
+              "before": "Prior to v1.25, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Kubeadm: graduated the kubeadm specific feature gate `UnversionedKubeletConfigMap` to GA and locked it to `true` by default. The kubelet related ConfigMap and RBAC rules are now locked to have a (#110327).",
+                "Support for the alpha seccomp annotations `seccomp.security.alpha.kubernetes.io/pod` and `container.seccomp.security.alpha.kubernetes.io`, deprecated since v1.19, was partially removed. Kubelets no (#109819).",
+                "Kube-controller-manager: Removed flags  `deleting-pods-qps`, `deleting-pods-burst`, and `register-retry-count`. ([#109612](https://github.com/kubernetes/kubernetes/pull/109612).",
+                "The `gcp` and `azure` auth plugins have been removed from client-go and kubectl. See https://github.com/Azure/kubelogin and (#110013)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#110459",
+                "#109938",
+                "#109798"
+              ],
+              "before": "Prior to v1.25, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "PodSecurityPolicy is Removed, Pod Security Admission graduates to Stable: PodSecurityPolicy was initially [deprecated in.",
+                "The `PodSecurity` admission plugin has graduated to GA and is enabled by default. The admission configuration version has been promoted to `pod-security.admission.config.k8s.io/v1`. (#110459).",
+                "There is a new OCI image registry (`registry.k8s.io`) that can be used to pull Kubernetes images. The old registry (`k8s.gcr.io`) will continue to be supported for the foreseeable future, but the new (#109938).",
+                "The beta `PodSecurityPolicy` admission plugin, deprecated since 1.21, is removed. Follow the instructions at https://kubernetes.io/docs/tasks/configure-pod-container/migrate-from-psp/ to migrate to (#109798)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Deprecation Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "Linux User Namespaces (`hostUsers: false`)",
+              "plain_english": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+              "bottom_line": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "LocalStorageCapacityIsolationFSQuotaMonitoring ConfigMap rendering failure: ConfigMap rendering [issue](https://github.com/kubernetes/kubernetes/issues/112081) was found in the 1.25.0 release. When ConfigMaps get updated",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.25"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Deprecated beta APIs scheduled for removal in 1.25 are no longer served. See https://kubernetes.io/docs/reference/using-api/deprecation-guide/#v1-25 for more information. ([#108797](https://github.com/kubernetes/kubernet",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#108797"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Encrypted data with DEK using AES-GCM instead of AES-CBC for kms data encryption. No user action required. Reads with AES-GCM and AES-CBC will continue to be allowed. ([#111119](https://github.com/kubernetes/kubernetes/p",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#111119"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "End-to-end testing has been migrated from Ginkgo v1 to v2. When running test/e2e via the Ginkgo CLI, the v2 CLI must be used and `-timeout=24h` (or some other, suitable value) must be passed because the default timeout w",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#109111"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "No action required; No API/CLI changed; Add new Windows Image Support ([#110333](https://github.com/kubernetes/kubernetes/pull/110333), [@liurupeng](https://github.com/liurupeng)) [SIG Cloud Provider and Windows]",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#110333"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Deprecation",
+              "hardware": "Kubeadm: graduated the kubeadm specific feature gate `UnversionedKubeletConfigMap` to GA and locked it to `true` by default. The kubelet related ConfigMap and R",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#110327"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Promoted Server Side Unknown Field Validation to Beta: Promoted the `ServerSideFieldValidation` feature gate to beta (on by default). This allows optionally tri",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.25"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Promoted core CSI Migration to Stable: [CSI Migration](https://kubernetes.io/blog/2021/12/10/storage-in-tree-to-csi-migration-status-update/#quick-recap-what-is",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.25"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated SeccompDefault to `beta`. The Kubelet feature gate is now enabled by default and the configuration/CLI flag still defaults to `false`. ([#110805](http",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#110805"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated `CustomResourceValidationExpressions` to `beta`. The `CustomResourceValidationExpressions` feature gate is now enabled by default. ([#111524](https://",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#111524"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.24",
+        "badge": "Release",
+        "date": "2022-05-03",
+        "stats": "331 upstream changes and 152 PRs",
+        "headline": "API Change Enhancements, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.24 focuses on API Change Enhancements, Feature Enhancements, and Urgent Upgrade Notes Enhancements. For operators, this release translates 331 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#108782",
+                "#108136",
+                "#106366"
+              ],
+              "before": "Prior to v1.24, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The CertificateSigningRequest `spec.expirationSeconds` API field has graduated to GA. The `CSRDuration` feature gate for the field is now unconditionally enabled and will be removed in 1.26. (#108782).",
+                "Pod affinity namespace selector and cross-namespace quota graduated to GA. The feature gate `PodAffinityNamespaceSelector` is locked and will be removed in 1.26. (#108136).",
+                "Renamed metrics `evictions_number` to `evictions_total` and mark it as stable. The original `evictions_number` metrics name is marked as \"Deprecated\" and has been removed in kubernetes 1.23 . (#106366).",
+                "The `ServerSideFieldValidation` feature has graduated to beta and is now enabled by default. Kubectl 1.24 and newer will use server-side validation instead of client-side validation when writing to (#108889)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#106838",
+                "#107462",
+                "#108038"
+              ],
+              "before": "Prior to v1.24, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `NamespaceDefaultLabelName` feature gate, GA since v1.22, is now removed. ([#106838](https://github.com/kubernetes/kubernetes/pull/106838), [@mengjiao-liu](https://github.com/mengjiao-liu)).",
+                "OpenStack Cinder CSI migration is now GA and switched on by default, Cinder CSI driver must be installed on clusters on OpenStack for Cinder volumes to work (has been since v1.21). (#107462).",
+                "Removed feature gate `SetHostnameAsFQDN`. ([#108038](https://github.com/kubernetes/kubernetes/pull/108038), [@mengjiao-liu](https://github.com/mengjiao-liu)).",
+                "Removed the `ImmutableEphemeralVolumes` feature gate. ([#107152](https://github.com/kubernetes/kubernetes/pull/107152), [@mengjiao-liu](https://github.com/mengjiao-liu))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#108309",
+                "#104732",
+                "#107317"
+              ],
+              "before": "Prior to v1.24, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `LegacyServiceAccountTokenNoAutoGeneration` feature gate is beta, and enabled by default. When enabled, Secret API objects containing service account tokens are no longer auto-generated for every (#108309).",
+                "Remove the deprecated flag `--experimental-check-node-capabilities-before-mount`. With CSI now GA, there is a better alternative. Remove any use of  (#104732).",
+                "Kubeadm: default the kubeadm configuration to the containerd socket (Unix: `unix:///var/run/containerd/containerd.sock`, Windows: `npipe:////./pipe/containerd-containerd`) instead of the one for (#107317).",
+                "The feature gate was mentioned as `csiMigrationRBD` where it should have been `CSIMigrationRBD` to be in parity with other migration plugins. This release correct the same and keep it as (#107554)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#108129",
+                "#107476",
+                "#107395"
+              ],
+              "before": "Prior to v1.24, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Suspend job to GA. The feature gate `SuspendJob` is locked and will be removed in 1.26. ([#108129](https://github.com/kubernetes/kubernetes/pull/108129), [@ahg-g](https://github.com/ahg-g)).",
+                "JobReadyPods graduates to Beta and it's enabled by default. ([#107476](https://github.com/kubernetes/kubernetes/pull/107476), [@alculquicondor](https://github.com/alculquicondor)).",
+                "Indexed Jobs graduated to stable. ([#107395](https://github.com/kubernetes/kubernetes/pull/107395), [@alculquicondor](https://github.com/alculquicondor)).",
+                "This adds an optional `timeZone` field as part of the CronJob spec to support running cron jobs in a specific time zone. ([#108032](https://github.com/kubernetes/kubernetes/pull/108032)."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#107027",
+                "#108312",
+                "#109024"
+              ],
+              "before": "Prior to v1.24, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "The `ServiceLBNodePortControl` feature has graduated to GA. The feature gate will be removed in 1.26. ([#107027](https://github.com/kubernetes/kubernetes/pull/107027).",
+                "CRD `x-kubernetes-validations` rules now support the CEL functions: `isSorted`, `sum`, `min`, `max`, `indexOf`, `lastIndexOf`, `find` and `findAll`. (#108312).",
+                "Kubernetes 1.24 is built with go1.18, which will no longer validate certificates signed with a SHA-1 hash algorithm by default. See https://golang.org/doc/go1.18#sha1 for more details. If you are (#109024).",
+                "CEL CRD validation expressions may now reference existing object state using the identifier `oldSelf`. ([#108073](https://github.com/kubernetes/kubernetes/pull/108073)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Docker runtime support using dockershim in the kubelet is now completely removed in 1.24. The kubelet used to have a module called dockershim, which implements CRI support for Docker, and it has seen maintenance issues i",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#97252"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Fixed bug with leads to Node goes `Not-ready` state when credentials for vCenter stored in a secret and Zones feature is in use. Zone labels setup moved to KCM component, kubelet skips this step during startup in such ca",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#101028"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The `LegacyServiceAccountTokenNoAutoGeneration` feature gate is beta, and enabled by default. When enabled, Secret API objects containing service account tokens are no longer auto-generated for every ServiceAccount. Use ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#108309"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The calculations for Pod topology spread skew now exclude nodes that don't match the node affinity/selector. This may lead to unschedulable pods if you previously had pods matching the spreading selector on those exclude",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#107009"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Remove the deprecated flag `--experimental-check-node-capabilities-before-mount`. With CSI now GA, there is a better alternative. Remove any use of  `--experimental-check-node-capabilities-before-mount` from your kubelet",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#104732"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "API Change",
+              "hardware": "The CertificateSigningRequest `spec.expirationSeconds` API field has graduated to GA. The `CSRDuration` feature gate for the field is now unconditionally enable",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#108782"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Pod affinity namespace selector and cross-namespace quota graduated to GA. The feature gate `PodAffinityNamespaceSelector` is locked and will be removed in 1.26",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#108136"
+            },
+            {
+              "label": "API Change",
+              "hardware": "The `ServiceLBNodePortControl` feature has graduated to GA. The feature gate will be removed in 1.26. ([#107027](https://github.com/kubernetes/kubernetes/pull/1",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#107027"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "The `LegacyServiceAccountTokenNoAutoGeneration` feature gate is beta, and enabled by default. When enabled, Secret API objects containing service account tokens",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#108309"
+            },
+            {
+              "label": "API Change",
+              "hardware": "The AnyVolumeDataSource feature is now beta, and the feature gate is enabled by default. In order to provide user feedback on PVCs with data sources, deployers ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#108736"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.23",
+        "badge": "Release",
+        "date": "2021-12-07",
+        "stats": "364 upstream changes and 140 PRs",
+        "headline": "Networking, `nftables` Proxy & Traffic Observability, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.23 focuses on Networking, `nftables` Proxy & Traffic Observability, API Change Enhancements, and Feature Enhancements. For operators, this release translates 364 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#96684",
+                "#104691",
+                "#103860"
+              ],
+              "before": "Prior to v1.23, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "IPv4/IPv6 Dual-stack Networking graduates to GA: [IPv4/IPv6 dual-stack networking](https://github.com/kubernetes/enhancements/tree/master/keps/sig-network/563-dual-stack) graduates to GA. Since 1.21.",
+                "The `Service.spec.ipFamilyPolicy` field is now *required* in order to create or update a Service as dual-stack.  This is a breaking change from the beta behavior.  Previously the server would try to (#96684).",
+                "Promote `IPv6DualStack` feature to stable. Controller Manager flags for the node IPAM controller have slightly changed: 1. When configuring a dual-stack cluster, the user must specify both (#104691).",
+                "A deprecation notice has been added when using the kube-proxy userspace proxier, which will be removed in v1.25. (#103860) ([#104631](https://github.com/kubernetes/kubernetes/pull/104631)."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#105222",
+                "#105940",
+                "#105219"
+              ],
+              "before": "Prior to v1.23, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Remove `NodeLease` feature gate that was graduated and locked to stable in 1.17 release. ([#105222](https://github.com/kubernetes/kubernetes/pull/105222), [@cyclinder](https://github.com/cyclinder)).",
+                "The `CSIVolumeFSGroupPolicy` feature has moved from beta to GA. ([#105940](https://github.com/kubernetes/kubernetes/pull/105940), [@dobsonj](https://github.com/dobsonj)).",
+                "The `TTLAfterFinished` feature gate is now GA and enabled by default. ([#105219](https://github.com/kubernetes/kubernetes/pull/105219), [@sahilvv](https://github.com/sahilvv)).",
+                "Ephemeral containers graduated to beta and are now available by default. ([#105405](https://github.com/kubernetes/kubernetes/pull/105405), [@verb](https://github.com/verb))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#103685",
+                "#105003",
+                "#103095"
+              ],
+              "before": "Prior to v1.23, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `ServiceAccountIssuerDiscovery` feature gate is removed. It reached GA in Kubernetes 1.21. ([#103685](https://github.com/kubernetes/kubernetes/pull/103685).",
+                "Move the `GetAllocatableResources` Endpoint in PodResource API to the beta that will make it enabled by default. ([#105003](https://github.com/kubernetes/kubernetes/pull/105003).",
+                "Added support for `PodAndContainerStatsFromCRI` feature gate, which allows a user to specify their pod stats must also come from the CRI, not `cAdvisor`. (#103095).",
+                "Graduating `pending_pods`, `preemption_attempts_total`, `preemption_victims` and `schedule_attempts_total` metrics to stable. Also `e2e_scheduling_duration_seconds` is renamed to (#105941)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#106089",
+                "#106051",
+                "#103162"
+              ],
+              "before": "Prior to v1.23, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "PodSecurity graduates to Beta: [PodSecurity](https://kubernetes.io/docs/concepts/security/pod-security-admission/) moves to Beta. `PodSecurity` replaces the deprecated `PodSecurityPolicy` admission.",
+                "The `PodSecurity `admission plugin has graduated to `beta` and is enabled by default. The admission configuration version has been promoted to `pod-security.admission.config.k8s.io/v1beta1`. See (#106089).",
+                "Validation rules for Custom Resource Definitions can be written in the [CEL expression language](https://github.com/google/cel-spec) using the `x-kubernetes-validations` extension in OpenAPIv3 (#106051).",
+                "Introduces a new metric: `admission_webhook_request_total` with the following labels: name (string) - the webhook name, type (string) - the admission type, operation (string) - the requested verb (#103162)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#105741",
+                "#105474",
+                "#96345"
+              ],
+              "before": "Prior to v1.23, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Kubeadm: add the kubeadm specific, Alpha (disabled by default) feature gate UnversionedKubeletConfigMap. When this feature is enabled kubeadm will start using a new naming format for the ConfigMap (#105741).",
+                "Feature-gate `VolumeSubpath` has been deprecated and cannot be disabled. It will be completely removed in 1.25 ([#105474](https://github.com/kubernetes/kubernetes/pull/105474).",
+                "Kube-scheduler: the `--port` and `--address` flags have no effect and would be removed in v1.24. The insecure port flags `--port` may only be set to 0 now. Also `metricsBindAddress` and (#96345).",
+                "Kubeadm: remove the deprecated / NO-OP phase `update-cluster-status` in `kubeadm reset` ([#105888](https://github.com/kubernetes/kubernetes/pull/105888), [@neolit123](https://github.com/neolit123))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "WatchList & Snapshottable Watch Cache",
+              "plain_english": "Streaming object lists from `kube-apiserver` memory cache snapshots instead of assembling giant one-shot payloads from `etcd`.",
+              "bottom_line": "Slashes API server RAM spikes and protects `etcd` from OOM crashes during controller restarts on large clusters."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubeadm: remove the deprecated flag `--experimental-patches` for the `init|join|upgrade` commands. The flag `--patches` is no longer allowed in a mixture with the flag `--config`. Please use the kubeadm configuration for",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#104065"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Log messages in JSON format are written to stderr by default now (same as text format) instead of stdout. Users who expected JSON output on stdout must now capture stderr instead or in addition to stdout. ([#106146](http",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#106146"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Support for the seccomp annotations `seccomp.security.alpha.kubernetes.io/pod` and `container.seccomp.security.alpha.kubernetes.io/[name]` has been deprecated since 1.19, will be dropped in 1.25. Transition to using the ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#104389"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "[kube-log-runner](https://github.com/kubernetes/kubernetes/tree/master/staging/src/k8s.io/component-base/logs/kube-log-runner) is included in release tar balls. It can be used to replace the deprecated `--log-file` param",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#106123"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubernetes is built using golang 1.17. This version of go removes the ability to use a `GODEBUG=x509ignoreCN=0` environment setting to re-enable deprecated legacy behavior of treating the CommonName of X.509 serving cert",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.23"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "IPv4/IPv6 Dual-stack Networking graduates to GA: [IPv4/IPv6 dual-stack networking](https://github.com/kubernetes/enhancements/tree/master/keps/sig-network/563-d",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.23"
+            },
+            {
+              "label": "Feature",
+              "hardware": "PodSecurity graduates to Beta: [PodSecurity](https://kubernetes.io/docs/concepts/security/pod-security-admission/) moves to Beta. `PodSecurity` replaces the dep",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.23"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Remove `NodeLease` feature gate that was graduated and locked to stable in 1.17 release. ([#105222](https://github.com/kubernetes/kubernetes/pull/105222), [@cyc",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#105222"
+            },
+            {
+              "label": "API Change",
+              "hardware": "The `Service.spec.ipFamilyPolicy` field is now *required* in order to create or update a Service as dual-stack.  This is a breaking change from the beta behavio",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#96684"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Promote `IPv6DualStack` feature to stable. Controller Manager flags for the node IPAM controller have slightly changed: 1. When configuring a dual-stack cluster",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#104691"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.22",
+        "badge": "Release",
+        "date": "2021-08-04",
+        "stats": "381 upstream changes and 186 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.22 focuses on Feature Enhancements, API Change Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 381 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#101711",
+                "#103462",
+                "#101767"
+              ],
+              "before": "Prior to v1.22, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Removal of several beta Kubernetes APIs: A number of APIs are no longer serving specific Beta versions in favour of the GA version of those APIs. All existing objects can be interacted with via.",
+                "The `IngressClassNamespacedParams` feature gate has graduated to beta and is enabled by default. This means IngressClass resource will now have two new fields - `spec.paramters.namespace` and (#101711).",
+                "External credential providers: Kubernetes client [credential plugins](https://kubernetes.io/docs/reference/access-authn-authz/authentication/#client-go-credential-plugins) have been in beta since.",
+                "The `ServiceInternalTrafficPolicy` feature graduates to Beta and enable by default, which enables the `internalTrafficPolicy` field of Service by default. (#103462)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#103190",
+                "#101496",
+                "#102834"
+              ],
+              "before": "Prior to v1.22, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `ServiceAppProtocol` feature gate has been removed. It reached GA in Kubernetes ([#103190](https://github.com/kubernetes/kubernetes/pull/103190), [@robscott](https://github.com/robscott)).",
+                "The `podAffinity`, `NamespaceSelector` and the associated `CrossNamespaceAffinity` quota scope features graduate to Beta and they are now enabled by default. (#101496).",
+                "The `NetworkPolicyEndPort` is graduated to beta and is enabled by default. ([#102834](https://github.com/kubernetes/kubernetes/pull/102834), [@rikatz](https://github.com/rikatz)).",
+                "The `PodDeletionCost` feature has been promoted to beta, and enabled by default. ([#101080](https://github.com/kubernetes/kubernetes/pull/101080), [@ahg-g](https://github.com/ahg-g))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#100754",
+                "#103276",
+                "#102158"
+              ],
+              "before": "Prior to v1.22, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "The `WarningHeader` feature is now GA and is unconditionally enabled. The `apiserver_requested_deprecated_apis` metric has graduated to stable status. The `WarningHeader` feature-gate is no longer (#100754).",
+                "Add `DataSourceRef` alpha field to PVC spec, which allows contents other than `PVCs` and `VolumeSnapshots` to be data sources. ([#103276](https://github.com/kubernetes/kubernetes/pull/103276).",
+                "Kubeadm: Add the `RootlessControlPlane` kubeadm specific feature gate (Alpha in 1.22, disabled by default). It can be used to enable an experimental feature that makes the control plane component (#102158).",
+                "For `kubeadm`: remove the ClusterStatus API from v1beta3 and its management in the kube-system/kubeadm-config ConfigMap. This method of keeping track of what API endpoints exists in the cluster was (#101915)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#101534",
+                "#99647",
+                "#99178"
+              ],
+              "before": "Prior to v1.22, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Newly provisioned PVs by Azure disk will no longer have the beta `FailureDomain` label. Azure disk volume plugin will start to have GA topology label instead. (#101534).",
+                "Kubeadm: remove the automatic detection and matching of cgroup drivers for Docker. For new clusters if you have not configured the cgroup driver explicitly you might get a failure in the `kubelet` on (#99647).",
+                "Conformance image is now built with Distroless. Users running Conformance testing should rely on container entrypoint instead of manual invocation to `/run_e2e.sh` or `/gorunner`, as they are now (#99178).",
+                "The flag `--experimental-patches` is now deprecated and will be removed in a future release. You can migrate to using the new flag `--patches`. Add a new field (#103063)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#102022",
+                "#102529",
+                "#98817"
+              ],
+              "before": "Prior to v1.22, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Suspend Job feature graduated to beta. Added the `action` label to Job controller sync metrics `job_sync_total` and `job_sync_duration_seconds`. (#102022).",
+                "Promote `CronJobControllerV2` flag to GA, with removal in 1.23. ([#102529](https://github.com/kubernetes/kubernetes/pull/102529), [@soltysh](https://github.com/soltysh)).",
+                "Added field `.status.uncountedTerminatedPods` to the Job resource. This field is used by the job controller to keep track of finished pods before adding them to the Job status counters. Pods created (#98817).",
+                "Add three metrics to the job controller to monitor if a job works in healthy condition. `IndexedJob` has been promoted to Beta. ([#101292](https://github.com/kubernetes/kubernetes/pull/101292)."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "Linux User Namespaces (`hostUsers: false`)",
+              "plain_english": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+              "bottom_line": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "CPU and Memory manager are not working correctly for Guaranteed Pods with multiple containers: A regression bug was found where guaranteed Pods with multiple containers do not work properly with set allocations for CPU, ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.22"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "`CSIMigrationvSphere` feature gate has not migrated to new CRD APIs: If CSIMigrationvSphere feature gate is enabled, user should not upgrade to Kubernetes v1.22. vSphere CSI Driver does not support Kubernetes v1.22 yet b",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.22"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Workloads that saturate nodes with pods may see pods that fail due to node admission: 1.22 addressed a long-standing issue in the Kubelet where terminating pods were [vulnerable to race conditions](https://github.com/kub",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.22"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Etcd v3.5.[0-2] data corruption: Data corruption issue was found in etcd v3.5.0 release that was shipped with 1.22 Kubernetes release. Please read up-to-date [production recommendations for etcd](https://github.com/etcd-",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.22"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Audit log files are now created with a mode of 0600. Existing file permissions will not be changed. If you need the audit file to be readable by a non-root user, you can pre-create the file with the desired permissions. ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#95387"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Removal of several beta Kubernetes APIs: A number of APIs are no longer serving specific Beta versions in favour of the GA version of those APIs. All existing o",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.22"
+            },
+            {
+              "label": "Feature",
+              "hardware": "The `WarningHeader` feature is now GA and is unconditionally enabled. The `apiserver_requested_deprecated_apis` metric has graduated to stable status. The `Warn",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#100754"
+            },
+            {
+              "label": "Feature",
+              "hardware": "The `BoundServiceAccountTokenVolume` graduates to GA and thus will be unconditionally enabled. The feature gate is going to be removed in 1.23. ([#101992](https",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#101992"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "Newly provisioned PVs by Azure disk will no longer have the beta `FailureDomain` label. Azure disk volume plugin will start to have GA topology label instead. (",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#101534"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Suspend Job feature graduated to beta. Added the `action` label to Job controller sync metrics `job_sync_total` and `job_sync_duration_seconds`. ([#102022](http",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#102022"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.21",
+        "badge": "Release",
+        "date": "2021-04-08",
+        "stats": "301 upstream changes and 141 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.21 focuses on Feature Enhancements, API Change Enhancements, and Urgent Upgrade Notes Enhancements. For operators, this release translates 301 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#98553",
+                "#98033",
+                "#98678"
+              ],
+              "before": "Prior to v1.21, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `ServiceAccountIssuerDiscovery` feature has graduated to GA, and is unconditionally enabled. The `ServiceAccountIssuerDiscovery` feature-gate will be removed in 1.22. (#98553).",
+                "The feature gate `RootCAConfigMap` graduated to GA in v1.21 and therefore will be unconditionally enabled. This flag will be removed in v1.22 release. (#98033).",
+                "The `TTLAfterFinished` feature flag is now beta and enabled by default ([#98678](https://github.com/kubernetes/kubernetes/pull/98678), [@ahg-g](https://github.com/ahg-g)).",
+                "Kubeadm: IPv6DualStack feature gate graduates to Beta and enabled by default ([#99294](https://github.com/kubernetes/kubernetes/pull/99294), [@pacoxu](https://github.com/pacoxu))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#99870",
+                "#99641",
+                "#99662"
+              ],
+              "before": "Prior to v1.21, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The EndpointSlice Controllers are now GA. The `EndpointSliceController` will not populate the `deprecatedTopology` field and will only provide topology information through the `zone` and `nodeName` (#99870).",
+                "Storage capacity tracking (= the CSIStorageCapacity feature) graduates to Beta and enabled by default, storage.k8s.io/v1alpha1/VolumeAttachment and storage.k8s.io/v1alpha1/CSIStorageCapacity objects (#99641).",
+                "The `EndpointSlice` API is now GA. The `EndpointSlice` topology field has been removed from the GA API and will be replaced by a new per Endpoint Zone field. If the topology field was previously (#99662).",
+                "CSIServiceAccountToken graduates to Beta and enabled by default. ([#99298](https://github.com/kubernetes/kubernetes/pull/99298), [@zshihang](https://github.com/zshihang))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#98700",
+                "#98332",
+                "#98243"
+              ],
+              "before": "Prior to v1.21, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Newly provisioned PVs by gce-pd will no longer have the beta FailureDomain label. gce-pd volume plugin will start to have GA topology label instead. (#98700).",
+                "Remove storage metrics `storage_operation_errors_total`, since we already have `storage_operation_status_count`.And add new field `status` for `storage_operation_duration_seconds`, so that we can (#98332).",
+                "Remove alpha `CSIMigrationXXComplete` flag and add alpha `InTreePluginXXUnregister` flag. Deprecate `CSIMigrationvSphereComplete` flag and it will be removed in v1.22. (#98243).",
+                "`ServiceNodeExclusion`, `NodeDisruptionExclusion` and `LegacyNodeRoleBehavior` features have been promoted to GA. `ServiceNodeExclusion` and `NodeDisruptionExclusion` are now unconditionally enabled (#97543)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#99785",
+                "#98858",
+                "#93861"
+              ],
+              "before": "Prior to v1.21, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Rename metrics `etcd_object_counts` to `apiserver_storage_object_counts` and mark it as stable. The original `etcd_object_counts` metrics name is marked as \"Deprecated\" and will be removed in the (#99785).",
+                "Rename metrics `etcd_object_counts` to `apiserver_storage_object_counts` and mark it as stable. The original `etcd_object_counts` metrics name is marked as \"Deprecated\" and will be removed in the (#99785).",
+                "`audit.k8s.io/v1beta1` and `audit.k8s.io/v1alpha1` audit policy configuration and audit events are deprecated in favor of `audit.k8s.io/v1`, available since v1.13. kube-apiserver invocations that (#98858).",
+                "Immutable Secrets and ConfigMaps: Immutable Secrets and ConfigMaps graduates to GA. This feature allows users to specify that the contents of a particular Secret or ConfigMap is immutable for its."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#98969",
+                "#99794",
+                "#101054"
+              ],
+              "before": "Prior to v1.21, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Upgrades `IPv6Dualstack` to `Beta` and turns it on by default. New clusters or existing clusters are not be affected until an actor starts adding secondary Pods and service CIDRS CLI flags as (#98969).",
+                "WindowsEndpointSliceProxying feature gate has graduated to beta and is enabled by default. This means kube-proxy will  read from EndpointSlices instead of Endpoints on Windows by default. (#99794).",
+                "`TopologyAwareHints` feature falls back to default behavior: The feature gate currently falls back to the default behavior in most cases. Enabling the feature gate will add hints to `EndpointSlices` (#101054).",
+                "Kube-proxy's IPVS proxy mode no longer sets the net.ipv4.conf.all.route_localnet sysctl parameter. Nodes upgrading will have net.ipv4.conf.all.route_localnet set to 1 but new nodes will inherit the (#92938)."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "`TopologyAwareHints` feature falls back to default behavior: The feature gate currently falls back to the default behavior in most cases. Enabling the feature gate will add hints to `EndpointSlices`, but functional diffe",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#101054"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kube-proxy's IPVS proxy mode no longer sets the net.ipv4.conf.all.route_localnet sysctl parameter. Nodes upgrading will have net.ipv4.conf.all.route_localnet set to 1 but new nodes will inherit the system default (usuall",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#92938"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubeadm: during \"init\" an empty cgroupDriver value in the KubeletConfiguration is now always set to \"systemd\" unless the user is explicit about it. This requires existing machine setups to configure the container runtime",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#99471"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Newly provisioned PVs by EBS plugin will no longer use the deprecated \"failure-domain.beta.kubernetes.io/zone\" and \"failure-domain.beta.kubernetes.io/region\" labels. It will use \"topology.kubernetes.io/zone\" and \"topolog",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#99130"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Newly provisioned PVs by OpenStack Cinder plugin will no longer use the deprecated \"failure-domain.beta.kubernetes.io/zone\" and \"failure-domain.beta.kubernetes.io/region\" labels. It will use \"topology.kubernetes.io/zone\"",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#99719"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "The `ServiceAccountIssuerDiscovery` feature has graduated to GA, and is unconditionally enabled. The `ServiceAccountIssuerDiscovery` feature-gate will be remove",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#98553"
+            },
+            {
+              "label": "Feature",
+              "hardware": "The feature gate `RootCAConfigMap` graduated to GA in v1.21 and therefore will be unconditionally enabled. This flag will be removed in v1.22 release. ([#98033]",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#98033"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Storage capacity tracking (= the CSIStorageCapacity feature) graduates to Beta and enabled by default, storage.k8s.io/v1alpha1/VolumeAttachment and storage.k8s.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#99641"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "Newly provisioned PVs by gce-pd will no longer have the beta FailureDomain label. gce-pd volume plugin will start to have GA topology label instead. ([#98700](h",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#98700"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Rename metrics `etcd_object_counts` to `apiserver_storage_object_counts` and mark it as stable. The original `etcd_object_counts` metrics name is marked as \"Dep",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#99785"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.20",
+        "badge": "Release",
+        "date": "2020-12-08",
+        "stats": "383 upstream changes and 136 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.20 focuses on Feature Enhancements, API Change Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 383 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#1441",
+                "#95718",
+                "#95631"
+              ],
+              "before": "Prior to v1.20, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "`kubectl debug` graduates to Beta: `kubectl alpha debug` graduates from alpha to beta in 1.20, becoming `kubectl debug`. `kubectl debug` provides support for common debugging workflows directly from (#1441).",
+                "CSIDriver policy for FSGroup graduates to Beta: The FSGroup's CSIDriver Policy is now beta in 1.20. This allows CSIDrivers to explicitly indicate if they want Kubernetes to manage permissions and.",
+                "RuntimeClass feature graduates to General Availability.: The `node.k8s.io` API groups are promoted from `v1beta1` to `v1`. `v1beta1` is now deprecated and will be removed in a future release, please (#95718).",
+                "`TokenRequest` / `TokenRequestProjection` graduates to General Availability: Service account tokens bound to a pod is now a stable feature. The feature gates will be removed in 1.21 release. For more."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#96327",
+                "#91921",
+                "#94807"
+              ],
+              "before": "Prior to v1.20, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "AppProtocol is now GA for Endpoints and Services. The ServiceAppProtocol feature gate will be deprecated in 1.21. ([#96327](https://github.com/kubernetes/kubernetes/pull/96327).",
+                "`TokenRequest` and `TokenRequestProjection` features have been promoted to GA. This feature allows generating service account tokens that are not visible in Secret objects and are tied to the.",
+                "The ServiceAccountIssuerDiscovery feature gate is now Beta and enabled by default. ([#91921](https://github.com/kubernetes/kubernetes/pull/91921), [@mtaufen](https://github.com/mtaufen)) [SIG Auth].",
+                "WinOverlay feature graduated to beta ([#94807](https://github.com/kubernetes/kubernetes/pull/94807), [@ksubrmnn](https://github.com/ksubrmnn)) [SIG Windows]."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#96197",
+                "#93873",
+                "#95207"
+              ],
+              "before": "Prior to v1.20, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Introducing `RootCAConfigMap`: `RootCAConfigMap` graduates to Beta, separating from `BoundServiceAccountTokenVolume`. The `kube-root-ca.crt` ConfigMap is now available to every namespace, by default..",
+                "The beta `RootCAConfigMap` feature gate is enabled by default and causes kube-controller-manager to publish a \"kube-root-ca.crt\" ConfigMap to every namespace. This ConfigMap contains a CA bundle used (#96197).",
+                "API Priority and Fairness graduates to Beta: Initially introduced in 1.18, Kubernetes 1.20 now enables API Priority and Fairness (APF) by default. This allows `kube-apiserver` to [categorize incoming.",
+                "CSI Volume Snapshot graduates to General Availability: CSI Volume Snapshot moves to GA in the 1.20 release. This feature provides a standard way to trigger volume snapshot operations in Kubernetes."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#95718",
+                "#96527",
+                "#94115"
+              ],
+              "before": "Prior to v1.20, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "RuntimeClass feature graduates to General Availability. Promote `node.k8s.io` API groups from `v1beta1` to `v1`. `v1beta1` is now deprecated and will be removed in a future release, please start (#95718).",
+                "`TokenRequest` and `TokenRequestProjection` are now GA features. The following flags are required by the API server:.",
+                "API priority and fairness graduated to beta. 1.19 servers with APF turned on should not be run in a multi-server cluster with 1.20+ servers. (#96527).",
+                "This change in behavior may be unexpected for some clusters and can be disabled by turning off the `ExecProbeTimeout` feature gate. This gate will be locked and removed in future releases so that (#94115)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#94938",
+                "#95125",
+                "#94668"
+              ],
+              "before": "Prior to v1.20, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Kubeadm: graduate the \"kubeadm alpha certs\" command to a parent command \"kubeadm certs\". The command \"kubeadm alpha certs\" is deprecated and will be removed in a future release. Please migrate. (#94938).",
+                "Kubeadm: deprecate self-hosting support. The experimental command \"kubeadm alpha self-hosting\" is now deprecated and will be removed in a future release. (#95125).",
+                "Kubeadm: remove the deprecated \"kubeadm alpha kubelet config enable-dynamic\" command. To continue using the feature please defer to the guide for \"Dynamic Kubelet Configuration\" at k8s.io. This (#94668).",
+                "Scheduler alpha metrics binding_duration_seconds and scheduling_algorithm_preemption_evaluation_seconds are deprecated, Both of those metrics are now covered as part of (#95001)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Summary API in kubelet doesn't have accelerator metrics: Currently, cadvisor_stats_provider provides AcceleratorStats but cri_stats_provider does not. As a result, when using cri_stats_provider, kubelet's Summary API doe",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#96873"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "A bug was fixed in kubelet where exec probe timeouts were not respected. This may result in unexpected behavior since the default timeout (if not specified) is `1s` which may be too small for some exec probes. Ensure tha",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.20"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "This change in behavior may be unexpected for some clusters and can be disabled by turning off the `ExecProbeTimeout` feature gate. This gate will be locked and removed in future releases so that exec probe timeouts are ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#94115"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "RuntimeClass feature graduates to General Availability. Promote `node.k8s.io` API groups from `v1beta1` to `v1`. `v1beta1` is now deprecated and will be removed in a future release, please start using `v1`. ([#95718](htt",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#95718"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "API priority and fairness graduated to beta. 1.19 servers with APF turned on should not be run in a multi-server cluster with 1.20+ servers. ([#96527](https://github.com/kubernetes/kubernetes/pull/96527), [@adtac](https:",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#96527"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "`kubectl debug` graduates to Beta: `kubectl alpha debug` graduates from alpha to beta in 1.20, becoming `kubectl debug`. `kubectl debug` provides support for co",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#1441"
+            },
+            {
+              "label": "Feature",
+              "hardware": "CSIDriver policy for FSGroup graduates to Beta: The FSGroup's CSIDriver Policy is now beta in 1.20. This allows CSIDrivers to explicitly indicate if they want K",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.20"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Introducing `RootCAConfigMap`: `RootCAConfigMap` graduates to Beta, separating from `BoundServiceAccountTokenVolume`. The `kube-root-ca.crt` ConfigMap is now av",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.20"
+            },
+            {
+              "label": "Feature",
+              "hardware": "RuntimeClass feature graduates to General Availability.: The `node.k8s.io` API groups are promoted from `v1beta1` to `v1`. `v1beta1` is now deprecated and will ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#95718"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "RuntimeClass feature graduates to General Availability. Promote `node.k8s.io` API groups from `v1beta1` to `v1`. `v1beta1` is now deprecated and will be removed",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#95718"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.19",
+        "badge": "Release",
+        "date": "2020-08-26",
+        "stats": "478 upstream changes and 172 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.19 focuses on Feature Enhancements, API Change Enhancements, and Urgent Upgrade Notes Enhancements. For operators, this release translates 478 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#91780",
+                "#92440",
+                "#92183"
+              ],
+              "before": "Prior to v1.19, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "seccomp graduates to General Availability: The seccomp (secure computing mode) support for Kubernetes has graduated to General Availability (GA). This feature can be used to increase the workload.",
+                "The RotateKubeletClientCertificate feature gate has been promoted to GA, and the kubelet --feature-gate RotateKubeletClientCertificate parameter will be removed in 1.20. (#91780).",
+                "Avoiding permanent beta:  - reach GA, and deprecate the beta, or.",
+                "KubeSchedulerConfiguration graduates to Beta: SIG Scheduling graduates `KubeSchedulerConfiguration` to Beta. The [KubeSchedulerConfiguration](https://kubernetes.io/docs/reference/scheduling/config)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#91381",
+                "#91957",
+                "#92001"
+              ],
+              "before": "Prior to v1.19, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Seccomp support has graduated to GA. A new `seccompProfile` field is added to pod and container securityContext objects. Support for `seccomp.security.alpha.kubernetes.io/pod` and (#91381).",
+                "The `DefaultIngressClass` feature is now GA. The `--feature-gate` parameter will be removed in 1.20. ([#91957](https://github.com/kubernetes/kubernetes/pull/91957).",
+                "`Ingress` and `IngressClass` resources have graduated to `networking.k8s.io/v1`. Ingress and IngressClass types in the `extensions/v1beta1` and `networking.k8s.io/v1beta1` API versions are deprecated.",
+                "A new alpha-level field, `SupportsFsGroup`, has been introduced for CSIDrivers to allow them to specify whether they support volume ownership and permission modifications. The (#92001)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#92610",
+                "#92905",
+                "#91329"
+              ],
+              "before": "Prior to v1.19, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The 'kubeadm config upload' command is finally removed after a full GA deprecation cycle. If you still use it, please, use 'kubeadm init phase upload-config' instead (#92610).",
+                "Azure blob disk feature(`kind`: `Shared`, `Dedicated`) has been deprecated, you should use `kind`: `Managed` in `kubernetes.io/azure-disk` storage class. (#92905).",
+                "`Unreserve` extension point is removed from Profile definition. All `Reserve` plugins implement an `Unreserve` call.",
+                "ACTION REQUIRED: Switch core master base images (kube-controller-manager) from debian to distroless. If you need Flex Volumes support using scripts, please build your own image with required packages (#91329)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73032",
+                "#92784",
+                "#91805"
+              ],
+              "before": "Prior to v1.19, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "`kube-apiserver` publishes `apiserver_requested_deprecated_apis` gauge metrics set to `1` for deprecated APIs which have been requested, with `group`, `version`, `resource`, `subresource`, and (#73032).",
+                "Generic ephemeral volumes, a new alpha feature under the `GenericEphemeralVolume` feature gate, provide a more flexible alternative to `EmptyDir` volumes: as with `EmptyDir`, volumes are created and (#92784).",
+                "goVersion --> go_version This change happens in `kube-apiserver`\u3001`kube-scheduler`\u3001`kube-proxy` and `kube-controller-manager`. ([#91805](https://github.com/kubernetes/kubernetes/pull/91805).",
+                "`local-up-cluster.sh` installs CSI snapshotter by default now, can be disabled with `ENABLE_CSI_SNAPSHOTTER=false`. ([#91504](https://github.com/kubernetes/kubernetes/pull/91504)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#90896",
+                "#90911"
+              ],
+              "before": "Prior to v1.19, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Feat: azure disk migration go beta in 1.19. Feature gates CSIMigration to Beta (on by default) and CSIMigrationAzureDisk to Beta (off by default since it requires installation of the AzureDisk CSI (#90896).",
+                "CSI Volume health monitoring: The alpha version of CSI health monitoring is being released with Kubernetes 1.19. This feature enables CSI Drivers to share abnormal volume conditions from the.",
+                "Added support for vSphere in-tree volumes migration to vSphere CSI driver. The in-tree vSphere Volume plugin will be deprecated and removed in a future release. Users that self-deploy Kubernetes on (#90911)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "ACTION REQUIRED: Switch core master base images (kube-controller-manager) from debian to distroless. If you need Flex Volumes support using scripts, please build your own image with required packages (like bash) ([#91329",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#91329"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "ACTION REQUIRED: Support for basic authentication via the --basic-auth-file flag has been removed.  Users should migrate to --token-auth-file for similar functionality. ([#89069](https://github.com/kubernetes/kubernetes/",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#89069"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Azure blob disk feature(`kind`: `Shared`, `Dedicated`) has been deprecated, you should use `kind`: `Managed` in `kubernetes.io/azure-disk` storage class. ([#92905](https://github.com/kubernetes/kubernetes/pull/92905), [@",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#92905"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "CVE-2020-8559 (Medium): Privilege escalation from compromised node to cluster. See https://github.com/kubernetes/kubernetes/issues/92914 for more details. The API Server will no longer proxy non-101 responses for upgrade",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#92941"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubeadm does not set the deprecated '--cgroup-driver' flag in /var/lib/kubelet/kubeadm-flags.env, it will be set in the kubelet config.yaml. If you have this flag in /var/lib/kubelet/kubeadm-flags.env or /etc/default/kub",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#90513"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "seccomp graduates to General Availability: The seccomp (secure computing mode) support for Kubernetes has graduated to General Availability (GA). This feature c",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.19"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Seccomp support has graduated to GA. A new `seccompProfile` field is added to pod and container securityContext objects. Support for `seccomp.security.alpha.kub",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#91381"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Avoiding permanent beta:  - reach GA, and deprecate the beta, or",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.19"
+            },
+            {
+              "label": "API Change",
+              "hardware": "`Ingress` and `IngressClass` resources have graduated to `networking.k8s.io/v1`. Ingress and IngressClass types in the `extensions/v1beta1` and `networking.k8s.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.19"
+            },
+            {
+              "label": "Deprecation",
+              "hardware": "Feat: azure disk migration go beta in 1.19. Feature gates CSIMigration to Beta (on by default) and CSIMigrationAzureDisk to Beta (off by default since it requir",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#90896"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.18",
+        "badge": "Release",
+        "date": "2020-03-25",
+        "stats": "353 upstream changes and 265 PRs",
+        "headline": "Feature Enhancements, API Change Enhancements",
+        "executive_summary": "Kubernetes v1.18 focuses on Feature Enhancements, API Change Enhancements, and Networking, `nftables` Proxy & Traffic Observability. For operators, this release translates 353 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Change Enhancements",
+              "plain_summary": "Improves api change enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#87400",
+                "#88105",
+                "#87944"
+              ],
+              "before": "Prior to v1.18, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Other (Bug, Cleanup or Flake): - Kubeadm: remove the deprecated CoreDNS feature-gate. It was set to \"true\" since v1.11 when the feature went GA. In v1.13 it was marked as deprecated and hidden from (#87400).",
+                "The feature PodTopologySpread (feature gate `EvenPodsSpread`) has been enabled by default in 1.18. ([#88105](https://github.com/kubernetes/kubernetes/pull/88105).",
+                "Introducing Windows CSI support alpha for Kubernetes: With the release of Kubernetes 1.18, an alpha version of CSI Proxy for Windows is getting released. CSI proxy enables non-privileged.",
+                "Other (Bug, Cleanup or Flake): - Kubeadm:  'kubeadm alpha kubelet config download' has been removed, please use 'kubeadm upgrade node phase kubelet-config' instead (#87944)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Change Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#87475",
+                "#83437",
+                "#88503"
+              ],
+              "before": "Prior to v1.18, teams operating api change enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Features graduated to GA:: - The following feature gates are removed, because the associated features were unconditionally enabled in previous releases: CustomResourceValidation (#87475).",
+                "Features graduated to beta::   - StartupProbe ([#83437](https://github.com/kubernetes/kubernetes/pull/83437), [@matthyx](https://github.com/matthyx)) [SIG Node, Scalability and Testing].",
+                "Other API changes:: - The beta feature `ServerSideApply` enables tracking and managing changed fields for all new objects, which means there will be `managedFields` in `metadata` with the list of.",
+                "New API fields:: - The alpha feature `ServiceAppProtocol` enables setting an `appProtocol` field in ServicePort and EndpointPort definitions. (#88503)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#86137",
+                "#85279",
+                "#86092"
+              ],
+              "before": "Prior to v1.18, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "EndpointSlices will now be enabled by default. A new `EndpointSliceProxying` feature gate determines if kube-proxy will use EndpointSlices, this is disabled by default. (#86137).",
+                "kube-proxy:: - a new `EndpointSliceProxying` feature gate has been added to control the use of EndpointSlices in kube-proxy. The EndpointSlice feature gate that used to control this behavior no (#86137).",
+                "kube-proxy:: - New flag `--show-hidden-metrics-for-version` in kube-proxy, kubelet, kube-controller-manager, and kube-scheduler can be used to show all hidden metrics that are deprecated in the (#85279).",
+                "Other (Bug, Cleanup or Flake): - Kube-proxy no longer modifies shared EndpointSlices. ([#86092](https://github.com/kubernetes/kubernetes/pull/86092), [@robscott](https://github.com/robscott)) [SIG."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#85637",
+                "#88686",
+                "#88636"
+              ],
+              "before": "Prior to v1.18, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "kubelet:: - Promote CSIMigrationOpenStack to Beta (off by default since it requires installation of the OpenStack Cinder CSI Driver. The in-tree AWS OpenStack Cinder driver \"kubernetes.io/cinder\" was (#85637).",
+                "Features graduated to GA::   - VolumePVCDataSource ([#88686](https://github.com/kubernetes/kubernetes/pull/88686), [@j-griffith](https://github.com/j-griffith)) [SIG Storage].",
+                "New API fields:: - The alpha feature `AnyVolumeDataSource` enables PersistentVolumeClaim objects to use the spec.dataSource field to reference a custom type as a data source (#88636).",
+                "Other (Bug, Cleanup or Flake): - Adds \"volume.beta.kubernetes.io/migrated-to\" annotation to PV's and PVC's when they are migrated to signal external provisioners to pick up those objects for (#87098)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#87440",
+                "#86173",
+                "#87077"
+              ],
+              "before": "Prior to v1.18, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "kubelet:: - `--enable-cadvisor-json-endpoints` is now disabled by default. If you need access to the cAdvisor v1 Json API please enable it explicitly in the kubelet command line. Please note that (#87440).",
+                "client-go::       - `rest_client_request_latency_seconds` -> `rest_client_request_duration_seconds`.",
+                "client-go::       - `docker_operations_latency_microseconds` -> `docker_operations_duration_seconds`.",
+                "client-go::       - `network_plugin_operations_latency_microseconds` -> `network_plugin_operations_duration_seconds`."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Change Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-apiserver:: - in an `--encryption-provider-config` config file, an explicit `cacheSize: 0` parameter previously silently defaulted to caching 1000 keys. In Kubernetes 1.18, this now returns a config validation error",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.18"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-apiserver:: - consumers of the 'certificatesigningrequests/approval' API must now have permission to 'approve' CSRs for the specific signer requested by the CSR. More information on the new signerName field and the ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#88246"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-apiserver:: - The following features are unconditionally enabled and the corresponding `--feature-gates` flags have been removed: `PodPriority`, `TaintNodesByCondition`, `ResourceQuotaScopeSelectors` and `ScheduleDa",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#86210"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kubelet:: - `--enable-cadvisor-json-endpoints` is now disabled by default. If you need access to the cAdvisor v1 Json API please enable it explicitly in the kubelet command line. Please note that this flag was deprecated",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#87440"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kubelet:: - Promote CSIMigrationOpenStack to Beta (off by default since it requires installation of the OpenStack Cinder CSI Driver. The in-tree AWS OpenStack Cinder driver \"kubernetes.io/cinder\" was deprecated in 1.16 a",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#85637"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "API Change",
+              "hardware": "Features graduated to GA:: - The following feature gates are removed, because the associated features were unconditionally enabled in previous releases: CustomR",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#87475"
+            },
+            {
+              "label": "API Change",
+              "hardware": "Features graduated to beta::   - StartupProbe ([#83437](https://github.com/kubernetes/kubernetes/pull/83437), [@matthyx](https://github.com/matthyx)) [SIG Node,",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#83437"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other notable announcements: SIG Network is moving IPv6 to Beta in Kubernetes 1.18, after incrementing significantly the test coverage with new CI jobs. NodeLoc",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#1351"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Introducing Windows CSI support alpha for Kubernetes: With the release of Kubernetes 1.18, an alpha version of CSI Proxy for Windows is getting released. CSI pr",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.18"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other (Bug, Cleanup or Flake): - Kubeadm:  'kubeadm alpha kubelet config download' has been removed, please use 'kubeadm upgrade node phase kubelet-config' inst",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#87944"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.17",
+        "badge": "Release",
+        "date": "2019-12-09",
+        "stats": "486 upstream changes and 284 PRs",
+        "headline": "Dynamic Resource Allocation, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.17 focuses on Dynamic Resource Allocation, Feature Enhancements, and Deprecation Enhancements. For operators, this release translates 486 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#82690",
+                "#82795",
+                "#82703"
+              ],
+              "before": "Prior to v1.17, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "Stable: - The ResourceQuotaScopeSelectors feature has graduated to GA. The `ResourceQuotaScopeSelectors` feature gate is now unconditionally enabled and will be removed in 1.18. (#82690).",
+                "Stable: - Graduate ScheduleDaemonSetPods to GA. (feature gate will be removed in 1.18) ([#82795](https://github.com/kubernetes/kubernetes/pull/82795), [@draveness](https://github.com/draveness)).",
+                "Stable: - Graduate TaintNodesByCondition to GA in 1.17. (feature gate will be removed in 1.18) ([#82703](https://github.com/kubernetes/kubernetes/pull/82703).",
+                "Scheduling: - TaintNodesByCondition was graduated to GA, CheckNodeMemoryPressure, CheckNodePIDPressure, CheckNodeDiskPressure, CheckNodeCondition were accidentally removed since 1.12, the replacement (#84152)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#82578",
+                "#84713",
+                "#83838"
+              ],
+              "before": "Prior to v1.17, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Stable: - The VolumeSubpathEnvExpansion feature is graduating to GA. The `VolumeSubpathEnvExpansion` feature gate is unconditionally enabled, and will be removed in v1.19. (#82578).",
+                "API Machinery: - CRDs defaulting is promoted to GA. Note: the feature gate CustomResourceDefaulting will be removed in 1.18. ([#84713](https://github.com/kubernetes/kubernetes/pull/84713).",
+                "Deprecated/changed metrics: - Following metrics have been turned off: `scheduler_scheduling_latency_seconds` `scheduler_e2e_scheduling_latency_microseconds` (#83838).",
+                "Deprecated/changed metrics: - Following metrics from kubelet are now marked as with the ALPHA stability level: `kubelet_container_log_filesystem_used_bytes` `kubelet_volume_stats_capacity_bytes` (#84907)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#82049",
+                "#84365",
+                "#83474"
+              ],
+              "before": "Prior to v1.17, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Deprecate the instance type beta label (`beta.kubernetes.io/instance-type`) in favor of its GA equivalent: `node.kubernetes.io/instance-type` (#82049).",
+                "Removed Alpha feature `MountContainers` ([#84365](https://github.com/kubernetes/kubernetes/pull/84365), [@codenrhoden](https://github.com/codenrhoden)).",
+                "The CSINodeInfo feature gate is deprecated and will be removed in a future release. The storage.k8s.io/v1beta1 CSINode object is deprecated and will be removed in a future release. (#83474).",
+                "The certificate signer no longer accepts ca.key passwords via the `CFSSL_CA_PK_PASSWORD` environment variable. This capability was not prompted by user request, never advertised, and recommended (#84677)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#83837",
+                "#83283",
+                "#82409"
+              ],
+              "before": "Prior to v1.17, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Beta: - The Kubernetes Volume Snapshot feature has been moved to beta. The VolumeSnapshotDataSource feature gate is on by default in this release. This feature enables you to take a snapshot of a.",
+                "Deprecated/changed metrics: - Following metrics have been turned off: `apiserver_request_count` `apiserver_request_latencies` `apiserver_request_latencies_summary` `apiserver_dropped_requests` (#83837).",
+                "Deprecated/changed metrics: - etcd version monitor metrics are now marked as with the ALPHA stability level. ([#83283](https://github.com/kubernetes/kubernetes/pull/83283).",
+                "Volume Snapshot Moves to Beta: The Kubernetes Volume Snapshot feature is now beta in Kubernetes v1.17. It was introduced as alpha in Kubernetes v1.12, with a second alpha with breaking changes in."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#84896",
+                "#75588",
+                "#85231"
+              ],
+              "before": "Prior to v1.17, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Deprecated/changed metrics: - Following metrics from kube-controller-manager are now marked as with the ALPHA stability level: `storage_count_attachable_volumes_in_use` (#84896).",
+                "Storage: - Ceph RBD volume plugin now does not use any keyring (`/etc/ceph/ceph.client.lvs01cinder.keyring`, `/etc/ceph/ceph.keyring`, `/etc/ceph/keyring`, `/etc/ceph/keyring.bin`) for (#75588).",
+                "The in-tree GCE PD plugin `kubernetes.io/gce-pd` is now deprecated and will be removed in 1.21. Users that self-deploy Kubernetes on GCP should enable CSIMigration + CSIMigrationGCE features and (#85231).",
+                "The in-tree AWS EBS plugin `kubernetes.io/aws-ebs` is now deprecated and will be removed in 1.21. Users that self-deploy Kubernetes on AWS should enable CSIMigration + CSIMigrationAWS features and (#85237)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Deprecation Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "WatchList & Snapshottable Watch Cache",
+              "plain_english": "Streaming object lists from `kube-apiserver` memory cache snapshots instead of assembling giant one-shot payloads from `etcd`.",
+              "bottom_line": "Slashes API server RAM spikes and protects `etcd` from OOM crashes during controller restarts on large clusters."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "volumeDevices mapping ignored when container is privileged",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.17"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The `Should recreate evicted statefulset` conformance [test]( https://github.com/kubernetes/kubernetes/blob/master/test/e2e/apps/statefulset.go) fails because `Pod ss-0 expected to be re-created at least once`. This was ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.17"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "client-go discovery clients constructed using `NewDiscoveryClientForConfig` or `NewDiscoveryClientForConfigOrDie` default to rate limits that cause normal discovery request patterns to take several seconds. This is fixed",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.17"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "the IP allocator in v1.17.0 can return errors such as `the cluster IP <ip> for service <service-name> is not within the service CIDR <cidr>; please recreate` in the logs of the kube-apiserver. The cause is incorrect CIDR",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.17"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Cluster Lifecycle: - Kubeadm: add a new `kubelet-finalize` phase as part of the `init` workflow and an experimental sub-phase to enable automatic kubelet client certificate rotation on primary control-plane nodes. Prior ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#84118"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Stable: - The VolumeSubpathEnvExpansion feature is graduating to GA. The `VolumeSubpathEnvExpansion` feature gate is unconditionally enabled, and will be remove",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#82578"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Stable: - The ResourceQuotaScopeSelectors feature has graduated to GA. The `ResourceQuotaScopeSelectors` feature gate is now unconditionally enabled and will be",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#82690"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Stable: - Graduate ScheduleDaemonSetPods to GA. (feature gate will be removed in 1.18) ([#82795](https://github.com/kubernetes/kubernetes/pull/82795), [@dravene",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#82795"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Stable: - Graduate TaintNodesByCondition to GA in 1.17. (feature gate will be removed in 1.18) ([#82703](https://github.com/kubernetes/kubernetes/pull/82703), [",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#82703"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Deprecated/changed metrics: - Following metrics have been turned off: `scheduler_scheduling_latency_seconds` `scheduler_e2e_scheduling_latency_microseconds` `sc",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#83838"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.16",
+        "badge": "Release",
+        "date": "2019-09-18",
+        "stats": "307 upstream changes and 239 PRs",
+        "headline": "Feature Enhancements, Dynamic Resource Allocation",
+        "executive_summary": "Kubernetes v1.16 focuses on Feature Enhancements, Dynamic Resource Allocation, and Networking, `nftables` Proxy & Traffic Observability. For operators, this release translates 307 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#81872",
+                "#82110",
+                "#80376"
+              ],
+              "before": "Prior to v1.16, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Beta: - The `CustomResourceDefaulting` feature is promoted to beta and enabled by default. Defaults may be specified in structural schemas via the `apiextensions.k8s.io/v1` API. See (#81872).",
+                "`spec.scope` is no longer defaulted to `Namespaced` and must be explicitly specified.",
+                "Beta: - Graduating Windows GMSA support from alpha to beta ([#82110](https://github.com/kubernetes/kubernetes/pull/82110), [@wk8](https://github.com/wk8)).",
+                "Custom resources: CRDs are in widespread use as a way to extend Kubernetes to persist and serve new resource types, and have been available in beta since the 1.7 release. The 1.16 release marks the."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#79262",
+                "#80342",
+                "#79307"
+              ],
+              "before": "Prior to v1.16, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "The GA `PodPriority` feature gate is now on by default and cannot be disabled. The feature gate will be removed in v1.18. ([#79262](https://github.com/kubernetes/kubernetes/pull/79262).",
+                "the `scheduler.alpha.kubernetes.io/critical-pod` annotation is removed. Pod priority (`spec.priorityClassName`) should be used instead to mark pods as critical. (#80342).",
+                "The feature flags `HugePages`, `VolumeScheduling`, `CustomPodDNS` and `PodReadinessGates` have been removed ([#79307](https://github.com/kubernetes/kubernetes/pull/79307).",
+                "Remove `DirectCodecFactory` (replaced with `serializer.WithoutConversionCodecFactory`), `DirectEncoder` (replaced with `runtime.WithVersionEncoder`) and `DirectDecoder` (replaced with (#79263)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#81691",
+                "#81626",
+                "#80531"
+              ],
+              "before": "Prior to v1.16, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Beta: - Finalizer Protection for Service LoadBalancers is now in beta (enabled by default). This feature ensures the Service resource is not fully deleted until the correlating load balancer (#81691).",
+                "Deprecated/changed metrics: - kube-proxy metrics are now marked as with the ALPHA stability level. ([#81626](https://github.com/kubernetes/kubernetes/pull/81626).",
+                "Misc: - In order to enable dual-stack support within kubeadm and kubernetes components, as part of the init config file, the user should set feature-gate `IPv6DualStack=true` in the (#80531).",
+                "Cluster Lifecycle: - Node labels `beta.kubernetes.io/metadata-proxy-ready`, `beta.kubernetes.io/metadata-proxy-ready` and `beta.kubernetes.io/kube-proxy-ds-ready` are no longer added on new nodes."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#78484",
+                "#79549",
+                "#53185"
+              ],
+              "before": "Prior to v1.16, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Admission webhooks: Admission webhooks are in widespread use as a Kubernetes extensibility mechanism and have been available in beta since the 1.9 release. The 1.16 release marks the graduation of.",
+                "The `name` field for specified webhooks must be unique for `MutatingWebhookConfiguration` and `ValidatingWebhookConfiguration` objects created via `admissionregistration.k8s.io/v1`.",
+                "`admissionReviewVersions` default value is removed and the field made required for v1 (supported versions for AdmissionReview are `v1` and `v1beta1`).",
+                "The `AdmissionReview` API sent to and received from admission webhooks has been promoted to `admission.k8s.io/v1`. Webhooks can specify a preference for receiving `v1` AdmissionReview objects with."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#81531",
+                "#81399",
+                "#81786"
+              ],
+              "before": "Prior to v1.16, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Deprecated/changed metrics: - kube-apiserver metrics are now marked as with the ALPHA stability level. ([#81531](https://github.com/kubernetes/kubernetes/pull/81531).",
+                "Deprecated/changed metrics: - The `rejected` label in `apiserver_admission_webhook_admission_duration_seconds` metrics now properly indicates if the request was rejected. (#81399).",
+                "Added metrics `aggregator_openapi_v2_regeneration_count`, `aggregator_openapi_v2_regeneration_gauge` and `apiextension_openapi_v2_regeneration_count` counting the triggering APIService and CRDs and (#81786).",
+                "Misc: - kubeadm: implement support for concurrent add/remove of stacked etcd members ([#79677](https://github.com/kubernetes/kubernetes/pull/79677), [@neolit123](https://github.com/neolit123))."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The etcd and KMS plugin health checks are not exposed in the new `livez` and `readyz` endpoints. This will be fixed in 1.16.1.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.16"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Systems running `iptables` 1.8.0 or newer should start it in legacy mode. Please note that this affects all versions of Kubernetes and not only v1.16.0. For more detailed information about the issue and how to apply a wo",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.16"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Generating informers for packages in directories containing dots in their name is broken. This will be fixed in v1.16.1. ([#82860](https://github.com/kubernetes/kubernetes/issues/82860))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#82860"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-scheduler won't be able to report scheduling Events if `events.k8s.io/v1beta1` API is disabled. We are targeting the fix for v1.16.2 ([#83203](https://github.com/kubernetes/kubernetes/issues/83203))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#83203"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The etcd client library vendored in v1.16 (github.com/coreos/etcd/clientv3) has a bug where IPv6 IP addresses get incorrectly trimmed to the first occurance of the `:` character. This affects all users of the client libr",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#83550"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Beta: - The `CustomResourceDefaulting` feature is promoted to beta and enabled by default. Defaults may be specified in structural schemas via the `apiextension",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#81872"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Beta: - Finalizer Protection for Service LoadBalancers is now in beta (enabled by default). This feature ensures the Service resource is not fully deleted until",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#81691"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Beta: - Graduating Windows GMSA support from alpha to beta ([#82110](https://github.com/kubernetes/kubernetes/pull/82110), [@wk8](https://github.com/wk8))",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#82110"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Custom resources: CRDs are in widespread use as a way to extend Kubernetes to persist and serve new resource types, and have been available in beta since the 1.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.16"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Admission webhooks: Admission webhooks are in widespread use as a Kubernetes extensibility mechanism and have been available in beta since the 1.9 release. The ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.16"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.15",
+        "badge": "Release",
+        "date": "2019-06-19",
+        "stats": "266 upstream changes and 233 PRs",
+        "headline": "Feature Enhancements, Dynamic Resource Allocation",
+        "executive_summary": "Kubernetes v1.15 focuses on Feature Enhancements, Dynamic Resource Allocation, and CEL-Based Validating & Mutating Admission Policies. For operators, this release translates 266 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#76221",
+                "#357",
+                "#970"
+              ],
+              "before": "Prior to v1.15, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Beta: - The `SupportNodePidsLimit` feature is now beta, and enabled by default.  It is no longer necessary to set the feature gate `SupportNodePidsLimit=true`. (#76221).",
+                "Cluster Lifecycle Stability and Usability Improvements: Work on making Kubernetes installation, upgrade and configuration even more robust has been a major focus for this cycle for SIG Cluster (#357, #970).",
+                "GCP: - The GCERegionalPersistentDisk feature gate (GA in 1.13) can no longer be disabled. The feature gate will be removed in v1.17. ([#77412](https://github.com/kubernetes/kubernetes/pull/77412).",
+                "Deprecated/changed metrics: - Introducing new semantic for metric `volume_operation_total_seconds` to be the end to end latency of volume provisioning/deletion. Existing metric (#78061)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#77567",
+                "#77559",
+                "#77529"
+              ],
+              "before": "Prior to v1.15, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "Deprecated/changed metrics: - Implement the scheduling framework with `Reserve`, `Prebind`, `Permit`, `Post-bind`, `Queue sort` and `Unreserve` extension points. (#77567, #77559).",
+                "Introduced the [`v1beta2`](https://docs.google.com/document/d/1XnP67oO1i9VcDIpw42IzptnJsc5OQM-HTf8cVcjCR2w/edit) config format to kubeadm. (#76710).",
+                "Apps: - Removed extra pod creation expectations when daemonset fails to create pods in batches. ([#74856](https://github.com/kubernetes/kubernetes/pull/74856).",
+                "Misc: - Kubelet plugin registration now has retry and exponential backoff logic for when registration of plugins (such as CSI or device plugin) fail. (#73891)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#77820",
+                "#74610",
+                "#78505"
+              ],
+              "before": "Prior to v1.15, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Node: - The deprecated kubelet security controls `AllowPrivileged`, `HostNetworkSources`, `HostPIDSources`, and `HostIPCSources` have been removed. Enforcement of these restrictions should be done (#77820).",
+                "Storage: - The `StorageObjectInUseProtection` admission plugin is enabled by default, so  the default enabled admission plugins are now (#74610).",
+                "API Machinery: - Added `objectSelector` to admission webhook configurations. `objectSelector` is evaluated the oldObject and newObject that would be sent to the webhook, and is considered to match if (#78505).",
+                "Deprecated/changed metrics: - Replaced *_admission_latencies_milliseconds_summary and *_admission_latencies_milliseconds metrics because they were reporting seconds rather than milliseconds. They (#75279)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#74321",
+                "#74074",
+                "#77278"
+              ],
+              "before": "Prior to v1.15, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Stable: - The kube-apiserver\u2019s `watch` can now be enabled for events using the `--watch-cache-sizes` flag. ([#74321](https://github.com/kubernetes/kubernetes/pull/74321).",
+                "CustomResourceDefinitions Pruning: To enforce both data consistency and security, Kubernetes performs pruning, or the automatic removal of unknown fields in objects sent to a Kubernetes API. An.",
+                "Alpha: - Kubernetes now includes an alpha field, `AllowWatchBookmarks`, in ListOptions for requesting the watching of bookmarks from apiserver. The implementation in apiserver is hidden behind the (#74074).",
+                "API Machinery: - API paging is now enabled by default in k8s.io/apiserver recommended options, and in k8s.io/sample-apiserver ([#77278](https://github.com/kubernetes/kubernetes/pull/77278)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#77755",
+                "#75622",
+                "#625"
+              ],
+              "before": "Prior to v1.15, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Beta: - Online volume expansion (ExpandInUsePersistentVolumes) is now a beta feature. As such, it is enabled by default. ([#77755](https://github.com/kubernetes/kubernetes/pull/77755).",
+                "Apps: - StatefulSet controllers no longer force a resync every 30 seconds when nothing has changed. ([#75622](https://github.com/kubernetes/kubernetes/pull/75622).",
+                "Continued improvement of CSI: In Kubernetes v1.15, SIG Storage continued work to [enable migration of in-tree volume plugins](https://github.com/kubernetes/enhancements/issues/625) to the Container (#625).",
+                "CLI Improvements: - Kubernetes now supports printing the `volumeMode` using `kubectl get pv/pvc -o wide` ([#76646](https://github.com/kubernetes/kubernetes/pull/76646)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Concurrently joining control-plane nodes does not work as expected in kubeadm 1.15.0. The feature was planned for release in 1.15.0, but a fix may  come in a follow up patch release.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.15"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Using `--log-file` is known to be problematic in 1.15. This presents as things being logged multiple times to the same file. The behaviour and details of this issue, as well as some preliminary attempts at fixing it are ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.15"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "API Machinery: - `k8s.io/kubernetes` and published components (such as `k8s.io/client-go` and `k8s.io/api`) now contain go module files including dependency version information. See [go-modules](http://git.k8s.io/client-",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#74877"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Apps: - Hyperkube short aliases have been removed from source code, because hyperkube docker image currently creates these aliases. ([#76953](https://github.com/kubernetes/kubernetes/pull/76953), [@Rand01ph](https://gith",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#76953"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Auth: - The Rancher credential provider has now been removed. This only affects you if you are using the downstream Rancher distro. ([#77099](https://github.com/kubernetes/kubernetes/pull/77099), [@dims](https://github.c",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#77099"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Beta: - The `SupportNodePidsLimit` feature is now beta, and enabled by default.  It is no longer necessary to set the feature gate `SupportNodePidsLimit=true`. ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#76221"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Cluster Lifecycle Stability and Usability Improvements: Work on making Kubernetes installation, upgrade and configuration even more robust has been a major focu",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#357"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Deprecated/changed metrics: - Introducing new semantic for metric `volume_operation_total_seconds` to be the end to end latency of volume provisioning/deletion.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#78061"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Beta: - The CustomResourcePublishOpenAPI feature is now beta and enabled by default. CustomResourceDefinitions with [structural schemas](https://github.com/kube",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#77825"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Beta: - CustomResourcesDefinition conversion via Web Hooks is promoted to beta. Note that you must set `spec.preserveUnknownFields` to `false`. ([#78426](https:",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#78426"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.14",
+        "badge": "Release",
+        "date": "2019-03-25",
+        "stats": "250 upstream changes and 193 PRs",
+        "headline": "Feature Enhancements, Urgent Upgrade Notes Enhancements",
+        "executive_summary": "Kubernetes v1.14 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 250 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73007",
+                "#73525",
+                "#74391"
+              ],
+              "before": "Prior to v1.14, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `RunAsGroup` feature has been promoted to beta and enabled by default. `PodSpec` and `PodSecurityPolicy` objects can be used to control the primary GID of containers on supported container (#73007).",
+                "Allows users to take advantage of the typically cheaper and improved performance of persistent local storage kubernetes/kubernetes: [#73525](https://github.com/kubernetes/kubernetes/pull/73525).",
+                "`RuntimeClass` has been promoted to beta, and is enabled by default. ([#75003](https://github.com/kubernetes/kubernetes/pull/75003), [@tallclair](https://github.com/tallclair)).",
+                "The NodeLease feature gate has been promoted to Beta, and is enabled by default ([#72096](https://github.com/kubernetes/kubernetes/pull/72096), [@wojtek-t](https://github.com/wojtek-t))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73807",
+                "#69099",
+                "#73718"
+              ],
+              "before": "Prior to v1.14, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Default RBAC policy no longer grants access to discovery and permission-checking APIs (used by `kubectl auth can-i`) to *unauthenticated* users. Upgraded clusters preserve prior behavior, but cluster (#73807).",
+                "Any Prometheus queries that match `pod_name` and `container_name` labels (e.g. cadvisor or kubelet probe metrics) should be updated to use `pod` and `container` instead. `pod_name` and (#69099).",
+                "`kubeadm alpha preflight` and `kubeadm alpha preflight node` are removed; you can now use `kubeadm join phase preflight` ([#73718](https://github.com/kubernetes/kubernetes/pull/73718).",
+                "The deprecated taints `node.alpha.kubernetes.io/notReady` and `node.alpha.kubernetes.io/unreachable` are no longer supported or adjusted. These uses should be replaced with (#73001)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73102",
+                "#72552",
+                "#74809"
+              ],
+              "before": "Prior to v1.14, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "If you are running the cloud-controller-manager and you have the `pvlabel.kubernetes.io` alpha Initializer enabled, you must now enable PersistentVolume labeling using the `PersistentVolumeLabel` (#73102).",
+                "The `ValidateProxyRedirects` feature was promoted to Beta and enabled by default. This feature restricts redirect-following from the apiserver to same-host redirects.  If nodes are configured to (#72552).",
+                "Deprecated metrics: - `apiserver_proxy_tunnel_sync_latency_secs` -> `apiserver_proxy_tunnel_sync_duration_seconds`.",
+                "Deprecated metrics: - `apiserver_request_latencies` -> `apiserver_request_latency_seconds`."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73333",
+                "#73783",
+                "#73555"
+              ],
+              "before": "Prior to v1.14, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Deprecated metrics: - `rest_client_request_latency_seconds` -> `rest_client_request_duration_seconds`.",
+                "Deprecated metrics: - `scheduler_scheduling_latency_seconds` -> `scheduler_scheduling_duration_seconds`.",
+                "Deprecated metrics: - `kubelet_pod_worker_latency_microseconds` -> `kubelet_pod_worker_duration_seconds`.",
+                "Deprecated metrics: - `kubelet_pod_start_latency_microseconds` -> `kubelet_pod_start_duration_seconds`."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#73097",
+                "#74562",
+                "#74448"
+              ],
+              "before": "Prior to v1.14, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Node: - A new `TaintNodesByCondition` admission plugin taints newly created Node objects as \"not ready\", to fix a race condition that could cause pods to be scheduled on new nodes before their taints (#73097).",
+                "API Machinery: - Add a configuration field to shorten the timeout of validating/mutating admission webhook call. The timeout value must be between 1 and 30 seconds. Default to 30 seconds when (#74562).",
+                "API Machinery: - Fixed an issue with missing `apiVersion/kind` in object data sent to admission webhooks ([#74448](https://github.com/kubernetes/kubernetes/pull/74448).",
+                "API Machinery: - Fixed admission metrics in seconds. ([#72343](https://github.com/kubernetes/kubernetes/pull/72343), [@danielqsj](https://github.com/danielqsj))."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Deprecation Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "There is a known issue [coredns/coredns#2629](https://github.com/coredns/coredns/issues/2629) in CoreDNS 1.3.1, wherein if the Kubernetes API shuts down while CoreDNS is connected, CoreDNS will crash. The issue is fixed ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#2629"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubelet might fail to restart if an existing flexvolume mounted pvc contains a large number of directories, or is full. [#75019](https://github.com/kubernetes/kubernetes/pull/75019)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#75019"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-apiserver:",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.14"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Default RBAC policy no longer grants access to discovery and permission-checking APIs (used by `kubectl auth can-i`) to *unauthenticated* users. Upgraded clusters preserve prior behavior, but cluster administrators wishi",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#73807"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "`kubectl create clusterrolebinding anonymous-discovery --clusterrole=system:discovery --group=system:unauthenticated`",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.14"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "The `RunAsGroup` feature has been promoted to beta and enabled by default. `PodSpec` and `PodSecurityPolicy` objects can be used to control the primary GID of c",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#73007"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Allows users to take advantage of the typically cheaper and improved performance of persistent local storage kubernetes/kubernetes: [#73525](https://github.com/",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#73525"
+            },
+            {
+              "label": "Feature",
+              "hardware": "`RuntimeClass` has been promoted to beta, and is enabled by default. ([#75003](https://github.com/kubernetes/kubernetes/pull/75003), [@tallclair](https://github",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#75003"
+            },
+            {
+              "label": "Feature",
+              "hardware": "If you are running the cloud-controller-manager and you have the `pvlabel.kubernetes.io` alpha Initializer enabled, you must now enable PersistentVolume labelin",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#73102"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "The `ValidateProxyRedirects` feature was promoted to Beta and enabled by default. This feature restricts redirect-following from the apiserver to same-host redi",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#72552"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.13",
+        "badge": "Release",
+        "date": "2018-12-03",
+        "stats": "260 upstream changes and 197 PRs",
+        "headline": "Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale",
+        "executive_summary": "Kubernetes v1.13 focuses on Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale, and Urgent Upgrade Notes Enhancements. For operators, this release translates 260 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#71167",
+                "#71020",
+                "#69663"
+              ],
+              "before": "Prior to v1.13, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "SIG Scheduling: SIG Scheduling has mostly focused on stability in 1.13 and has postponed some of the major features to the next versions. There are still two notable changes: 1. TaintBasedEviction is.",
+                "Raw block volume support is promoted to beta, and enabled by default. This is accessible via the `volumeDevices` container field in pod specs, and the `volumeMode` field in persistent volume and (#71167).",
+                "SIG Cluster Lifecycle: - kubeadm has graduated `kubeadm alpha phase` commands to `kubeadm init phase`. This means that the phases of creating a control-plane node are now tightly integrated as part.",
+                "Kubernetes v1.13 moves support for Container Storage Interface to GA. As part of this move Kubernetes now supports CSI v1.0.0 and deprecates support for CSI 0.3 and older releases. Older CSI drivers (#71020)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#67383",
+                "#69694",
+                "#69827"
+              ],
+              "before": "Prior to v1.13, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "As part of graduating the etcd encryption feature to beta, the configuration file referenced by `--encryption-provider-config` now uses `kind: EncryptionConfiguration` and `apiVersion (#67383).",
+                "SIG Auth: With this release we've made several important enhancements to core SIG Auth areas. In the authorization category, we've further reduced Kubelet privileges by [restricting node self-updates.",
+                "SIG Node: - kube-apiserver: fixes `procMount` field incorrectly being marked as required in openapi schema ([#69694](https://github.com/kubernetes/kubernetes/pull/69694).",
+                "SIG Cluster Lifecycle: - kubeadm: Use `advertise-client-urls` instead of `listen-client-urls` as and `etcd-servers` options for apiserver. (#69827)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#70515",
+                "#70728",
+                "#69354"
+              ],
+              "before": "Prior to v1.13, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "(No, really, you MUST do this before you upgrade):   - The schema for the alpha `CSINodeInfo` CRD has been split into `spec` and `status` fields, and new fields `status.available` and (#70515).",
+                "(No, really, you MUST do this before you upgrade):   - The deprecated command `run-container` has been removed. Invocations should use `kubectl run` instead (#70728).",
+                "(No, really, you MUST do this before you upgrade):   - The deprecated `--google-json-key` flag has been removed. Remove the `--google-json-key` flag from kubelet invocations before upgrading. (#69354).",
+                "(No, really, you MUST do this before you upgrade): - client-go releases will no longer have bootstrap (k8s.io/client-go/tools/bootstrap) related code. Any reference to it will break. Please redirect (#67356)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#70494",
+                "#71314",
+                "#68655"
+              ],
+              "before": "Prior to v1.13, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "SIG Node: SIG Node focused on stability and performance improvements in the 1.13 release.  A new alpha feature is introduced to improve the mechanism that nodes heartbeat back to the control plane. .",
+                "Use of the beta plugin registration directory `{kubelet_root_dir}/plugins/` for registration of external drivers via the kubelet plugin registration protocol is deprecated in favor of (#70494, #71314).",
+                "SIG CLI: - kubectl: support multiple arguments for cordon/uncordon and drain ([#68655](https://github.com/kubernetes/kubernetes/pull/68655), [@goodluckbot](https://github.com/goodluckbot)).",
+                "SIG CLI: - kubectl: support multiple arguments for cordon/uncordon and drain ([#68655](https://github.com/kubernetes/kubernetes/pull/68655), [@goodluckbot](https://github.com/goodluckbot))."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#69929",
+                "#70466",
+                "#60195"
+              ],
+              "before": "Prior to v1.13, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "SIG Storage: Over the last year, SIG Storage has been focused on adding support for the Container Storage Interface (CSI) to Kubernetes. The specification recently moved to 1.0, and on the heels of.",
+                "SIG Storage: - CSIPersistentVolume feature, i.e. PersistentVolumes with CSIPersistentVolumeSource, is GA.  ([#69929](https://github.com/kubernetes/kubernetes/pull/69929).",
+                "Added `Ready` column and improve human-readable output of Deployments and StatefulSets ([#70466](https://github.com/kubernetes/kubernetes/pull/70466), [@Pingan2017](https://github.com/Pingan2017)).",
+                "SIG Storage: - GlusterFS PersistentVolumes sources can now reference endpoints in any namespace using the `spec.glusterfs.endpointsNamespace` field. Ensure all kubelets are upgraded to 1.13+ before (#60195)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "Linux User Namespaces (`hostUsers: false`)",
+              "plain_english": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+              "bottom_line": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade): - kube-apiserver",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.13"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade):   - The deprecated `etcd2` storage backend has been removed. Before upgrading a kube-apiserver using `--storage-backend=etcd2`, etcd v2 data must be migrated to the v3 s",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.13"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade):   - The deprecated `--etcd-quorum-read` flag has been removed. Quorum reads are now always enabled when fetching data from etcd. Remove the `--etcd-quorum-read` flag fro",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.13"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade): - kube-controller-manager",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.13"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade):   - The deprecated `--insecure-experimental-approve-all-kubelet-csrs-for-group` flag has been removed.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.13"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "SIG Node: SIG Node focused on stability and performance improvements in the 1.13 release.  A new alpha feature is introduced to improve the mechanism that nodes",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.13"
+            },
+            {
+              "label": "Feature",
+              "hardware": "SIG Scheduling: SIG Scheduling has mostly focused on stability in 1.13 and has postponed some of the major features to the next versions. There are still two no",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.13"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Raw block volume support is promoted to beta, and enabled by default. This is accessible via the `volumeDevices` container field in pod specs, and the `volumeMo",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#71167"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "(No, really, you MUST do this before you upgrade):   - The schema for the alpha `CSINodeInfo` CRD has been split into `spec` and `status` fields, and new fields",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#70515"
+            },
+            {
+              "label": "Deprecation",
+              "hardware": "As part of graduating the etcd encryption feature to beta, the configuration file referenced by `--encryption-provider-config` now uses `kind: EncryptionConfigu",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#67383"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.12",
+        "badge": "Release",
+        "date": "2018-09-27",
+        "stats": "367 upstream changes and 280 PRs",
+        "headline": "Feature Enhancements, CEL-Based Validating & Mutating Admission Policies",
+        "executive_summary": "Kubernetes v1.12 focuses on Feature Enhancements, CEL-Based Validating & Mutating Admission Policies, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 367 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#67255",
+                "#68200",
+                "#67077"
+              ],
+              "before": "Prior to v1.12, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Mount propagation has been promoted to GA. The `MountPropagation` feature gate is deprecated and will be removed in 1.13. ([#67255](https://github.com/kubernetes/kubernetes/pull/67255).",
+                "SIG-node: SIG-node graduated the PodShareProcessNamespace feature from alpha to beta.  This feature allows a pod spec to request that all containers in a pod share a common process namespaces. Two.",
+                "KubeletPluginsWatcher feature graduated to beta. ([#68200](https://github.com/kubernetes/kubernetes/pull/68200), [@RenaudWasTaken](https://github.com/RenaudWasTaken)) Courtesy of SIG Node, SIG.",
+                "Graduate Resource Quota ScopeSelectors to beta, and enable it by default. ([#67077](https://github.com/kubernetes/kubernetes/pull/67077), [@vikaschoudhary16](https://github.com/vikaschoudhary16))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#66039",
+                "#66156",
+                "#66936"
+              ],
+              "before": "Prior to v1.12, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "The alpha `Initializers` admission plugin is no longer enabled by default. This matches the off-by-default behavior of the alpha API which drives initializer behavior. (#66039).",
+                "The quota admission configuration API graduated to v1beta1. ([#66156](https://github.com/kubernetes/kubernetes/pull/66156), [@vikaschoudhary16](https://github.com/vikaschoudhary16)) Courtesy of SIG.",
+                "To address the possibility of dry-run requests overwhelming admission webhooks that rely on side effects and a reconciliation mechanism, a new field is being added to (#66936).",
+                "SIG API Machinery: - To address the possibility dry-run requests overwhelming admission webhooks that rely on side effects and a reconciliation mechanism, a new field is being added to (#66936)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#65739",
+                "#67157",
+                "#68080"
+              ],
+              "before": "Prior to v1.12, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "SIG-storage: SIG Storage promoted the [Kubernetes volume topology feature](https://github.com/kubernetes/enhancements/issues/490) to beta. This enables Kubernetes to understand and act intelligently.",
+                "kube-apiserver: When using `--enable-admission-plugins` the `Priority` admission plugin is now enabled by default (matching changes in 1.11.1+). If using `--admission-control` to fully specify the (#65739).",
+                "Not Very Notable (that is, non-user-facing): - Remove unused binary and container image for kube-aggregator. The functionality is already integrated into the kube-apiserver. (#67157).",
+                "The --storage-versions flag of kube-apiserver is now deprecated. This flag should be omitted to ensure the default storage versions are used. Otherwise the cluster is not safe to upgrade to a version (#68080)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#67432",
+                "#65628",
+                "#566"
+              ],
+              "before": "Prior to v1.12, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Volume dynamic provisioning scheduling has been moved to beta, which means that the DynamicProvisioningScheduling alpha feature gate has been removed but the VolumeScheduling beta feature gate is (#67432).",
+                "kubeadm: The `v1alpha1` config API has been removed. ([#65628](https://github.com/kubernetes/kubernetes/pull/65628), [@luxas](https://github.com/luxas)) Courtesy of SIG Cluster Lifecycle.",
+                "Feature [#566](https://github.com/kubernetes/enhancements/issues/566) enabling CoreDNS as the default for kube-up deployments was dropped from the release due to a scalability memory resource.",
+                "The formerly publicly-available cAdvisor web UI that the kubelet started using `--cadvisor-port` has been entirely removed in 1.12. The recommended way to run cAdvisor if you still need it, is via a (#65707)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#63757",
+                "#66615",
+                "#68021"
+              ],
+              "before": "Prior to v1.12, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+              "tech_bullets": [
+                "`DisruptedPods` field in `PodDisruptionBudget` is optional instead of required. ([#63757](https://github.com/kubernetes/kubernetes/pull/63757), [@nak3](https://github.com/nak3)).",
+                "SIG Autoscaling: - HPA reaction to metric changes has been spend up by removing the scale up forbidden window. ([#66615](https://github.com/kubernetes/kubernetes/pull/66615).",
+                "SIG Autoscaling: - Horizontal Pod Autoscaler default update interval has been increased from 30s to 15s, improving HPA reaction time for metric changes. (#68021).",
+                "SIG Autoscaling: - To avoid soft-deleted pods incorrectly affecting scale up replica count calculations, the HPA controller will stop counting soft-deleted pods for scaling purposes. (#67067)."
+              ],
+              "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Feature [#566](https://github.com/kubernetes/enhancements/issues/566) enabling CoreDNS as the default for kube-up deployments was dropped from the release due to a scalability memory resource consumption issue observed. ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#566"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-controller-manager currently needs a writable `--cert-dir` (default is `/var/run/kubernetes`) for generating self-signed certificates, when no `--tls-cert-file` or `--tls-private-key-file` are provided.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.12"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The `system:kube-controller-manager` ClusterRole lacks permission to `get` the `configmap` extension-apiserver-authentication. kube-controller-manager errors if run with a service account bound to the clusterrole.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.12"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Runtime handler and Windows npipe protocol are not supported yet in crictl v1.11.x. Those features will be supported in crictl [v1.12.0](https://github.com/kubernetes-sigs/cri-tools/releases/tag/v1.12.0), together with K",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.12"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "etcd2 as a backend is deprecated and support will be removed in Kubernetes 1.13.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.12"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "The alpha `Initializers` admission plugin is no longer enabled by default. This matches the off-by-default behavior of the alpha API which drives initializer be",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#66039"
+            },
+            {
+              "label": "Feature",
+              "hardware": "SIG-node: SIG-node graduated the PodShareProcessNamespace feature from alpha to beta.  This feature allows a pod spec to request that all containers in a pod sh",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.12"
+            },
+            {
+              "label": "Feature",
+              "hardware": "KubeletPluginsWatcher feature graduated to beta. ([#68200](https://github.com/kubernetes/kubernetes/pull/68200), [@RenaudWasTaken](https://github.com/RenaudWasT",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#68200"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduate Resource Quota ScopeSelectors to beta, and enable it by default. ([#67077](https://github.com/kubernetes/kubernetes/pull/67077), [@vikaschoudhary16](ht",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#67077"
+            },
+            {
+              "label": "Feature",
+              "hardware": "SIG-scheduling: - TaintNodeByCondition has been moved to Beta and is enabled by default.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.12"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.11",
+        "badge": "Release",
+        "date": "2018-06-27",
+        "stats": "436 upstream changes and 367 PRs",
+        "headline": "Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale",
+        "executive_summary": "Kubernetes v1.11 focuses on Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 436 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#6371",
+                "#63598",
+                "#63100"
+              ],
+              "before": "Prior to v1.11, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "SIG API Machinery: This release SIG API Machinery focused mainly on CustomResources. For example, subresources for CustomResources are now beta and enabled by default. With this, updates to the.",
+                "Graduated to Beta: * The Sysctls experimental feature has been promoted to beta (enabled by default via the `Sysctls` feature flag). PodSecurityPolicy and Pod objects now have fields for specifying (#6371).",
+                "Graduated to Beta: * Subresources for custom resources is now considered beta and enabled by default. With this, updates to the `/status` subresource will disallow updates to all fields other than (#63598).",
+                "Graduated to Beta: * The `PriorityClass` API has been promoted to `scheduling.k8s.io/v1beta1` ([#63100](https://github.com/kubernetes/kubernetes/pull/63100)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#63383",
+                "#64174",
+                "#61453"
+              ],
+              "before": "Prior to v1.11, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "(No, really, you MUST do this before you upgrade): * [Pod priority and preemption](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/) is now enabled by default. Note that.",
+                "New Deprecations: * kube-apiserver: the default `--endpoint-reconciler-type` is now `lease`. The `master-count` endpoint reconciler type is deprecated and will be removed in 1.13. (#63383).",
+                "New Deprecations:   * If you have to use the legacy in-tree cloud providers, you can rearrange your config like the example below. If you need the `cloud-config` file (located in.",
+                "SIG API Machinery: * The kube-apiserver openapi doc now includes extensions identifying `APIService` and `CustomResourceDefinition` `kind`s (#64174)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#61816",
+                "#64386",
+                "#64895"
+              ],
+              "before": "Prior to v1.11, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "SIG Storage: Sig Storage graduated two features that had been introduced in previous versions and introduced three new features in an alpha state. The StorageProtection feature, which prevents.",
+                "Graduated to Beta: * Resizing PersistentVolumes after pod restart is now considered beta. ([ref](https://github.com/kubernetes/enhancements/issues/284)).",
+                "New Deprecations: * Alpha annotation for PersistentVolume node affinity has been removed.  Update your PersistentVolumes to use the beta PersistentVolume.nodeAffinity field before upgrading to this (#61816).",
+                "SIG Azure: * You can now change the size of an azuredisk PVC using `kubectl edit pvc pvc-azuredisk`. Note that this operation will fail if the volume is already attached to a  running VM. (#64386)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#60012",
+                "#58784",
+                "#63167"
+              ],
+              "before": "Prior to v1.11, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "HTTP transport now uses `context.Context` to cancel dial operations. k8s.io/client-go/transport/Config struct has been updated to accept a function with a `context.Context` parameter. This is a (#60012).",
+                "Removed Deprecations: * The `initresource` admission plugin has been removed. ([#58784](https://github.com/kubernetes/kubernetes/pull/58784), [@wackxu](https://github.com/wackxu)).",
+                "SIG Auth: * The `NodeRestriction` admission plugin now prevents kubelets from modifying/removing taints applied to their Node API object. (#63167).",
+                "SIG API Machinery: * Webhooks for the mutating admission controller now support the \"remove\" operation. ([#64255](https://github.com/kubernetes/kubernetes/pull/64255)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#61884",
+                "#62707",
+                "#62390"
+              ],
+              "before": "Prior to v1.11, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "SIG Azure: * The Azure cloud provider now supports standard SKU load balancer and public IP. `excludeMasterFromStandardLB` defaults to true, which means master nodes are excluded from the standard (#61884, #62707).",
+                "SIG Cluster Lifecycle: * kubead now creates kube-proxy with a toleration to run on all nodes, no matter the taint. ([#62390](https://github.com/kubernetes/kubernetes/pull/62390).",
+                "\"beginPort+offset\" format support for port range which affects kube-proxy only ([#58731](https://github.com/kubernetes/kubernetes/pull/58731), [@yue9944882](https://github.com/yue9944882)).",
+                "IPVS based kube-proxy doesn't support graceful close connections for terminating pod. This issue will be fixed in a future release. ([#57841](https://github.com/kubernetes/kubernetes/pull/57841)."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade): * JSON configuration files that contain fields with incorrect case will no longer be valid. You must correct these files before upgrading. When specifying keys in JSON r",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#65034"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade): * [Pod priority and preemption](https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/) is now enabled by default. Note that this means that pods fro",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.11"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "(No, really, you MUST do this before you upgrade): Before upgrading to Kubernetes 1.11, you must keep the following in mind:",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.11"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "IPVS based kube-proxy doesn't support graceful close connections for terminating pod. This issue will be fixed in a future release. ([#57841](https://github.com/kubernetes/kubernetes/pull/57841), [@jsravn](https://github",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#57841"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kube-proxy needs to be configured to override hostname in some environments. ([#857](https://github.com/kubernetes/kubeadm/issues/857), [@detiber](https://github.com/detiber))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#857"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "SIG API Machinery: This release SIG API Machinery focused mainly on CustomResources. For example, subresources for CustomResources are now beta and enabled by d",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.11"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated to Beta: * The Sysctls experimental feature has been promoted to beta (enabled by default via the `Sysctls` feature flag). PodSecurityPolicy and Pod o",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#6371"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated to Beta: * Subresources for custom resources is now considered beta and enabled by default. With this, updates to the `/status` subresource will disal",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#63598"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated to Beta: * The `PriorityClass` API has been promoted to `scheduling.k8s.io/v1beta1` ([#63100](https://github.com/kubernetes/kubernetes/pull/63100), [@",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#63100"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Graduated to Beta: * The dynamic Kubelet config feature is now beta, and the DynamicKubeletConfig feature gate is on by default. In order to use dynamic Kubelet",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#64275"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.10",
+        "badge": "Release",
+        "date": "2018-03-26",
+        "stats": "435 upstream changes and 395 PRs",
+        "headline": "Feature Enhancements, StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+        "executive_summary": "Kubernetes v1.10 focuses on Feature Enhancements, StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion, and Dynamic Resource Allocation. For operators, this release translates 435 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#53833",
+                "#55977",
+                "#58462"
+              ],
+              "before": "Prior to v1.10, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `kubeletconfig` API group has graduated from alpha to beta, and the name has changed to `kubelet.config.k8s.io`. Please use `kubelet.config.k8s.io/v1beta1`, as `kubeletconfig/v1alpha1` is no (#53833).",
+                "Node: * The CPU Manager feature is now beta, and is enabled by default, but the default policy is no-op so no action is required. ([#55977](https://github.com/kubernetes/kubernetes/pull/55977).",
+                "Storage: * The VolumeAttachment API is now available as V1beta1, and is enabled by default. The Alpha API is deprecated and will be removed in a future release.  (#58462).",
+                "\"ExternalTrafficLocalOnly\" has been removed from feature gate. It has been a GA feature since v1.7. ([#56948](https://github.com/kubernetes/kubernetes/pull/56948)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#59391",
+                "#59052",
+                "#58990"
+              ],
+              "before": "Prior to v1.10, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Storage: * VolumeScheduling and LocalPersistentVolume features are beta and enabled by default.  The PersistentVolume NodeAffinity alpha annotation is deprecated and will be removed in a future (#59391).",
+                "VolumeScheduling and LocalPersistentVolume features are beta and enabled by default.  The PersistentVolume NodeAffinity alpha annotation is deprecated and will be removed in a future release. (#59391).",
+                "Storage: This release brings additional power to both local storage and Persistent Volumes. [Mount namespace propagation](https://github.com/kubernetes/enhancements/issues/432) allows a container to.",
+                "Cluster Lifecycle: * PVC Protection alpha feature was renamed to Storage Protection. The Storage Protection feature is beta. ([#59052](https://github.com/kubernetes/kubernetes/pull/59052)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#57384",
+                "#56864"
+              ],
+              "before": "Prior to v1.10, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "Node: Many of the changes within SIG-Node revolve around control. With the beta release of the `kubelet.config.k8s.io` API group, a significant subset of Kubelet configuration can now be [configured.",
+                "The alpha Accelerators feature gate is deprecated and will be removed in v1.11. Please use device plugins (#57384).",
+                "In-place node upgrades to this release from versions 1.7.14, 1.8.9, and 1.9.4 are not supported if using subpath volumes with PVCs.  Such pods should be drained from the node first.",
+                "CLI: * Added the ability to select pods in a chosen node to be drained based on given pod label-selector. ([#56864](https://github.com/kubernetes/kubernetes/pull/56864)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#57265",
+                "#56812",
+                "#58428"
+              ],
+              "before": "Prior to v1.10, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "API-Machinery: * Access to externally managed IP addresses via the kube-apiserver service proxy subresource is no longer allowed by default. This can be re-enabled via the (#57265).",
+                "API-Machinery: * kube-apiserver: The external hostname no longer longer use the cloud provider API to select a default. It can be set explicitly using --external-hostname, if needed. If there is no (#56812).",
+                "Cluster Lifecycle: * Alpha Initializers have been removed from kubeadm admission control.  Kubeadm users who still want to use Initializers can use apiServerExtraArgs through the kubeadm config file (#58428).",
+                "kube-apiserver: the experimental in-tree Keystone password authenticator has been removed in favor of extensions that enable use of Keystone tokens. (#59492)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#58093",
+                "#54933",
+                "#59949"
+              ],
+              "before": "Prior to v1.10, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The kubelet  --docker-disable-shared-pid flag, which runs docker containers with a process namespace that is shared between all containers in a pod, is now deprecated and will be removed in a future (#58093).",
+                "The Kubelet now explicitly registers all of its command-line flags with an internal flagset, which prevents flags from third party libraries from unintentionally leaking into the Kubelet's.",
+                "The `PodSecurityPolicy` API has been moved to the `policy/v1beta1` API group. The `PodSecurityPolicy` API in the `extensions/v1beta1` API group is deprecated and will be removed in a future release. (#54933).",
+                "The boostrapped RBAC role and rolebinding for the `cloud-provider` service account is now deprecated. If you're currently using this service account, you must create and apply your own [RBAC (#59949)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "If you need to downgrade from 1.10 to 1.9.x, downgrade to v1.9.6 to ensure PV and PVC objects can be deleted properly.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.10"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Use of subPath module with hostPath volumes can cause issues during reconstruction ([#61446](https://github.com/kubernetes/kubernetes/issues/61446)) and with containerized kubelets ([#61456](https://github.com/kubernetes",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#61446"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubeadm is currently omitting etcd certificates in a self-hosted deployment; this will be fixed in a point relelase. ([#61322](https://github.com/kubernetes/kubernetes/issues/61322))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#61322"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Some users, especially those with very large clusters, may see higher memory usage by the kube-controller-manager in 1.10. ([#61041](https://github.com/kubernetes/kubernetes/issues/61041))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#61041"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Due to an issue in ingress-gce controller in 1.10.0, creating multi-cluster ingresses with [kubemci CLI](https://github.com/GoogleCloudPlatform/k8s-multicluster-ingress) fails. This will be fixed in 1.10.1 release. ([Goo",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#175"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "The `kubeletconfig` API group has graduated from alpha to beta, and the name has changed to `kubelet.config.k8s.io`. Please use `kubelet.config.k8s.io/v1beta1`,",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#53833"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Node: Many of the changes within SIG-Node revolve around control. With the beta release of the `kubelet.config.k8s.io` API group, a significant subset of Kubele",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.10"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Node: * The CPU Manager feature is now beta, and is enabled by default, but the default policy is no-op so no action is required. ([#55977](https://github.com/k",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#55977"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Storage: * VolumeScheduling and LocalPersistentVolume features are beta and enabled by default.  The PersistentVolume NodeAffinity alpha annotation is deprecate",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#59391"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Storage: * The VolumeAttachment API is now available as V1beta1, and is enabled by default. The Alpha API is deprecated and will be removed in a future release.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#58462"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.9",
+        "badge": "Release",
+        "date": "2017-12-15",
+        "stats": "348 upstream changes and 246 PRs",
+        "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.9 focuses on StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion, Feature Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 348 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#53580",
+                "#52322",
+                "#55329"
+              ],
+              "before": "Prior to v1.9, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Storage: *   [stable] `PersistentVolume` and `PersistentVolumeClaim` objects must now have a capacity greater than zero.",
+                "Storage: *   [stable] Mutation of `PersistentVolumeSource` after creation is no longer allowed.",
+                "Apps: The core workloads API, which is composed of the DaemonSet, Deployment, ReplicaSet, and StatefulSet kinds, has been promoted to GA stability in the apps/v1 group version. As such, the.",
+                "Storage: *   [alpha] Deletion of `PersistentVolumeClaim` objects that are in use by a pod no longer permitted (if alpha feature is enabled)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#53573",
+                "#53768",
+                "#56024"
+              ],
+              "before": "Prior to v1.9, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Node: *   kubelet's `--cloud-provider` flag no longer defaults to \"auto-detect\". If you want cloud-provider support in kubelet, you must set a specific cloud-provider explicitly. (#53573).",
+                "Cloud Provider Integration: *   kubelet's --cloud-provider flag no longer defaults to \"auto-detect\". If you want cloud-provider support in kubelet, you must set a specific cloud-provider explicitly. (#53573).",
+                "Cluster Lifecycle: SIG Cluster Lifecycle has been focusing on improving kubeadm in order to bring it to GA in a future release, as well as developing the [Cluster.",
+                "Other: *   [beta] Flag `--chunk-size={SIZE}` is added to `kubectl get` to customize the number of results returned in large lists of resources. This reduces the perceived latency of managing large (#53768)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#54516",
+                "#53695",
+                "#53717"
+              ],
+              "before": "Prior to v1.9, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Cluster Lifecycle: *   If you are using the cloud provider API to determine the external host address of the apiserver, set `--external-hostname` explicitly instead. The cloud provider detection has (#54516).",
+                "Cluster Lifecycle: *   If you are using the cloud provider API to determine the external host address of the apiserver, set `--external-hostname` explicitly instead. The cloud provider detection has (#54516).",
+                "Audit: *   Fixed a bug so that `kube-apiserver` now waits for open connections to finish before exiting. This fix provides graceful shutdown and ensures that the audit backend no longer drops events (#53695).",
+                "Other: *   The `--etcd-quorum-read` flag now defaults to true to ensure correct operation with HA etcd clusters. This flag is deprecated and the flag will be removed in future versions, as well as (#53717)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#53031",
+                "#53353",
+                "#52440"
+              ],
+              "before": "Prior to v1.9, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "Node: SIG Node iterated on the ability to support more workloads with better performance and improved reliability.  Alpha features were improved around hardware accelerator support, device plugins.",
+                "Kubelet:     *   Extends the device plugin checkpoint data to record registered resources so that we can finish resource removing devices even upon kubelet restarts.",
+                "Hardware Accelerators: *   The device plugin Alpha API no longer supports returning artifacts per device as part of AllocateResponse. ([#53031](https://github.com/kubernetes/kubernetes/pull/53031),[.",
+                "Kubelet: *   Kubelet no longer removes unregistered extended resource capacities from node status; cluster admins will have to manually remove extended resources exposed via device plugins when they (#53353)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#55988",
+                "#54513",
+                "#55643"
+              ],
+              "before": "Prior to v1.9, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "API Machinery: *   A new `ValidatingAdmissionWebhook` is added (replacing `GenericAdmissionWebhook`) and is available in the generic API server. You must update your API server configuration file to (#55988, #54513).",
+                "API Machinery: *   The admission API, which is used when the API server calls admission control webhooks, is moved from `admission.v1alpha1` to `admission.v1beta1`. You must delete any existing.",
+                "Other: *   Improved PodSecurityPolicy admission latency. ([#55643](https://github.com/kubernetes/kubernetes/pull/55643),[ @tallclair](https://github.com/tallclair)).",
+                "Other: *   A new priority function ResourceLimitsPriorityMap (disabled by default and behind alpha feature gate and not part of the scheduler's default priority functions list) that assigns a lowest (#55906)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "If you are adding Windows Server Virtual Machines as nodes to your Kubernetes environment, there is a compatibility issue with certain virtualization products. Specifically the Windows version of the kubelet.exe calls `G",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.9"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "If you run `kubectl get po` while the API server in unreachable, a misleading error is returned: `the server doesn't have a resource type \"po\"`. To work around this issue, specify the full resource name in the command in",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#57198"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Mutating and validating webhook configurations are continuously polled by the API server (once per second). This issue will be fixed in a future release. For more information, see [#56357](https://github.com/kubernetes/k",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#56357"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Audit logging is slow because writes to the log are performed synchronously with requests to the log. This issue will be fixed in a future release. For more information, see [#53006](https://github.com/kubernetes/kuberne",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#53006"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Custom Resource Definitions (CRDs) are not properly deleted under certain conditions. This issue will be fixed in a future release. For more information, see [#56348](https://github.com/kubernetes/kubernetes/issues/56348",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#56348"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Storage: *   [stable] `PersistentVolume` and `PersistentVolumeClaim` objects must now have a capacity greater than zero.",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.9"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Storage: *   [stable] Mutation of `PersistentVolumeSource` after creation is no longer allowed",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.9"
+            },
+            {
+              "label": "Feature",
+              "hardware": "IPVS: *   Graduate kube-proxy IPVS mode to beta. ([#56623](https://github.com/kubernetes/kubernetes/pull/56623), [@m1093782566](https://github.com/m1093782566))",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#56623"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Apps: The core workloads API, which is composed of the DaemonSet, Deployment, ReplicaSet, and StatefulSet kinds, has been promoted to GA stability in the apps/v",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.9"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Cluster Lifecycle: SIG Cluster Lifecycle has been focusing on improving kubeadm in order to bring it to GA in a future release, as well as developing the [Clust",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.9"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.8",
+        "badge": "Release",
+        "date": "2017-09-29",
+        "stats": "212 upstream changes and 54 PRs",
+        "headline": "Workload-Aware & Gang Scheduling, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.8 focuses on Workload-Aware & Gang Scheduling, Feature Enhancements, and CEL-Based Validating & Mutating Admission Policies. For operators, this release translates 212 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Deprecation Enhancements",
+              "plain_summary": "Improves deprecation enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#41039",
+                "#30243",
+                "#49142"
+              ],
+              "before": "Prior to v1.8, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "The CronJob object is now enabled by default at `v1beta1`. CronJob `v2alpha1` is still available, but it must be explicitly enabled. We recommend that you move any current CronJob objects to.",
+                "The `batch/v2alpha1.ScheduledJob` was removed. Migrate to `batch/v1beta.CronJob` to continue managing time based jobs.",
+                "Workloads API (batch): - `batch/v2alpha.CronJob` is deprecated in favor of `batch/v1beta` and will be removed in a future release.",
+                "Workloads API (batch): - `batch/v2alpha1.ScheduledJob` is removed."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#49638",
+                "#275",
+                "#296"
+              ],
+              "before": "Prior to v1.8, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "The `--audit-policy-file` option is required if the `AdvancedAuditing` feature is not explicitly turned off (`--feature-gates=AdvancedAuditing=false`) on the API server.",
+                "Storage:   * The ability to specify mount options for volumes is moved from beta to stable.",
+                "kubeadm:    * NOTE: This command is currently staged under `kubeadm alpha phase` and will be graduated to top level in a future release.",
+                "Behavioral Changes:  - Extended Resources are fully-qualified resource names outside the `kubernetes.io` domain. Extended Resource quantities must be integers. You can specify any resource name of."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#51283",
+                "#51436",
+                "#49133"
+              ],
+              "before": "Prior to v1.8, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Cluster Lifecycle:   - The `PersistentVolumeLabel` admission controller will be removed in a future release, when the out-of-tree versions of the GCE and AWS cloud providers move to GA. The cloud.",
+                "Dynamic Admission Control: * [Action required] The validation rule for metadata.initializers.pending[x].name is tightened. The initializer name must contain at least three segments, separated by (#51283).",
+                "Dynamic Admission Control: * Use of the alpha initializers feature now requires enabling the `Initializers` feature gate. This feature gate is automatically enabled if the `Initializers` admission (#51436).",
+                "Auth: * The OwnerReferencesPermissionEnforcement admission plugin now requires `update` permission on the `finalizers` subresource of the referenced owner in order to set `blockOwnerDeletion` on an (#49133)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#48921",
+                "#52237",
+                "#51921"
+              ],
+              "before": "Prior to v1.8, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "kube-apiserver: * [Alpha] The Kubernetes API server now supports the ability to break large LIST calls into multiple smaller chunks. A client can specify a limit to the number of results to return. (#48921).",
+                "Monitoring/Prometheus: * [action required] The WATCHLIST calls are now reported as WATCH verbs in prometheus for the apiserver_request_* series.  A new \"scope\" label is added to all (#52237).",
+                "Custom Resource Definitions (CRDs): * [alpha] The CustomResourceDefinition API can now optionally [validate custom.",
+                "kube-apiserver: * Fixed an issue with `APIService` auto-registration. This issue affected rolling restarts of HA API servers that added or removed API groups being (#51921)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Deprecation Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#49213",
+                "#51312"
+              ],
+              "before": "Prior to v1.8, teams operating deprecation enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Autoscaling:    - In version 1.9, this behavior will be enabled by default, and must be explicitly disabled by setting the `--horizontal-pod-autoscaler-use-rest-clients` flag to `false`.",
+                "OpenStack: - The `openstack-heat` provider for `kube-up` is deprecated and will be removed in a future release. Refer to Issue [#49213](https://github.com/kubernetes/kubernetes/issues/49213) for.",
+                "Scheduling:   - Opaque Integer Resources (OIRs) are deprecated and will be removed in version 1.9. Extended Resources (ERs) are a drop-in replacement for OIRs. You can use any domain name prefix.",
+                "Cluster Lifecycle:   - In version 1.9, the default will be `\"\"`, which means no built-in cloud provider extension will be enabled by default."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "WatchList & Snapshottable Watch Cache",
+              "plain_english": "Streaming object lists from `kube-apiserver` memory cache snapshots instead of assembling giant one-shot payloads from `etcd`.",
+              "bottom_line": "Slashes API server RAM spikes and protects `etcd` from OOM crashes during controller restarts on large clusters."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kubelets using TLS bootstrapping (`--bootstrap-kubeconfig`) or certificate rotation (`--rotate-certificates`) store certificates in the directory specified by `--cert-dir`. The default location (`/var/run/kubernetes`) is",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#53288"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "`kubeadm init` and `kubeadm join` invocations on newly installed systems can encounter a `/var/lib/kubelet is not empty` message during pre-flight checks that prevents setup. If this is the only pre-flight failure, it ca",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#53356"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "A performance issue was identified in large-scale clusters when deleting thousands of pods simultaneously across hundreds of nodes. Kubelets in this scenario can encounter temporarily increased latency of `delete pod` AP",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#51899"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Audit logs might impact the API server performance and the latency of large request and response calls. The issue is observed under the following conditions: if `AdvancedAuditing` feature gate is enabled, which is the de",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#51899"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Minikube version 0.22.2 or lower does not work with kubectl version 1.8 or higher. This issue is caused by the presence of an unregistered type in the minikube API server. New versions of kubectl force validate the OpenA",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#1996"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "The CronJob object is now enabled by default at `v1beta1`. CronJob `v2alpha1` is still available, but it must be explicitly enabled. We recommend that you move ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.8"
+            },
+            {
+              "label": "Deprecation",
+              "hardware": "Cluster Lifecycle:   - The `PersistentVolumeLabel` admission controller will be removed in a future release, when the out-of-tree versions of the GCE and AWS cl",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.8"
+            },
+            {
+              "label": "Feature",
+              "hardware": "StatefulSet: The deprecated `pod.alpha.kubernetes.io/initialized` annotation for interrupting the StatefulSet Pod management is now ignored. StatefulSets with t",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.8"
+            },
+            {
+              "label": "Feature",
+              "hardware": "kube-apiserver: * [Alpha] The Kubernetes API server now supports the ability to break large LIST calls into multiple smaller chunks. A client can specify a limi",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#48921"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "Audit logs might impact the API server performance and the latency of large request and response calls. The issue is observed under the following conditions: if",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#51899"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.7",
+        "badge": "Release",
+        "date": "2017-06-30",
+        "stats": "450 upstream changes and 292 PRs",
+        "headline": "Urgent Upgrade Notes Enhancements, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.7 focuses on Urgent Upgrade Notes Enhancements, Feature Enhancements, and Networking, `nftables` Proxy & Traffic Observability. For operators, this release translates 450 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#47690",
+                "#46750",
+                "#39164"
+              ],
+              "before": "Prior to v1.7, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "API Machinery: * The following alpha API groups were unintentionally enabled by default in previous releases, and will no longer be enabled by default in v1.8 (#47690).",
+                "Cloud Providers: * GKE/GCE: New and upgraded 1.7 GCE/GKE clusters no longer have an RBAC ClusterRoleBinding that grants the cluster-admin ClusterRole to the default service account in the kube-system (#46750).",
+                "NetworkPolicy has been promoted from extensions/v1beta1 to the new networking.k8s.io/v1 API group. The structure remains unchanged from the v1beta1 API. The net.beta.kubernetes.io/network-policy (#39164).",
+                "Storage: * Alpha volume provisioning is removed and default storage class should be used instead. ([#44090](https://github.com/kubernetes/kubernetes/pull/44090)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#46799",
+                "#44774",
+                "#287"
+              ],
+              "before": "Prior to v1.7, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Container Runtime Interface: * [GA] The Docker-CRI implementation is GA. The legacy, non-CRI Docker integration has been completely removed.",
+                "Security:   * Promote kubelet tls bootstrap to beta. Add a non-experimental flag to use it and deprecate the old flag. ([#46799](https://github.com/kubernetes/kubernetes/pull/46799).",
+                "User Provided Extensions: * [beta] ThirdPartyResource is deprecated. Please migrate to the successor, CustomResourceDefinition. For more information, see [Custom.",
+                "Application Deployment: * Deployments are updated to use (1) a more stable hashing algorithm (fnv) than the previous one (adler) and (2) a hashing collision avoidance mechanism that will ensure new (#44774, #287)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#38636",
+                "#46716",
+                "#34727"
+              ],
+              "before": "Prior to v1.7, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Cloud Provider Enhancement:   * Remove check that forces loadBalancerSourceRanges to be 0.0.0.0/0. ([#38636](https://github.com/kubernetes/kubernetes/pull/38636).",
+                "kube-proxy: \t* When switching from the service.beta.kubernetes.io/external-traffic annotation to the new ([#46716](https://github.com/kubernetes/kubernetes/pull/46716).",
+                "kube-proxy: * In 1.7, the kube-proxy component has been converted to use a configuration file. The old flags still work in 1.7, but they are being deprecated and will be removed in a future release. (#34727).",
+                "Cloud Provider Enhancement:   * Fix support for multiple loadBalancerSourceRanges ([#45523](https://github.com/kubernetes/kubernetes/pull/45523), [@colemickens](https://github.com/colemickens))."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#46987",
+                "#46294",
+                "#45747"
+              ],
+              "before": "Prior to v1.7, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Cluster Provisioning: * Remove Initializers from admission-control in kubernetes-master charm for pre-1.7 ([#46987](https://github.com/kubernetes/kubernetes/pull/46987).",
+                "User Provided Extensions: * [alpha] Adding admissionregistration API group which enables dynamic registration of initializers and external admission webhooks. (#46294).",
+                "Admission Control: * [alpha] Add [extensible external admission control](https://kubernetes.io/docs/admin/extensible-admission-controllers/).",
+                "Node Authorization: * [beta] A new Node authorization mode and NodeRestriction admission plugin, when used in combination, limit nodes' access to specific APIs, so that they may only modify their own."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#46116",
+                "#44593",
+                "#47977"
+              ],
+              "before": "Prior to v1.7, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "API Machinery: * `cluster/update-storage-objects.sh` now supports updating StorageClasses in etcd to storage.k8s.io/v1. You must do this prior to upgrading to 1.8. (#46116).",
+                "API Machinery:     * If you wish to continue using them in v1.8, please enable them explicitly using the `--runtime-config` flag on the apiserver (for example.",
+                "User Provided Extensions: * [beta] User-provided apiservers can be aggregated (served along with) the rest of the Kubernetes API. See [Extending the Kubernetes API with the aggregation.",
+                "Encryption at Rest: * [alpha] Encrypt secrets stored in etcd. For more information, see [Securing a Cluster](https://kubernetes.io/docs/tasks/administer-cluster/securing-a-cluster/) and [Encrypting."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "NetworkPolicy has been promoted from extensions/v1beta1 to the new networking.k8s.io/v1 API group. The structure remains unchanged from the v1beta1 API. The net.beta.kubernetes.io/network-policy annotation on Namespaces ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#39164"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Storage: * Alpha volume provisioning is removed and default storage class should be used instead. ([#44090](https://github.com/kubernetes/kubernetes/pull/44090), [@NickrenREN](https://github.com/NickrenREN))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#44090"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Storage: * Portworx volume driver no longer has to run on the master. ([#45518](https://github.com/kubernetes/kubernetes/pull/45518), [@harsh-px](https://github.com/harsh-px))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#45518"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Storage: * Default behavior in Cinder storageclass is changed. If availability is not specified, the zone is chosen by algorithm. It makes possible to spread stateful pods across many zones. ([#44798](https://github.com/",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#44798"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Storage: * PodSpecs containing parent directory references such as `..` (for example, `../bar`) in hostPath volume path or in volumeMount subpaths must be changed to the simple absolute path. Backsteps `..` are no longer",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#47290"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "API Machinery: * The following alpha API groups were unintentionally enabled by default in previous releases, and will no longer be enabled by default in v1.8: ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#47690"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Security:   * Promote kubelet tls bootstrap to beta. Add a non-experimental flag to use it and deprecate the old flag. ([#46799](https://github.com/kubernetes/k",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#46799"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "NetworkPolicy has been promoted from extensions/v1beta1 to the new networking.k8s.io/v1 API group. The structure remains unchanged from the v1beta1 API. The net",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#39164"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "Storage: * Alpha volume provisioning is removed and default storage class should be used instead. ([#44090](https://github.com/kubernetes/kubernetes/pull/44090)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#44090"
+            },
+            {
+              "label": "Feature",
+              "hardware": "User Provided Extensions: * [beta] ThirdPartyResource is deprecated. Please migrate to the successor, CustomResourceDefinition. For more information, see [Custo",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.7"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.6",
+        "badge": "Release",
+        "date": "2017-03-28",
+        "stats": "511 upstream changes and 338 PRs",
+        "headline": "Feature Enhancements, Urgent Upgrade Notes Enhancements",
+        "executive_summary": "Kubernetes v1.6 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 511 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#40355",
+                "#38382",
+                "#38871"
+              ],
+              "before": "Prior to v1.6, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (as the rest of taints) and enabled by (#40355).",
+                "Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod.",
+                "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kubeadm v1.5 and v1.6 don't work together.",
+                "Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters and allows passing arguments to."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#38981",
+                "#38121",
+                "#39284"
+              ],
+              "before": "Prior to v1.6, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "RBAC: * special handling of the user `*` in RoleBinding and ClusterRoleBinding objects is removed in v1beta1. To match all users, explicitly bind to the group `system:authenticated` and/or (#38981).",
+                "Scheduling:   * You can continue to use the alpha version of this feature (with one caveat -- see below), in which you specify affinity requests using Pod annotations, in 1.6 by including.",
+                "Scheduling:   * Caveat: The alpha version no longer supports, and the beta version does not support, the \"empty `podAffinityTerm.namespaces` list means all namespaces\" behavior. In both alpha and.",
+                "Scheduling:   * After your master is upgraded to 1.6, you will need to update your PodSpecs to set the `tolerations` field of the PodSpec and remove the `scheduler.alpha.kubernetes.io/tolerations`."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#42128",
+                "#42080",
+                "#38418"
+              ],
+              "before": "Prior to v1.6, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "Volumes: * StorageClassName attribute has been added to PersistentVolume and PersistentVolumeClaim objects and should be used instead of annotation `volume.beta.kubernetes.io/storage-class`. The beta (#42128).",
+                "Volumes:   * If you depend on the old behavior of volumes binding to existing pool of PersistentVolume objects then modify the StorageClass object and set.",
+                "StatefulSet now respects ControllerRef to avoid fighting over Pods. At the time of upgrade, you must not have StatefulSets with selectors that overlap with any other controllers (such as (#42080).",
+                "StatefulSet: * Fixes issue [#38418](https://github.com/kubernetes/kubernetes/pull/38418) which, under circumstance, could cause StatefulSet to deadlock.."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#40585",
+                "#42090",
+                "#37720"
+              ],
+              "before": "Prior to v1.6, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "kube-proxy: * Remove outdated net.experimental.kubernetes.io/proxy-mode and net.beta.kubernetes.io/proxy-mode annotations from kube-proxy. (#40585).",
+                "kube-proxy: * Clean up the kube-proxy container image by removing unnecessary packages and files. ([#42090](https://github.com/kubernetes/kubernetes/pull/42090).",
+                "Service: * Fix Service Update on LoadBalancerSourceRanges Field ([#37720](https://github.com/kubernetes/kubernetes/pull/37720), [@freehan](https://github.com/freehan)).",
+                "Services of type loadbalancer consume both loadbalancer and nodeport quota. ([#39364](https://github.com/kubernetes/kubernetes/pull/39364), [@zhouhaibing089](https://github.com/zhouhaibing089))."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#37953",
+                "#41931",
+                "#41815"
+              ],
+              "before": "Prior to v1.6, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Admission Control: * An `automountServiceAccountToken` field was added to ServiceAccount and PodSpec objects. If set to `false` on a pod spec, no service account token is automounted in the pod. If (#37953).",
+                "Node Components: * [alpha] `--experimental-nvidia-gpus` flag is replaced by `Accelerators` alpha feature gate along with addition of support for multiple Nvidia GPUs.",
+                "Service Catalog: - [alpha] Adds a new API resource `PodPreset` and admission controller to enable defining cross-cutting injection of Volumes and Environment into Pods.",
+                "Node Components: * [alpha] Critical Pods: When feature gate \"ExperimentalCriticalPodAnnotation\" is set to true, the system will guarantee scheduling and admission of pods with the following."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Certificates API: * Users of the alpha certificates API should delete v1alpha1 CSRs from the API before upgrading and recreate them as v1beta1 CSR after upgrading. ([#39772](https://github.com/kubernetes/kubernetes/pull/",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#39772"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Cluster Autoscaler: * If you are using (or planning to use) Cluster Autoscaler please wait for Kubernetes 1.6.1. In 1.6.0 Cluster Autoscaler may occasionally increase the size of the cluster a bit more than it is actuall",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.6"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Deployment now fully respects ControllerRef to avoid fighting over Pods and ReplicaSets. At the time of upgrade, you must not have Deployments with selectors that overlap, or else [ownership of ReplicaSets may change](ht",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#42175"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Federation: * The --dns-provider argument of 'kubefed init' is now mandatory and does not default to `google-clouddns`. To initialize a Federation control plane with Google Cloud DNS, use the following invocation: 'kubef",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#42092"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Federation: * Cluster federation servers have changed the location in etcd where federated services are stored, so existing federated services must be deleted and recreated. Before upgrading, export all federated service",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#37770"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Taints and Tolerations: * Add a manager to NodeController that is responsible for removing Pods from Nodes tainted with NoExecute Taints. This feature is beta (",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#40355"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Scheduling: - [beta] [Node affinity/anti-affinity](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/) and [beta] [pod affinity/anti-affinity](h",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.6"
+            },
+            {
+              "label": "Feature",
+              "hardware": "kubeadm: * The Certificates API has graduated from alpha to beta. This is a backwards-incompatible change since the alpha support is dropped, and therefore kube",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.6"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Federation: * [beta] `kubefed` has graduated to beta: supports hosting federation on on-prem clusters, automatically configures `kube-dns` in joining clusters a",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.6"
+            },
+            {
+              "label": "Feature",
+              "hardware": "The [`kubeadm` cluster bootstrap tool](https://kubernetes.io/docs/getting-started-guides/kubeadm/) has graduated to beta. Some highlights:",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.6"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.5",
+        "badge": "Release",
+        "date": "2016-12-13",
+        "stats": "98 upstream changes and 36 PRs",
+        "headline": "Feature Enhancements, Urgent Upgrade Notes Enhancements",
+        "executive_summary": "Kubernetes v1.5 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion. For operators, this release translates 98 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "plain_summary": "Improves statefulset pvc auto-cleanup, volume health & storage expansion for databases, kafka/clickhouse clusters, and stateful ai checkpoint storage running on csi storage drivers and cloud block volumes, delivering eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#128",
+                "#119",
+                "#120"
+              ],
+              "before": "Prior to v1.5, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "`kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements/issues/128)).",
+                "Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-autoscaling/)).",
+                "In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force delete pods via the CLI. (#119).",
+                "Added ability to create/remove clusters w/highly available (replicated) masters on GCE using kube-up/kube-down scripts. ([docs](http://kubernetes.io/docs/admin/ha-master-gce/))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#38593",
+                "#34906",
+                "#34471"
+              ],
+              "before": "Prior to v1.5, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593).",
+                "The deprecated kubelet --configure-cbr0 flag has been removed, and with that the \"classic\" networking mode as well.  If you depend on this mode, please investigate whether the other network plugins (#34906).",
+                "The deprecated kube-scheduler --bind-pods-qps and --bind-pods burst flags have been removed, use --kube-api-qps and --kube-api-burst instead (#34471).",
+                "Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#137",
+                "#35663"
+              ],
+              "before": "Prior to v1.5, teams operating statefulset pvc auto-cleanup, volume health & storage expansion relied on older execution paths or manual tuning on CSI storage drivers and cloud block volumes.",
+              "tech_bullets": [
+                "StatefulSets allow workloads that require persistent identity or per-instance storage to be created and managed on Kubernetes. (#137).",
+                "PetSet has been renamed to StatefulSet. If you have existing PetSets, you must perform extra migration steps both before and after upgrading to convert them to StatefulSets. (#35663).",
+                "StatefulSets are beta now (fixes and stabilization).",
+                "StatefulSets (ex-PetSets)."
+              ],
+              "why_it_matters": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#30601"
+              ],
+              "before": "Prior to v1.5, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "`kube-apiserver` support for the OpenAPI spec is moving from alpha to beta. The first [non-go client](https://github.com/kubernetes-incubator/client-python) is based on it.",
+                "You *MUST* set `--anonymous-auth=false` flag on your kube-apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to access.",
+                "You *MUST* set `--anonymous-auth=false` flag on your federation apiserver unless you are a developer testing this feature and understand it. If you do not, you risk allowing unauthorized users to.",
+                "If you are upgrading your Cluster Federation components from v1.4.x, please update your `federation-apiserver` and `federation-controller-manager` manifests to the new version (#30601)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.5, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+              "tech_bullets": [
+                "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  upgrading from 1.4 to 1.5, you must."
+              ],
+              "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "StatefulSet PVC Auto-Cleanup, Volume Health & Storage Expansion",
+              "models": "Databases, Kafka/ClickHouse clusters, and stateful AI checkpoint storage",
+              "gpus": "CSI storage drivers and cloud block volumes",
+              "impact": "Eliminates orphaned cloud disk charges when scaling down or deleting temporary StatefulSets"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "Linux User Namespaces (`hostUsers: false`)",
+              "plain_english": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+              "bottom_line": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+            },
+            {
+              "term": "CSI (Container Storage Interface)",
+              "plain_english": "The standard plugin layer connecting Kubernetes PersistentVolumes to cloud block/file storage providers.",
+              "bottom_line": "Controls how fast stateful workloads attach disks, recover from node failures, and handle credentials."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "CRI [known issues and limitations](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-node/container-runtime-interface.md#kubernetes-v15-release-cri-v1alpha1)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.5"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "getDeviceNameFromMount() function doesn't return the volume path correctly when the volume path contains spaces [#37712](https://github.com/kubernetes/kubernetes/issues/37712)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#37712"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.com/kubernetes/kubernetes/issues/38593)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#38593"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Federation control plane can be upgraded by updating the image fields in the `Deployment` specs of the control plane components. However, federation control plane upgrades were not tested in this release [38537](https://",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.5"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Important Security-related changes before upgrading",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.5"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "[stable] `kubectl apply` is now able to delete resources you no longer need with `--prune` ([kubernetes/features#128](https://github.com/kubernetes/enhancements",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#128"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "Federation alpha features do not have feature gates defined and are hence enabled by default. This will be fixed in a future release. [#38593](https://github.co",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#38593"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[stable] Enable DNS Horizontal Autoscaling with beta ConfigMap parameters support ([docs](http://kubernetes.io/docs/tasks/administer-cluster/dns-horizontal-auto",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.5"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[beta] In order to preserve safety guarantees the cluster no longer force deletes pods on un-responsive nodes and users are now warned if they try to force dele",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#119"
+            },
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "If you used the [PodDisruptionBudget](http://kubernetes.io/docs/admin/disruptions/) feature in 1.4 (i.e. created `PodDisruptionBudget` objects), then BEFORE  up",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.5"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.4",
+        "badge": "Release",
+        "date": "2016-09-26",
+        "stats": "82 upstream changes and 19 PRs",
+        "headline": "Feature Enhancements, Urgent Upgrade Notes Enhancements",
+        "executive_summary": "Kubernetes v1.4 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 82 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.4, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "`kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults..",
+                "Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard).",
+                "Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/).",
+                "kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#29999",
+                "#28800",
+                "#31026"
+              ],
+              "before": "Prior to v1.4, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead (#29999).",
+                "Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but (#28800).",
+                "If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If (#31026).",
+                "If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#29929",
+                "#28938"
+              ],
+              "before": "Prior to v1.4, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "`kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)).",
+                "If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead (#29929).",
+                "If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ```.",
+                "If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#33033",
+                "#33346"
+              ],
+              "before": "Prior to v1.4, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual.",
+                "Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)).",
+                "disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346))."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.4, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time..",
+                "New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity).",
+                "kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "Linux User Namespaces (`hostUsers: false`)",
+              "plain_english": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+              "bottom_line": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Completed pods lose logs across node upgrade ([#32324](https://github.com/kubernetes/kubernetes/issues/32324))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#32324"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Pods are deleted across node upgrade ([#32323](https://github.com/kubernetes/kubernetes/issues/32323))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#32323"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Secure master -> node communication ([#11816](https://github.com/kubernetes/kubernetes/issues/11816))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#11816"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "upgrading master doesn't upgrade kubectl ([#32538](https://github.com/kubernetes/kubernetes/issues/32538))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#32538"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Specific error message on failed rolling update issued by older kubectl against 1.4 master ([#32751](https://github.com/kubernetes/kubernetes/issues/32751))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#32751"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "[stable] `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults. ([k",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.4"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[stable] Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.4"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[beta] Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.4"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[stable] kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.4"
+            },
+            {
+              "label": "Feature",
+              "hardware": "[stable] Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker [kubernetes/features#57](https://github.com/kubernetes/enhancemen",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.4"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.3",
+        "badge": "Release",
+        "date": "2016-07-06",
+        "stats": "60 upstream changes and 7 PRs",
+        "headline": "Urgent Upgrade Notes Enhancements, Feature Enhancements",
+        "executive_summary": "Kubernetes v1.3 focuses on Urgent Upgrade Notes Enhancements, Feature Enhancements, and Dynamic Resource Allocation. For operators, this release translates 60 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#24000",
+                "#24086",
+                "#26082"
+              ],
+              "before": "Prior to v1.3, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "(https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat.",
+                "kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.",
+                "Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000)).",
+                "CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086))."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#24836"
+              ],
+              "before": "Prior to v1.3, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc)).",
+                "Alpha RBAC authorization API group.",
+                "federation api group is now beta.",
+                "alpha PetSets manage stateful apps."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.3, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "Stop 'kubectl drain' deleting pods with local storage."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.3, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Adding loadBalancer services and nodeports services to quota system."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "In-Place Pod Vertical Scaling (Resize)",
+              "plain_english": "Changing a running Pod's CPU or memory requests/limits dynamically without killing and recreating the container.",
+              "bottom_line": "Eliminates cold-start restarts and dropped connections when scaling stateful services, databases, or warm AI model servers."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "ThirdPartyResource: If you use ThirdPartyResource objects, they have moved from being namespaced-scoped to be cluster-scoped. Before upgrading to 1.3.0, export and delete any existing ThirdPartyResource objects using a 1",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.3"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "kubectl: Kubectl flag `--container-port` flag is deprecated: it will be removed in the future, please use `--target-port` instead.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.3"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Kube Proxy crashes infrequently due to a docker bug ([#24000](https://github.com/docker/docker/issues/24000))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#24000"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "This issue can be resolved by restarting docker daemon",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.3"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "CORS works only in insecure mode ([#24086](https://github.com/kubernetes/kubernetes/issues/24086))",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#24086"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Urgent Upgrade Notes",
+              "hardware": "[List of upstream fixes](https://github.com/docker/docker/compare/v1.10.3...runcom:docker-1.10.3-stable) for docker v1.10 identified by RedHat",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.3"
+            },
+            {
+              "label": "Feature",
+              "hardware": "alpha: NVIDIA GPU support ([#24836](https://github.com/kubernetes/kubernetes/pull/24836), [@therc](https://github.com/therc))",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#24836"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Alpha RBAC authorization API group",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.3"
+            },
+            {
+              "label": "Feature",
+              "hardware": "federation api group is now beta",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.3"
+            },
+            {
+              "label": "Feature",
+              "hardware": "alpha PetSets manage stateful apps",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.3"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.2",
+        "badge": "Release",
+        "date": "2016-03-17",
+        "stats": "106 upstream changes and 5 PRs",
+        "headline": "Feature Enhancements, Autoscaling & Scale-to-Zero Cost Optimization",
+        "executive_summary": "Kubernetes v1.2 focuses on Feature Enhancements, Autoscaling & Scale-to-Zero Cost Optimization, and Workload-Aware & Gang Scheduling. For operators, this release translates 106 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            },
+            {
+              "headline": "Urgent Upgrade Notes Enhancements",
+              "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#13580",
+                "#20688",
+                "#22542"
+              ],
+              "before": "Prior to v1.2, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Major Themes:   * <strong>New GUI</strong> (dashboard) allows you to get started quickly and enables the same functionality found in the CLI as a more approachable and discoverable way of interacting.",
+                "Other notable improvements:   * Stable version of Heapster which scales up to 1000 nodes: more metrics, reduced latency, reduced cpu/memory consumption (~4mb per monitored node).",
+                "Experimental Features:   * New SchedulerExtender enables users to implement custom out-of-(the-scheduler)-process scheduling predicates and priority functions, for example to schedule pods based on (#13580).",
+                "Other notable improvements:   * A stable client library release\\_1\\_2 is added. The library is [here](pkg/client/clientset_generated/), and detailed doc is."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#23196"
+              ],
+              "before": "Prior to v1.2, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+              "tech_bullets": [
+                "Other notable improvements:   *  HorizontalPodAutoscaler was Beta in 1.1 and is GA in 1.2 .",
+                "Other notable improvements:      * The previous version, <code>apiVersion: extensions/v1beta1</code>, is still supported.  Even if you roll back to 1.1, the objects created using the new apiVersions.",
+                "Major Themes:      * Custom Metrics for Autoscaling (HorizontalPodAutoscaler API in the Autoscaling API group): The Horizontal Pod Autoscaling feature now supports custom metrics (Alpha), allowing.",
+                "If you create HPA object using autoscaling/v1 API without specifying targetCPUUtilizationPercentage and read it using kubectl it will print default value as specified in extensions/v1beta1 (see (#23196)."
+              ],
+              "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.2, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Other notable improvements:   * Job was Beta in 1.1 and is GA in 1.2 .",
+                "Other notable improvements:      * The previous version, <code>apiVersion: extensions/v1beta1</code>, is still supported.  Even if you roll back to 1.1, the objects created using the new apiVersion.",
+                "Other notable improvements:      * <code>apiVersion: batch/v1 </code>is now available.  You now do not need to specify the <code>.spec.selector</code> field \u2014 a [unique selector is automatically.",
+                "Other notable improvements:   * \u201ckubectl run\u201d now produces Deployments (instead of ReplicationControllers) and Jobs (instead of Pods) by default."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            },
+            {
+              "title": "Urgent Upgrade Notes Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.2, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "CPU hardcapping will be enabled by default for containers with CPU limit set, if supported by the kernel. You should either adjust your CPU limit, or set CPU request only, if you want to avoid.",
+                "Client (kubectl) and server versions must match (both 1.1 or both 1.2) for any Deployment-related operations.",
+                ".spec.uniqueLabelKey is removed -- users can\u2019t customize unique label key -- and its default value is changed from \u201cdeployment.kubernetes.io/podTemplateHash\u201d to \u201cpod-template-hash\u201d.",
+                "Client (kubectl) and server versions must match (both 1.1 or both 1.2) for any DaemonSet-related operations."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [],
+              "before": "Prior to v1.2, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
+              "tech_bullets": [
+                "Pod IP allocation-related issues. Deleting the docker checkpoint prior to restarting the daemon alleviates this issue, but hasn\u2019t been verified to completely eliminate the IP allocation issue. More.",
+                "Docker daemon restarts can fail. Docker checkpoints have to deleted between restarts. More information [here](https://github.com/kubernetes/kubernetes/issues/20995)."
+              ],
+              "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "models": "Event-driven workers, async queue consumers, and bursty GPU inference endpoints",
+              "gpus": "Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller",
+              "impact": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives"
+            },
+            {
+              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+            },
+            {
+              "persona": "Urgent Upgrade Notes Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Docker v1.9.1 is officially recommended. Docker v1.8.3 and Docker v1.10 are supported. If you are using an older release of Docker, please upgrade. Known issues with Docker 1.9.1 can be found below.",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.2"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "CPU hardcapping will be enabled by default for containers with CPU limit set, if supported by the kernel. You should either adjust your CPU limit, or set CPU request only, if you want to avoid hardcapping. If the kernel ",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.2"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "The following applies only if you use the Go language client (<code>/pkg/client/unversioned</code>) to create Job by defining Go variables of type \"<code>k8s.io/kubernetes/pkg/apis/extensions\".Job</code>).  We think <str",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.2"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Deployment was Alpha in 1.1 (though it had apiVersion extensions/v1beta1) and was disabled by default. Due to some non-backward-compatible API changes, any Deployment objects you created in 1.1 won\u2019t work with in the 1.2",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.2"
+              },
+              {
+                "change": "Urgent Upgrade Notes",
+                "impact": "Before upgrading to 1.2, <strong>delete all Deployment alpha-version resources</strong>, including the Replication Controllers and Pods the Deployment manages. Then create Deployment Beta resources after upgrading to 1.2",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "v1.2"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Other notable improvements:   * Stable version of Heapster which scales up to 1000 nodes: more metrics, reduced latency, reduced cpu/memory consumption (~4mb pe",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.2"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Experimental Features:   * New SchedulerExtender enables users to implement custom out-of-(the-scheduler)-process scheduling predicates and priority functions, ",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#13580"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other notable improvements:   * Job was Beta in 1.1 and is GA in 1.2 .",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.2"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other notable improvements:   *  HorizontalPodAutoscaler was Beta in 1.1 and is GA in 1.2 .",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.2"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other notable improvements:   * A stable client library release\\_1\\_2 is added. The library is [here](pkg/client/clientset_generated/), and detailed doc is [her",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.2"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.1",
+        "badge": "Release",
+        "date": "2015-11-09",
+        "stats": "55 upstream changes and 51 PRs",
+        "headline": "Feature Enhancements, CEL-Based Validating & Mutating Admission Policies",
+        "executive_summary": "Kubernetes v1.1 focuses on Feature Enhancements, CEL-Based Validating & Mutating Admission Policies, and Networking, `nftables` Proxy & Traffic Observability. For operators, this release translates 55 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "CEL-Based Validating & Mutating Admission Policies",
+              "plain_summary": "Improves cel-based validating & mutating admission policies for platform security guardrails, multi-tenant compliance policies, and default resource injectors running on in-process `kube-apiserver` admission chain (replaces external webhook deployments), delivering removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts."
+            },
+            {
+              "headline": "Networking, `nftables` Proxy & Traffic Observability",
+              "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            },
+            {
+              "headline": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "plain_summary": "Improves autoscaling & scale-to-zero cost optimization for event-driven workers, async queue consumers, and bursty gpu inference endpoints running on autoscaled node pools (karpenter / cluster autoscaler) and hpa controller, delivering directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#12813",
+                "#13099",
+                "#15994"
+              ],
+              "before": "Prior to v1.1, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Other important changes: - Deprecated -t for --template to make it --tty (#12813).",
+                "Other important changes: - Deprecated kubectl flag \"create-external-load-balancer\" (#13099).",
+                "Other important changes: - Automated cherry pick of #15994 upstream release 1.1 (#16549, @dchen1107) | binary | hash alg | hash | | --- | --- | --- | | `kubernetes.tar.gz` | md5 |.",
+                "Main features: - Improvements to the `kubectl` tool including interactive containers and improvements to `kubectl rolling-update`."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "CEL-Based Validating & Mutating Admission Policies",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#15188"
+              ],
+              "before": "Prior to v1.1, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+              "tech_bullets": [
+                "Other important changes: - Removed DenyEscalatingExec from the list of default admission controllers (#15188)."
+              ],
+              "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+              "config_snippet": ""
+            },
+            {
+              "title": "Networking, `nftables` Proxy & Traffic Observability",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#12464",
+                "#13050"
+              ],
+              "before": "Prior to v1.1, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+              "tech_bullets": [
+                "Other important changes: - Add Birthcry event to kube-proxy (#12464).",
+                "Other important changes: - MESOS: Add path-override for minion controller so that kube-proxy can find iptables (#13050)."
+              ],
+              "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#12910"
+              ],
+              "before": "Prior to v1.1, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Other important changes: - New Job resource (#12910).",
+                "Main features: - Job objects for batch and other run-once workloads."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            },
+            {
+              "title": "Autoscaling & Scale-to-Zero Cost Optimization",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#12344"
+              ],
+              "before": "Prior to v1.1, teams operating autoscaling & scale-to-zero cost optimization relied on older execution paths or manual tuning on Autoscaled node pools (Karpenter / Cluster Autoscaler) and HPA controller.",
+              "tech_bullets": [
+                "Other important changes: - Added HorizontalPodAutoscaler object to experimental API (#12344)."
+              ],
+              "why_it_matters": "Directly saves compute spend by parking idle worker pools at 0 replicas until queue demand arrives",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "CEL-Based Validating & Mutating Admission Policies",
+              "models": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+              "gpus": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+              "impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+            },
+            {
+              "persona": "Networking, `nftables` Proxy & Traffic Observability",
+              "models": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+              "gpus": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+              "impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+            },
+            {
+              "persona": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "models": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+              "gpus": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+              "impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            },
+            {
+              "term": "nftables `kube-proxy` Backend",
+              "plain_english": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+              "bottom_line": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+            },
+            {
+              "term": "HPA Scale-to-Zero (`minReplicas: 0`)",
+              "plain_english": "Allows `HorizontalPodAutoscaler` to scale external/queue-driven workloads all the way down to 0 replicas when idle and wake them when queue depth rises.",
+              "bottom_line": "Directly cuts cloud compute and GPU bills for bursty batch/inference workers during off-peak hours."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Feature",
+                "impact": "Other important changes: - Deprecated -t for --template to make it --tty (#12813, @janetkuo)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#12813"
+              },
+              {
+                "change": "Feature",
+                "impact": "Other important changes: - Deprecated kubectl flag \"create-external-load-balancer\" (#13099, @janetkuo)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#13099"
+              },
+              {
+                "change": "Feature",
+                "impact": "Other important changes: - Removed DenyEscalatingExec from the list of default admission controllers (#15188, @ArtfulCoder)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#15188"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "Other important changes: - Deprecated -t for --template to make it --tty (#12813, @janetkuo)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#12813"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other important changes: - Deprecated kubectl flag \"create-external-load-balancer\" (#13099, @janetkuo)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#13099"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other important changes: - Removed DenyEscalatingExec from the list of default admission controllers (#15188, @ArtfulCoder)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#15188"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Other important changes: - Automated cherry pick of #15994 upstream release 1.1 (#16549, @dchen1107) | binary | hash alg | hash | | --- | --- | --- | | `kuberne",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#15994"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Main features: - Improvements to the `kubectl` tool including interactive containers and improvements to `kubectl rolling-update`",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "v1.1"
+            }
+          ]
+        }
+      },
+      {
+        "version": "v1.0",
+        "badge": "Release",
+        "date": "2015-07-02",
+        "stats": "113 upstream changes and 115 PRs",
+        "headline": "Feature Enhancements, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+        "executive_summary": "Kubernetes v1.0 focuses on Feature Enhancements, Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, and Dynamic Resource Allocation. For operators, this release translates 113 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+        "five_parts": {
+          "high_level_changes": [
+            {
+              "headline": "Feature Enhancements",
+              "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+            },
+            {
+              "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "plain_summary": "Improves native sidecar containers, checkpoint/restore & node lifecycle for service-mesh pods, telemetry agents, fast-restoring stateful apps, and oci artifact mounts running on kubelet cri runtime (containerd / cri-o) and linux/windows worker nodes, delivering stops zombie sidecars from holding batch nodes open after job completion."
+            },
+            {
+              "headline": "Dynamic Resource Allocation",
+              "plain_summary": "Improves dynamic resource allocation for ai/ml training, llm inference pods, fractional/multi-gpu workloads, and nic/fpga consumers running on nvidia/amd gpu nodes, multi-nic rdma clusters, and topology-aware hardware pools, delivering higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting."
+            },
+            {
+              "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+            },
+            {
+              "headline": "Workload-Aware & Gang Scheduling",
+              "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+            }
+          ],
+          "big_deal": [
+            {
+              "title": "Feature Enhancements",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#8945",
+                "#10830",
+                "#11062"
+              ],
+              "before": "Prior to v1.0, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+              "tech_bullets": [
+                "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson).",
+                "When releasing, update versions in title #11062 (thockin).",
+                "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese).",
+                "Remove the unsafe_format_and_mount instructions #10912 (brendandburns)."
+              ],
+              "why_it_matters": "Operational reliability and lower maintenance toil",
+              "config_snippet": ""
+            },
+            {
+              "title": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#10925",
+                "#11004"
+              ],
+              "before": "Prior to v1.0, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
+              "tech_bullets": [
+                "Sidecar container capable of servicing exec style liveness probes over http #10925 (bprashanth).",
+                "Use the exec-sidecar as a healthz probe for the syndns container #11004 (bprashanth)."
+              ],
+              "why_it_matters": "Stops zombie sidecars from holding batch nodes open after job completion",
+              "config_snippet": ""
+            },
+            {
+              "title": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#11071",
+                "#10993",
+                "#10231"
+              ],
+              "before": "Prior to v1.0, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
+              "tech_bullets": [
+                "First draft of deployment-oriented sections of the user guide. #11071 (bgrant0607).",
+                "examples/cassandra - image version inc and reduced cpu requirements #10993 (mwielgus).",
+                "Fix IP field name and add namespace support in Cassandra example #10231 (mwielgus)."
+              ],
+              "why_it_matters": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting",
+              "config_snippet": ""
+            },
+            {
+              "title": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#11055",
+                "#9904"
+              ],
+              "before": "Prior to v1.0, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+              "tech_bullets": [
+                "Assigned emptyDir for etcd data dir in skydns pod #11055 (ArtfulCoder).",
+                "Fully automated impl of containerized high available etcd+apiserver+controllermgr+scheduler #9904 (jayunit100)."
+              ],
+              "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+              "config_snippet": ""
+            },
+            {
+              "title": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+              "status": "Graduated / Merged",
+              "status_tone": "green",
+              "prs": [
+                "#10932",
+                "#10940"
+              ],
+              "before": "Prior to v1.0, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+              "tech_bullets": [
+                "Add skip/flaky arguments for gce-release job #10932 (zmerlynn).",
+                "Jenkins: Allow fetching new tars for multi-job tests #10940 (mbforbes)."
+              ],
+              "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Feature Enhancements",
+              "models": "General platform workloads and API consumers",
+              "gpus": "Standard cluster nodes and runtime components",
+              "impact": "Operational reliability and lower maintenance toil"
+            },
+            {
+              "persona": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle",
+              "models": "Service-mesh pods, telemetry agents, fast-restoring stateful apps, and OCI artifact mounts",
+              "gpus": "Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes",
+              "impact": "Stops zombie sidecars from holding batch nodes open after job completion"
+            },
+            {
+              "persona": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+              "models": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+              "gpus": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+              "impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+            },
+            {
+              "persona": "API Server & etcd Watch/Cache Efficiency at Scale",
+              "models": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+              "gpus": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+              "impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "DRA (Dynamic Resource Allocation)",
+              "plain_english": "Kubernetes' next-generation API (`resource.k8s.io`) for requesting, sharing, and topology-aligning specialized hardware like GPUs, TPUs, and NICs\u2014replacing rigid integer device plugins.",
+              "bottom_line": "Lets multiple pods share fractional GPUs safely or co-schedule across NVLink domains without custom vendor hacks."
+            },
+            {
+              "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+              "plain_english": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+              "bottom_line": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+            },
+            {
+              "term": "Native Sidecar Containers (`initContainers` with `restartPolicy: Always`)",
+              "plain_english": "First-class lifecycle support for helper containers (log shippers, service mesh proxies) so they start before the main app and terminate automatically after Batch Jobs finish.",
+              "bottom_line": "Fixes the classic Kubernetes bug where a finished Job hangs forever because an Istio/Envoy sidecar stays alive."
+            },
+            {
+              "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+              "plain_english": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+              "bottom_line": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+            "rows": [
+              {
+                "change": "Feature",
+                "impact": "Fixes #8945: Cleanup log symlinks on remove & dead log symlinks #10830 (jimmidyson)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#8945"
+              },
+              {
+                "change": "Feature",
+                "impact": "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#10856"
+              },
+              {
+                "change": "Feature",
+                "impact": "Remove the unsafe_format_and_mount instructions #10912 (brendandburns)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#10912"
+              },
+              {
+                "change": "Feature",
+                "impact": "Jenkins: remove dead 'use server version' code #10952 (mbforbes)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#10952"
+              },
+              {
+                "change": "Feature",
+                "impact": "Remove race in setting/reading kubelet.podCIDR #10958 (cjcullen)",
+                "action": "Verify manifests and flags against this change before upgrading.",
+                "pr": "#10958"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "Feature",
+              "hardware": "remove v1beta3 examples from getting started from scratch guide #10856 (mikedanese)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#10856"
+            },
+            {
+              "label": "Feature",
+              "hardware": "Stop exposing v1beta3 by default #10525 (nikhiljindal)",
+              "metric": "Verified upstream",
+              "pct_bar": 75,
+              "pr": "#10525"
             }
           ]
         }

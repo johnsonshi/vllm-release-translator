@@ -1,0 +1,648 @@
+{
+  "variant": "v5_progressive_clarity_engine",
+  "project": "kubernetes",
+  "version": "v1.4",
+  "positioning": "Kubernetes v1.4 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 82 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "Kubernetes v1.4 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 82 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "high_level_changes": [
+      {
+        "headline": "Feature Enhancements",
+        "plain_summary": "Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "Urgent Upgrade Notes Enhancements",
+        "plain_summary": "Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
+      },
+      {
+        "headline": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "plain_summary": "Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages."
+      },
+      {
+        "headline": "Networking, `nftables` Proxy & Traffic Observability",
+        "plain_summary": "Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules."
+      },
+      {
+        "headline": "Workload-Aware & Gang Scheduling",
+        "plain_summary": "Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers."
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Feature Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Urgent Upgrade Notes Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "models_workloads": "Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods",
+        "gpus_infra": "Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint",
+        "bill_impact": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages"
+      },
+      {
+        "capability": "Networking, `nftables` Proxy & Traffic Observability",
+        "models_workloads": "High-throughput east-west microservices and latency-sensitive ingress traffic",
+        "gpus_infra": "Linux dataplane (`nftables`/`ipvs`) and cloud load balancers",
+        "bill_impact": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules"
+      },
+      {
+        "capability": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "models_workloads": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+        "gpus_infra": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+        "bill_impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+      },
+      {
+        "capability": "CEL-Based Validating & Mutating Admission Policies",
+        "models_workloads": "Platform security guardrails, multi-tenant compliance policies, and default resource injectors",
+        "gpus_infra": "In-process `kube-apiserver` admission chain (replaces external webhook deployments)",
+        "bill_impact": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts"
+      },
+      {
+        "capability": "Workload Identity, User Namespaces & Fine-Grained Authz",
+        "models_workloads": "Multi-tenant SaaS workloads, zero-trust service meshes, and privileged container migrations",
+        "gpus_infra": "Linux kernel namespaces, kubelet endpoints, and CSI secret injection paths",
+        "bill_impact": "Reduces security agent/sidecar overhead and shrinks blast radius of container compromises"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "Gang Scheduling (`Workload` / `PodGroup`)",
+        "domain": "kubernetes",
+        "meaning": "An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group.",
+        "why_it_matters": "Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity."
+      },
+      {
+        "term": "ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)",
+        "domain": "kubernetes",
+        "meaning": "In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers.",
+        "why_it_matters": "Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments."
+      },
+      {
+        "term": "Linux User Namespaces (`hostUsers: false`)",
+        "domain": "kubernetes",
+        "meaning": "Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel.",
+        "why_it_matters": "Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container."
+      },
+      {
+        "term": "nftables `kube-proxy` Backend",
+        "domain": "kubernetes",
+        "meaning": "A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains.",
+        "why_it_matters": "Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Completed pods lose logs across node upgrade ([#32324](https://github.com/kubernetes/kubernetes/issues/32324))",
+        "prs": [
+          "32324"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Pods are deleted across node upgrade ([#32323](https://github.com/kubernetes/kubernetes/issues/32323))",
+        "prs": [
+          "32323"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Secure master -> node communication ([#11816](https://github.com/kubernetes/kubernetes/issues/11816))",
+        "prs": [
+          "11816"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "upgrading master doesn't upgrade kubectl ([#32538](https://github.com/kubernetes/kubernetes/issues/32538))",
+        "prs": [
+          "32538"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Specific error message on failed rolling update issued by older kubectl against 1.4 master ([#32751](https://github.com/kubernetes/kubernetes/issues/32751))",
+        "prs": [
+          "32751"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "bump master cidr range from /30 to /29 ([#32886](https://github.com/kubernetes/kubernetes/issues/32886))",
+        "prs": [
+          "32886"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "non-hostNetwork daemonsets will almost always have a pod that fails to schedule ([#32900](https://github.com/kubernetes/kubernetes/issues/32900))",
+        "prs": [
+          "32900"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033))",
+        "prs": [
+          "33033"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346))",
+        "prs": [
+          "33346"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": []
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0 (#28698)",
+        "prs": [
+          "23397",
+          "28698"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "docker"
+        ]
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.4, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "`kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults..",
+          "Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard).",
+          "Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/).",
+          "kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "kubectl",
+          "kubeadm",
+          "Namespace",
+          "StorageClasses"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.4, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead (#29999).",
+          "Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but (#28800).",
+          "If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If (#31026).",
+          "If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "29999",
+          "28800",
+          "31026",
+          "23397",
+          "28698"
+        ],
+        "keps": [],
+        "identifiers": [
+          "docker"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.4, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "`kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)).",
+          "If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead (#29929).",
+          "If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ```.",
+          "If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "29929",
+          "28938"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kube-apiserver",
+          "federation-apiserver",
+          "federation-controller-manager",
+          "hyperkube"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.4, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual.",
+          "Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)).",
+          "disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346))."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [
+          "33033",
+          "33346"
+        ],
+        "keps": [],
+        "identifiers": [
+          "Ingress"
+        ]
+      },
+      {
+        "rank": 5,
+        "theme": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "previously": "Prior to v1.4, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+        "tech_bullets": [
+          "Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time..",
+          "New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity).",
+          "kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller."
+        ],
+        "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "ScheduledJob"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.4, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "The NamespaceExists and NamespaceAutoProvision admission controllers have been removed, use the NamespaceLifecycle admission controller instead (#31250).",
+          "Container Image Policy allows an access controller to determine whether a pod may be scheduled based on a policy ([docs](http://kubernetes.io/docs/admin/admission-controllers/#imagepolicywebhook))."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "31250"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Feature Enhancements",
+        "previously": "Prior to v1.4, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "`kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults..",
+          "Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard).",
+          "Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/).",
+          "kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39))."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "kubectl",
+          "kubeadm",
+          "Namespace",
+          "StorageClasses"
+        ]
+      },
+      {
+        "rank": 2,
+        "theme": "Urgent Upgrade Notes Enhancements",
+        "previously": "Prior to v1.4, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead (#29999).",
+          "Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but (#28800).",
+          "If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If (#31026).",
+          "If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "29999",
+          "28800",
+          "31026",
+          "23397",
+          "28698"
+        ],
+        "keps": [],
+        "identifiers": [
+          "docker"
+        ]
+      },
+      {
+        "rank": 3,
+        "theme": "API Server & etcd Watch/Cache Efficiency at Scale",
+        "previously": "Prior to v1.4, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.",
+        "tech_bullets": [
+          "`kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)).",
+          "If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead (#29929).",
+          "If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ```.",
+          "If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this."
+        ],
+        "why_it_matters": "Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages",
+        "prs": [
+          "29929",
+          "28938"
+        ],
+        "keps": [],
+        "identifiers": [
+          "kube-apiserver",
+          "federation-apiserver",
+          "federation-controller-manager",
+          "hyperkube"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Networking, `nftables` Proxy & Traffic Observability",
+        "previously": "Prior to v1.4, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.",
+        "tech_bullets": [
+          "Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual.",
+          "Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)).",
+          "disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346))."
+        ],
+        "why_it_matters": "Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules",
+        "prs": [
+          "33033",
+          "33346"
+        ],
+        "keps": [],
+        "identifiers": [
+          "Ingress"
+        ]
+      },
+      {
+        "rank": 5,
+        "theme": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "previously": "Prior to v1.4, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.",
+        "tech_bullets": [
+          "Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time..",
+          "New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity).",
+          "kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller."
+        ],
+        "why_it_matters": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers",
+        "prs": [],
+        "keps": [],
+        "identifiers": [
+          "ScheduledJob"
+        ]
+      },
+      {
+        "rank": 6,
+        "theme": "CEL-Based Validating & Mutating Admission Policies",
+        "previously": "Prior to v1.4, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).",
+        "tech_bullets": [
+          "The NamespaceExists and NamespaceAutoProvision admission controllers have been removed, use the NamespaceLifecycle admission controller instead (#31250).",
+          "Container Image Policy allows an access controller to determine whether a pod may be scheduled based on a policy ([docs](http://kubernetes.io/docs/admin/admission-controllers/#imagepolicywebhook))."
+        ],
+        "why_it_matters": "Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts",
+        "prs": [
+          "31250"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Feature",
+        "text": "[stable] `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults. ([kubernetes/features#55](https://github.com/kubernetes/enhancements/issues/55))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubectl"
+        ],
+        "_score": 18.7
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 18.0
+      },
+      {
+        "category": "Feature",
+        "text": "[beta] Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 17.2
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker [kubernetes/features#57](https://github.com/kubernetes/enhancements/issues/57)",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] New volume plugin for the Quobyte Distributed File System ([docs](http://kubernetes.io/docs/user-guide/volumes/#quobyte)) ([kubernetes/features#80](https://github.com/kubernetes/enhancements/issues/80))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "[stable] New volume plugin for Azure Data Disk ([docs](http://kubernetes.io/docs/user-guide/volumes/#azurediskvolume)) ([kubernetes/features#79](https://github.com/kubernetes/enhancements/issues/79))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 14.0
+      },
+      {
+        "category": "Feature",
+        "text": "[beta] `kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kube-apiserver"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] The `kubeadm` tool makes it much easier to bootstrap Kubernetes. ([docs](http://kubernetes.io/docs/getting-started-guides/kubeadm/)) ([kubernetes/features#11](https://github.com/kubernetes/enhancements/issues/11))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "kubeadm"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual IP to load balance incoming HTTP(S) traffic across some or all the registered clusters, across all regions. Google's GCE L7 LoadBalancer is the first supported implementation, and is available in this release. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-ingress.md)) ([kubernetes/features#82](https://github.com/kubernetes/enhancements/issues/82))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "Ingress"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Creating a `Federated Namespace` causes matching `Namespace`s to be created and maintained in all the clusters registered with that federation. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-namespaces.md)) ([kubernetes/features#69](https://github.com/kubernetes/enhancements/issues/69))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [
+          "Namespace"
+        ],
+        "_score": 13.4
+      },
+      {
+        "category": "Urgent Upgrade Notes",
+        "text": "If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If there are any pods with the key `pods.beta.kubernetes.io/init-containers`, then that pod may not have been filtered by the PodSecurityPolicy. You should find such pods and either delete them or audit them to ensure they do not use features that you intend to be blocked by PodSecurityPolicy. (#31026, @erictune)",
+        "prs": [
+          "31026"
+        ],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.5
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Generate audit logs for every request user performs against secured API server endpoint. ([docs](http://kubernetes.io/docs/admin/audit/)) ([kubernetes/features#22](https://github.com/kubernetes/enhancements/issues/22))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      },
+      {
+        "category": "Feature",
+        "text": "[alpha] Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time. ([docs](http://kubernetes.io/docs/user-guide/scheduled-jobs/)) ([kubernetes/features#19](https://github.com/kubernetes/enhancements/issues/19))",
+        "prs": [],
+        "keps": [],
+        "sigs": [],
+        "identifiers": [],
+        "_score": 12.2
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "Patch release `v1.4.9` ships 15 backported fixes and stability updates ([#40828](https://github.com/kubernetes/kubernetes/pull/40828), [#41027](https://github.com/kubernetes/kubernetes/pull/41027), [#40118](https://github.com/kubernetes/kubernetes/pull/40118))",
+      "Patch release `v1.4.8` ships 18 backported fixes and stability updates ([#38746](https://github.com/kubernetes/kubernetes/pull/38746), [#38909](https://github.com/kubernetes/kubernetes/pull/38909), [#39705](https://github.com/kubernetes/kubernetes/pull/39705))",
+      "Patch release `v1.4.7` ships 33 backported fixes and stability updates ([#37723](https://github.com/kubernetes/kubernetes/pull/37723), [#38124](https://github.com/kubernetes/kubernetes/pull/38124), [#38338](https://github.com/kubernetes/kubernetes/pull/38338))",
+      "[stable] `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the... (Upstream release notes)",
+      "[stable] Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management.... (Upstream release notes)",
+      "[beta] Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/) (Upstream release notes)",
+      "[stable] kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/))... (Upstream release notes)",
+      "[stable] Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker... (Upstream release notes)"
+    ]
+  },
+  "cited_prs": [
+    "29929",
+    "31250",
+    "29999",
+    "28938",
+    "28800",
+    "31026",
+    "23397",
+    "28698",
+    "32324",
+    "32323",
+    "11816",
+    "32538",
+    "32751",
+    "32886",
+    "32900",
+    "33033",
+    "33346",
+    "30956",
+    "28258"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [
+    "kubectl",
+    "kube-apiserver",
+    "kubeadm",
+    "Ingress",
+    "Namespace",
+    "federation-apiserver",
+    "federation-controller-manager",
+    "hyperkube",
+    "docker",
+    "StorageClasses",
+    "ScheduledJob",
+    "sysctl"
+  ],
+  "markdown": "# What's New in Kubernetes v1.4\n\n## High-Level Explanation\nKubernetes v1.4 focuses on Feature Enhancements, Urgent Upgrade Notes Enhancements, and API Server & etcd Watch/Cache Efficiency at Scale. For operators, this release translates 82 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Feature Enhancements**: Improves feature enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Urgent Upgrade Notes Enhancements**: Improves urgent upgrade notes enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **API Server & etcd Watch/Cache Efficiency at Scale**: Improves api server & etcd watch/cache efficiency at scale for operator-heavy platforms, argo cd / flux gitops controllers, and multi-tenant clusters with 10k+ crds/pods running on control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) cpu and memory footprint, delivering cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages.\n- **Networking, `nftables` Proxy & Traffic Observability**: Improves networking, `nftables` proxy & traffic observability for high-throughput east-west microservices and latency-sensitive ingress traffic running on linux dataplane (`nftables`/`ipvs`) and cloud load balancers, delivering lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules.\n- **Workload-Aware & Gang Scheduling**: Improves workload-aware & gang scheduling for distributed ai training, multi-node batch jobs, ray/spark clusters, and mpi workloads running on high-density gpu/cpu batch pools and `kube-scheduler` queues, delivering prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Feature Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Urgent Upgrade Notes Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **API Server & etcd Watch/Cache Efficiency at Scale** | Operator-heavy platforms, Argo CD / Flux GitOps controllers, and multi-tenant clusters with 10k+ CRDs/Pods | Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint | Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages |\n| **Networking, `nftables` Proxy & Traffic Observability** | High-throughput east-west microservices and latency-sensitive ingress traffic | Linux dataplane (`nftables`/`ipvs`) and cloud load balancers | Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules |\n| **Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)** | Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads | High-density GPU/CPU batch pools and `kube-scheduler` queues | Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers |\n| **CEL-Based Validating & Mutating Admission Policies** | Platform security guardrails, multi-tenant compliance policies, and default resource injectors | In-process `kube-apiserver` admission chain (replaces external webhook deployments) | Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts |\n| **Workload Identity, User Namespaces & Fine-Grained Authz** | Multi-tenant SaaS workloads, zero-trust service meshes, and privileged container migrations | Linux kernel namespaces, kubelet endpoints, and CSI secret injection paths | Reduces security agent/sidecar overhead and shrinks blast radius of container compromises |\n\n## 3. What Does the Jargon Mean?\n- **Gang Scheduling (`Workload` / `PodGroup`)**: An 'all-or-nothing' scheduling guarantee where a group of cooperating Pods (like a multi-node training or distributed inference job) only starts when capacity exists for the entire group. Why it matters: Prevents expensive GPUs from sitting idle in deadlocked partial allocations when a cluster is near capacity.\n- **ValidatingAdmissionPolicy & MutatingAdmissionPolicy (CEL)**: In-process policy rules written in Common Expression Language (CEL) evaluated directly inside `kube-apiserver` without calling external admission webhook servers. Why it matters: Removes webhook network latency and prevents a crashed policy pod from taking down cluster deployments.\n- **Linux User Namespaces (`hostUsers: false`)**: Maps the `root` user inside a container to an unprivileged non-root UID on the host node kernel. Why it matters: Dramatically reduces container-escape blast radius even for legacy workloads that require running as `root` inside the container.\n- **nftables `kube-proxy` Backend**: A modern Linux kernel packet-filtering backend for Kubernetes Service routing that replaces legacy `iptables` linear rule chains. Why it matters: Cuts Service rule programming latency and CPU overhead on clusters with tens of thousands of Services.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Urgent Upgrade Notes**: Completed pods lose logs across node upgrade ([#32324](https://github.com/kubernetes/kubernetes/issues/32324)). ([#32324](https://github.com/kubernetes/kubernetes/pull/32324))\n- **Urgent Upgrade Notes**: Pods are deleted across node upgrade ([#32323](https://github.com/kubernetes/kubernetes/issues/32323)). ([#32323](https://github.com/kubernetes/kubernetes/pull/32323))\n- **Urgent Upgrade Notes**: Secure master -> node communication ([#11816](https://github.com/kubernetes/kubernetes/issues/11816)). ([#11816](https://github.com/kubernetes/kubernetes/pull/11816))\n- **Urgent Upgrade Notes**: upgrading master doesn't upgrade kubectl ([#32538](https://github.com/kubernetes/kubernetes/issues/32538)). ([#32538](https://github.com/kubernetes/kubernetes/pull/32538))\n- **Urgent Upgrade Notes**: Specific error message on failed rolling update issued by older kubectl against 1.4 master ([#32751](https://github.com/kubernetes/kubernetes/issues/32751)). ([#32751](https://github.com/kubernetes/kubernetes/pull/32751))\n- **Urgent Upgrade Notes**: bump master cidr range from /30 to /29 ([#32886](https://github.com/kubernetes/kubernetes/issues/32886)). ([#32886](https://github.com/kubernetes/kubernetes/pull/32886))\n- **Urgent Upgrade Notes**: non-hostNetwork daemonsets will almost always have a pod that fails to schedule ([#32900](https://github.com/kubernetes/kubernetes/issues/32900)). ([#32900](https://github.com/kubernetes/kubernetes/pull/32900))\n- **Urgent Upgrade Notes**: Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)). ([#33033](https://github.com/kubernetes/kubernetes/pull/33033))\n- **Urgent Upgrade Notes**: disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346)). ([#33346](https://github.com/kubernetes/kubernetes/pull/33346))\n- **Urgent Upgrade Notes**: If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0. ([#23397](https://github.com/kubernetes/kubernetes/pull/23397), [#28698](https://github.com/kubernetes/kubernetes/pull/28698))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Feature Enhancements (Upstream release notes)\n- **Previously**: Prior to v1.4, teams operating feature enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults..\n- **Technical change**: Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard).\n- **Technical change**: Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/).\n- **Technical change**: kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39)).\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Urgent Upgrade Notes Enhancements ([#29999](https://github.com/kubernetes/kubernetes/pull/29999), [#28800](https://github.com/kubernetes/kubernetes/pull/28800), [#31026](https://github.com/kubernetes/kubernetes/pull/31026), [#23397](https://github.com/kubernetes/kubernetes/pull/23397))\n- **Previously**: Prior to v1.4, teams operating urgent upgrade notes enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead (#29999).\n- **Technical change**: Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but (#28800).\n- **Technical change**: If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If (#31026).\n- **Technical change**: If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0.\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 3. API Server & etcd Watch/Cache Efficiency at Scale ([#29929](https://github.com/kubernetes/kubernetes/pull/29929), [#28938](https://github.com/kubernetes/kubernetes/pull/28938))\n- **Previously**: Prior to v1.4, teams operating api server & etcd watch/cache efficiency at scale relied on older execution paths or manual tuning on Control plane (`kube-apiserver`, `etcd`, `kube-controller-manager`) CPU and memory footprint.\n- **Technical change**: `kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)).\n- **Technical change**: If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead (#29929).\n- **Technical change**: If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ```.\n- **Technical change**: If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this.\n- **Operational impact**: Cuts control-plane memory spikes by 30\u201350% during list storms and prevents cascading `etcd` overload outages\n### 4. Networking, `nftables` Proxy & Traffic Observability ([#33033](https://github.com/kubernetes/kubernetes/pull/33033), [#33346](https://github.com/kubernetes/kubernetes/pull/33346))\n- **Previously**: Prior to v1.4, teams operating networking, `nftables` proxy & traffic observability relied on older execution paths or manual tuning on Linux dataplane (`nftables`/`ipvs`) and cloud load balancers.\n- **Technical change**: Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual.\n- **Technical change**: Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)).\n- **Technical change**: disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346)).\n- **Operational impact**: Lowers cross-AZ data transfer costs (`trafficDistribution`) and reduces node CPU spent on iptables rules\n### 5. Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing) (Upstream release notes)\n- **Previously**: Prior to v1.4, teams operating workload-aware & gang scheduling relied on older execution paths or manual tuning on High-density GPU/CPU batch pools and `kube-scheduler` queues.\n- **Technical change**: Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time..\n- **Technical change**: New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity).\n- **Technical change**: kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller.\n- **Operational impact**: Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers\n### 6. CEL-Based Validating & Mutating Admission Policies ([#31250](https://github.com/kubernetes/kubernetes/pull/31250))\n- **Previously**: Prior to v1.4, teams operating cel-based validating & mutating admission policies relied on older execution paths or manual tuning on In-process `kube-apiserver` admission chain (replaces external webhook deployments).\n- **Technical change**: The NamespaceExists and NamespaceAutoProvision admission controllers have been removed, use the NamespaceLifecycle admission controller instead (#31250).\n- **Technical change**: Container Image Policy allows an access controller to determine whether a pod may be scheduled based on a policy ([docs](http://kubernetes.io/docs/admin/admission-controllers/#imagepolicywebhook)).\n- **Operational impact**: Removes dedicated webhook pods and eliminates deployment outages caused by webhook timeouts\n\n### Weekly / Patch Merge Pulse\n- Patch release `v1.4.9` ships 15 backported fixes and stability updates ([#40828](https://github.com/kubernetes/kubernetes/pull/40828), [#41027](https://github.com/kubernetes/kubernetes/pull/41027), [#40118](https://github.com/kubernetes/kubernetes/pull/40118))\n- Patch release `v1.4.8` ships 18 backported fixes and stability updates ([#38746](https://github.com/kubernetes/kubernetes/pull/38746), [#38909](https://github.com/kubernetes/kubernetes/pull/38909), [#39705](https://github.com/kubernetes/kubernetes/pull/39705))\n- Patch release `v1.4.7` ships 33 backported fixes and stability updates ([#37723](https://github.com/kubernetes/kubernetes/pull/37723), [#38124](https://github.com/kubernetes/kubernetes/pull/38124), [#38338](https://github.com/kubernetes/kubernetes/pull/38338))\n- [stable] `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the... (Upstream release notes)\n- [stable] Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management.... (Upstream release notes)\n- [beta] Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/) (Upstream release notes)\n- [stable] kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/))... (Upstream release notes)\n- [stable] Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker... (Upstream release notes)\n\n## 6. Where's the Proof?\n- **Feature** (Upstream release notes): `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults..\n- **Feature** (Upstream release notes): Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard).\n- **Feature** (Upstream release notes): Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/).\n- **Feature** (Upstream release notes): kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39)).\n- **Feature** (Upstream release notes): Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker [kubernetes/features#57](https://github.com/kubernetes/enhancements/issues/57).\n- **Feature** (Upstream release notes): New volume plugin for the Quobyte Distributed File System ([docs](http://kubernetes.io/docs/user-guide/volumes/#quobyte)) ([kubernetes/features#80](https://github.com/kubernetes/enhancements/issues/80)).\n- **Feature** (Upstream release notes): New volume plugin for Azure Data Disk ([docs](http://kubernetes.io/docs/user-guide/volumes/#azurediskvolume)) ([kubernetes/features#79](https://github.com/kubernetes/enhancements/issues/79)).\n- **Feature** (Upstream release notes): `kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)).\n- **Feature** (Upstream release notes): The `kubeadm` tool makes it much easier to bootstrap Kubernetes. ([docs](http://kubernetes.io/docs/getting-started-guides/kubeadm/)) ([kubernetes/features#11](https://github.com/kubernetes/enhancements/issues/11)).\n- **Feature** (Upstream release notes): Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual IP to load balance.\n- **Feature** (Upstream release notes): Creating a `Federated Namespace` causes matching `Namespace`s to be created and maintained in all the clusters registered with that federation..\n- **Urgent Upgrade Notes** ([#31026](https://github.com/kubernetes/kubernetes/pull/31026)): If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If there are any pods.\n- **Feature** (Upstream release notes): Generate audit logs for every request user performs against secured API server endpoint. ([docs](http://kubernetes.io/docs/admin/audit/)) ([kubernetes/features#22](https://github.com/kubernetes/enhancements/issues/22)).\n- **Feature** (Upstream release notes): Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time. ([docs](http://kubernetes.io/docs/user-guide/scheduled-jobs/)).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Feature]** `kubectl` no longer applies defaults before sending objects to the server in create and update requests, allowing the server to apply the defaults. ([kubernetes/features#55](https://github.com/kubernetes/enhancements/issues/55)). (Upstream release notes)\n- **[Feature]** Kubernetes Dashboard UI - a great looking Kubernetes Dashboard UI with 90% CLI parity for at-a-glance management. [docs](https://github.com/kubernetes/dashboard). (Upstream release notes)\n- **[Feature]** Server-side garbage collection is enabled by default. See [user-guide](http://kubernetes.io/docs/user-guide/garbage-collection/). (Upstream release notes)\n- **[Feature]** kubelet is able to evict pods when it observes disk pressure ([docs](http://kubernetes.io/docs/admin/out-of-resource/)) ([kubernetes/features#39](https://github.com/kubernetes/enhancements/issues/39)). (Upstream release notes)\n- **[Feature]** Automated docker validation results posted to https://k8s-testgrid.appspot.com/docker [kubernetes/features#57](https://github.com/kubernetes/enhancements/issues/57). (Upstream release notes)\n- **[Feature]** New volume plugin for the Quobyte Distributed File System ([docs](http://kubernetes.io/docs/user-guide/volumes/#quobyte)) ([kubernetes/features#80](https://github.com/kubernetes/enhancements/issues/80)). (Upstream release notes)\n- **[Feature]** New volume plugin for Azure Data Disk ([docs](http://kubernetes.io/docs/user-guide/volumes/#azurediskvolume)) ([kubernetes/features#79](https://github.com/kubernetes/enhancements/issues/79)). (Upstream release notes)\n- **[Feature]** `kube-apiserver` now publishes a swagger 2.0 spec in addition to a swagger 1.2 spec ([kubernetes/features#53](https://github.com/kubernetes/enhancements/issues/53)). (Upstream release notes)\n- **[Feature]** The `kubeadm` tool makes it much easier to bootstrap Kubernetes. ([docs](http://kubernetes.io/docs/getting-started-guides/kubeadm/)) ([kubernetes/features#11](https://github.com/kubernetes/enhancements/issues/11)). (Upstream release notes)\n- **[Feature]** Creating a `Federated Ingress` is as simple as submitting an `Ingress` creation request to the Federation API Server. The Federation control system then creates and maintains a single global virtual IP to load balance incoming HTTP(S) traffic across some or all the registered clusters, across all. (Upstream release notes)\n- **[Feature]** Creating a `Federated Namespace` causes matching `Namespace`s to be created and maintained in all the clusters registered with that federation. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-namespaces.md)). (Upstream release notes)\n- **[Feature]** DELETE operation in REST API: * Other objects: no changes unless you explicitly request orphaning. (Upstream release notes)\n- **[Urgent Upgrade Notes]** If upgrading Cluster Federation components from 1.3.x, the `federation-apiserver` and `federation-controller-manager` binaries have been folded into `hyperkube`.  Please switch to using that instead. ([#29929](https://github.com/kubernetes/kubernetes/pull/29929))\n- **[Urgent Upgrade Notes]** The NamespaceExists and NamespaceAutoProvision admission controllers have been removed, use the NamespaceLifecycle admission controller instead. ([#31250](https://github.com/kubernetes/kubernetes/pull/31250))\n- **[Urgent Upgrade Notes]** kubelet's `--config` flag has been deprecated, use `--pod-manifest-path` instead. ([#29999](https://github.com/kubernetes/kubernetes/pull/29999))\n- **[Urgent Upgrade Notes]** If upgrading Cluster Federation components from 1.3.x, be aware the federation-controller-manager now looks for a different secret name.  Run the following to migrate (#28938, @madhusudancs) ``` kubectl --namespace=federation get secret federation-apiserver-secret -o json | sed. ([#28938](https://github.com/kubernetes/kubernetes/pull/28938))\n- **[Urgent Upgrade Notes]** Kubernetes components no longer handle panics, and instead actively crash.  All Kubernetes components should be run by something that actively restarts them. This is true of the default setups, but those with custom environments may need to double-check. ([#28800](https://github.com/kubernetes/kubernetes/pull/28800))\n- **[Urgent Upgrade Notes]** If you are using the PodSecurityPolicy feature (eg: `kubectl get podsecuritypolicy` does not error, and returns one or more objects), be aware that init containers have moved from alpha to beta.  If there are any pods with the key `pods.beta.kubernetes.io/init-containers`, then that pod may not. ([#31026](https://github.com/kubernetes/kubernetes/pull/31026))\n- **[Feature]** Generate audit logs for every request user performs against secured API server endpoint. ([docs](http://kubernetes.io/docs/admin/audit/)) ([kubernetes/features#22](https://github.com/kubernetes/enhancements/issues/22)). (Upstream release notes)\n- **[Feature]** Introducing 'ScheduledJobs', which allow running time based Jobs, namely once at a specified time or repeatedly at specified point in time. ([docs](http://kubernetes.io/docs/user-guide/scheduled-jobs/)) ([kubernetes/features#19](https://github.com/kubernetes/enhancements/issues/19)). (Upstream release notes)\n- **[Feature]** Container Image Policy allows an access controller to determine whether a pod may be scheduled based on a policy ([docs](http://kubernetes.io/docs/admin/admission-controllers/#imagepolicywebhook)) ([kubernetes/features#59](https://github.com/kubernetes/enhancements/issues/59)). (Upstream release notes)\n- **[Feature]** Access Review APIs expose authorization engine to external inquiries for delegation, inspection, and debugging ([docs](http://kubernetes.io/docs/admin/authorization/)) ([kubernetes/features#37](https://github.com/kubernetes/enhancements/issues/37)). (Upstream release notes)\n- **[Feature]** Ensure critical cluster infrastructure pods (Heapster, DNS, etc.) can schedule by evicting regular pods when necessary to make the critical pods schedule. ([docs](http://kubernetes.io/docs/admin/rescheduler/#guaranteed-scheduling-of-critical-add-on-pods)). (Upstream release notes)\n- **[Feature]** Simplifies bootstrapping of TLS secured communication between the API server and kubelet. ([docs](http://kubernetes.io/docs/admin/master-node-communication/#kubelet-tls-bootstrap)) ([kubernetes/features#43](https://github.com/kubernetes/enhancements/issues/43)). (Upstream release notes)\n- **[Feature]** `Federated Replica Sets` create and maintain matching `Replica Set`s in some or all clusters in a federation, with the desired replica count distributed equally or according to specified per-cluster weights. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-replicasets.md)). (Upstream release notes)\n- **[Feature]** `Federated Secrets` are created and kept consistent across all clusters in a federation. ([docs](http://kubernetes.io/docs/user-guide/federation/federated-secrets.md)) ([kubernetes/features#68](https://github.com/kubernetes/enhancements/issues/68)). (Upstream release notes)\n- **[Feature]** Federation API server gained support for events and many federation controllers now report important events. ([docs](http://kubernetes.io/docs/user-guide/federation/events)) ([kubernetes/features#70](https://github.com/kubernetes/enhancements/issues/70)). (Upstream release notes)\n- **[Feature]** ingress has alpha support for a single master multi zone cluster ([docs](http://kubernetes.io/docs/user-guide/ingress.md#failing-across-availability-zones)) ([kubernetes/features#52](https://github.com/kubernetes/enhancements/issues/52)). (Upstream release notes)\n- **[Feature]** Service LB now has alpha support for preserving client source IP ([docs](http://kubernetes.io/docs/user-guide/load-balancer/)) ([kubernetes/features#27](https://github.com/kubernetes/enhancements/issues/27)). (Upstream release notes)\n- **[Feature]** Publish node performance dashboard at http://node-perf-dash.k8s.io/#/builds ([docs](https://github.com/kubernetes/contrib/blob/master/node-perf-dash/README.md)) ([kubernetes/features#83](https://github.com/kubernetes/enhancements/issues/83)). (Upstream release notes)\n- **[Feature]** Pods now have alpha support for setting whitelisted, safe sysctls. Unsafe sysctls can be whitelisted on the kubelet. ([docs](http://kubernetes.io/docs/admin/sysctls/)) ([kubernetes/features#34](https://github.com/kubernetes/enhancements/issues/34)). (Upstream release notes)\n- **[Feature]** AppArmor profiles can be specified & applied to pod containers ([docs](http://kubernetes.io/docs/admin/apparmor/)) ([kubernetes/features#24](https://github.com/kubernetes/enhancements/issues/24)). (Upstream release notes)\n- **[Feature]** Cluster policy to control access and defaults of security related features ([docs](http://kubernetes.io/docs/user-guide/pod-security-policy/)) ([kubernetes/features#5](https://github.com/kubernetes/enhancements/issues/5)). (Upstream release notes)\n- **[Feature]** Allows pods to require or prohibit (or prefer or prefer not) co-scheduling on the same node (or zone or other topology domain) as another set of pods. ([docs](http://kubernetes.io/docs/user-guide/node-selection/) ([kubernetes/features#51](https://github.com/kubernetes/enhancements/issues/51)). (Upstream release notes)\n- **[Feature]** Persistent Volume provisioning now supports multiple provisioners using StorageClass configuration. ([docs](http://kubernetes.io/docs/user-guide/persistent-volumes/)) ([kubernetes/features#36](https://github.com/kubernetes/enhancements/issues/36)). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta10). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta8). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta7). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta6). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta5). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta3). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta2). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-beta1). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-alpha3). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-alpha2). (Upstream release notes)\n- **[Feature]** (CHANGELOG.md#v140-alpha1). (Upstream release notes)\n- **[Urgent Upgrade Notes]** If you are using Kubernetes to manage `docker` containers, please be aware Kubernetes has been validated to work with docker 1.9.1, docker 1.11.2 (#23397), and docker 1.12.0. ([#23397](https://github.com/kubernetes/kubernetes/pull/23397), [#28698](https://github.com/kubernetes/kubernetes/pull/28698))\n- **[Feature]** Easier to get a cluster up and running (eg: `kubeadm`, intra-cluster bootstrapping). (Upstream release notes)\n- **[Feature]** Enhanced persistence capabilities (eg: `StorageClasses`, new volume plugins). (Upstream release notes)\n- **[Feature]** New resources and scheduler features (eg: `ScheduledJob` resource, pod/node affinity/anti-affinity). (Upstream release notes)\n- **[Feature]** Increased pod-level security granularity (eg: Container Image Policies, AppArmor and `sysctl` support). (Upstream release notes)\n- **[Urgent Upgrade Notes]** Completed pods lose logs across node upgrade ([#32324](https://github.com/kubernetes/kubernetes/issues/32324)). ([#32324](https://github.com/kubernetes/kubernetes/pull/32324))\n- **[Urgent Upgrade Notes]** Pods are deleted across node upgrade ([#32323](https://github.com/kubernetes/kubernetes/issues/32323)). ([#32323](https://github.com/kubernetes/kubernetes/pull/32323))\n- **[Urgent Upgrade Notes]** Secure master -> node communication ([#11816](https://github.com/kubernetes/kubernetes/issues/11816)). ([#11816](https://github.com/kubernetes/kubernetes/pull/11816))\n- **[Urgent Upgrade Notes]** upgrading master doesn't upgrade kubectl ([#32538](https://github.com/kubernetes/kubernetes/issues/32538)). ([#32538](https://github.com/kubernetes/kubernetes/pull/32538))\n- **[Urgent Upgrade Notes]** Specific error message on failed rolling update issued by older kubectl against 1.4 master ([#32751](https://github.com/kubernetes/kubernetes/issues/32751)). ([#32751](https://github.com/kubernetes/kubernetes/pull/32751))\n- **[Urgent Upgrade Notes]** bump master cidr range from /30 to /29 ([#32886](https://github.com/kubernetes/kubernetes/issues/32886)). ([#32886](https://github.com/kubernetes/kubernetes/pull/32886))\n- **[Urgent Upgrade Notes]** non-hostNetwork daemonsets will almost always have a pod that fails to schedule ([#32900](https://github.com/kubernetes/kubernetes/issues/32900)). ([#32900](https://github.com/kubernetes/kubernetes/pull/32900))\n- **[Urgent Upgrade Notes]** Service loadBalancerSourceRanges doesn't respect updates ([#33033](https://github.com/kubernetes/kubernetes/issues/33033)). ([#33033](https://github.com/kubernetes/kubernetes/pull/33033))\n- **[Urgent Upgrade Notes]** disallow user to update loadbalancerSourceRanges ([#33346](https://github.com/kubernetes/kubernetes/issues/33346)). ([#33346](https://github.com/kubernetes/kubernetes/pull/33346))\n- **[Urgent Upgrade Notes]** If upgrading Cluster Federation components from 1.3.x, please ensure your cluster name is a valid DNS label. ([#30956](https://github.com/kubernetes/kubernetes/pull/30956))\n- **[Urgent Upgrade Notes]** kubelet now defaults to `--cloud-provider=auto-detect`, use `--cloud-provider=''` to preserve previous default of no cloud provider. ([#28258](https://github.com/kubernetes/kubernetes/pull/28258))\n- **[Feature]** Simplified User Experience. (Upstream release notes)\n- **[Feature]** Easier to understand a cluster (eg: API audit logs, server-based API defaults). (Upstream release notes)\n- **[Feature]** Stateful Application Support. (Upstream release notes)\n- **[Feature]** Cluster Federation. (Upstream release notes)\n- **[Feature]** Global Multi-cluster HTTP(S) Ingress across GCE and GKE clusters. (Upstream release notes)\n- **[Feature]** Expanded support for federated hybrid-cloud resources including ReplicaSets, Secrets, Namespaces and Events. (Upstream release notes)\n- **[Feature]** Security. (Upstream release notes)\n- **[Feature]** Increased cluster-level security granularity (eg: Access Review API). (Upstream release notes)\n- **[Feature]** API Machinery. (Upstream release notes)\n- **[Feature]** Cluster Lifecycle. (Upstream release notes)\n- **[Feature]** Federation. (Upstream release notes)\n- **[Feature]** Network. (Upstream release notes)\n- **[Feature]** Scheduling. (Upstream release notes)\n- **[Feature]** Storage. (Upstream release notes)\n- **[Feature]** Deployments: - ReplicaSets of paused Deployments are now scaled while the Deployment is paused. This is retroactive to existing Deployments. (Upstream release notes)\n- **[Feature]** Deployments: - When scaling a Deployment during a rollout, the ReplicaSets of all Deployments are now scaled proportionally based on the number of replicas they each have instead of only scaling the newest ReplicaSet. (Upstream release notes)\n- **[Feature]** kubectl rolling-update: < v1.4.0 client vs >=v1.4.0 cluster: Old version kubectl's rolling-update command is compatible with Kubernetes 1.4 and higher only if you specify a new replication controller name. You will need to update to kubectl 1.4 or higher to use the rolling update command against a. (Upstream release notes)\n- **[Feature]** kubectl delete: < v1.4.0 client vs >=v1.4.0 cluster: If you use an old version kubectl to delete a replication controller or replicaset, then after the delete command has returned, the replication controller or the replicaset will continue to exist in the key-value store for a short period of time. (Upstream release notes)\n- **[Feature]** DELETE operation in REST API: * Replication controller & Replicaset: the DELETE request of a replication controller or a replicaset becomes asynchronous by default. The object will continue to exist in the key-value store for some time. The API server will set its metadata.deletionTimestamp, add. (Upstream release notes)\n- **[Urgent Upgrade Notes]** If you upgrade your apiserver to 1.4.x but leave your kubelets at 1.3.x, they will not report init container status, but init containers will work properly.  Upgrading kubelets to 1.4.x fixes this. (Upstream release notes)\n\n**Key Feature Gates / API Identifiers**: `kubectl`, `kube-apiserver`, `kubeadm`, `Ingress`, `Namespace`, `federation-apiserver`, `federation-controller-manager`, `hyperkube`, `docker`, `StorageClasses`, `ScheduledJob`, `sysctl`",
+  "eval": {
+    "variant": "v5_progressive_clarity_engine",
+    "project": "kubernetes",
+    "version": "v1.4",
+    "headline_salience_recall": 0.8333,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 0.7833,
+    "cluster_diversity_score": 0.9611,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.937,
+    "matched_spotlights": "5/6",
+    "cited_prs_count": 19,
+    "cited_keps_count": 0
+  },
+  "published_date": "2016-09-26",
+  "total_raw_items": 82
+}

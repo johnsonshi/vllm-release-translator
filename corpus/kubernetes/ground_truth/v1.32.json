@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.32: Penelope",
   "release_date": "2024-12-11",
   "reported_enhancements_count": 44,
-  "spotlight_count": 29,
+  "spotlight_count": 22,
   "spotlights": [
     {
       "heading": "A note on DRA enhancements",
@@ -224,97 +224,12 @@
       "summary": "Support for graceful shutdowns of Windows nodes in Kubernetes clusters has been added.  Before this release, Kubernetes provided graceful node shutdown functionality for Linux nodes  but lacked equivalent support for Windows. This enhancement enables the kubelet on Windows nodes to handle system  shutdown events properly. Doing so, it ensures that Pods running on Windows nodes are gracefully terminated,  allowing workloads to be rescheduled without disruption. This improvement enhances the reliability and stability  of clusters that include Windows nodes, especially during a planned maintenanc"
     },
     {
-      "heading": "Graduations to Stable",
-      "stage": "Stable",
-      "keps": [
-        "3221",
-        "4193",
-        "4358",
-        "4420",
-        "1860",
-        "2681",
-        "4292",
-        "1769",
-        "1967",
-        "3545",
-        "4026",
-        "4017",
-        "1847"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 13 enhancements promoted to Stable:  - [Structured Authorization Configuration](https://github.com/kubernetes/enhancements/issues/3221)"
-    },
-    {
-      "heading": "Deprecations and removals",
-      "stage": "Deprecation",
-      "keps": [
-        "3063",
-        "4381"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health. See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process.      #### Withdrawal of the old DRA implementation"
-    },
-    {
       "heading": "Release notes and upgrade actions required",
       "stage": "Unspecified",
       "keps": [],
       "prs": [],
       "identifiers": [],
       "summary": "Check out the full details of the Kubernetes v1.32 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.32.md)."
-    },
-    {
-      "heading": "Even more DRA enhancements!",
-      "stage": "Unspecified",
-      "keps": [
-        "4680"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "In this release, like the previous one, the Kubernetes project continues proposing a number of enhancements to the Dynamic Resource Allocation (DRA), a key component of the Kubernetes resource management system. These enhancements aim to improve the flexibility and efficiency of resource allocation for workloads that require specialized hardware, such as GPUs, FPGAs and network adapters. This release introduces improvements, including the addition of resource health status in the Pod status, as outlined in KEP [#4680](https://github.com/kubernetes/enhancements/issues/4680)."
-    },
-    {
-      "heading": "Windows strikes back!",
-      "stage": "Unspecified",
-      "keps": [
-        "4802"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "KEP [#4802](https://github.com/kubernetes/enhancements/issues/4802) adds support for graceful shutdowns of Windows nodes in Kubernetes clusters. Before this release, Kubernetes provided graceful node shutdown functionality for Linux nodes but lacked equivalent support for Windows. This enhancement enables the kubelet on Windows nodes to handle system shutdown events properly. Doing so, it ensures that Pods running on Windows nodes are gracefully terminated,"
-    },
-    {
-      "heading": "Allow special characters in environment variables",
-      "stage": "Unspecified",
-      "keps": [
-        "4369"
-      ],
-      "prs": [],
-      "identifiers": [
-        "RelaxedEnvironmentVariableValidation"
-      ],
-      "summary": "With the graduation of this [enhancement](https://github.com/kubernetes/enhancements/issues/4369) to beta, Kubernetes now allows almost all printable ASCII characters (excluding \"=\") to be used as environment variable names. This change addresses the limitations previously imposed on variable naming, facilitating a broader adoption of Kubernetes by accommodating various application needs. The relaxed validation will be enabled by default via the `RelaxedEnvironmentVariableValidation` feature gate, ensuring that users can easily utilize environment variables without strict constraints, enhancin"
-    },
-    {
-      "heading": "Make Kubernetes aware of the LoadBalancer behavior",
-      "stage": "Stable",
-      "keps": [
-        "1860"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "KEP [#1860](https://github.com/kubernetes/enhancements/issues/1860) graduates to GA, introducing the `ipMode` field for a Service of `type: LoadBalancer`, which can be set to either `\"VIP\"` or `\"Proxy\"`. This enhancement is aimed at improving how cloud providers load balancers interact with kube-proxy and it is a change transparent to the end user. The existing behavior of kube-proxy is preserved when using `\"VIP\"`, where kube-proxy handles the load balancing. Using `\"Proxy\"` results in traffic sent directly to the load balancer,"
-    },
-    {
-      "heading": "Retry generate name for resources",
-      "stage": "Unspecified",
-      "keps": [
-        "4420"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "This [enhancement](https://github.com/kubernetes/enhancements/issues/4420) improves how name conflicts are handled for Kubernetes resources created with the `generateName` field. Previously, if a name conflict occurred, the API server returned a 409 HTTP Conflict error and clients had to manually retry the request. With this update, the API server automatically retries generating a new name up to seven times in case of a conflict. This significantly reduces the chances of collision, ensuring smooth generation of up to 1 million names with less than a 0.1% probability of a conflict,"
     }
   ],
   "ground_truth_keps": [
@@ -348,13 +263,10 @@
     "3545",
     "4026",
     "4017",
-    "3063",
-    "4680",
-    "4369"
+    "3063"
   ],
   "ground_truth_identifiers": [
     "ImagePullBackOff",
-    "PodLifecycleSleepActionAllowZero",
-    "RelaxedEnvironmentVariableValidation"
+    "PodLifecycleSleepActionAllowZero"
   ]
 }

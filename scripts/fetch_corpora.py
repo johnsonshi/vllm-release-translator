@@ -27,7 +27,35 @@ VLLM_RAW_DIR = REPO_ROOT / "corpus" / "vllm" / "raw"
 VLLM_GT_DIR = REPO_ROOT / "corpus" / "vllm" / "ground_truth"
 VLLM_WEEKLY_DIR = REPO_ROOT / "corpus" / "vllm" / "weekly"
 
-K8S_BLOG_PATHS = {
+K8S_BLOG_PATHS: dict[str, tuple[str | None, str | None]] = {
+    "v1.0": ("2015/kubernetes-10-launch-party-at-oscon.md", None),
+    "v1.1": ("2015/kubernetes-1-1-performance-upgrades-improved-tooling-and-a-growing-community.md", None),
+    "v1.2": ("2016/kubernetes-1-2-even-more-performance-upgrades-plus-easier-application-deployment-and-management-.md", None),
+    "v1.3": ("2016/kubernetes-1-3-bridging-cloud-native-and-enterprise-workloads.md", None),
+    "v1.4": ("2016/kubernetes-1-4-making-it-easy-to-run-on-kuberentes-anywhere.md", None),
+    "v1.5": ("2016/kubernetes-1-5-supporting-production-workloads.md", None),
+    "v1.6": ("2017/kubernetes-1-6-multi-user-multi-workloads-at-scale.md", "2017/scalability-updates-in-kubernetes-1-6.md"),
+    "v1.7": ("2017/kubernetes-1-7-security-hardening-stateful-application-extensibility-updates.md", None),
+    "v1.8": ("2017/kubernetes-18-security-workloads-and.md", None),
+    "v1.9": ("2017/kubernetes-19-workloads-expanded-ecosystem.md", None),
+    "v1.10": ("2018/kubernetes-1-10-stabilizing-storage-security-networking.md", None),
+    "v1.11": ("2018/kubernetes-1-11-release-announcement.md", None),
+    "v1.12": ("2018/kubernetes-1-12-release-announcement.md", None),
+    "v1.13": ("2018/kubernetes-1-13-release-announcement.md", None),
+    "v1.14": ("2019/1-14-release-announcement.md", None),
+    "v1.15": ("2019/kubernetes-1-15-release-announcement.md", None),
+    "v1.16": ("2019/kubernetes-1-16-release-announcement.md", None),
+    "v1.17": ("2019/kubernetes-1.17-release-announcement.md", None),
+    "v1.18": ("2020/kubernetes-1.18-release-announcement.md", None),
+    "v1.19": ("2020/kubernetes-release-1.19.md", None),
+    "v1.20": ("2020/kubernetes-release-1.20.md", None),
+    "v1.21": ("2021/kubernetes-release-1.21.md", None),
+    "v1.22": ("2021/kubernetes-release-1.22.md", None),
+    "v1.23": ("2021/kubernetes-release-1.23.md", None),
+    "v1.24": ("2022/kubernetes-release-1.24.md", "2022/kubernetes-1-24-removals-and-deprecations.md"),
+    "v1.25": ("2022/kubernetes-1.25-blog.md", "2022/kubernetes-1.25-deprecations-and-removals.md"),
+    "v1.26": ("2022/kubernetes-1.26-blog.md", "2022/kubernetes-1.26-deprecations-and-removals.md"),
+    "v1.27": ("2023/kubernetes-1.27-release.md", "2023/kubernetes-1.27-deprecations-and-removals.md"),
     "v1.28": ("2023/kubernetes-1.28-blog.md", None),
     "v1.29": ("2023/kubernetes-1.29.md", "2023/mid-cycle-1.29.md"),
     "v1.30": ("2024/kubernetes-v1-30-release.md", "2024/mid-cycle-1-30.md"),
@@ -101,14 +129,28 @@ def parse_k8s_changelog(md_text: str, minor_ver: str) -> dict[str, Any]:
 
         def flush_item(sub: str, lines: list[str]) -> None:
             text = " ".join(x.strip() for x in lines if x.strip()).strip()
-            if not text:
+            if not text or len(text) < 12:
                 return
-            pr_matches = re.findall(r"#(\d{4,6})", text)
-            kep_matches = re.findall(r"KEP[-#\s]*(\d{3,5})", text, flags=re.I)
+            pr_matches = re.findall(r"#(\d{3,6})", text)
+            kep_matches = re.findall(r"KEP[-#\s]*(\d{2,5})", text, flags=re.I)
             sig_matches = re.findall(r"\[SIG\s+([^\]]+)\]", text, flags=re.I)
-            fg_matches = re.findall(r"`([A-Z][A-Za-z0-9]{4,50})`", text)
+            fg_matches = re.findall(r"`([A-Za-z][A-Za-z0-9_.-]{3,50})`", text)
+            # Normalize historical sub-category names into canonical categories
+            sub_l = sub.lower()
+            if any(k in sub_l for k in ("urgent", "action required", "known issue", "before you upgrade")):
+                norm_sub = "Urgent Upgrade Notes"
+            elif any(k in sub_l for k in ("deprecat", "removal")):
+                norm_sub = "Deprecation"
+            elif "api change" in sub_l:
+                norm_sub = "API Change"
+            elif any(k in sub_l for k in ("bug", "regression")):
+                norm_sub = "Bug or Regression"
+            elif any(k in sub_l for k in ("other (cleanup", "flake", "failing test", "dependency")):
+                norm_sub = "Other"
+            else:
+                norm_sub = "Feature"
             items.append({
-                "category": sub,
+                "category": norm_sub,
                 "text": re.sub(r"^[-*]\s+", "", text),
                 "prs": list(dict.fromkeys(pr_matches)),
                 "keps": list(dict.fromkeys(kep_matches)),
@@ -117,35 +159,64 @@ def parse_k8s_changelog(md_text: str, minor_ver: str) -> dict[str, Any]:
             })
 
         in_relevant = False
+        current_sub_heading = ""
+        para_lines: list[str] = []
         for line in section_text.splitlines():
             h2 = re.match(r"^##\s+(.+)$", line.strip())
             h3 = re.match(r"^###\s+(.+)$", line.strip())
+            h4 = re.match(r"^####\s+(.+)$", line.strip())
             if h2:
                 flush_item(current_sub, current_item)
                 current_item = []
+                if para_lines and current_sub_heading:
+                    flush_item(current_sub, [f"{current_sub_heading}: {' '.join(para_lines)}"])
+                para_lines = []
+                current_sub_heading = ""
                 title = h2.group(1).strip()
-                if "Urgent Upgrade Notes" in title:
+                title_l = title.lower()
+                if any(skip in title_l for skip in ("downloads for", "dependencies", "client binaries", "server binaries", "node binaries", "container images")):
+                    in_relevant = False
+                elif any(u in title_l for u in ("urgent upgrade", "action required", "known issues")):
                     current_sub = "Urgent Upgrade Notes"
                     in_relevant = True
-                elif "Changes by Kind" in title:
+                elif "deprecat" in title_l:
+                    current_sub = "Deprecation"
                     in_relevant = True
-                elif "Dependencies" in title or "Downloads" in title:
-                    in_relevant = False
-            elif h3 and in_relevant:
+                else:
+                    current_sub = "Feature"
+                    in_relevant = True
+            elif (h3 or h4) and in_relevant:
                 flush_item(current_sub, current_item)
                 current_item = []
-                sub_title = h3.group(1).strip()
-                if "MUST read this" in sub_title:
+                if para_lines and current_sub_heading:
+                    flush_item(current_sub, [f"{current_sub_heading}: {' '.join(para_lines)}"])
+                para_lines = []
+                sub_title = (h3 or h4).group(1).strip()
+                sub_l = sub_title.lower()
+                if any(skip in sub_l for skip in ("client binaries", "server binaries", "node binaries", "source code", "container images")):
+                    continue
+                if "must read this" in sub_l or "action required" in sub_l or "known issue" in sub_l:
                     current_sub = "Urgent Upgrade Notes"
-                else:
+                    current_sub_heading = ""
+                elif sub_title in ("Feature", "API Change", "Deprecation", "Bug or Regression", "Other", "Other (Cleanup or Flake)"):
                     current_sub = sub_title
+                    current_sub_heading = ""
+                else:
+                    current_sub_heading = sub_title
             elif in_relevant:
                 if re.match(r"^\s*[-*]\s+", line):
                     flush_item(current_sub, current_item)
-                    current_item = [line]
+                    if current_sub_heading and not line.strip().lstrip("-* ").startswith(current_sub_heading):
+                        current_item = [f"- {current_sub_heading}: {re.sub(r'^\\s*[-*]\\s+', '', line)}"]
+                    else:
+                        current_item = [line]
                 elif current_item and line.strip():
                     current_item.append(line)
+                elif current_sub_heading and line.strip() and not line.strip().startswith("#"):
+                    para_lines.append(line.strip())
         flush_item(current_sub, current_item)
+        if para_lines and current_sub_heading:
+            flush_item(current_sub, [f"{current_sub_heading}: {' '.join(para_lines)}"])
         return items
 
     minor_items = extract_bullets(minor_body)
@@ -194,6 +265,13 @@ def parse_k8s_blog_ground_truth(blog_md: str, sneak_md: str | None, minor_ver: s
     enh_match = re.search(r"consists of\s+(\d+)\s+enhancements", blog_md, flags=re.I)
 
     combined = blog_md + ("\n\n" + sneak_md if sneak_md else "")
+    # Strip trailing community/adoption/event sections so customer quotes and KubeCon blurbs aren't treated as features
+    combined = re.split(
+        r"(?:^##+\s*(?:Community|Documentation|Roadmap|Connect|Availability|Release [Tt]eam|Ecosystem Updates|Project Velocity|User Highlights|KubeCon|Upcoming Release Webinar|Webinar|Get Involved)|\*\*(?:Adoption|Availability|Release [Tt]eam|Project Velocity|User Highlights|Ecosystem Updates|KubeCon|Get Involved)\*\*)",
+        combined,
+        maxsplit=1,
+        flags=re.M,
+    )[0]
     spotlights: list[dict[str, Any]] = []
 
     # Split by ### headings in the blog (or ## headings if ### has < 5 spotlights, e.g. v1.28)
@@ -203,7 +281,10 @@ def parse_k8s_blog_ground_truth(blog_md: str, sneak_md: str | None, minor_ver: s
     skip_headings = {
         "release theme and logo", "release notes", "availability", "release team",
         "ecosystem updates", "project velocity", "upcoming release webinar", "get involved",
-        "spotlight on key updates", "other notable changes",
+        "spotlight on key updates", "other notable changes", "what’s new", "what's new",
+        "community", "documentation", "roadmap", "connect", "features blog series",
+        "user highlights", "kubecon", "webinar", "what does this change mean?",
+        "graduations to stable", "deprecations and removals",
     }
     for idx in range(1, len(chunks), 2):
         heading = re.sub(r"\[.*?\]\(.*?\)", "", chunks[idx]).strip()
@@ -234,6 +315,48 @@ def parse_k8s_blog_ground_truth(blog_md: str, sneak_md: str | None, minor_ver: s
 
     all_keps = list(dict.fromkeys(re.findall(r"(?:KEP\s*#?|/keps/|enhancements/issues/)(\d{3,5})", combined, flags=re.I)))
     all_identifiers = list(dict.fromkeys(re.findall(r"`([A-Z][A-Za-z0-9]{4,50})`", combined)))
+
+    # Fallback for early Kubernetes release blogs (v1.0 - v1.19) that used `- **Feature**:`, `- [Feature](/docs/...)`, or `**beta: Feature**` bullets
+    if len(spotlights) < 4:
+        for line in combined.splitlines():
+            s = line.strip()
+            m_bullet = re.match(r"^[-*]\s+\*\*([^*]{4,90})\*\*\s*[:.-]?\s*(.*)$", s)
+            m_link_bullet = re.match(r"^[-*]\s+(?:[A-Za-z0-9\s]{0,25})?\[([^\]]{4,80})\]\([^)]+\)\s*(.*)$", s)
+            m_bold = re.match(r"^\*\*((?:alpha|beta|stable|ga)\s*:\s*[^*]{4,90})\*\*\s*$", s, flags=re.I)
+            if m_bullet:
+                h_txt = m_bullet.group(1).strip()
+                b_txt = m_bullet.group(2).strip() or h_txt
+                if h_txt.lower() not in ("and many more", "availability", "release team", "community"):
+                    spotlights.append({
+                        "heading": h_txt,
+                        "stage": "Unspecified",
+                        "keps": [],
+                        "prs": [],
+                        "identifiers": list(dict.fromkeys(re.findall(r"`([A-Za-z][A-Za-z0-9_.-]{3,50})`", b_txt)))[:6],
+                        "summary": f"{h_txt}: {b_txt}"[:400],
+                    })
+            elif m_link_bullet:
+                h_txt = m_link_bullet.group(1).strip()
+                b_txt = m_link_bullet.group(2).strip() or h_txt
+                if not any(w in h_txt.lower() for w in ("release notes", "here", "meetup", "hello world")):
+                    spotlights.append({
+                        "heading": h_txt,
+                        "stage": "Unspecified",
+                        "keps": list(dict.fromkeys(re.findall(r"enhancements/issues/(\d{2,5})", s))),
+                        "prs": [],
+                        "identifiers": list(dict.fromkeys(re.findall(r"`([A-Za-z][A-Za-z0-9_.-]{3,50})`", s)))[:6],
+                        "summary": f"{h_txt}: {b_txt}"[:400],
+                    })
+            elif m_bold:
+                h_txt = m_bold.group(1).strip()
+                spotlights.append({
+                    "heading": h_txt,
+                    "stage": "Beta" if "beta" in h_txt.lower() else ("Alpha" if "alpha" in h_txt.lower() else "Stable"),
+                    "keps": [],
+                    "prs": [],
+                    "identifiers": [],
+                    "summary": h_txt,
+                })
 
     return {
         "project": "kubernetes",
@@ -594,19 +717,31 @@ def main() -> None:
     for d in (K8S_RAW_DIR, K8S_GT_DIR, K8S_LWKD_DIR, VLLM_RAW_DIR, VLLM_GT_DIR, VLLM_WEEKLY_DIR):
         d.mkdir(parents=True, exist_ok=True)
 
-    print("1. Checking Kubernetes 10 minor releases (v1.28 - v1.37)...")
+    print("1. Fetching all 38 Kubernetes minor releases (v1.0 - v1.37) + official release blogs...")
     for minor_ver, (blog_rel_path, sneak_rel_path) in K8S_BLOG_PATHS.items():
         if (K8S_RAW_DIR / f"{minor_ver}.json").exists() and (K8S_GT_DIR / f"{minor_ver}.json").exists():
             continue
         ver_num = minor_ver.lstrip("v")
-        changelog_url = f"https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-{ver_num}.md"
-        print(f"  - Downloading CHANGELOG-{ver_num}.md ...")
-        cl_text = fetch_url(changelog_url)
+        if minor_ver in ("v1.0", "v1.1"):
+            gh_tag = "v1.0.0" if minor_ver == "v1.0" else "v1.1.1"
+            cmd = ["gh", "release", "view", gh_tag, "--repo", "kubernetes/kubernetes", "--json", "body"]
+            res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            rel_body = json.loads(res.stdout).get("body", "")
+            cl_text = f"# v{ver_num}.0\n## Changes by Kind\n### Feature\n" + rel_body
+        else:
+            changelog_url = f"https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-{ver_num}.md"
+            print(f"  - Downloading CHANGELOG-{ver_num}.md ...")
+            cl_text = fetch_url(changelog_url)
         raw_k8s = parse_k8s_changelog(cl_text, minor_ver)
         (K8S_RAW_DIR / f"{minor_ver}.json").write_text(json.dumps(raw_k8s, indent=2))
 
-        blog_url = f"https://raw.githubusercontent.com/kubernetes/website/main/content/en/blog/_posts/{blog_rel_path}"
-        blog_text = fetch_url(blog_url)
+        blog_text = ""
+        if blog_rel_path:
+            blog_url = f"https://raw.githubusercontent.com/kubernetes/website/main/content/en/blog/_posts/{blog_rel_path}"
+            try:
+                blog_text = fetch_url(blog_url)
+            except Exception:
+                blog_text = ""
         sneak_text = None
         if sneak_rel_path:
             try:
@@ -617,6 +752,32 @@ def main() -> None:
         gt_k8s = parse_k8s_blog_ground_truth(blog_text, sneak_text, minor_ver)
         (K8S_GT_DIR / f"{minor_ver}.json").write_text(json.dumps(gt_k8s, indent=2))
         print(f"    Saved {minor_ver}: {raw_k8s['total_raw_items']} raw items, {gt_k8s['spotlight_count']} human spotlights, {len(raw_k8s['patch_releases'])} patches")
+
+    # Auto-discover any newer Kubernetes minor releases (v1.38+) that have a stable .0 section
+    for next_k8s_minor in range(38, 45):
+        m_ver = f"v1.{next_k8s_minor}"
+        if (K8S_RAW_DIR / f"{m_ver}.json").exists():
+            continue
+        try:
+            cl_url = f"https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-1.{next_k8s_minor}.md"
+            cl_txt = fetch_url(cl_url)
+            if f"# v1.{next_k8s_minor}.0\n" in cl_txt:
+                raw_k8s = parse_k8s_changelog(cl_txt, m_ver)
+                if raw_k8s["total_raw_items"] > 0:
+                    (K8S_RAW_DIR / f"{m_ver}.json").write_text(json.dumps(raw_k8s, indent=2))
+                    (K8S_GT_DIR / f"{m_ver}.json").write_text(json.dumps({
+                        "project": "kubernetes",
+                        "version": m_ver,
+                        "blog_title": f"Kubernetes {m_ver} Release",
+                        "release_date": "",
+                        "spotlight_count": 0,
+                        "spotlights": [],
+                        "ground_truth_keps": [],
+                        "ground_truth_identifiers": [],
+                    }, indent=2))
+                    print(f"    Auto-discovered new Kubernetes release {m_ver}: {raw_k8s['total_raw_items']} items")
+        except Exception:
+            break
 
     print("2. Checking LWKD weekly editions...")
     for fname in LWKD_FILES:
@@ -629,8 +790,26 @@ def main() -> None:
         (K8S_LWKD_DIR / out_name).write_text(json.dumps(parsed, indent=2))
         print(f"  - Saved LWKD {out_name}: {len(parsed['featured_prs'])} featured PRs, {len(parsed['other_merges'])} other merges")
 
-    print("3. Fetching all 34 vLLM minor releases (v0.1.0 - v0.34.0)...")
-    for disp_ver, tag_ver in VLLM_VERSIONS + VLLM_PATCH_VERSIONS:
+    print("3. Checking all vLLM minor releases (v0.1.0 - v0.34.0 + auto-discovery of v0.35.0+)...")
+    # Also dynamically discover any newer v0.XX.0 releases on vllm-project/vllm
+    dynamic_vllm = list(VLLM_VERSIONS)
+    try:
+        rel_list_cmd = ["gh", "release", "list", "--repo", "vllm-project/vllm", "--limit", "15", "--json", "tagName"]
+        rel_list_res = subprocess.run(rel_list_cmd, capture_output=True, text=True, check=False)
+        if rel_list_res.returncode == 0 and rel_list_res.stdout.strip():
+            known_disp = {d for d, _ in dynamic_vllm}
+            for r_obj in json.loads(rel_list_res.stdout):
+                t_name = r_obj.get("tagName", "")
+                m_minor = re.match(r"^(v\d+\.\d+\.0)(?:rc\d+)?$", t_name)
+                if m_minor and m_minor.group(1) not in known_disp:
+                    dynamic_vllm.append((m_minor.group(1), t_name))
+                    known_disp.add(m_minor.group(1))
+    except Exception:
+        pass
+
+    for disp_ver, tag_ver in dynamic_vllm:
+        if (VLLM_RAW_DIR / f"{disp_ver}.json").exists() and (VLLM_GT_DIR / f"{disp_ver}.json").exists():
+            continue
         cmd = ["gh", "release", "view", tag_ver, "--repo", "vllm-project/vllm", "--json", "tagName,name,publishedAt,body,url"]
         res = subprocess.run(cmd, capture_output=True, text=True, check=True)
         rel_json = json.loads(res.stdout)

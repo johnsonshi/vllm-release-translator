@@ -4,7 +4,7 @@
   "blog_title": "Kubernetes v1.29: Mandala",
   "release_date": "2023-12-13",
   "reported_enhancements_count": 49,
-  "spotlight_count": 15,
+  "spotlight_count": 11,
   "spotlights": [
     {
       "heading": "ReadWriteOncePod PersistentVolume access mode ()",
@@ -98,51 +98,9 @@
       "prs": [],
       "identifiers": [],
       "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md).  This release includes a total of 11 enhancements promoted to Stable:"
-    },
-    {
-      "heading": "Deprecations and removals",
-      "stage": "Deprecation",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "DisableCloudProviders",
-        "DisableKubeletCloudCredentialProviders"
-      ],
-      "summary": "#### Removal of in-tree integrations with cloud providers ([SIG Cloud Provider](https://github.com/kubernetes/community/tree/master/sig-cloud-provider)) {#in-tree-cloud-provider-integration-removal}  Kubernetes v1.29 defaults to operating _without_ a built-in integration to any cloud provider. If you have previously been relying on in-tree cloud provider integrations (with Azure, GCE, or vSphere) then you can either: - enable an equivalent external [cloud controller manager](/docs/concepts/architecture/cloud-controller/)   integration _(recommended)_"
-    },
-    {
-      "heading": "Removal of in-tree integrations with cloud providers ()",
-      "stage": "Removal",
-      "keps": [],
-      "prs": [],
-      "identifiers": [
-        "DisableCloudProviders",
-        "DisableKubeletCloudCredentialProviders"
-      ],
-      "summary": "The [feature gates](/docs/reference/command-line-tools-reference/feature-gates/) `DisableCloudProviders` and `DisableKubeletCloudCredentialProviders` will both be set to `true` by default for Kubernetes v1.29. This change will require that users who are currently using in-tree cloud provider integrations (Azure, GCE, or vSphere) enable external cloud controller managers, or opt in to the legacy integration by setting the associated feature gates to `false`.  Enabling external cloud controller managers means you must run a suitable cloud controller manager within your cluster's control plane; i"
-    },
-    {
-      "heading": "Removal of the `v1beta2` flow control API group",
-      "stage": "Beta",
-      "keps": [],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The _flowcontrol.apiserver.k8s.io/v1beta2_ API version of FlowSchema and PriorityLevelConfiguration will [no longer be served](/docs/reference/using-api/deprecation-guide/#v1-29) in Kubernetes v1.29.   To prepare for this, you can edit your existing manifests and rewrite client software to use the `flowcontrol.apiserver.k8s.io/v1beta3` API version, available since v1.26. All existing persisted objects are accessible via the new API. Notable changes in `flowcontrol.apiserver.k8s.io/v1beta3` include that the PriorityLevelConfiguration `spec.limited.assuredConcurrencyShares` field was renamed to "
-    },
-    {
-      "heading": "Deprecation of the `status.nodeInfo.kubeProxyVersion` field for Node",
-      "stage": "Deprecation",
-      "keps": [
-        "4004"
-      ],
-      "prs": [],
-      "identifiers": [],
-      "summary": "The `.status.kubeProxyVersion` field for Node objects will be [marked as deprecated](https://github.com/kubernetes/enhancements/issues/4004) in v1.29 in preparation for its removal in a future release. This field is not accurate and is set by kubelet, which does not actually know the kube-proxy version, or even if kube-proxy is running."
     }
   ],
-  "ground_truth_keps": [
-    "4004"
-  ],
+  "ground_truth_keps": [],
   "ground_truth_identifiers": [
     "TaintManager",
     "NodeLifecycleController",

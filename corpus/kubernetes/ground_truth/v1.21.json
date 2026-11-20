@@ -1,0 +1,103 @@
+{
+  "project": "kubernetes",
+  "version": "v1.21",
+  "blog_title": "Kubernetes 1.21: Power to the Community",
+  "release_date": "2021-04-08",
+  "reported_enhancements_count": 51,
+  "spotlight_count": 10,
+  "spotlights": [
+    {
+      "heading": "CronJobs Graduate to Stable!",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[CronJobs](/docs/concepts/workloads/controllers/cron-jobs/) (previously ScheduledJobs) has been a beta feature since Kubernetes 1.8! With 1.21 we get to finally see this widely used API graduate to stable.  CronJobs are meant for performing regular scheduled actions such as backups, report generation, and so on. Each of those tasks should be configured to recur indefinitely (for example: once a day / week / month); you can define the point in time within that interval when the job should start."
+    },
+    {
+      "heading": "Immutable Secrets and ConfigMaps",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Immutable Secrets](/docs/concepts/configuration/secret/#secret-immutable) and [ConfigMaps](/docs/concepts/configuration/configmap/#configmap-immutable) add a new field to those resource types that will reject changes to those objects if set. Secrets and ConfigMaps by default are mutable which is beneficial for pods that are able to consume changes. Mutating Secrets and ConfigMaps can also cause problems if a bad configuration is pushed for pods that use them.  By marking Secrets and ConfigMaps as immutable you can be sure your application configuration won't change. If you want to make change"
+    },
+    {
+      "heading": "IPv4/IPv6 dual-stack support",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "IP addresses are a consumable resource that cluster operators and administrators need to make sure are not exhausted. In particular, public IPv4 addresses are now scarce. Having dual-stack support enables native IPv6 routing to pods and services, whilst still allowing your cluster to talk IPv4 where needed. Dual-stack cluster networking also improves a possible scaling limitation for workloads.  Dual-stack support in Kubernetes means that pods, services, and nodes can get IPv4 addresses and IPv6 addresses. In Kubernetes 1.21 [dual-stack networking](/docs/concepts/services-networking/dual-stack"
+    },
+    {
+      "heading": "Graceful Node Shutdown",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Graceful Node shutdown](/docs/concepts/architecture/nodes/#graceful-node-shutdown) also graduated to beta with this release (and will now be available to a much larger group of users)! This is a hugely beneficial feature that allows the kubelet to be aware of node shutdown, and gracefully terminate pods that are scheduled to that node.  Currently, when a node shuts down, pods do not follow the expected termination lifecycle and are not shut down gracefully. This can introduce problems with a lot of different workloads. Going forward, the kubelet will be able to detect imminent system shutdown"
+    },
+    {
+      "heading": "PersistentVolume Health Monitor",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Persistent Volumes (PV) are commonly used in applications to get local, file-based storage. They can be used in many different ways and help users migrate applications without needing to re-write storage backends.  Kubernetes 1.21 has a new alpha feature which allows PVs to be monitored for health of the volume and marked accordingly if the volume becomes unhealthy. Workloads will be able to react to the health state to protect data from being written or read from a volume that is unhealthy."
+    },
+    {
+      "heading": "Reducing Kubernetes Build Maintenance",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Previously Kubernetes has maintained multiple build systems. This has often been a source of friction and complexity for new and current contributors.  Over the last release cycle, a lot of work has been put in to simplify the build process, and standardize on the native Golang build tools. This should empower broader community maintenance, and lower the barrier to entry for new contributors."
+    },
+    {
+      "heading": "PodSecurityPolicy Deprecation",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes 1.21, PodSecurityPolicy is deprecated. As with all Kubernetes feature deprecations, PodSecurityPolicy will continue to be available and fully-functional for several more releases. PodSecurityPolicy, previously in the beta stage, is planned for removal in Kubernetes 1.25.  What's next? We're developing a new built-in mechanism to help limit Pod privileges, with a working title of \u201cPSP Replacement Policy.\u201d Our plan is for this new mechanism to cover the key PodSecurityPolicy use cases, with greatly improved ergonomics and maintainability. To learn more, read [PodSecurityPolicy Depr"
+    },
+    {
+      "heading": "TopologyKeys Deprecation",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Service field `topologyKeys` is now deprecated; all the component features that used this field were previously alpha, and are now also deprecated. We've replaced `topologyKeys` with a way to implement topology-aware routing, called topology-aware hints.  Topology-aware hints are an alpha feature in Kubernetes 1.21. You can read more details about the replacement feature in [Topology Aware Hints](/docs/concepts/services-networking/topology-aware-hints/); the related [KEP](https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/2433-topology-aware-hints/README.md) explains t"
+    },
+    {
+      "heading": "Graduated to Stable",
+      "stage": "Stable",
+      "keps": [
+        "752"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [EndpointSlice](https://github.com/kubernetes/enhancements/issues/752) * [Add sysctl support](https://github.com/kubernetes/enhancements/issues/34) * [PodDisruptionBudgets](https://github.com/kubernetes/enhancements/issues/85)"
+    },
+    {
+      "heading": "Notable Feature Updates",
+      "stage": "Unspecified",
+      "keps": [
+        "541",
+        "1602",
+        "592"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "* [External client-go credential providers](https://github.com/kubernetes/enhancements/issues/541) - beta in 1.21 * [Structured logging](https://github.com/kubernetes/enhancements/issues/1602) - graduating to beta in 1.22 * [TTL after finish cleanup for Jobs and Pods](https://github.com/kubernetes/enhancements/issues/592) - graduated to beta  # Release notes"
+    }
+  ],
+  "ground_truth_keps": [
+    "752",
+    "541",
+    "1602",
+    "592"
+  ],
+  "ground_truth_identifiers": []
+}

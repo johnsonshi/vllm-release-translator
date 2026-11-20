@@ -273,10 +273,10 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
         "## 1. Executive Summary",
         "",
         "We evaluated six progressive release-translation architectures (`v0_naive_baseline` -> `v1_five_part_template` -> `v2_salience_and_risk_ranker` -> `v3_clustered_synthesis` -> `v4_adoption_engine` -> `v5_progressive_clarity_engine`) on:",
-        "1. **Kubernetes Control Benchmark**: 10 minor releases (`v1.28`–`v1.37`, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly editions, scored against held-out Official Kubernetes Release Blogs (`kubernetes/website`).",
+        "1. **Kubernetes Control Benchmark**: All 38 minor releases (`v1.0`–`v1.37`, 11,495 raw changelog items) + 177 patch releases + 5 LWKD weekly editions, scored against held-out Official Kubernetes Release Blogs (`kubernetes/website`).",
         "2. **vLLM Target Benchmark**: All 34 minor releases (`v0.1.0`–`v0.34.0`, 5,302 raw changelog items) + **Last Week in vLLM** (100 merged PRs), scored against held-out human-written `TL;DR`, `Highlights`, and `Before you upgrade` tables.",
         "",
-        "## 2. Kubernetes Control Benchmark (v1.28 – v1.37) Hill-Climbing Results",
+        "## 2. Kubernetes Control Benchmark (All 38 Minor Releases: v1.0 – v1.37) Hill-Climbing Results",
         "",
         "| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
@@ -292,7 +292,7 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
 
     lines.extend([
         "",
-        "## 3. vLLM Target Benchmark (v0.1.0 – v0.34.0) A/B Transfer Results",
+        "## 3. vLLM Target Benchmark (All 34 Minor Releases: v0.1.0 – v0.34.0) A/B Transfer Results",
         "",
         "| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
@@ -310,7 +310,7 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
         "",
         "## 4. Structural Comparison: Kubernetes vs. vLLM Releases",
         "",
-        "| Dimension | Kubernetes (10 Releases: v1.28–v1.37) | vLLM (10 Releases: v0.25.0–v0.34.0) | Architectural Adaptation in `v4_adoption_engine` |",
+        "| Dimension | Kubernetes (All 38 Releases: v1.0–v1.37) | vLLM (All 34 Releases: v0.1.0–v0.34.0) | Architectural Adaptation in `v5_progressive_clarity_engine` |",
         "|---|---|---|---|",
     ])
     for diff in comp["key_structural_differences_and_transfer_lessons"]:

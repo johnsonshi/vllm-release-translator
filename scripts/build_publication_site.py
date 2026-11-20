@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """
 Builds the curated, publication-grade content bundle (`site/publication_data.js`)
-for the public-facing demo website:
-  - "What's New in vLLM" (Sysdig / Versionlog style release guides for v0.34, v0.33, v0.32, v0.31, v0.30...)
-  - "This Week in vLLM" (LWKD-style weekly digest written in clean editorial prose)
-  - "What's New in Kubernetes" (Sysdig / Official Release Blog style guides for v1.37, v1.36, v1.35, v1.34 + LWKD)
+for the public-facing website:
+  - "What's New in vLLM" (operator release guides across all vLLM minor versions v0.1.0 - v0.34.0+)
+  - "What's New in Kubernetes" (operator release guides across Kubernetes minor versions)
 """
 
 from __future__ import annotations
@@ -498,7 +497,7 @@ PUBLICATION_DATA = {
             "date_range": "Thursday, 2026-11-19 (LWKD Digest)",
             "reading_time": "4 min read",
             "headline": "This Week in Kubernetes (2026-11-19): 50% Lower UnstructuredList Memory, Conditional Authorization, and Patch Releases 1.37.2 / 1.36.6",
-            "intro": "Modeled on Last Week in Kubernetes Development (LWKD) + Sysdig's operational lens: what merged in upstream Kubernetes this week and what it means for your clusters.",
+            "intro": "Weekly summary of upstream Kubernetes development activity and what it means for your clusters.",
             "tldr_cards": [
                 {
                     "tag": "Control Plane Efficiency",

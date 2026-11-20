@@ -1,76 +1,74 @@
-# vLLM & Kubernetes Release Adoption Translator
+# What's New in vLLM — Release Adoption Translator & Evaluation Harness
 
-> **Positioning**: *Translating inference engine and platform changes into adoption decisions for people who don't follow inference engineering full-time — what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*
+> **Positioning**: *Translating inference engine changes into adoption decisions for people who don't follow inference engineering full-time — what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*
 
 ---
 
 ## Overview
 
-Raw upstream changelogs (`vllm-project/vllm` and `kubernetes/kubernetes`) list hundreds of low-level PR titles, kernel flags, and internal refactors per release. Operators and engineering leaders need an actionable answer to a much simpler question: **What changed, why does it matter for our models/GPUs/bill, and should we upgrade?**
+Raw upstream changelogs (`vllm-project/vllm` and `kubernetes/kubernetes`) list hundreds of low-level PR titles, kernel flags, and internal refactors per release. Operators and engineering leaders need a clear answer to a much simpler question: **What changed at a high level, who benefits, what does the jargon mean, should we upgrade, and what are the technical details and proof?**
 
 This repository provides:
-1. **A Unified 5-Part Adoption Decision Engine (`v4_adoption_engine`)** combining **Sysdig / Official Release Spotlight** depth with **Last Week in Kubernetes Development (LWKD)** compact weekly/patch pulse bullets:
-   - **1. What's the Big Deal?** (Multi-PR capability clusters + operational impact + LWKD-style Patch & Weekly Merge Pulse)
-   - **2. Who Benefits? (Models, GPUs, Workloads & Your Bill)** (3D matrix mapping capabilities to Models/Workloads, GPUs/Infrastructure, and Cost/SLA impact)
-   - **3. What Does the Jargon Mean?** (Plain-English glossary with operator takeaways)
-   - **4. Should I Upgrade?** (Executive verdict + pre-upgrade checklist of breaking changes, flag migrations, and removals)
-   - **5. Where's the Proof?** (Hardware-qualified benchmark claims + complete graduated feature & PR/KEP index)
-2. **A Ground-Truth A/B Evaluation & Hill-Climbing Harness**:
-   - Uses **10 Kubernetes minor releases (`v1.28`–`v1.37`, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly editions** as a control benchmark against held-out human editorial spotlights (`kubernetes/website` Official Release Blogs).
-   - Hill-climbs across 5 generator architectures (`v0_naive_baseline` -> `v1_five_part_template` -> `v2_salience_and_risk_ranker` -> `v3_clustered_synthesis` -> `v4_adoption_engine`), improving composite score on Kubernetes from **32.4% to 95.8%**.
-   - Transfers and calibrates the winning architecture onto **10 vLLM minor releases (`v0.25.0`–`v0.34.0`) + patch releases (`v0.25.1`, `v0.27.1`) + Last Week in vLLM (100 merged PRs)**, achieving **99.6%** composite score (vs. **44.6%** baseline).
-3. **Interactive Web Portal + Human-in-the-Loop Approval Queue + Scheduled Watcher**:
-   - Browse every version and weekly edition in `site/index.html`.
-   - Approve, disapprove, or annotate any draft via the Web UI or CLI (`python3 -m harness.cli review ...`).
-   - Run a periodic timer (`python3 -m harness.cli watch --interval 3600`) that polls GitHub for new releases/PRs, runs the `v4` generator + evaluation gate (`>= 82%`), and queues drafts in `pending_review`.
+1. **A Progressive 6-Part Release Translation Engine (`v5_progressive_clarity_engine`)** across all **34 vLLM minor releases (`v0.1.0` – `v0.34.0`)**:
+   - **High-Level Explanation** (2 crisp plain-English sentences)
+   - **1. What are the high-level changes?** (Non-technical plain-English bullets)
+   - **2. Who benefits? (Models, GPUs & Your Bill)** (3D matrix mapping capabilities to Models/Workloads, GPUs/Hardware, and Cost/Latency impact)
+   - **3. What does the jargon mean?** (Plain-English glossary with operator takeaways)
+   - **4. Should I upgrade?** (Executive verdict + pre-upgrade checklist of breaking changes, flag migrations, and removals)
+   - **5. Technical deep dive (What's the big deal under the hood?)** (Detailed subsystem breakdown with clean bullets and CLI/config examples)
+   - **6. Where's the proof?** (Hardware-qualified benchmark claims + verified upstream `#PR` and `KEP` citations)
+2. **A Ground-Truth A/B Evaluation & Hill-Climbing Control Harness**:
+   - Uses **all 38 Kubernetes minor releases (`v1.0`–`v1.37`, 11,495 raw changelog items)** against held-out human-written Official Kubernetes Release Announcement Blogs (`kubernetes/website`, CC-BY-4.0 / Apache-2.0) as the control benchmark.
+   - Hill-climbs across 6 generator architectures (`v0_naive_baseline` -> `v1_five_part_template` -> `v2_salience_and_risk_ranker` -> `v3_clustered_synthesis` -> `v4_adoption_engine` -> `v5_progressive_clarity_engine`), improving composite score on all 38 Kubernetes releases from **33.4% to 96.8%**.
+   - Evaluates and transfers the winning architecture onto **all 34 vLLM minor releases (`v0.1.0`–`v0.34.0`, 5,302 raw changelog items)**, achieving **97.6%** composite score (vs. **44.5%** baseline).
+3. **Static GitHub Pages Website + Automated GitHub Actions Sync**:
+   - Frameworkless, lightweight static site in `site/index.html` with light/dark mode toggle.
+   - `.github/workflows/pages.yml`: Deploys `site/` to GitHub Pages on push to `main`.
+   - `.github/workflows/release-hillclimb-and-sync.yml`: Periodically polls upstream Kubernetes (`v1.0`–`v1.38+`) and vLLM (`v0.1.0`–`v0.35.0+`) releases, runs the full hill-climb control & target test suite, and updates the site automatically.
 
 ---
 
-## Quick Start
+## Local Commands & Test Suite
 
 ```bash
-# 1. Refresh upstream Kubernetes & vLLM corpora (optional; pre-fetched in corpus/)
+# 1. Fetch/sync upstream Kubernetes (v1.0 - v1.37+) & vLLM (v0.1.0 - v0.34.0+) releases
 python3 scripts/fetch_corpora.py
 
-# 2. Run the 5-stage A/B evaluation & hill-climbing pipeline
-python3 -m harness.cli eval
+# 2. Run the 6-stage A/B evaluation & hill-climbing pipeline
+PYTHONPATH=. python3 -m harness.cli eval
 
-# 3. Build the static site bundle (site/data.json + site/data.js)
-python3 -m harness.cli build-site
+# 3. Run the local unit & regression test suite
+PYTHONPATH=. python3 -m unittest discover -s tests -v
 
-# 4. Inspect and manage the review queue via CLI
-python3 -m harness.cli review list
-python3 -m harness.cli review approve vllm:v0.34.0 --note "Verified Blackwell & MRV2 notes"
-python3 -m harness.cli review disapprove vllm:v0.25.0 --note "Expand Hopper FP8 notes"
+# 4. Build the static GitHub Pages bundle (site/publication_data.js)
+python3 scripts/build_publication_site.py
 
-# 5. Start the local interactive web portal & approval server
-python3 -m harness.cli serve --port 8765
-
-# 6. Run the upstream watcher timer (one-shot or continuous daemon)
-python3 -m harness.cli watch --once
-python3 -m harness.cli watch --interval 3600
+# 5. Serve locally on http://127.0.0.1:8765
+PYTHONPATH=. python3 -m harness.cli serve --port 8765
 ```
 
 ---
 
-## A/B Benchmark Summary
+## Full Hill-Climbing Results (`v0` $\rightarrow$ `v5_progressive_clarity_engine`)
 
-### Kubernetes Control Benchmark (`v1.28` – `v1.37`)
+### 1. Kubernetes Control Benchmark (All 38 Minor Releases: `v1.0` – `v1.37`, 11,495 Raw Items)
 
-| Generator Variant | Headline Salience Recall | Upgrade Risk Recall | Citation Precision | 5-Part Completeness | Jargon Translation | Cluster Diversity | **Composite Score** |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `v0_naive_baseline` | 11.9% | 0.0% | 100.0% | 28.6% | 0.0% | 90.2% | **32.4%** |
-| `v1_five_part_template` | 17.1% | 79.2% | 100.0% | 57.1% | 74.0% | 92.7% | **62.9%** |
-| `v2_salience_and_risk_ranker` | 27.4% | 54.2% | 100.0% | 71.4% | 89.6% | 85.6% | **63.1%** |
-| `v3_clustered_synthesis` | 57.7% | 100.0% | 100.0% | 100.0% | 95.0% | 94.4% | **87.1%** |
-| `v4_adoption_engine` | **87.7%** | **100.0%** | **100.0%** | **100.0%** | **98.7%** | **93.7%** | **95.8%** |
+| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `v0_naive_baseline` | 15.6% | 5.3% | 97.4% | 30.1% | 0.0% | 90.3% | 20.0% | **33.4%** |
+| `v1_five_part_template` | 26.5% | 67.2% | 97.4% | 56.4% | 75.3% | 93.7% | 19.5% | **58.9%** |
+| `v2_salience_and_risk_ranker` | 35.2% | 43.2% | 100.0% | 71.4% | 92.2% | 89.1% | 20.0% | **59.7%** |
+| `v3_clustered_synthesis` | 57.8% | 100.0% | 100.0% | 97.7% | 97.5% | 94.7% | 16.8% | **80.6%** |
+| `v4_adoption_engine` | 89.6% | 100.0% | 100.0% | 100.0% | 97.6% | 94.3% | 0.0% | **86.8%** |
+| **`v5_progressive_clarity_engine`** | **89.6%** | **100.0%** | **100.0%** | **100.0%** | **97.6%** | **94.2%** | **100.0%** | **96.8%** |
 
-### vLLM Target Benchmark (`v0.25.0` – `v0.34.0`)
+### 2. vLLM Target Benchmark (All 34 Minor Releases: `v0.1.0` – `v0.34.0`, 5,302 Raw Items)
 
-| Generator Variant | Headline Salience Recall | Upgrade Risk Recall | Citation Precision | 5-Part Completeness | Jargon Translation | Cluster Diversity | **Composite Score** |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| `v0_naive_baseline` | 50.2% | 0.0% | 100.0% | 34.3% | 0.0% | 97.7% | **44.6%** |
-| `v1_five_part_template` | 63.0% | 66.7% | 100.0% | 57.1% | 65.7% | 96.7% | **72.5%** |
-| `v2_salience_and_risk_ranker` | 71.1% | 60.4% | 100.0% | 71.4% | 76.2% | 97.1% | **76.5%** |
-| `v3_clustered_synthesis` | 91.5% | 100.0% | 100.0% | 100.0% | 98.0% | 97.1% | **97.1%** |
-| `v4_adoption_engine` | **100.0%** | **100.0%** | **100.0%** | **100.0%** | **99.4%** | **96.6%** | **99.6%** |
+| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| `v0_naive_baseline` | 46.9% | 17.6% | 100.0% | 32.8% | 0.0% | 98.2% | 16.5% | **44.5%** |
+| `v1_five_part_template` | 51.4% | 70.5% | 100.0% | 52.1% | 72.3% | 97.7% | 17.1% | **65.2%** |
+| `v2_salience_and_risk_ranker` | 63.5% | 81.4% | 100.0% | 70.6% | 80.3% | 97.6% | 15.9% | **73.3%** |
+| `v3_clustered_synthesis` | 83.8% | 86.8% | 100.0% | 95.0% | 92.9% | 95.0% | 13.5% | **83.1%** |
+| `v4_adoption_engine` | 94.8% | 100.0% | 100.0% | 100.0% | 97.0% | 94.6% | 0.0% | **88.0%** |
+| **`v5_progressive_clarity_engine`** | **93.5%** | **100.0%** | **100.0%** | **100.0%** | **97.0%** | **94.8%** | **99.0%** | **97.6%** |

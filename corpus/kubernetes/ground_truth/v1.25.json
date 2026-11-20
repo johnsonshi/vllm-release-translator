@@ -1,0 +1,153 @@
+{
+  "project": "kubernetes",
+  "version": "v1.25",
+  "blog_title": "Kubernetes v1.25: Combiner",
+  "release_date": "2022-08-23",
+  "reported_enhancements_count": null,
+  "spotlight_count": 14,
+  "spotlights": [
+    {
+      "heading": "PodSecurityPolicy is removed; Pod Security Admission graduates to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "PodSecurityPolicy was initially [deprecated in v1.21](/blog/2021/04/06/podsecuritypolicy-deprecation-past-present-and-future/), and with the release of v1.25, it has been removed. The updates required to improve its usability would have introduced breaking changes, so it became necessary to remove it in favor of a more friendly replacement. That replacement is [Pod Security Admission](/docs/concepts/security/pod-security-admission/), which graduates to Stable with this release. If you are currently relying on PodSecurityPolicy, please follow the instructions for [migration to Pod Security Admi"
+    },
+    {
+      "heading": "Ephemeral Containers Graduate to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Ephemeral Containers](/docs/concepts/workloads/pods/ephemeral-containers/) are containers that exist for only a limited time within an existing pod. This is particularly useful for troubleshooting when you need to examine another container but cannot use `kubectl exec` because that container has crashed or its image lacks debugging utilities. Ephemeral containers graduated to Beta in Kubernetes v1.23, and with this release, the feature graduates to Stable."
+    },
+    {
+      "heading": "Support for cgroups v2 Graduates to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "It has been more than two years since the Linux kernel cgroups v2 API was declared stable. With some distributions now defaulting to this API, Kubernetes must support it to continue operating on those distributions. cgroups v2 offers several improvements over cgroups v1, for more information see the [cgroups v2](/docs/concepts/architecture/cgroups/) documentation. While cgroups v1 will continue to be supported, this enhancement puts us in a position to be ready for its eventual deprecation and replacement."
+    },
+    {
+      "heading": "Improved Windows support",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "108592"
+      ],
+      "identifiers": [],
+      "summary": "- [Performance dashboards](http://perf-dash.k8s.io/#/?jobname=soak-tests-capz-windows-2019) added support for Windows - [Unit tests](https://github.com/kubernetes/kubernetes/issues/51540) added support for Windows - [Conformance tests](https://github.com/kubernetes/kubernetes/pull/108592) added support for Windows - New GitHub repository created for [Windows Operational Readiness](https://github.com/kubernetes-sigs/windows-operational-readiness)"
+    },
+    {
+      "heading": "Moved container registry service from k8s.gcr.io to registry.k8s.io",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "109938"
+      ],
+      "identifiers": [],
+      "summary": "[Moving container registry from k8s.gcr.io to registry.k8s.io](https://github.com/kubernetes/kubernetes/pull/109938) got merged. For more details, see the [wiki page](https://github.com/kubernetes/k8s.io/wiki/New-Registry-url-for-Kubernetes-\\(registry.k8s.io\\)), [announcement](https://groups.google.com/a/kubernetes.io/g/dev/c/DYZYNQ_A6_c/m/oD9_Q8Q9AAAJ) was sent to the kubernetes development mailing list."
+    },
+    {
+      "heading": "Promoted SeccompDefault to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "SeccompDefault promoted to beta, see the tutorial [Restrict a Container's Syscalls with seccomp](/docs/tutorials/security/seccomp/#enable-the-use-of-runtimedefault-as-the-default-seccomp-profile-for-all-workloads) for more details."
+    },
+    {
+      "heading": "Promoted endPort in Network Policy to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Promoted `endPort` in [Network Policy](/docs/concepts/services-networking/network-policies/#targeting-a-range-of-ports) to GA. Network Policy providers that support `endPort` field now can use it to specify a range of ports to apply a Network Policy. Previously, each Network Policy could only target a single port.  Please be aware that `endPort` field **must be supported** by the Network Policy provider. If your provider does not support `endPort`, and this field is specified in a Network Policy, the Network Policy will be created covering only the port field (single port)."
+    },
+    {
+      "heading": "Promoted Local Ephemeral Storage Capacity Isolation to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "EmptyDir"
+      ],
+      "summary": "The [Local Ephemeral Storage Capacity Isolation](https://github.com/kubernetes/enhancements/tree/master/keps/sig-storage/361-local-ephemeral-storage-isolation) feature moved to GA. This was introduced as alpha in 1.8, moved to beta in 1.10, and it is now a stable feature. It provides support for capacity isolation of local ephemeral storage between pods, such as `EmptyDir`, so that a pod can be hard limited in its consumption of shared resources by evicting Pods if its consumption of local ephemeral storage exceeds that limit."
+    },
+    {
+      "heading": "Promoted core CSI Migration to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[CSI Migration](https://kubernetes.io/blog/2021/12/10/storage-in-tree-to-csi-migration-status-update/#quick-recap-what-is-csi-migration-and-why-migrate) is an ongoing effort that SIG Storage has been working on for a few releases. The goal is to move in-tree volume plugins to out-of-tree CSI drivers and eventually remove the in-tree volume plugins. The [core CSI Migration](https://github.com/kubernetes/enhancements/tree/master/keps/sig-storage/625-csi-migration) feature moved to GA. CSI Migration for GCE PD and AWS EBS also moved to GA. CSI Migration for vSphere remains in beta (but is on by d"
+    },
+    {
+      "heading": "Promoted CSI Ephemeral Volume to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [CSI Ephemeral Volume](https://github.com/kubernetes/enhancements/tree/master/keps/sig-storage/596-csi-inline-volumes) feature allows CSI volumes to be specified directly in the pod specification for ephemeral use cases. They can be used to inject arbitrary states, such as configuration, secrets, identity, variables or similar information, directly inside pods using a mounted volume. This was initially introduced in 1.15 as an alpha feature, and it moved to GA. This feature is used by some CSI drivers such as the [secret-store CSI driver](https://github.com/kubernetes-sigs/secrets-store-cs"
+    },
+    {
+      "heading": "Promoted CRD Validation Expression Language to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[CRD Validation Expression Language](https://github.com/kubernetes/enhancements/blob/master/keps/sig-api-machinery/2876-crd-validation-expression-language/README.md) is promoted to beta, which makes it possible to declare how custom resources are validated using the [Common Expression Language (CEL)](https://github.com/google/cel-spec). Please see the [validation rules](/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/#validation-rules) guide."
+    },
+    {
+      "heading": "Promoted Server Side Unknown Field Validation to Beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ServerSideFieldValidation"
+      ],
+      "summary": "Promoted the `ServerSideFieldValidation` feature gate to beta (on by default). This allows optionally triggering schema validation on the API server that errors when unknown fields are detected. This allows the removal of client-side validation from kubectl while maintaining the same core functionality of erroring out on requests that contain unknown or invalid fields."
+    },
+    {
+      "heading": "Introduced KMS v2 API",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "Secrets"
+      ],
+      "summary": "Introduce KMS v2alpha1 API to add performance, rotation, and observability improvements. Encrypt data at rest (ie Kubernetes `Secrets`) with DEK using AES-GCM instead of AES-CBC for kms data encryption. No user action is required. Reads with AES-GCM and AES-CBC will continue to be allowed. See the guide [Using a KMS provider for data encryption](/docs/tasks/administer-cluster/kms-provider/) for more information."
+    },
+    {
+      "heading": "Kube-proxy images are now based on distroless images",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In previous releases, kube-proxy container images were built using Debian as the base image. Starting with this release, the images are now built using [distroless](https://github.com/GoogleContainerTools/distroless). This change reduced image size by almost 50% and decreased the number of installed packages and files to only those strictly required for kube-proxy to do its job."
+    }
+  ],
+  "ground_truth_keps": [
+    "277",
+    "361",
+    "596",
+    "625",
+    "785",
+    "1487",
+    "1488",
+    "1591",
+    "2079",
+    "2254",
+    "2579",
+    "2599",
+    "2802",
+    "3446"
+  ],
+  "ground_truth_identifiers": [
+    "EmptyDir",
+    "ServerSideFieldValidation",
+    "Secrets"
+  ]
+}
