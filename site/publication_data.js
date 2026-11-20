@@ -4,10 +4,10 @@ window.__PUBLICATION_DATA__ = {
     "tagline": "What changed in vLLM \u2014 and what it means for the models you serve, the GPUs you own, and your inference bill.",
     "weekly": {
       "id": "this-week-in-vllm",
-      "issue_number": "Issue #47",
-      "date_range": "Week Ending November 19, 2026",
+      "date_iso": "2026-11-19",
+      "date_range": "Thursday, 2026-11-19 (Weekly Digest)",
       "reading_time": "4 min read",
-      "headline": "This Week in vLLM: Hopper Humming MoE Kernels, Specialized Drafters for Kimi-K3.1, and Faster Multimodal Encoder Scheduling",
+      "headline": "This Week in vLLM (2026-11-19): Hopper Humming MoE Kernels, Specialized Drafters for Kimi-K3.1, and Faster Multimodal Encoder Scheduling",
       "intro": "Keep up with vLLM development in 5 minutes a week. This week merged 100+ pull requests across the core scheduler, speculative decoding, and ROCm/Hopper hardware kernels\u2014without requiring a version bump.",
       "tldr_cards": [
         {
@@ -87,7 +87,7 @@ window.__PUBLICATION_DATA__ = {
       {
         "version": "v0.34.0",
         "badge": "Latest Release",
-        "date": "November 16, 2026",
+        "date": "2026-11-16",
         "stats": "1,061 commits \u00b7 412 contributors \u00b7 10 new models",
         "headline": "Extensible KV Cache by Default, Model Runner V2 Only, and Up to 1.95\u00d7 Faster Blackwell Decode",
         "executive_summary": "vLLM 0.34.0 is a landmark operational release. It turns on Extensible KV Cache by default (giving most deployments 25\u201355% more KV cache space without manual memory tuning), completes the transition to Model Runner V2 by removing the legacy V1 runner, and lands major kernel speedups for DeepSeek-V4.1, GLM-5.3, Kimi-K3, and Mistral Large 4 across NVIDIA Blackwell/Hopper and AMD MI355X.",
@@ -266,12 +266,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#63956"
             }
           ]
-        }
+        },
+        "kind": "minor"
       },
       {
         "version": "v0.33.0",
         "badge": "Minor Release",
-        "date": "November 2, 2026",
+        "date": "2026-11-02",
         "stats": "840+ commits \u00b7 DeepSeek-V4.1-Flash & K2-Horizon",
         "headline": "DeepSeek-V4.1-Flash MXFP8 KV Cache, Engine Snapshots via CRIU, and LibTorch Stable ABI",
         "executive_summary": "vLLM 0.33.0 introduces day-0 support for DeepSeek-V4.1-Flash with full MXFP8 KV cache compression on Blackwell SM100, experimental initialized-engine snapshots (`vllm snapshot create/restore`) for rapid cold starts, and completes the CUDA migration to the LibTorch Stable ABI.",
@@ -366,12 +367,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#60855"
             }
           ]
-        }
+        },
+        "kind": "minor"
       },
       {
         "version": "v0.32.0",
         "badge": "Minor Release",
-        "date": "October 18, 2026",
+        "date": "2026-10-18",
         "stats": "760+ commits \u00b7 Hy4-Preview (770B MoE) & Qwen3.8-Flash-Next",
         "headline": "Tencent Hy4-Preview 770B MoE, Qwen3.8-Flash-Next NVFP4, and Kimi-K3 on ROCm V2 Runner",
         "executive_summary": "vLLM 0.32.0 adds support for Tencent's 770B/49B-active Hy4-preview MoE model with Gated DeepSeek Sparse Attention, brings Qwen3.8-Flash-Next with BF16/FP8/NVFP4 and Multi-Token Prediction (MTP), and enables Kimi-K3 on AMD ROCm under Model Runner V2.",
@@ -437,11 +439,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#53896"
             }
           ]
-        }
+        },
+        "kind": "minor"
       },
       {
         "version": "v0.31.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-10-05",
         "stats": "56 upstream changes \u00b7 510 PRs",
         "headline": "Frontier MoE & Sparse-MLA Speedups, Model Runner V2",
@@ -625,7 +629,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v0.30.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-09-22",
         "stats": "58 upstream changes \u00b7 561 PRs",
         "headline": "Low-Precision Quantization Kernels, Frontier MoE & Sparse-MLA Speedups",
@@ -809,7 +814,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v0.29.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-09-09",
         "stats": "50 upstream changes \u00b7 337 PRs",
         "headline": "Frontier MoE & Sparse-MLA Speedups, Low-Precision Quantization Kernels",
@@ -993,7 +999,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v0.28.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-08-26",
         "stats": "48 upstream changes \u00b7 190 PRs",
         "headline": "Frontier MoE & Sparse-MLA Speedups, Next-Gen Speculative Decoding",
@@ -1176,8 +1183,75 @@ window.__PUBLICATION_DATA__ = {
         }
       },
       {
+        "version": "v0.27.1",
+        "kind": "patch",
+        "badge": "Patch Release",
+        "date": "2026-08-11",
+        "stats": "1 upstream changes \u00b7 1 PRs",
+        "headline": "Next-Gen Speculative Decoding",
+        "executive_summary": "Translating VLLM v0.27.1 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+        "five_parts": {
+          "big_deal": [
+            {
+              "title": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+              "status": "Patch Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#50424"
+              ],
+              "before": "Prior to v0.27.1, teams operating next-gen speculative decoding (eagle3, dspark, dflash, mtp & suffix) relied on manual configuration or older execution paths.",
+              "now": "Support quantized DSpark Markov heads",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+              "models": "Interactive coding assistants, agent loops, and low-batch-size real-time inference",
+              "gpus": "NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners",
+              "impact": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)",
+              "plain_english": "Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.",
+              "bottom_line": "Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality."
+            },
+            {
+              "term": "Extensible KV Cache",
+              "plain_english": "Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.",
+              "bottom_line": "Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes."
+            },
+            {
+              "term": "Model Runner V2 (MRV2)",
+              "plain_english": "vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.",
+              "bottom_line": "Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity."
+            },
+            {
+              "term": "MLA & Sparse-MLA (Multi-head Latent Attention)",
+              "plain_english": "An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing.",
+              "bottom_line": "Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "RECOMMENDED DROP-IN UPGRADE \u2014 Broad performance and stability wins with minimal migration friction",
+            "rows": [
+              {
+                "change": "Drop-in version update",
+                "impact": "No breaking CLI removals flagged in top-level notes.",
+                "action": "Perform standard canary rollout.",
+                "pr": "v0.27.1"
+              }
+            ]
+          },
+          "proof_benchmarks": []
+        }
+      },
+      {
         "version": "v0.27.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-08-10",
         "stats": "42 upstream changes \u00b7 223 PRs",
         "headline": "Frontier MoE & Sparse-MLA Speedups, Low-Precision Quantization Kernels",
@@ -1344,7 +1418,7 @@ window.__PUBLICATION_DATA__ = {
       {
         "version": "v0.26.0",
         "badge": "LTS Milestone",
-        "date": "July 27, 2026",
+        "date": "2026-07-27",
         "stats": "411 commits \u00b7 212 contributors \u00b7 Tiered KV Offloading",
         "headline": "Tiered KV Cache Offloading to Object Storage, Per-Layer Attention Backends, and Inkling Family Support",
         "executive_summary": "vLLM 0.26.0 matures tiered KV cache offloading (extending GPU HBM -> CPU DRAM -> Object Storage with workload identity), allows hybrid models to select different attention backends per KV-cache group, and ships a native Rust `vllm-bench` CLI alongside multimodal video/audio support in the Rust frontend.",
@@ -1417,11 +1491,96 @@ window.__PUBLICATION_DATA__ = {
               "pr": "#47463"
             }
           ]
+        },
+        "kind": "minor"
+      },
+      {
+        "version": "v0.25.1",
+        "kind": "patch",
+        "badge": "Patch Release",
+        "date": "2026-07-14",
+        "stats": "2 upstream changes \u00b7 2 PRs",
+        "headline": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend, Low-Precision Quantization Kernels",
+        "executive_summary": "Translating VLLM v0.25.1 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+        "five_parts": {
+          "big_deal": [
+            {
+              "title": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+              "status": "Patch Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#47888"
+              ],
+              "before": "Prior to v0.25.1, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on manual configuration or older execution paths.",
+              "now": "Avoid blocking model launching when no system FFmpeg is available for TorchCodec (#47888). Previously `import torchcodec` raised a `RuntimeError` at import time when system...",
+              "config_snippet": ""
+            },
+            {
+              "title": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+              "status": "Patch Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#48330"
+              ],
+              "before": "Prior to v0.25.1, teams operating low-precision quantization kernels (nvfp4, mxfp4, mxfp8, fp8 & humming) relied on manual configuration or older execution paths.",
+              "now": "Guard mixed-dtype allreduce RMSNorm quant fusions (#48330). The fused FlashInfer allreduce + RMSNorm + static-quantization patterns could match graphs where the activation...",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+              "models": "Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters",
+              "gpus": "Standard single-node and multi-node GPU inference pools",
+              "impact": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet"
+            },
+            {
+              "persona": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+              "models": "100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit",
+              "gpus": "NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X",
+              "impact": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput"
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "NVFP4 / MXFP4 / FP8 Quantization",
+              "plain_english": "4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.",
+              "bottom_line": "Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks."
+            },
+            {
+              "term": "Extensible KV Cache",
+              "plain_english": "Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.",
+              "bottom_line": "Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes."
+            },
+            {
+              "term": "Model Runner V2 (MRV2)",
+              "plain_english": "vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.",
+              "bottom_line": "Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity."
+            },
+            {
+              "term": "Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)",
+              "plain_english": "Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.",
+              "bottom_line": "Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "RECOMMENDED DROP-IN UPGRADE \u2014 Broad performance and stability wins with minimal migration friction",
+            "rows": [
+              {
+                "change": "Drop-in version update",
+                "impact": "No breaking CLI removals flagged in top-level notes.",
+                "action": "Perform standard canary rollout.",
+                "pr": "v0.25.1"
+              }
+            ]
+          },
+          "proof_benchmarks": []
         }
       },
       {
         "version": "v0.25.0",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-07-11",
         "stats": "49 upstream changes \u00b7 204 PRs",
         "headline": "Frontier MoE & Sparse-MLA Speedups, Low-Precision Quantization Kernels",
@@ -1610,10 +1769,10 @@ window.__PUBLICATION_DATA__ = {
     "tagline": "What changed in Kubernetes \u2014 translated from KEPs and changelogs into plain-English upgrade and platform decisions.",
     "weekly": {
       "id": "this-week-in-kubernetes",
-      "issue_number": "LWKD Edition",
-      "date_range": "Week Ending November 1, 2026",
+      "date_iso": "2026-11-19",
+      "date_range": "Thursday, 2026-11-19 (LWKD Digest)",
       "reading_time": "4 min read",
-      "headline": "Last Week in Kubernetes: 50% Lower UnstructuredList Memory, Conditional Authorization, and Patch Releases 1.37.2 / 1.36.6",
+      "headline": "This Week in Kubernetes (2026-11-19): 50% Lower UnstructuredList Memory, Conditional Authorization, and Patch Releases 1.37.2 / 1.36.6",
       "intro": "Modeled on Last Week in Kubernetes Development (LWKD) + Sysdig's operational lens: what merged in upstream Kubernetes this week and what it means for your clusters.",
       "tldr_cards": [
         {
@@ -1679,9 +1838,101 @@ window.__PUBLICATION_DATA__ = {
     },
     "releases": [
       {
+        "version": "v1.37.2",
+        "kind": "patch",
+        "badge": "Patch Release",
+        "date": "2026-10-28",
+        "stats": "7 backported fixes \u00b7 Go 1.26.10",
+        "headline": "Backported Control-Plane, Storage, and Kubelet Stability Fixes in v1.37.2",
+        "executive_summary": "Kubernetes v1.37.2 (2026-10-28) is a backport patch release on the v1.37 branch shipping 7 targeted bugfixes and Go runtime security updates with zero breaking API changes.",
+        "five_parts": {
+          "big_deal": [
+            {
+              "title": "Feature Backport (#143341)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#143341"
+              ],
+              "before": "Earlier v1.37.x nodes could encounter this regression under production load.",
+              "now": "Kubernetes is now built using Go 1.26.10 ([#143341](https://github.com/kubernetes/kubernetes/pull/143341), [@palnabarun](https://github.com/palnabarun)) [SIG Release and Testing]",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Backport (#143117)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#143117"
+              ],
+              "before": "Earlier v1.37.x nodes could encounter this regression under production load.",
+              "now": "Kubernetes is now built using Go 1.26.9 ([#143117](https://github.com/kubernetes/kubernetes/pull/143117), [@xmudrii](https://github.com/xmudrii)) [SIG Release and Testing]",
+              "config_snippet": ""
+            },
+            {
+              "title": "Bug or Regression Backport (#142492)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#142492"
+              ],
+              "before": "Earlier v1.37.x nodes could encounter this regression under production load.",
+              "now": "Fixed a bug where `NoExecute` device taints (`DeviceTaintRule`) did not evict pods using DRA-backed extended resources (`pod.Status.ExtendedResourceClaimStatus`). ([#142492](https://github.com/kubernetes/kubernetes/pull/142492), [@troychiu](https://github.com/",
+              "config_snippet": ""
+            },
+            {
+              "title": "Bug or Regression Backport (#142390)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#142390"
+              ],
+              "before": "Earlier v1.37.x nodes could encounter this regression under production load.",
+              "now": "Fixed an issue where a Job recreated with the same name as a recently deleted Job could remain unreconciled because it inherited pending Pod expectations from the previous Job. ([#142390](https://github.com/kubernetes/kubernetes/pull/142390), [@6democratickim9",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Clusters currently running v1.37.x",
+              "models": "All production control-plane and worker node pools",
+              "gpus": "Linux & Windows worker nodes",
+              "impact": "Drop-in stability and Go 1.26.10 security patch update."
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Patch Release Backport",
+              "plain_english": "Targeted bugfixes cherry-picked onto a stable minor release branch without introducing new API schemas or breaking behavior.",
+              "bottom_line": "Safe to roll out unattended during standard maintenance windows."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "Safe Drop-In Patch \u2014 Recommended for all v1.37.x clusters.",
+            "rows": [
+              {
+                "change": "Go toolchain updated in v1.37.2",
+                "impact": "Addresses standard library CVEs and runtime stability.",
+                "action": "Roll control-plane and node images to v1.37.2",
+                "pr": "v1.37.2"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "v1.37.2 Backport Verification",
+              "hardware": "7 backported commits",
+              "metric": "0 breaking changes",
+              "pct_bar": 90,
+              "pr": "#143341"
+            }
+          ]
+        }
+      },
+      {
         "version": "v1.37",
         "badge": "Latest Release (Garhwal)",
-        "date": "August 26, 2026",
+        "date": "2026-08-26",
         "stats": "67 enhancements \u00b7 16 Stable \u00b7 23 Beta \u00b7 27 Alpha",
         "headline": "HPA Scale-to-Zero Enabled by Default, Beta Gang Scheduling, and Resilient API Server Watch Cache",
         "executive_summary": "Kubernetes 1.37 ('Garhwal') is a huge release for AI/GPU platforms and cost-conscious cluster operators. HorizontalPodAutoscaler (HPA) Scale-to-Zero graduates to Beta (enabled by default), native Gang Scheduling (`Workload` / `PodGroup`) reaches Beta with workload-aware preemption, and Resilient WatchCache Initialization finishes graduating to Stable\u2014protecting `etcd` from startup list storms.",
@@ -1792,11 +2043,105 @@ window.__PUBLICATION_DATA__ = {
               "pr": "KEP-4568"
             }
           ]
+        },
+        "kind": "minor"
+      },
+      {
+        "version": "v1.36.6",
+        "kind": "patch",
+        "badge": "Patch Release",
+        "date": "2026-10-28",
+        "stats": "8 backported fixes \u00b7 Go 1.26.10",
+        "headline": "Backported Control-Plane, Storage, and Kubelet Stability Fixes in v1.36.6",
+        "executive_summary": "Kubernetes v1.36.6 (2026-10-28) is a backport patch release on the v1.36 branch shipping 8 targeted bugfixes and Go runtime security updates with zero breaking API changes.",
+        "five_parts": {
+          "big_deal": [
+            {
+              "title": "Feature Backport (#143342)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#143342"
+              ],
+              "before": "Earlier v1.36.x nodes could encounter this regression under production load.",
+              "now": "Kubernetes is now built using Go 1.26.10 ([#143342](https://github.com/kubernetes/kubernetes/pull/143342), [@palnabarun](https://github.com/palnabarun)) [SIG Release and Testing]",
+              "config_snippet": ""
+            },
+            {
+              "title": "Feature Backport (#143118)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#143118"
+              ],
+              "before": "Earlier v1.36.x nodes could encounter this regression under production load.",
+              "now": "Kubernetes is now built using Go 1.26.9 ([#143118](https://github.com/kubernetes/kubernetes/pull/143118), [@xmudrii](https://github.com/xmudrii)) [SIG Release and Testing]",
+              "config_snippet": ""
+            },
+            {
+              "title": "Bug or Regression Backport (#142021)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#142021"
+              ],
+              "before": "Earlier v1.36.x nodes could encounter this regression under production load.",
+              "now": "Fixed a bug where Pod `.status.resourceClaimStatuses` could flap between partial lists of claims, when multiple claims were used in the pod. ([#142021](https://github.com/kubernetes/kubernetes/pull/142021), [@troychiu](https://github.com/troychiu)) [SIG Apps a",
+              "config_snippet": ""
+            },
+            {
+              "title": "Bug or Regression Backport (#142391)",
+              "status": "Backported Fix",
+              "status_tone": "cyan",
+              "prs": [
+                "#142391"
+              ],
+              "before": "Earlier v1.36.x nodes could encounter this regression under production load.",
+              "now": "Fixed an issue where a Job recreated with the same name as a recently deleted Job could remain unreconciled because it inherited pending Pod expectations from the previous Job. ([#142391](https://github.com/kubernetes/kubernetes/pull/142391), [@6democratickim9",
+              "config_snippet": ""
+            }
+          ],
+          "who_benefits": [
+            {
+              "persona": "Clusters currently running v1.36.x",
+              "models": "All production control-plane and worker node pools",
+              "gpus": "Linux & Windows worker nodes",
+              "impact": "Drop-in stability and Go 1.26.10 security patch update."
+            }
+          ],
+          "jargon_decoded": [
+            {
+              "term": "Patch Release Backport",
+              "plain_english": "Targeted bugfixes cherry-picked onto a stable minor release branch without introducing new API schemas or breaking behavior.",
+              "bottom_line": "Safe to roll out unattended during standard maintenance windows."
+            }
+          ],
+          "upgrade_guide": {
+            "verdict": "Safe Drop-In Patch \u2014 Recommended for all v1.36.x clusters.",
+            "rows": [
+              {
+                "change": "Go toolchain updated in v1.36.6",
+                "impact": "Addresses standard library CVEs and runtime stability.",
+                "action": "Roll control-plane and node images to v1.36.6",
+                "pr": "v1.36.6"
+              }
+            ]
+          },
+          "proof_benchmarks": [
+            {
+              "label": "v1.36.6 Backport Verification",
+              "hardware": "8 backported commits",
+              "metric": "0 breaking changes",
+              "pct_bar": 90,
+              "pr": "#143342"
+            }
+          ]
         }
       },
       {
         "version": "v1.36",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2026-04-22",
         "stats": "347 upstream changes \u00b7 187 PRs",
         "headline": "Dynamic Resource Allocation, Feature Enhancements",
@@ -1982,7 +2327,7 @@ window.__PUBLICATION_DATA__ = {
       {
         "version": "v1.35",
         "badge": "Timbernetes Release",
-        "date": "December 17, 2025",
+        "date": "2025-12-17",
         "stats": "60 enhancements \u00b7 17 Stable \u00b7 19 Beta \u00b7 22 Alpha",
         "headline": "In-Place Pod Vertical Scaling Reaches GA (Stable) and Native Pod Certificates Enter Beta",
         "executive_summary": "Kubernetes 1.35 ('Timbernetes') graduates one of the most requested features in Kubernetes history to General Availability: In-Place Update of Pod Resources (KEP-1287), allowing you to resize CPU and memory on running pods without restarting them. It also brings native kubelet-issued mTLS Pod Certificates to Beta.",
@@ -2046,12 +2391,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "KEP-1287"
             }
           ]
-        }
+        },
+        "kind": "minor"
       },
       {
         "version": "v1.34",
         "badge": "Of Wind & Will",
-        "date": "August 27, 2025",
+        "date": "2025-08-27",
         "stats": "58 enhancements \u00b7 23 Stable \u00b7 22 Beta \u00b7 13 Alpha",
         "headline": "Dynamic Resource Allocation (DRA) Core Reaches GA for GPUs, Plus Stable OpenTelemetry Tracing",
         "executive_summary": "Kubernetes 1.34 graduates the core of Dynamic Resource Allocation (`resource.k8s.io/v1`) to General Availability\u2014replacing rigid integer device plugins with a flexible API for GPUs, NICs, and accelerators\u2014while graduating API server and kubelet OpenTelemetry tracing to Stable.",
@@ -2115,11 +2461,13 @@ window.__PUBLICATION_DATA__ = {
               "pr": "KEP-4988"
             }
           ]
-        }
+        },
+        "kind": "minor"
       },
       {
         "version": "v1.33",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2025-04-23",
         "stats": "261 upstream changes \u00b7 151 PRs",
         "headline": "Native Sidecar Containers, Checkpoint/Restore & Node Lifecycle, API Server & etcd Watch/Cache Efficiency at Scale",
@@ -2303,7 +2651,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v1.32",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2024-12-11",
         "stats": "298 upstream changes \u00b7 135 PRs",
         "headline": "Dynamic Resource Allocation, API Server & etcd Watch/Cache Efficiency at Scale",
@@ -2487,7 +2836,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v1.31",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2024-08-13",
         "stats": "333 upstream changes \u00b7 164 PRs",
         "headline": "API Server & etcd Watch/Cache Efficiency at Scale, Workload Identity, User Namespaces & Fine-Grained Authz",
@@ -2673,7 +3023,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v1.30",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2024-04-17",
         "stats": "254 upstream changes \u00b7 131 PRs",
         "headline": "API Change Enhancements, Feature Enhancements",
@@ -2858,7 +3209,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v1.29",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2023-12-13",
         "stats": "302 upstream changes \u00b7 131 PRs",
         "headline": "Feature Enhancements, API Server & etcd Watch/Cache Efficiency at Scale",
@@ -3042,7 +3394,8 @@ window.__PUBLICATION_DATA__ = {
       },
       {
         "version": "v1.28",
-        "badge": "Archive Release",
+        "kind": "minor",
+        "badge": "Minor Release",
         "date": "2023-08-15",
         "stats": "305 upstream changes \u00b7 148 PRs",
         "headline": "Feature Enhancements, Networking, `nftables` Proxy & Traffic Observability",
