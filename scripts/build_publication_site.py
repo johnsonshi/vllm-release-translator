@@ -95,7 +95,7 @@ PUBLICATION_DATA = {
                 "version": "v0.34.0",
                 "badge": "Latest Release",
                 "date": "November 16, 2026",
-                "stats": "1,061 commits · 412 contributors · 10 new models",
+                "stats": "1,061 commits from 412 contributors and 10 new models",
                 "headline": "Extensible KV Cache by Default, Model Runner V2 Only, and Up to 1.95× Faster Blackwell Decode",
                 "executive_summary": "vLLM 0.34.0 is a landmark operational release. It turns on Extensible KV Cache by default (giving most deployments 25–55% more KV cache space without manual memory tuning), completes the transition to Model Runner V2 by removing the legacy V1 runner, and lands major kernel speedups for DeepSeek-V4.1, GLM-5.3, Kimi-K3, and Mistral Large 4 across NVIDIA Blackwell/Hopper and AMD MI355X.",
                 "five_parts": {
@@ -263,7 +263,7 @@ PUBLICATION_DATA = {
                 "version": "v0.33.0",
                 "badge": "Minor Release",
                 "date": "November 2, 2026",
-                "stats": "840+ commits · DeepSeek-V4.1-Flash & K2-Horizon",
+                "stats": "840+ commits including DeepSeek-V4.1-Flash and K2-Horizon",
                 "headline": "DeepSeek-V4.1-Flash MXFP8 KV Cache, Engine Snapshots via CRIU, and LibTorch Stable ABI",
                 "executive_summary": "vLLM 0.33.0 introduces day-0 support for DeepSeek-V4.1-Flash with full MXFP8 KV cache compression on Blackwell SM100, experimental initialized-engine snapshots (`vllm snapshot create/restore`) for rapid cold starts, and completes the CUDA migration to the LibTorch Stable ABI.",
                 "five_parts": {
@@ -355,7 +355,7 @@ PUBLICATION_DATA = {
                 "version": "v0.32.0",
                 "badge": "Minor Release",
                 "date": "October 18, 2026",
-                "stats": "760+ commits · Hy4-Preview (770B MoE) & Qwen3.8-Flash-Next",
+                "stats": "760+ commits including Hy4-Preview (770B MoE) and Qwen3.8-Flash-Next",
                 "headline": "Tencent Hy4-Preview 770B MoE, Qwen3.8-Flash-Next NVFP4, and Kimi-K3 on ROCm V2 Runner",
                 "executive_summary": "vLLM 0.32.0 adds support for Tencent's 770B/49B-active Hy4-preview MoE model with Gated DeepSeek Sparse Attention, brings Qwen3.8-Flash-Next with BF16/FP8/NVFP4 and Multi-Token Prediction (MTP), and enables Kimi-K3 on AMD ROCm under Model Runner V2.",
                 "five_parts": {
@@ -420,7 +420,7 @@ PUBLICATION_DATA = {
                 "version": "v0.26.0",
                 "badge": "LTS Milestone",
                 "date": "July 27, 2026",
-                "stats": "411 commits · 212 contributors · Tiered KV Offloading",
+                "stats": "411 commits from 212 contributors",
                 "headline": "Tiered KV Cache Offloading to Object Storage, Per-Layer Attention Backends, and Inkling Family Support",
                 "executive_summary": "vLLM 0.26.0 matures tiered KV cache offloading (extending GPU HBM -> CPU DRAM -> Object Storage with workload identity), allows hybrid models to select different attention backends per KV-cache group, and ships a native Rust `vllm-bench` CLI alongside multimodal video/audio support in the Rust frontend.",
                 "five_parts": {
@@ -1049,7 +1049,7 @@ def _backfill_remaining_releases() -> None:
         "version": "v0.1.0",
         "badge": "Inaugural Release",
         "date": "2023-06-20",
-        "stats": "Initial open-source release · PagedAttention & Continuous Batching",
+        "stats": "initial open-source release with PagedAttention and continuous batching",
         "headline": "The First Official Release of vLLM: PagedAttention, Continuous Batching, and OpenAI-Compatible Serving",
         "executive_summary": "vLLM 0.1.0 is the initial open-source release of vLLM from UC Berkeley Sky Computing Lab. It introduces PagedAttention—managing attention Keys and Values in non-contiguous virtual memory blocks like an operating system—reducing KV cache memory waste from 60–80% to under 4% and delivering up to 24× higher LLM serving throughput than Hugging Face Transformers.",
         "five_parts": {
@@ -1199,7 +1199,7 @@ def _backfill_remaining_releases() -> None:
                 "version": ver,
                 "badge": "Release",
                 "date": iso_date,
-                "stats": f"{raw_data.get('total_raw_items', data.get('total_raw_items', 0))} upstream changes · {len(data.get('cited_prs', []))} PRs",
+                "stats": f"{raw_data.get('total_raw_items', data.get('total_raw_items', 0))} upstream changes and {len(data.get('cited_prs', []))} PRs",
                 "headline": headline[:140] if headline else f"Core Engine & Model Updates in {ver}",
                 "executive_summary": exec_summary.replace("VLLM", "vLLM"),
                 "five_parts": {
