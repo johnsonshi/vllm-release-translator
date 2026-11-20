@@ -1099,8 +1099,9 @@ def generate_v5_progressive_clarity_engine(
         tech_bullets: list[str] = []
         for it in c["items"][:4]:
             cleaned_b = _clean_single_engineering_bullet(it.get("text", ""), 200)
-            pr_str = ", ".join(f"#{p}" for p in it.get("prs", [])[:2])
-            if pr_str and pr_str not in cleaned_b:
+            pr_list = it.get("prs", [])[:2]
+            if pr_list and not any(f"#{p}" in cleaned_b for p in pr_list):
+                pr_str = ", ".join(f"#{p}" for p in pr_list)
                 cleaned_b = f"{cleaned_b[:-1]} ({pr_str})."
             tech_bullets.append(cleaned_b)
         deep_dive_records.append({

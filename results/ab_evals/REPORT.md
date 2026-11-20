@@ -26,7 +26,7 @@ We evaluated six progressive release-translation architectures (`v0_naive_baseli
 | `v2_salience_and_risk_ranker` | 63.5% | 81.4% | 100.0% | 70.6% | 80.3% | 97.6% | 15.9% | **73.3%** |
 | `v3_clustered_synthesis` | 83.8% | 86.8% | 100.0% | 95.0% | 92.7% | 95.0% | 13.5% | **83.0%** |
 | `v4_adoption_engine` | 94.8% | 100.0% | 100.0% | 100.0% | 97.0% | 94.6% | 0.0% | **88.0%** |
-| `v5_progressive_clarity_engine` | 93.5% | 100.0% | 100.0% | 100.0% | 97.0% | 94.7% | 99.0% | **97.6%** |
+| `v5_progressive_clarity_engine` | 93.5% | 100.0% | 100.0% | 100.0% | 97.0% | 94.8% | 99.0% | **97.6%** |
 
 ## 4. Structural Comparison: Kubernetes vs. vLLM Releases
 

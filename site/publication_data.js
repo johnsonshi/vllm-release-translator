@@ -547,10 +547,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.31.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Kimi K3 and MiniMax-M3: Kimi-K3 vision patch embedder as a GEMM (#58527), fused KimiViT QK RoPE (up to 29x, #58651), routed expert quantization (#57430), reasoning parser (#57098) and reasoning token (#58527, #58651).",
-                "GLM-5.3-Flash: opt-in FlashAttention and FlashMLA sparse backends on SM90 (#55385), NoPE sparse MLA on the FlashInfer SM120 backend (#55277), cooperative top-k for small decode batches (#57327) (#55385, #55277).",
+                "Kimi K3 and MiniMax-M3: Kimi-K3 vision patch embedder as a GEMM (#58527), fused KimiViT QK RoPE (up to 29x, #58651), routed expert quantization (#57430), reasoning parser (#57098) and reasoning token.",
+                "GLM-5.3-Flash: opt-in FlashAttention and FlashMLA sparse backends on SM90 (#55385), NoPE sparse MLA on the FlashInfer SM120 backend (#55277), cooperative top-k for small decode batches (#57327).",
                 "AMD ROCm: AITER v0.1.23 (#56885, #58867), torch 2.13 and Triton 3.8 (#50605, #58006), `triton_kernels` 3.8 MXFP4 MoE for gpt-oss and DeepSeek-V4 (#55934), a ROCR host segfault fixed (#57328)..",
-                "Startup and memory: parallel Triton warmup compilation (#58582), JIT warmup disabled under `--enforce-eager` (#58197) unless fault tolerance is on (#58593), DeepGEMM warmup reusing the MoE workspace (#58582, #58197)."
+                "Startup and memory: parallel Triton warmup compilation (#58582), JIT warmup disabled under `--enforce-eager` (#58197) unless fault tolerance is on (#58593), DeepGEMM warmup reusing the MoE workspace."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -566,10 +566,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.31.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Intel XPU: PyTorch 2.14 (#56013), XPU graphs on by default (#51600), EPLB (#44987), int8 W8A8 MoE on Triton (#53162), batch invariance (#55881), SYCL rotary embedding (#55721), fused QK RMSNorm + (#56013, #51600).",
+                "Intel XPU: PyTorch 2.14 (#56013), XPU graphs on by default (#51600), EPLB (#44987), int8 W8A8 MoE on Triton (#53162), batch invariance (#55881), SYCL rotary embedding (#55721), fused QK RMSNorm +.",
                 "New defaults: `--enforce-eager` also disables JIT kernel warmup unless fault tolerance is enabled (#58197, #58593). `VLLM_BATCH_INVARIANT=1` uses breakable CUDA graphs without torch.compile (#57586).",
-                "Model Runner V1 + PP > 1 + async scheduling + structured output is now rejected at startup (#56250); `json_object` is rejected at validation with the outlines backend (#57743) (#56250, #57743).",
-                "Batch invariance: breakable CUDA graphs without torch.compile by default under `VLLM_BATCH_INVARIANT` (#57586), sequence parallelism and async TP disabled (#56377), and NCCL 2.31 collectives kept (#57586, #56377)."
+                "Model Runner V1 + PP > 1 + async scheduling + structured output is now rejected at startup (#56250); `json_object` is rejected at validation with the outlines backend (#57743).",
+                "Batch invariance: breakable CUDA graphs without torch.compile by default under `VLLM_BATCH_INVARIANT` (#57586), sequence parallelism and async TP disabled (#56377), and NCCL 2.31 collectives kept."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -585,10 +585,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.31.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Online quantization through `quantization=\"fp8\"` now redirects to the `fp8_per_tensor` online shorthand (#53585); Quark-specific silent online MXFP4 quantization was removed in favor of the online (#53585, #51800).",
-                "Humming: Hadamard transforms and NVFP4/MXFP4/MXFP8 online quantization (#56685), asymmetric wNaM through compressed-tensors (#46528), humming-kernels 0.1.16 (#58054), and Humming in the W4A8 (#56685, #46528).",
-                "New capabilities: native Quark W4A16 INT4/UINT4 exports (#48606), opt-in load-time MXFP4 dequantization (#50814), explicit per-token NVFP4 MoE backends (#57176), and a canonical N-first layout for (#48606, #50814).",
-                "Fixes: MXFP8 on layers below `mm_mxfp8` shape limits (#54223), online NVFP4 scales on reload (#57954), LM head linear metadata (#58444), and the fused SiLU-mul block-quant path skipped under a SwiGLU (#54223, #57954)."
+                "Online quantization through `quantization=\"fp8\"` now redirects to the `fp8_per_tensor` online shorthand (#53585); Quark-specific silent online MXFP4 quantization was removed in favor of the online.",
+                "Humming: Hadamard transforms and NVFP4/MXFP4/MXFP8 online quantization (#56685), asymmetric wNaM through compressed-tensors (#46528), humming-kernels 0.1.16 (#58054), and Humming in the W4A8.",
+                "New capabilities: native Quark W4A16 INT4/UINT4 exports (#48606), opt-in load-time MXFP4 dequantization (#50814), explicit per-token NVFP4 MoE backends (#57176), and a canonical N-first layout for.",
+                "Fixes: MXFP8 on layers below `mm_mxfp8` shape limits (#54223), online NVFP4 scales on reload (#57954), LM head linear metadata (#58444), and the fused SiLU-mul block-quant path skipped under a SwiGLU."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -604,10 +604,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.31.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "Scheduler: `--max-num-active-seqs` (#56758), adaptive `--long-prefill-token-threshold` (#57951, #58459), `skipped_waiting` replaced by a KV-holding waiting queue (#58947), atomic admission of `n > 1` (#56758, #57951).",
-                "Speculative decoding: LiLiCorr drafter (#57934), DFlash async scheduling (#58065) and context K/V in the draft CUDA graph (#57632), Gemma4 DSpark adaptive verification (#57263), Kimi-K3 (#57934, #58065).",
-                "MoE communication: MoonEP backend (#52101), DeepEPv2 with sequence parallelism (#57210) and EPLB + shared-expert overlap (#57236), low-SM multimem reduce-scatter (#55072), EPLB load statistics during (#52101, #57210).",
-                "New model capabilities: DiffusionGemma structured generation mode with bounded single-token choices (#57250), MiMo V2 MXFP4 MoE, BF16 MoE router and DFlash drafts (#57784), Cohere2MoE auxiliary (#57250, #57784)."
+                "Scheduler: `--max-num-active-seqs` (#56758), adaptive `--long-prefill-token-threshold` (#57951, #58459), `skipped_waiting` replaced by a KV-holding waiting queue (#58947), atomic admission of `n > 1`.",
+                "Speculative decoding: LiLiCorr drafter (#57934), DFlash async scheduling (#58065) and context K/V in the draft CUDA graph (#57632), Gemma4 DSpark adaptive verification (#57263), Kimi-K3.",
+                "MoE communication: MoonEP backend (#52101), DeepEPv2 with sequence parallelism (#57210) and EPLB + shared-expert overlap (#57236), low-SM multimem reduce-scatter (#55072), EPLB load statistics during.",
+                "New model capabilities: DiffusionGemma structured generation mode with bounded single-token choices (#57250), MiMo V2 MXFP4 MoE, BF16 MoE router and DFlash drafts (#57784), Cohere2MoE auxiliary."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
               "config_snippet": ""
@@ -623,10 +623,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.31.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "`VLLM_PLE_CPU_OFFLOAD` was removed; use `--engram-config` (#57937). `VLLM_XPU_ENABLE_XPU_GRAPH` was removed and XPU graphs are on by default (#51600) (#57937, #51600).",
-                "KV connectors: NIXL pipeline-parallel push prefill for attention-HMA (#50494) and packed MLA layouts (#50499), transport-failure metrics split from KV expiry (#55854), dead peer state released (#50494, #50499).",
-                "ROCm: AITER v0.1.23 (#58867), torch 2.13, Triton 3.8 (#50605, #58006), patched ROCR (#57328), LMCache OpenTelemetry pins (#59056) (#58867, #50605).",
-                "Rust frontend: `--hf-overrides` (#56931), `--sse-keep-alive-interval` (#58306), custom chat roles (#58311), MiMo V2.5 parsers (#57933), normalized reasoning controls (#56998), parser-owned output (#56931, #58306)."
+                "`VLLM_PLE_CPU_OFFLOAD` was removed; use `--engram-config` (#57937). `VLLM_XPU_ENABLE_XPU_GRAPH` was removed and XPU graphs are on by default (#51600).",
+                "KV connectors: NIXL pipeline-parallel push prefill for attention-HMA (#50494) and packed MLA layouts (#50499), transport-failure metrics split from KV expiry (#55854), dead peer state released.",
+                "ROCm: AITER v0.1.23 (#58867), torch 2.13, Triton 3.8 (#50605, #58006), patched ROCR (#57328), LMCache OpenTelemetry pins (#59056).",
+                "Rust frontend: `--hf-overrides` (#56931), `--sse-keep-alive-interval` (#58306), custom chat roles (#58311), MiMo V2.5 parsers (#57933), normalized reasoning controls (#56998), parser-owned output."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -792,10 +792,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.30.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "New defaults: FlashInfer CuTeDSL NVFP4 W4A16 over Marlin on SM100/103 (#53014), W4A4 NVFP4 over weight-only kernels on SM120/121 (#55170), BF16x3 router GEMM on SM100 (#55899), DeepEP v2 combine (#53014, #55170).",
-                "NVIDIA: FlashInfer PCIe IPC all-reduce (#53576), DeepGEMM pinned to the vLLM fork 2.8.0 with SM120 and SM90 paged-MQA ports (#56876), public CUDA 13.4 Rubin build path (#54640, #56545), SM12x (#53576, #56876).",
-                "New capabilities: targeted online quantization (#51285) and online quantization of partially pre-quantized checkpoints (#51392), W4A16 DSA (#51724, #55538), FlashInfer CuTeDSL NVFP4 W4A16 (#53014) (#51285, #51392).",
-                "Fixes: NVFP4 padding initialized in-kernel (#53568), unloaded NVFP4 scales detected with a NaN sentinel (#52501), NVFP4 fused SiLU+mul scales (#55643), Quark per-block scales registered as (#53568, #52501)."
+                "New defaults: FlashInfer CuTeDSL NVFP4 W4A16 over Marlin on SM100/103 (#53014), W4A4 NVFP4 over weight-only kernels on SM120/121 (#55170), BF16x3 router GEMM on SM100 (#55899), DeepEP v2 combine.",
+                "NVIDIA: FlashInfer PCIe IPC all-reduce (#53576), DeepGEMM pinned to the vLLM fork 2.8.0 with SM120 and SM90 paged-MQA ports (#56876), public CUDA 13.4 Rubin build path (#54640, #56545), SM12x.",
+                "New capabilities: targeted online quantization (#51285) and online quantization of partially pre-quantized checkpoints (#51392), W4A16 DSA (#51724, #55538), FlashInfer CuTeDSL NVFP4 W4A16 (#53014).",
+                "Fixes: NVFP4 padding initialized in-kernel (#53568), unloaded NVFP4 scales detected with a NaN sentinel (#52501), NVFP4 fused SiLU+mul scales (#55643), Quark per-block scales registered as."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -811,10 +811,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.30.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "GLM-5.3-Flash: EPLB support (#55119), FlashKDA for KDA chunked prefill (1.7-3.8x faster than the Triton chunk path, #55737), dense and masked-MHA sparse prefill for the NoPE (256, 0, 256) layout (#55119, #55737).",
-                "AMD ROCm: TheRock base bumped to ROCm 10.0 (#55246) with nightly TheRock images (#55014), AITER 0.1.21.post2 (#52826, #55968), AITER custom AG/RS on the DP group (about 3% TPOT, #48247), multi-stream (#55246, #55014).",
-                "Kimi K3: native CUDA AttnRes default on SM100 (#54261), ll_bf16 router weight prefetch (#53524), overlapped TP8 KDA projections (#54697), strided DSV3 GEMM (#54565), MLA decode epilogue latency (#54261, #53524).",
-                "CPU: DeepSeek-V4 backend (#55355), native AMX-FP8 attention for Diamond Rapids with the Docker base moved to Ubuntu 25.04 and GCC 15 (#49410), faster LM head on Arm (about 6% on Llama-3.1-8B W8A8 (#55355, #49410)."
+                "GLM-5.3-Flash: EPLB support (#55119), FlashKDA for KDA chunked prefill (1.7-3.8x faster than the Triton chunk path, #55737), dense and masked-MHA sparse prefill for the NoPE (256, 0, 256) layout.",
+                "AMD ROCm: TheRock base bumped to ROCm 10.0 (#55246) with nightly TheRock images (#55014), AITER 0.1.21.post2 (#52826, #55968), AITER custom AG/RS on the DP group (about 3% TPOT, #48247), multi-stream.",
+                "Kimi K3: native CUDA AttnRes default on SM100 (#54261), ll_bf16 router weight prefetch (#53524), overlapped TP8 KDA projections (#54697), strided DSV3 GEMM (#54565), MLA decode epilogue latency.",
+                "CPU: DeepSeek-V4 backend (#55355), native AMX-FP8 attention for Diamond Rapids with the Docker base moved to Ubuntu 25.04 and GCC 15 (#49410), faster LM head on Arm (about 6% on Llama-3.1-8B W8A8."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -832,8 +832,8 @@ window.__PUBLICATION_DATA__ = {
               "tech_bullets": [
                 "Attention implementations must explicitly declare DCP support; DCP with ROCm standard attention, Triton, FlexAttention or TurboQuant now fails at backend selection (#55780).",
                 "Items deprecated for 0.29 removed: `VLLM_PREFIX_CACHE_RETENTION_INTERVAL` and `VLLM_MM_HASHER_ALGORITHM` env vars (use the config fields), the `use_fp4_indexer_cache` alias (use `indexer_kv_dtype`) (#55353).",
-                "Fast Start: weight-cache daemon with `--load-format ipc_cache` (#54921), FP4 checkpoints (#55465), multi-node TP (#55468), GPU UUID socket folders (#56669), per-client IPC tensor export so a (#54921, #55465).",
-                "ROCm: TheRock base on ROCm 10.0 (#55246), AITER 0.1.21.post2 (#52826, #55968), Mooncake from public wheels (#55002), AINIC libionic 54.0-187-1 pinned to a snapshot (#54112, #56459) (#55246, #52826)."
+                "Fast Start: weight-cache daemon with `--load-format ipc_cache` (#54921), FP4 checkpoints (#55465), multi-node TP (#55468), GPU UUID socket folders (#56669), per-client IPC tensor export so a.",
+                "ROCm: TheRock base on ROCm 10.0 (#55246), AITER 0.1.21.post2 (#52826, #55968), Mooncake from public wheels (#55002), AINIC libionic 54.0-187-1 pinned to a snapshot (#54112, #56459)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -849,10 +849,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.30.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Robustness: attention implementations must explicitly declare DCP support (#55780), unavailable piecewise CUDA graphs raise instead of producing garbled output (#54782), non-compiled models fall back (#55780, #54782).",
-                "Qwen3.8-Flash-Next: separate prefill and decode QSA indexer kernels with `VLLM_SPARSE_INDEXER_MAX_LOGITS_MB` (#54513), fused PLE kernels and merged K/V projections (#54517), sparse GQA skipping (#54513, #54517).",
+                "Robustness: attention implementations must explicitly declare DCP support (#55780), unavailable piecewise CUDA graphs raise instead of producing garbled output (#54782), non-compiled models fall back.",
+                "Qwen3.8-Flash-Next: separate prefill and decode QSA indexer kernels with `VLLM_SPARSE_INDEXER_MAX_LOGITS_MB` (#54513), fused PLE kernels and merged K/V projections (#54517), sparse GQA skipping.",
                 "The `all` Mamba cache mode is deprecated and falls back to Model Runner V1 (#55041).",
-                "Elastic EP and MoE communication: CUDA graphs reused across reconfiguration (#54985), routing only to surviving engines on scale-down (#55772), DeepEP v2 async finalize (#52781), FlashInfer PCIe IPC (#54985, #55772)."
+                "Elastic EP and MoE communication: CUDA graphs reused across reconfiguration (#54985), routing only to surviving engines on scale-down (#55772), DeepEP v2 async finalize (#52781), FlashInfer PCIe IPC."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -869,9 +869,9 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.30.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
                 "Correctness: Gemma 4 / Gemma 3n fine-tuned checkpoints without KV projections on shared layers (#54917, #55864), Gemma4 video preprocessing without image kwargs (#56652) and unified audio profiling.",
-                "Startup and warmup: renderer warmup overlapped with engine core init (#54557), FlashInfer autotune no longer rerun on each source change (#54794), Qwen3.5/Qwen3-Next Triton kernels (#54797) and GDN (#54557, #54794).",
+                "Startup and warmup: renderer warmup overlapped with engine core init (#54557), FlashInfer autotune no longer rerun on each source change (#54794), Qwen3.5/Qwen3-Next Triton kernels (#54797) and GDN.",
                 "New models: DeepSeek-V4.1-Flash (#56214, #56228, #56208), DeepSeek-V4-Flash-Vision-Exp (#54566) with ROCm support (#55107) and LoRA (#55897), GLM-5.3-Flash (#53906), K2-Horizon with its reasoning and.",
-                "Intel XPU: activation CustomOps on SYCL kernels (#53734), batch-invariant matmul and linear kernels (#49209), fused GemmaRMSNorm (#53678), `fused_input_norm` (#52945) and fused `grouped_topk` (#53734, #49209)."
+                "Intel XPU: activation CustomOps on SYCL kernels (#53734), batch-invariant matmul and linear kernels (#49209), fused GemmaRMSNorm (#53678), `fused_input_norm` (#52945) and fused `grouped_topk`."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -1037,10 +1037,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.29.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Kernels: fused embedding kernel (#53677), FA4 re-enabled for head_size=256 on Blackwell (#52980), vectorized sparse MLA mask loads (#52217), masked MHA prefill for GLM-5 head dimensions (#53785) (#53677, #52980).",
-                "RL workflows: `sharded_rdt` P2P weight sync (#43375), rank-local IPC updates (#52497), sparse checkpoint updates (#50723, #53751), gpt-oss routed expert loading (#52209), stable DeepSeek V4 mHC (#43375, #52497).",
-                "AMD ROCm: dual-stream decode with hipgraphs (#52033), W4A4 preshuffled asm GEMM by default (+15% throughput on Llama-3.3-70B MXFP4, #53141), ROCr/CLR update fixing graph replay segfaults with up to (#52033, #53141).",
-                "Correctness: PaliGemma stale image scaling removed (#52692), Mistral3 placeholder grid with processor size overrides (#52874), MiniCPM-o on Transformers v5 (#54501), JinaVL cache order (#53553) (#52692, #52874)."
+                "Kernels: fused embedding kernel (#53677), FA4 re-enabled for head_size=256 on Blackwell (#52980), vectorized sparse MLA mask loads (#52217), masked MHA prefill for GLM-5 head dimensions (#53785).",
+                "RL workflows: `sharded_rdt` P2P weight sync (#43375), rank-local IPC updates (#52497), sparse checkpoint updates (#50723, #53751), gpt-oss routed expert loading (#52209), stable DeepSeek V4 mHC.",
+                "AMD ROCm: dual-stream decode with hipgraphs (#52033), W4A4 preshuffled asm GEMM by default (+15% throughput on Llama-3.3-70B MXFP4, #53141), ROCr/CLR update fixing graph replay segfaults with up to.",
+                "Correctness: PaliGemma stale image scaling removed (#52692), Mistral3 placeholder grid with processor size overrides (#52874), MiniCPM-o on Transformers v5 (#54501), JinaVL cache order (#53553)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -1056,10 +1056,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.29.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "New backends: FlashInfer TRT-LLM MXFP8 linear (#52204), b12x FP4 MoE for SM120/SM121 (#52018), AutoRound block-wise FP8 (#47434), Humming MoE with MXFP4 weights + block-FP8 activations (#51332), and (#52204, #52018).",
-                "`VLLM_TEST_FORCE_FP8_MARLIN` removed in favor of `--linear-backend` / `--moe-backend` (#52182). `VLLM_ROCM_USE_AITER_FP4_ASM_GEMM` removed (#53141) (#52182, #53141).",
-                "MoE communication: DeepEP v2 receiver CPU overhead (#51114) and MXFP8 activation scale dispatch (#51398), FlashInfer one-sided All2All refinements (#51924), DeepEP v2 fixes for `--enforce-eager` (#51114, #51398).",
-                "Fixes: weight-only NVFP4 checkpoints routed through W4A16 (#54427), compressed-tensors block FP8 with Marlin (#52966) and int8 grouped WNA16 MoE (#52002), OCP MX mxfp6 activation emulation (#52704) (#54427, #52966)."
+                "New backends: FlashInfer TRT-LLM MXFP8 linear (#52204), b12x FP4 MoE for SM120/SM121 (#52018), AutoRound block-wise FP8 (#47434), Humming MoE with MXFP4 weights + block-FP8 activations (#51332), and.",
+                "`VLLM_TEST_FORCE_FP8_MARLIN` removed in favor of `--linear-backend` / `--moe-backend` (#52182). `VLLM_ROCM_USE_AITER_FP4_ASM_GEMM` removed (#53141).",
+                "MoE communication: DeepEP v2 receiver CPU overhead (#51114) and MXFP8 activation scale dispatch (#51398), FlashInfer one-sided All2All refinements (#51924), DeepEP v2 fixes for `--enforce-eager`.",
+                "Fixes: weight-only NVFP4 checkpoints routed through W4A16 (#54427), compressed-tensors block FP8 with Marlin (#52966) and int8 grouped WNA16 MoE (#52002), OCP MX mxfp6 activation emulation (#52704)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -1075,10 +1075,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.29.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Multimodal performance: ViT full CUDA graph for Idefics3 and SmolVLM (#47625), packed encoder attention for Pixtral (#52185), fused Kimi vision Q/K RoPE kernel (#50400), Dots3 NOTE runtime (#53517) (#47625, #52185).",
-                "Multimodal inputs: video embeds accepted by the Python frontend (#54242), modality-scoped `mm_processor_kwargs` honored (#53808), Qwen3-VL profiling honors `cap_pixels_per_frame` (#54380), video (#54242, #53808).",
-                "New models: Hy4-preview (#54160), Qwen3.8-Flash-Next (#53896), GraniteSWA and GraniteMoeSWA via the existing Granite implementation (#52706), NemotronH_Omni_Reasoning_V3 (#52929) with MTP for (#54160, #53896).",
-                "LoRA: DeepSeek V4 (#53361), Qwen3-Omni multimodal LoRA (#52786, #53557), tower/connector LoRA for LLaVA-NeXT (#49788) and LFM2-VL (#51498), plus fixes for Muse-Glimmer (#53513), Qwen3.5 embedding (#53361, #52786)."
+                "Multimodal performance: ViT full CUDA graph for Idefics3 and SmolVLM (#47625), packed encoder attention for Pixtral (#52185), fused Kimi vision Q/K RoPE kernel (#50400), Dots3 NOTE runtime (#53517).",
+                "Multimodal inputs: video embeds accepted by the Python frontend (#54242), modality-scoped `mm_processor_kwargs` honored (#53808), Qwen3-VL profiling honors `cap_pixels_per_frame` (#54380), video.",
+                "New models: Hy4-preview (#54160), Qwen3.8-Flash-Next (#53896), GraniteSWA and GraniteMoeSWA via the existing Granite implementation (#52706), NemotronH_Omni_Reasoning_V3 (#52929) with MTP for.",
+                "LoRA: DeepSeek V4 (#53361), Qwen3-Omni multimodal LoRA (#52786, #53557), tower/connector LoRA for LLaVA-NeXT (#49788) and LFM2-VL (#51498), plus fixes for Muse-Glimmer (#53513), Qwen3.5 embedding."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -1114,9 +1114,9 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.29.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
                 "FlashInfer all-reduce enabled by default (#52998).",
-                "KV connectors: Mooncake Store decode KV saving via `save_decode_cache` (#52466) and hybrid DCP prefix caching (#53324), externally transferable KV cache group identification (#53779), async KV loads (#52466, #53324).",
+                "KV connectors: Mooncake Store decode KV saving via `save_decode_cache` (#52466) and hybrid DCP prefix caching (#53324), externally transferable KV cache group identification (#53779), async KV loads.",
                 "`prefix_cache_retention_interval` default changed from dense to 0 for SWA/SSM models; the env var is deprecated in favor of the argument (#52216).",
-                "Prefix caching & scheduling: Mamba internal prefill checkpoints (#52789), `prefix_cache_retention_interval` argument (#52216, #55760, #55861), deterministic `NONE_HASH` (#51875), queue admission (#52789, #52216)."
+                "Prefix caching & scheduling: Mamba internal prefill checkpoints (#52789), `prefix_cache_retention_interval` argument (#52216, #55760, #55861), deterministic `NONE_HASH` (#51875), queue admission."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -1282,10 +1282,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.28.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "AMD ROCm: torch 2.12 / triton 3.7 stack bump (#50607), AITER and FP8 inference enabled on GFX120x (#43615), DeepSeek-V4 on gfx11 (#47017), optimized Triton sparse-MLA decode on gfx950 (#52212) (#50607, #43615).",
-                "CPU: an MLA backend so DeepSeek-V2/V3 can run on CPU (#49453), a triton-cpu wheel (#52092), GPTQ and AWQ enabled on s390x (#51148) along with tcmalloc (#50841), BF16 MoE routed through zentorch on (#49453, #52092).",
-                "DeepGEMM pinned to the deepseek-ai nv_dev tip (#52035), DeepEP pinned by full commit hash (#52028), FlashAttention 3 built with the torch stable API (#49599) (#52035, #52028).",
-                "MoE: extended EPLB support for Mistral Large 3 and additional MoE backends (#48355), CuTe DSL skinny GEMM extended to GLM-5.2 (#49791) (#48355, #49791)."
+                "AMD ROCm: torch 2.12 / triton 3.7 stack bump (#50607), AITER and FP8 inference enabled on GFX120x (#43615), DeepSeek-V4 on gfx11 (#47017), optimized Triton sparse-MLA decode on gfx950 (#52212).",
+                "CPU: an MLA backend so DeepSeek-V2/V3 can run on CPU (#49453), a triton-cpu wheel (#52092), GPTQ and AWQ enabled on s390x (#51148) along with tcmalloc (#50841), BF16 MoE routed through zentorch on.",
+                "DeepGEMM pinned to the deepseek-ai nv_dev tip (#52035), DeepEP pinned by full commit hash (#52028), FlashAttention 3 built with the torch stable API (#49599).",
+                "MoE: extended EPLB support for Mistral Large 3 and additional MoE backends (#48355), CuTe DSL skinny GEMM extended to GLM-5.2 (#49791)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -1301,10 +1301,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.28.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "NVIDIA: FlashInfer XQA decode support on SM12x (#49718), a CuTeDSL fused query kernel on SM100 (#49792), programmatic dependent launch for the DSA decode kernels (#50230), the native DSA decode path (#49718, #49792).",
-                "Qwen: Qwen3.8 enabled on AMD ROCm (#50068), fused CUDA post-conv MTP decode kernel for Qwen3.5 GDN (#51674), GDN gates aligned with speculative tokens (#51812), and Qwen3.5 fixes for text-only (#50068, #51674).",
-                "Speculative decoding: DSpark confidence-scheduled verification (#47808), top-k DSpark Markov projection (#49969), DFlash2 with local convolution and a candidate selector (#52816), async scheduling (#47808, #49969).",
-                "Speculative decoding coverage: EAGLE3 support declared on KimiLinear (#52171), Qwen3.6 dSpark acceptance coverage (#51310) (#52171, #51310)."
+                "NVIDIA: FlashInfer XQA decode support on SM12x (#49718), a CuTeDSL fused query kernel on SM100 (#49792), programmatic dependent launch for the DSA decode kernels (#50230), the native DSA decode path.",
+                "Qwen: Qwen3.8 enabled on AMD ROCm (#50068), fused CUDA post-conv MTP decode kernel for Qwen3.5 GDN (#51674), GDN gates aligned with speculative tokens (#51812), and Qwen3.5 fixes for text-only.",
+                "Speculative decoding: DSpark confidence-scheduled verification (#47808), top-k DSpark Markov projection (#49969), DFlash2 with local convolution and a candidate selector (#52816), async scheduling.",
+                "Speculative decoding coverage: EAGLE3 support declared on KimiLinear (#52171), Qwen3.6 dSpark acceptance coverage (#51310)."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
               "config_snippet": ""
@@ -1320,9 +1320,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.28.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Fixes: dynamic INT8 W8A8 MoE config no longer built as W8A16 (#50833) and a TritonExperts crash (#51411), MXFP4 conversion for FlashInfer CUTLASS (#51038), fp32 weight scales and per-expert (#50833, #51411).",
-                "New models: Muse Glimmer (#51655), Ling 3.0 Flash with BF16, MTP, and parser support (#51045) plus an FP8 variant (#51265) and hybrid MXFP4 routed experts (#52114), Dots3 NOTE native multimodal (#51655, #51045).",
-                "Correctness: MiniMax-M3 NVFP4 inference (#48929) and compressed-tensors FP8 MoE SwiGLU params (#46845), Gemma3n/Gemma4 variable-length audio batch padding (#50958), Gemma 4 compatibility with the (#48929, #46845).",
+                "Fixes: dynamic INT8 W8A8 MoE config no longer built as W8A16 (#50833) and a TritonExperts crash (#51411), MXFP4 conversion for FlashInfer CUTLASS (#51038), fp32 weight scales and per-expert.",
+                "New models: Muse Glimmer (#51655), Ling 3.0 Flash with BF16, MTP, and parser support (#51045) plus an FP8 variant (#51265) and hybrid MXFP4 routed experts (#52114), Dots3 NOTE native multimodal.",
+                "Correctness: MiniMax-M3 NVFP4 inference (#48929) and compressed-tensors FP8 MoE SwiGLU params (#46845), Gemma3n/Gemma4 variable-length audio batch padding (#50958), Gemma 4 compatibility with the.",
                 "Intel XPU: a torch linear backend including blockwise GEMM (#49664, #50826), MXFP8 linear weights for the INC DeepSeek V4 model (#48476), async-scheduling PP sampled-token broadcast overlapped with."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
@@ -1339,10 +1339,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.28.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "E/P/D disaggregation: Model Runner V2 E/P/D support (#38390), duplicate image preprocessing removed with GPU-side preprocessing (#50390), KV consumers may omit multimodal embeddings (#52697) (#38390, #50390).",
-                "Hybrid/Mamba: prefix caching on by default (#50991), the final part of the Mamba attention module refactor (#44857), 3D-grid tiling of the state-copy Triton kernels (#49436), and Mamba alignment (#50991, #44857).",
-                "RL workflows: stateful trainer send over NCCL and sparse NCCL (#50902), `CuMemAllocator.discard()` for tag-selective GPU memory release (#52514), level-2 sleep/wake/reload fixed with LoRA enabled (#50902, #52514).",
-                "LoRA: vision tower LoRA for Gemma4 (#42662), tower/connector LoRA for Keye (#51780) and Ultravox (#48215) (#42662, #51780)."
+                "E/P/D disaggregation: Model Runner V2 E/P/D support (#38390), duplicate image preprocessing removed with GPU-side preprocessing (#50390), KV consumers may omit multimodal embeddings (#52697).",
+                "Hybrid/Mamba: prefix caching on by default (#50991), the final part of the Mamba attention module refactor (#44857), 3D-grid tiling of the state-copy Triton kernels (#49436), and Mamba alignment.",
+                "RL workflows: stateful trainer send over NCCL and sparse NCCL (#50902), `CuMemAllocator.discard()` for tag-selective GPU memory release (#52514), level-2 sleep/wake/reload fixed with LoRA enabled.",
+                "LoRA: vision tower LoRA for Gemma4 (#42662), tower/connector LoRA for Keye (#51780) and Ultravox (#48215)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -1358,10 +1358,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.28.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "Connectors: transfer mode (push/pull) included in the NIXL compatibility hash (#50620), a MoRIIO per-layer READ-completion barrier (#48534), 2P2D wide-EP with mori-ep/mori-io at dp=ep=16 (#45043) (#50620, #48534).",
+                "Connectors: transfer mode (push/pull) included in the NIXL compatibility hash (#50620), a MoRIIO per-layer READ-completion barrier (#48534), 2P2D wide-EP with mori-ep/mori-io at dp=ep=16 (#45043).",
                 "`reasoning_content` output removal is documented as a breaking client change (#50624).",
                 "ROCm: torch 2.12, triton 3.7, torchaudio, torchvision (#50607).",
-                "New capabilities: request priority parsed from an HTTP header (#51089), session ID plumbing into requests (#48048), `count_reasoning_tokens` in the streaming parser engine (#45802), `content_parts` (#51089, #48048)."
+                "New capabilities: request priority parsed from an HTTP header (#51089), session ID plumbing into requests (#48048), `count_reasoning_tokens` in the streaming parser engine (#45802), `content_parts`."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -1527,10 +1527,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.27.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "DeepSeek-V4: sequence parallelism (#46789), ~2x kernel skipping empty c128 launches (#48957), 3.4% E2E TTFT skipping topk/router in decode (#49486), 3.9% E2E TTFT workspace reuse (#49236), 1.88x (#46789, #48957).",
-                "Attention: FlashAttention 4 SM100 FP8 KV cache (#42569) and headdim-256 (#42669). query replication for MLA decode under DCP for DeepSeek-V2/R1 and Kimi-K2.5 (#45964) (#42569, #42669).",
-                "ROCm: gfx1250 architecture enabled (#46516), AITER FP8 ViT encoder attention (#49937), fused shared expert for Quark DeepSeek-V4 checkpoints (#48044), Quark GLM-5.2 checkpoint inference fixes (#46516, #49937).",
-                "Kimi K3: new model (#50000) with model files and kernels (#50089), Python frontend (#50093), Rust frontend (#50104), AttnRes kernels (#50090), DeepGEMM support (#50458), DSpark AR fusion (#50242) (#50000, #50089)."
+                "DeepSeek-V4: sequence parallelism (#46789), ~2x kernel skipping empty c128 launches (#48957), 3.4% E2E TTFT skipping topk/router in decode (#49486), 3.9% E2E TTFT workspace reuse (#49236), 1.88x.",
+                "Attention: FlashAttention 4 SM100 FP8 KV cache (#42569) and headdim-256 (#42669). query replication for MLA decode under DCP for DeepSeek-V2/R1 and Kimi-K2.5 (#45964).",
+                "ROCm: gfx1250 architecture enabled (#46516), AITER FP8 ViT encoder attention (#49937), fused shared expert for Quark DeepSeek-V4 checkpoints (#48044), Quark GLM-5.2 checkpoint inference fixes.",
+                "Kimi K3: new model (#50000) with model files and kernels (#50089), Python frontend (#50093), Rust frontend (#50104), AttnRes kernels (#50090), DeepGEMM support (#50458), DSpark AR fusion (#50242)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -1546,10 +1546,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.27.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Kernels: RMSNorm uncontiguous support with 1.2\u20133.1x kernel improvement (#49750), MoE `reduce_scatter` regression fix restoring 5% E2E throughput (#48763), non-grouped bias-less topk routing (#49750, #48763).",
-                "New capabilities: FP4 Qutlass integration for compressed-tensors (#43229), CuTeDSL MoE for ReLU2 NVFP4 (#49580), MXFP8 linear support in INC (#47514), AutoRound W4A16 MoE and MXFP4 linear/MoE on XPU (#43229, #49580).",
-                "MoE refactor: FusedMoE renamed to FusedMoEFactory (#44941), MoeWNA16 migrated to the MK oracle scheme (#44120), Quark w8a8-int8 (#46765) and MXFP4 `aiter`/`emulation` backends (#49348, #48949) moved (#44941, #44120).",
-                "Inkling: llm-compressor NVFP4 weights (#49258) and compressed-tensors dynamic FP8 (#48876) (#49258, #48876)."
+                "Kernels: RMSNorm uncontiguous support with 1.2\u20133.1x kernel improvement (#49750), MoE `reduce_scatter` regression fix restoring 5% E2E throughput (#48763), non-grouped bias-less topk routing.",
+                "New capabilities: FP4 Qutlass integration for compressed-tensors (#43229), CuTeDSL MoE for ReLU2 NVFP4 (#49580), MXFP8 linear support in INC (#47514), AutoRound W4A16 MoE and MXFP4 linear/MoE on XPU.",
+                "MoE refactor: FusedMoE renamed to FusedMoEFactory (#44941), MoeWNA16 migrated to the MK oracle scheme (#44120), Quark w8a8-int8 (#46765) and MXFP4 `aiter`/`emulation` backends (#49348, #48949) moved.",
+                "Inkling: llm-compressor NVFP4 weights (#49258) and compressed-tensors dynamic FP8 (#48876)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -1565,10 +1565,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.27.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Multimodal: VidCom2 video token pruning (#47750), EVS for Qwen3.5 (#48912), ViT CUDA graph for Gemma-4 (#46837), Cosmos3 FP8 ModelOpt/Diffusers remapping (#48952), MiniMax-M3 MSA speculative decode (#47750, #48912).",
-                "New models: Qwen3.5 text-only dense and MoE (#50210), K-EXAONE-2.0-750B-A37B (#50524), VaultGemma via Transformers backend (#49803), jina-embeddings-v5-text-nano with EuroBERT encoder backbone (#50210, #50524).",
-                "UX & validation: standardized request error handling with a VLLMError hierarchy (#49665), reduced startup log noise (#50590), incompatible nested runtime overrides rejected (#49247), improved (#49665, #50590).",
-                "Preprocessing performance: derender CPU work offloaded to the renderer thread pool (#49396), raw-prompt preprocessing off the event loop in AsyncLLM (#49608), multimodal preprocessing isolated on its (#49396, #49608)."
+                "Multimodal: VidCom2 video token pruning (#47750), EVS for Qwen3.5 (#48912), ViT CUDA graph for Gemma-4 (#46837), Cosmos3 FP8 ModelOpt/Diffusers remapping (#48952), MiniMax-M3 MSA speculative decode.",
+                "New models: Qwen3.5 text-only dense and MoE (#50210), K-EXAONE-2.0-750B-A37B (#50524), VaultGemma via Transformers backend (#49803), jina-embeddings-v5-text-nano with EuroBERT encoder backbone.",
+                "UX & validation: standardized request error handling with a VLLMError hierarchy (#49665), reduced startup log noise (#50590), incompatible nested runtime overrides rejected (#49247), improved.",
+                "Preprocessing performance: derender CPU work offloaded to the renderer thread pool (#49396), raw-prompt preprocessing off the event loop in AsyncLLM (#49608), multimodal preprocessing isolated on its."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -1584,8 +1584,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.27.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "CPU: INT8 fused MoE kernel for Arm CPUs (#48637), s390x inference optimization with oneDNN INT8 GEMM (#50219), GDN conv path optimized for speculative decoding (#48577), granite-4 enabled (#47641) (#48637, #50219).",
-                "Spec decode: DSpark Markov head replicated across TP ranks (#49731), `sample_from_anchor` loaded from speculators config (#48639), earliest-completing stop string selected (#49391) (#49731, #48639)."
+                "CPU: INT8 fused MoE kernel for Arm CPUs (#48637), s390x inference optimization with oneDNN INT8 GEMM (#50219), GDN conv path optimized for speculative decoding (#48577), granite-4 enabled (#47641).",
+                "Spec decode: DSpark Markov head replicated across TP ranks (#49731), `sample_from_anchor` loaded from speculators config (#48639), earliest-completing stop string selected (#49391)."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
               "config_snippet": ""
@@ -1601,8 +1601,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.27.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Model Runner V2: encoder-only attention (#49331), sequence pooling for embedding and classification (#48791), encoder token classification (#50293), encoder token embedding (#50574), BGE-M3 pooling (#49331, #48791).",
-                "Memory & robustness: CuMem slept-L1 fragmentation accounting (#49208), cgroup memory limits respected on all platforms (#49966), fail fast when /dev/shm is too small (#48879), zero-copy tensor (#49208, #49966)."
+                "Model Runner V2: encoder-only attention (#49331), sequence pooling for embedding and classification (#48791), encoder token classification (#50293), encoder token embedding (#50574), BGE-M3 pooling.",
+                "Memory & robustness: CuMem slept-L1 fragmentation accounting (#49208), cgroup memory limits respected on all platforms (#49966), fail fast when /dev/shm is too small (#48879), zero-copy tensor."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -1844,10 +1844,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.25.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "GLM-5.2 / DeepSeek: `fused_indexer_q_rope_quant` Triton kernel (1.9\u20133.3% E2E throughput) (#46862), reduce-scatter MoE all-reduce (3.1\u20133.2% E2E) (#46635), op fusion for GLM5/DSV3.2 (#46876) (#46862, #46635).",
-                "AMD/ROCm: moved to torch 2.11 stable ABI (#47128). AITER FlashAttention MLA prefill backend `ROCM_AITER_FA` (#45033) (#47128, #45033).",
-                "NVIDIA/Blackwell: FlashInfer fused all-reduce tuned for world_size=16 on GB300 (#46392), restored NVFP4 swizzled-scale zero-init to recover Blackwell decode throughput (#45739), CuTeDSL/FA4-MLA (#46392, #45739).",
-                "GLM-5 family: GLM-5 / DeepSeek-V3.2 added to the model zoo (#46808), GLM-5.2 FP32 gate (#47410), GLM MTP post-final-norm fix (#47448), GLM4V startup fix (#47155) (#46808, #47410)."
+                "GLM-5.2 / DeepSeek: `fused_indexer_q_rope_quant` Triton kernel (1.9\u20133.3% E2E throughput) (#46862), reduce-scatter MoE all-reduce (3.1\u20133.2% E2E) (#46635), op fusion for GLM5/DSV3.2 (#46876).",
+                "AMD/ROCm: moved to torch 2.11 stable ABI (#47128). AITER FlashAttention MLA prefill backend `ROCM_AITER_FA` (#45033).",
+                "NVIDIA/Blackwell: FlashInfer fused all-reduce tuned for world_size=16 on GB300 (#46392), restored NVFP4 swizzled-scale zero-init to recover Blackwell decode throughput (#45739), CuTeDSL/FA4-MLA.",
+                "GLM-5 family: GLM-5 / DeepSeek-V3.2 added to the model zoo (#46808), GLM-5.2 FP32 gate (#47410), GLM MTP post-final-norm fix (#47448), GLM4V startup fix (#47155)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -1863,10 +1863,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.25.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Deprecated the old FP8 online MoE quantization class (#44514). legacy `api_server.py` moved to the examples directory (#46783) (#44514, #46783).",
-                "ROCm: stabilized high-throughput DBO for DP+EP (#46990), EPLB for Quark OCP MXFP4 MoE (#47220) (#46990, #47220).",
-                "FP8: weights padding for per-block online quantization (#44763); deprecated the old FP8 online MoE quantization class (#44514) (#44763, #44514).",
-                "Fixes: W8A8 int-quant scheme-selection regression (#46860), tied quantized embeddings for ModelOpt Gemma4 (#45544), NVFP4+MTP crash on Qwen3Next (#46316), ModelOpt mixed-precision for sparse configs (#46860, #45544)."
+                "Deprecated the old FP8 online MoE quantization class (#44514). legacy `api_server.py` moved to the examples directory (#46783).",
+                "ROCm: stabilized high-throughput DBO for DP+EP (#46990), EPLB for Quark OCP MXFP4 MoE (#47220).",
+                "FP8: weights padding for per-block online quantization (#44763); deprecated the old FP8 online MoE quantization class (#44514).",
+                "Fixes: W8A8 int-quant scheme-selection regression (#46860), tied quantized embeddings for ModelOpt Gemma4 (#45544), NVFP4+MTP crash on Qwen3Next (#46316), ModelOpt mixed-precision for sparse configs."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -1882,9 +1882,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.25.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Transformers backend: now as fast as native vLLM (#47187), FP8 MoE fix (#46820), embed scaling + CUDA graph fix (#48010), GPTBigCode/Starcoder2 (#30966) and RoBERTa (#47452) migration, M-RoPE (#47187, #46820).",
-                "Model Runner V2: default for all dense models (#44443); EVS (#46535), realtime embeddings (#46762), Mamba hybrid prefix caching (#42406), multimodal-prefix bidirectional attention (#46942) (#44443, #46535).",
-                "Intel XPU: W8A8 FP8 linear kernel with multi-granularity quant (#43645), pipeline-parallel accuracy fix (#47253), uniform-batch CUDA graph for FA2 (#46555), route mm_prefix models to Triton attention (#43645, #47253)."
+                "Transformers backend: now as fast as native vLLM (#47187), FP8 MoE fix (#46820), embed scaling + CUDA graph fix (#48010), GPTBigCode/Starcoder2 (#30966) and RoBERTa (#47452) migration, M-RoPE.",
+                "Model Runner V2: default for all dense models (#44443); EVS (#46535), realtime embeddings (#46762), Mamba hybrid prefix caching (#42406), multimodal-prefix bidirectional attention (#46942).",
+                "Intel XPU: W8A8 FP8 linear kernel with multi-granularity quant (#43645), pipeline-parallel accuracy fix (#47253), uniform-batch CUDA graph for FA2 (#46555), route mm_prefix models to Triton attention."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -1901,8 +1901,8 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.25.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
                 "Gemma family: Gemma4 sliding-window/FA4 attention fixes (#47217, #47332), Gemma4 MTP quant_config fix (#47091); DiffusionGemma tensor parallelism (#45719) and HF stability-window semantics (#45965).",
-                "Speculative decoding: universal spec decode for heterogeneous vocabularies (TLI) (#38174). DSpark drafter + speculators checkpoint support (#46995, #47093) (#38174, #46995).",
-                "Data parallel: throttle prefills based on local prefill work (#46532), rotate load-balancer tie-break to avoid engine bias (#47420), DP supervisor via the Rust frontend (#47076), DP MTP hang fix (#46532, #47420)."
+                "Speculative decoding: universal spec decode for heterogeneous vocabularies (TLI) (#38174). DSpark drafter + speculators checkpoint support (#46995, #47093).",
+                "Data parallel: throttle prefills based on local prefill work (#46532), rotate load-balancer tie-break to avoid engine bias (#47420), DP supervisor via the Rust frontend (#47076), DP MTP hang fix."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
               "config_snippet": ""
@@ -1918,10 +1918,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.25.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Other fixes: MiniCPM-V 4.6 language-backbone LoRA (#46740) and placeholder grid fix (#45918), pooled Whisper sliding-window sizing (#47071, #47437), Mamba/Mamba2 checkpoint-without-`architectures` (#46740, #45918).",
-                "CPU: accelerated unquantized MoE for AArch64 (#46353), macOS/Apple Silicon hang fix via OpenMP (#46769) and broken-install fix (#47457), compressed-tensor w8a8 int8 MoE (#42920), Mamba ShortConv (#46353, #46769).",
-                "New models: LLaVA-OneVision-2 (#44785), Unlimited OCR (#46564) with a Triton R-SWA backend (#47102), MOSS-Transcribe-Diarize (#47729), openai/privacy-filter (#41026), Hy3 with token-suffix and JSON (#44785, #46564).",
-                "Rust frontend: static HTTPS and mTLS for HTTP and gRPC (#45890), DP supervisor (#47076), profiler control routes (#46306), `repetition_detection` sampling param (#46684), unified/combined parser (#45890, #47076)."
+                "Other fixes: MiniCPM-V 4.6 language-backbone LoRA (#46740) and placeholder grid fix (#45918), pooled Whisper sliding-window sizing (#47071, #47437), Mamba/Mamba2 checkpoint-without-`architectures`.",
+                "CPU: accelerated unquantized MoE for AArch64 (#46353), macOS/Apple Silicon hang fix via OpenMP (#46769) and broken-install fix (#47457), compressed-tensor w8a8 int8 MoE (#42920), Mamba ShortConv.",
+                "New models: LLaVA-OneVision-2 (#44785), Unlimited OCR (#46564) with a Triton R-SWA backend (#47102), MOSS-Transcribe-Diarize (#47729), openai/privacy-filter (#41026), Hy3 with token-suffix and JSON.",
+                "Rust frontend: static HTTPS and mTLS for HTTP and gRPC (#45890), DP supervisor (#47076), profiler control routes (#46306), `repetition_detection` sampling param (#46684), unified/combined parser."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -2087,10 +2087,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.24.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "Deprecated: First-generation Qwen and QwenVL models (#45131), Transformers v4 support (#45161), `CUDA_VISIBLE_DEVICES` on ROCm (#46636); general deprecations for v0.23/v0.24 (#44992) (#45131, #45161).",
-                "AMD ROCm: Torch 2.11 (#45362). fused AR + RMSNorm + per-group FP8 quant (#42864), fused softplus-sqrt-topk MoE router under AITER (#44945), DSv4 flash-decode split-K kernel (#44899) and inverse-RoPE (#45362, #42864).",
-                "Torch 2.11 on ROCm (#45362), torch-xpu 2.12 (#42262), tpu-inference v0.22.1 (#45793), NIXL v0.10.1 for XPU (#40287), Starlette \u2265 1.0.1 (#45675) (#45362, #42262).",
-                "Weight loading & core: fastsafetensors `ParallelLoader` for weight loading (#40183), release of cached device memory under pressure on UMA GPUs (#45179), structured outputs for beam search (#35022) (#40183, #45179)."
+                "Deprecated: First-generation Qwen and QwenVL models (#45131), Transformers v4 support (#45161), `CUDA_VISIBLE_DEVICES` on ROCm (#46636); general deprecations for v0.23/v0.24 (#44992).",
+                "AMD ROCm: Torch 2.11 (#45362). fused AR + RMSNorm + per-group FP8 quant (#42864), fused softplus-sqrt-topk MoE router under AITER (#44945), DSv4 flash-decode split-K kernel (#44899) and inverse-RoPE.",
+                "Torch 2.11 on ROCm (#45362), torch-xpu 2.12 (#42262), tpu-inference v0.22.1 (#45793), NIXL v0.10.1 for XPU (#40287), Starlette \u2265 1.0.1 (#45675).",
+                "Weight loading & core: fastsafetensors `ParallelLoader` for weight loading (#40183), release of cached device memory under pressure on UMA GPUs (#45179), structured outputs for beam search (#35022)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -2106,10 +2106,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.24.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "NVIDIA / kernels: SM90 CUTLASS FP8 mm odd-M support via swap_ab (180\u2013290% kernel speedup) (#44572), tuned `fused_moe` FP8 for Qwen3-Next-80B on H100 (+25%) (#44830), native DSA indexer decode on (#44572, #44830).",
-                "torch stable ABI: Continued (and completed) migration of kernels to the libtorch stable ABI \u2014 MoE [10c/n] (#44565), Marlin [11a/n] (#45176), Machete [11b/n] (#45304), final `_C` library migration (#44565, #45176).",
-                "Expert parallel: DeepEP v2 integration (#41183) with token-bound and topk-index fixes (#46404, #46432). NIXL EP \u2014 DBO with NIXL EP (#45275), top-k index dtype query (#45298), NVFP4 post-receive (#41183, #46404).",
-                "FP4 / MXFP: FlashInfer cutedsl NVFP4 GEMM backend (#42235) and cute-dsl MXFP8 linear kernel (#46393), MXFP4 W4A4 MoE CUTLASS E8M0 scale fix (#43557), SwiGLU clamp wired for NVFP4 MoE on non-Blackwell (#42235, #46393)."
+                "NVIDIA / kernels: SM90 CUTLASS FP8 mm odd-M support via swap_ab (180\u2013290% kernel speedup) (#44572), tuned `fused_moe` FP8 for Qwen3-Next-80B on H100 (+25%) (#44830), native DSA indexer decode on.",
+                "torch stable ABI: Continued (and completed) migration of kernels to the libtorch stable ABI \u2014 MoE [10c/n] (#44565), Marlin [11a/n] (#45176), Machete [11b/n] (#45304), final `_C` library migration.",
+                "Expert parallel: DeepEP v2 integration (#41183) with token-bound and topk-index fixes (#46404, #46432). NIXL EP \u2014 DBO with NIXL EP (#45275), top-k index dtype query (#45298), NVFP4 post-receive.",
+                "FP4 / MXFP: FlashInfer cutedsl NVFP4 GEMM backend (#42235) and cute-dsl MXFP8 linear kernel (#46393), MXFP4 W4A4 MoE CUTLASS E8M0 scale fix (#43557), SwiGLU clamp wired for NVFP4 MoE on non-Blackwell."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -2125,10 +2125,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.24.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New models: MiniMax-M3 (#45381), DiffusionGemma (#45163) + Gemma Diffusion on CPU (#45690), Hierarchical Reasoning Model \u2014 Text / HrmTextForCausalLM (#43098), OpenMOSS (#44124) (#45381, #45163).",
-                "Qwen / multimodal: Qwen3-VL video loader (#44412), Qwen2-VL/Qwen2.5-VL processor-mapped video loader (#45555), Qwen3-VL multi-video processing optimization (#46026) and multi-video crash fix (#44412, #45555).",
-                "Model Runner V2: Quantized models by default (#44446), GraniteMoE default (#45461), Qwen/DSv2 MoE migration (#42667), DFlash (#44586), simplified async output handling (#45442), attention-group split (#44446, #45461).",
-                "Gemma 4: Unified FlashAttention (FA4) across all layers + `mm_prefix` support (#42175). many parser/serving fixes \u2014 forced-JSON skip for required/named tool choice (#45795), parsing with thinking (#42175, #45795)."
+                "New models: MiniMax-M3 (#45381), DiffusionGemma (#45163) + Gemma Diffusion on CPU (#45690), Hierarchical Reasoning Model \u2014 Text / HrmTextForCausalLM (#43098), OpenMOSS (#44124).",
+                "Qwen / multimodal: Qwen3-VL video loader (#44412), Qwen2-VL/Qwen2.5-VL processor-mapped video loader (#45555), Qwen3-VL multi-video processing optimization (#46026) and multi-video crash fix.",
+                "Model Runner V2: Quantized models by default (#44446), GraniteMoE default (#45461), Qwen/DSv2 MoE migration (#42667), DFlash (#44586), simplified async output handling (#45442), attention-group split.",
+                "Gemma 4: Unified FlashAttention (FA4) across all layers + `mm_prefix` support (#42175). many parser/serving fixes \u2014 forced-JSON skip for required/named tool choice (#45795), parsing with thinking."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -2144,10 +2144,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.24.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "ViT full CUDA graph: GLM-4.1V (#40576), DeepSeek-OCR dual-path (#43586), Kimi-VL (#41992), mllama4 (#40660), Lfm2VL encoder (#44930) (#40576, #43586).",
-                "Attention: Re-enabled cross-layer KV cache layout for MLA via stride-aware kernels (#45111), MLA prefill FA4 fp8 output (#43050), FlexAttention custom mask mods made fully cudagraphable (#45232) (#45111, #43050).",
-                "Intel XPU: Sequence-parallel support (#38608), torch-xpu 2.12 (#42262), vllm-xpu-kernels v0.1.10 (#40367), W4A16 int4 group_size=32 MoE (#45136), DeepSeek-V4 attention/MoE paths (#44144, #44517 (#38608, #42262).",
-                "DeepSeek-V4: OOM fix (#44914), MTP projection prefixing (#44821), supported KV-cache dtypes (#44892) (#44914, #44821)."
+                "ViT full CUDA graph: GLM-4.1V (#40576), DeepSeek-OCR dual-path (#43586), Kimi-VL (#41992), mllama4 (#40660), Lfm2VL encoder (#44930).",
+                "Attention: Re-enabled cross-layer KV cache layout for MLA via stride-aware kernels (#45111), MLA prefill FA4 fp8 output (#43050), FlexAttention custom mask mods made fully cudagraphable (#45232).",
+                "Intel XPU: Sequence-parallel support (#38608), torch-xpu 2.12 (#42262), vllm-xpu-kernels v0.1.10 (#40367), W4A16 int4 group_size=32 MoE (#45136), DeepSeek-V4 attention/MoE paths (#44144, #44517.",
+                "DeepSeek-V4: OOM fix (#44914), MTP projection prefixing (#44821), supported KV-cache dtypes (#44892)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -2163,9 +2163,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.24.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "KV connectors / disaggregated serving: KV push from prefill to decode via NIXL (#35264). per-region KV transfer classification for mixed full-attn + MLA groups (#44583) (#35264, #44583).",
-                "OpenAI / Responses: Real `/v1/embeddings` support for messages + `chat_template_kwargs` (#45173), multimodal token counts in `usage.prompt_tokens_details` (#45458), omit empty `tool_calls` from chat (#45173, #45458).",
-                "Rust frontend: API-key auth (#44321), CORS (#45753), `/tokenize` + `/detokenize` (#44222), `/pause` `/resume` `/is_paused` (#44499), `/abort_requests` (#44382), `/get_world_size` (#44801) (#44321, #45753)."
+                "KV connectors / disaggregated serving: KV push from prefill to decode via NIXL (#35264). per-region KV transfer classification for mixed full-attn + MLA groups (#44583).",
+                "OpenAI / Responses: Real `/v1/embeddings` support for messages + `chat_template_kwargs` (#45173), multimodal token counts in `usage.prompt_tokens_details` (#45458), omit empty `tool_calls` from chat.",
+                "Rust frontend: API-key auth (#44321), CORS (#45753), `/tokenize` + `/detokenize` (#44222), `/pause` `/resume` `/is_paused` (#44499), `/abort_requests` (#44382), `/get_world_size` (#44801)."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -2324,10 +2324,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.23.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "torch stable ABI: Continued migration of kernels to the libtorch stable ABI \u2014 merge_attn_states/mamba/sampler [8/n] (#43361), attention/cache kernels [9/n] (#43717), header files (#44013) (#43361, #43717).",
-                "Model fixes & enhancements: Qwen3-VL/Qwen3-omni-thinker deepstack accuracy under `torch.compile` (#43617), EVS for Qwen3-VL (#44205), GLM-5.1 PP loading (#42944), GLM-4.1V processor logits (#43575) (#43617, #44205).",
-                "Attention & hybrid/Mamba: FlexAttention/FlashAttention num-blocks-first layouts (#42095), OOT MLA prefill backend registration (#43325), FlashAttention upstream sync (#44065), Mamba LINEAR (#42095, #43325).",
-                "Intel XPU: vllm-xpu-kernel v0.1.7 (#41019), `block_fp8_moe` (#42139), block-scaled W8A8 FP8 path (#39968), WNA16 oracle for GPTQ sym-int4 (#41426), rms_norm/act quant fusions (#43963), GDN-attention (#41019, #42139)."
+                "torch stable ABI: Continued migration of kernels to the libtorch stable ABI \u2014 merge_attn_states/mamba/sampler [8/n] (#43361), attention/cache kernels [9/n] (#43717), header files (#44013).",
+                "Model fixes & enhancements: Qwen3-VL/Qwen3-omni-thinker deepstack accuracy under `torch.compile` (#43617), EVS for Qwen3-VL (#44205), GLM-5.1 PP loading (#42944), GLM-4.1V processor logits (#43575).",
+                "Attention & hybrid/Mamba: FlexAttention/FlashAttention num-blocks-first layouts (#42095), OOT MLA prefill backend registration (#43325), FlashAttention upstream sync (#44065), Mamba LINEAR.",
+                "Intel XPU: vllm-xpu-kernel v0.1.7 (#41019), `block_fp8_moe` (#42139), block-scaled W8A8 FP8 path (#39968), WNA16 oracle for GPTQ sym-int4 (#41426), rms_norm/act quant fusions (#43963), GDN-attention."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -2343,10 +2343,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.23.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "NVIDIA / kernels: FP8 FlashInfer attention for ViT (#38065), Triton MoE backend on Hopper by default (#44220), CUTLASS FP8 scaled-mm padding bypass (+20%) (#43706), MoE-permute buffer pre-allocation (#38065, #44220).",
-                "Kernels & backends: Triton W4A16 as CUDA fallback for non-Marlin-aligned shapes (#43731), Marlin MoE on SM 12.x (#40923), Machete W4A16 tests (#35450), fail-fast for unsupported NVFP4 KV-cache-dtype (#43731, #40923).",
-                "compressed-tensors: WNA8O8Int linears and WNInt embeddings (#44340), asymmetric MoE WNA16 Marlin (#44025), single-class NVFP4 linear refactor (#42443) (#44340, #44025).",
-                "MoE refactor (oracle): Migrated ModelOpt MXFP8 (#42768), W4A8-int8 (#42789), and WNA16 backend selection (#42553) into the modular-kernel oracle; removed `supports_expert_map` (#43108) and the (#42768, #42789)."
+                "NVIDIA / kernels: FP8 FlashInfer attention for ViT (#38065), Triton MoE backend on Hopper by default (#44220), CUTLASS FP8 scaled-mm padding bypass (+20%) (#43706), MoE-permute buffer pre-allocation.",
+                "Kernels & backends: Triton W4A16 as CUDA fallback for non-Marlin-aligned shapes (#43731), Marlin MoE on SM 12.x (#40923), Machete W4A16 tests (#35450), fail-fast for unsupported NVFP4 KV-cache-dtype.",
+                "compressed-tensors: WNA8O8Int linears and WNInt embeddings (#44340), asymmetric MoE WNA16 Marlin (#44025), single-class NVFP4 linear refactor (#42443).",
+                "MoE refactor (oracle): Migrated ModelOpt MXFP8 (#42768), W4A8-int8 (#42789), and WNA16 backend selection (#42553) into the modular-kernel oracle; removed `supports_expert_map` (#43108) and the."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -2362,10 +2362,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.23.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "KV connectors / disaggregated serving: PP-aware handshake aggregation and intermediate-PP output plumbing (#43720), multiple-async-KV-load deadlock fix (#44560), Nixl Mamba prefix-caching mode (#43720, #44560).",
-                "EPLB: Async EPLB by default (#43219), EPLB for DeepSeek-V4 Mega-MoE (#43339), Nixl zero-copy EPLB transfers (#41633) (#43219, #43339).",
+                "KV connectors / disaggregated serving: PP-aware handshake aggregation and intermediate-PP output plumbing (#43720), multiple-async-KV-load deadlock fix (#44560), Nixl Mamba prefix-caching mode.",
+                "EPLB: Async EPLB by default (#43219), EPLB for DeepSeek-V4 Mega-MoE (#43339), Nixl zero-copy EPLB transfers (#41633).",
                 "Begin the deprecation cycle for the NixlConnector `kv_both` role (#43874).",
-                "OpenAI / Responses API: `system_fingerprint` field (#40537), streaming tool/function calling with `required` (#40700), `chat_template_kwargs` in Responses (#43761), developer-to-system conversion in (#40537, #40700)."
+                "OpenAI / Responses API: `system_fingerprint` field (#40537), streaming tool/function calling with `required` (#40700), `chat_template_kwargs` in Responses (#43761), developer-to-system conversion in."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -2381,10 +2381,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.23.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Gemma 4: Encoder-free Unified support (#44429), MTP (#43241), native ViT linear layers (#43798), vision-embedder excluded from quantization (#44571), and fixes for MTP under TP>1 (#43909) (#44429, #43241).",
-                "New models: Step-3.7-Flash (#43859), Cosmos3 Reasoner (#43356), Gemma 4 Unified encoder-free (#44429), JetBrains Mellum v2 (#43992), Granite Speech Plus (#43519), Cohere Mini Code (#44707) (#43859, #43356).",
-                "Multimodal: Auto-select registered video loader for VLMs (#44126), O(log n) multimodal item handling per step (#44212), local image encoding in benchmarks (#43843), interleaved custom image benchmark (#44126, #44212).",
-                "Pooling/Classification: Proper exceptions for pooling UX (#44593), `extra_repr()` for pooler classes (#44805), LoRA-adapter-name pooling fix (#44410), resettled generative scoring entrypoint (#44593, #44805)."
+                "Gemma 4: Encoder-free Unified support (#44429), MTP (#43241), native ViT linear layers (#43798), vision-embedder excluded from quantization (#44571), and fixes for MTP under TP>1 (#43909).",
+                "New models: Step-3.7-Flash (#43859), Cosmos3 Reasoner (#43356), Gemma 4 Unified encoder-free (#44429), JetBrains Mellum v2 (#43992), Granite Speech Plus (#43519), Cohere Mini Code (#44707).",
+                "Multimodal: Auto-select registered video loader for VLMs (#44126), O(log n) multimodal item handling per step (#44212), local image encoding in benchmarks (#43843), interleaved custom image benchmark.",
+                "Pooling/Classification: Proper exceptions for pooling UX (#44593), `extra_repr()` for pooler classes (#44805), LoRA-adapter-name pooling fix (#44410), resettled generative scoring entrypoint."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -2400,10 +2400,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.23.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "AMD ROCm: ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), native W4A16 (#41394) and fused-MoE W4A16 HIP (#44075) kernels for RDNA3 (gfx1100), AITER top-k/top-p sampler by default (#43331) (#43136, #44265).",
-                "FlashInfer v0.6.12 (#44036), ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), tpu-inference v0.21.0 (#44621), mistral-common bump (#44649), fastsafetensors v0.3.2 (#43625) (#44036, #43136).",
-                "TPU: tpu-inference upgraded to v0.20.0 (#43394) then v0.21.0 (#44621) (#43394, #44621).",
-                "Anthropic Messages API: Structured output and effort support (#42396), system-role messages inside the messages array (#44283) (#42396, #44283)."
+                "AMD ROCm: ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), native W4A16 (#41394) and fused-MoE W4A16 HIP (#44075) kernels for RDNA3 (gfx1100), AITER top-k/top-p sampler by default (#43331).",
+                "FlashInfer v0.6.12 (#44036), ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), tpu-inference v0.21.0 (#44621), mistral-common bump (#44649), fastsafetensors v0.3.2 (#43625).",
+                "TPU: tpu-inference upgraded to v0.20.0 (#43394) then v0.21.0 (#44621).",
+                "Anthropic Messages API: Structured output and effort support (#42396), system-role messages inside the messages array (#44283)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -2548,10 +2548,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.22.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "NVIDIA Blackwell / SM12x: FlashInfer b12x MoE + FP4 GEMM for SM120/121 (#40082), per-tensor FP8 CUTLASS on SM12.1 (#41215), `head_dim=512` for FlashInfer TRTLLM attention (#38822), FlashInfer (#40082, #41215).",
-                "Performance: batch-invariant Cutlass FP8 (+28.9% E2E) (#40408), CutlassFP8 padding pre-processing (+13.5% TTFT) (#42651), padded NVFP4 quant kernel (+2.4\u20135.7% E2E) (#42774), GPU<->CPU sync (#40408, #42651).",
-                "CPU / RISC-V: RVV-optimized attention kernels for RISC-V Vector Extension (#40119) with VLEN=256 (#42943), fused GDN for AMX CPU (#42707), MXFP4 W4A16 MoE (#41922), experimental Triton + MRv2 on CPU (#40119, #42943).",
-                "Intel XPU: GPTQ int4 support (#37844), mxfp8 MoE (#41918), FP8 block-scaled quantization (#42952), custom-op collective behavior (#41354), multiple sparse-attention kernels (#37888), MoE topk routing (#37844, #41918)."
+                "NVIDIA Blackwell / SM12x: FlashInfer b12x MoE + FP4 GEMM for SM120/121 (#40082), per-tensor FP8 CUTLASS on SM12.1 (#41215), `head_dim=512` for FlashInfer TRTLLM attention (#38822), FlashInfer.",
+                "Performance: batch-invariant Cutlass FP8 (+28.9% E2E) (#40408), CutlassFP8 padding pre-processing (+13.5% TTFT) (#42651), padded NVFP4 quant kernel (+2.4\u20135.7% E2E) (#42774), GPU<->CPU sync.",
+                "CPU / RISC-V: RVV-optimized attention kernels for RISC-V Vector Extension (#40119) with VLEN=256 (#42943), fused GDN for AMX CPU (#42707), MXFP4 W4A16 MoE (#41922), experimental Triton + MRv2 on CPU.",
+                "Intel XPU: GPTQ int4 support (#37844), mxfp8 MoE (#41918), FP8 block-scaled quantization (#42952), custom-op collective behavior (#41354), multiple sparse-attention kernels (#37888), MoE topk routing."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -2567,9 +2567,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.22.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "DeepSeek V4: NVFP4 MoE (#42209), CUDA graph full/piecewise (#42604), MTP (#43385), model package refactor (#43004, #43039, #43073, #43077), sparse MLA + compressor refactor (#43149, #43710), MegaMoE (#42209, #42604).",
-                "Tool calling: Apertus tool parser (#41154), Qwen3Coder `anyOf`/`oneOf`/`$ref` resolution re-land (#37831), shared `coerce_to_schema_type` across MiniMax-M2 / DeepSeek-V3.2 / Seed-OSS parsers (#43006 (#41154, #37831).",
-                "Kimi-K2.5: skip vision-tower dtype conversion under quantization (#42869), `mm_projector` dtype fix (#42081) (#42869, #42081).",
+                "DeepSeek V4: NVFP4 MoE (#42209), CUDA graph full/piecewise (#42604), MTP (#43385), model package refactor (#43004, #43039, #43073, #43077), sparse MLA + compressor refactor (#43149, #43710), MegaMoE.",
+                "Tool calling: Apertus tool parser (#41154), Qwen3Coder `anyOf`/`oneOf`/`$ref` resolution re-land (#37831), shared `coerce_to_schema_type` across MiniMax-M2 / DeepSeek-V3.2 / Seed-OSS parsers (#43006.",
+                "Kimi-K2.5: skip vision-tower dtype conversion under quantization (#42869), `mm_projector` dtype fix (#42081).",
                 "Removed deprecated MLA prefill arguments (#42555)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
@@ -2586,10 +2586,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.22.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "Disaggregated serving (NIXL): lease-renewal TTL for KV blocks on P (#41383), handshake-failure policy honoring (#40364), GDN support for PD with NIXL (#41869), multi-node TP>8 fix (#39907) (#41383, #40364).",
-                "EPLB: change default EPLB communicator (#43110), VLM-wrapper init fix (#39805), remove dead `torch.accelerator.synchronize()` (#40733) (#43110, #39805).",
-                "MoE refactor: `ExpertMapManager` (#41046), experts moved to `experts/` (#42334), `RoutedExperts` alias for FusedMoE (#40735), EPLB refactoring for FusedMoE (#41055) (#41046, #42334).",
-                "Mamba: attention module refactor (#41126), Mamba2 SSD kernel warmup (#39822), bf16 SSM cache (#41680), GPU-side state postprocessing fused kernel (#40172), run single-token extends as decodes (#41126, #39822)."
+                "Disaggregated serving (NIXL): lease-renewal TTL for KV blocks on P (#41383), handshake-failure policy honoring (#40364), GDN support for PD with NIXL (#41869), multi-node TP>8 fix (#39907).",
+                "EPLB: change default EPLB communicator (#43110), VLM-wrapper init fix (#39805), remove dead `torch.accelerator.synchronize()` (#40733).",
+                "MoE refactor: `ExpertMapManager` (#41046), experts moved to `experts/` (#42334), `RoutedExperts` alias for FusedMoE (#40735), EPLB refactoring for FusedMoE (#41055).",
+                "Mamba: attention module refactor (#41126), Mamba2 SSD kernel warmup (#39822), bf16 SSM cache (#41680), GPU-side state postprocessing fused kernel (#40172), run single-token extends as decodes."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -2605,8 +2605,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.22.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Qwen3.5/3.6: GDN output-projection flatten (#42311), GatedDeltaNet Marlin TP\u22652 fix (#36329), ViT full CUDA graph (#42151), runai-streamer weight loading for Qwen3.5/MTP/Qwen3-VL (#42521, #42716), KDA (#42311, #36329).",
-                "Model Runner V2: Qwen3-dense-by-default oracle (#39337), sleep-mode reload weights (#42673), `update_config` (#42783), shared KV-cache layers (#35045), FP32 gumbel sampling (#41775), auto-fallback to (#39337, #42673).",
+                "Qwen3.5/3.6: GDN output-projection flatten (#42311), GatedDeltaNet Marlin TP\u22652 fix (#36329), ViT full CUDA graph (#42151), runai-streamer weight loading for Qwen3.5/MTP/Qwen3-VL (#42521, #42716), KDA.",
+                "Model Runner V2: Qwen3-dense-by-default oracle (#39337), sleep-mode reload weights (#42673), `update_config` (#42783), shared KV-cache layers (#35045), FP32 gumbel sampling (#41775), auto-fallback to.",
                 "Experimental: breakable CUDA graph (#42304)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
@@ -2624,7 +2624,7 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.22.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
                 "AMD ROCm: DSV4 functionality + accuracy fixes (#42810, #43679 Tilelang MHC), flash sparse MLA Triton kernels (#41812), gluon paged MQA logits on gfx950/MI355X (#42062), RMSNorm+Quant fusion for.",
-                "vllm-tpu: disable build isolation for CUDA deps (#43038), tpu-inference docker build fix (#43360) (#43038, #43360)."
+                "vllm-tpu: disable build isolation for CUDA deps (#43038), tpu-inference docker build fix (#43360)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -2784,10 +2784,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.21.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Performance: FlashInfer top-k/top-p sampler enabled by default (#40376), FP8 FlashInfer attention for ViT (#38065), TurboQuant shared dequant buffers (#40941), `AllPool.forward` 51% faster (#41163) (#40376, #38065).",
-                "DeepSeek V4: AMD/ROCm support (#40871), pipeline parallelism (#41694), `max` reasoning effort (#40982), disaggregated serving fixes (#41957) (#40871, #41694).",
-                "NVIDIA Blackwell: TOKENSPEED_MLA backend for DSR1/Kimi-K25 (#41778), faster per-token FP8 group quant packed kernel (#41326), FP8 on NVIDIA Thor/SM110 (#39712), CUTLASS scaled mm for non-compatible (#41778, #41326).",
-                "AMD ROCm: ROCm 7.2.2 (#41386), DBO (Dynamic Batch Optimization) (#34726), AITER Fused Allreduce+RMSNorm (#37646), Fused Shared Expert (FSE) for Qwen3-Next (#39280), DeepSeek V3.2 TP4 AITER MLA (#41386, #34726)."
+                "Performance: FlashInfer top-k/top-p sampler enabled by default (#40376), FP8 FlashInfer attention for ViT (#38065), TurboQuant shared dequant buffers (#40941), `AllPool.forward` 51% faster (#41163).",
+                "DeepSeek V4: AMD/ROCm support (#40871), pipeline parallelism (#41694), `max` reasoning effort (#40982), disaggregated serving fixes (#41957).",
+                "NVIDIA Blackwell: TOKENSPEED_MLA backend for DSR1/Kimi-K25 (#41778), faster per-token FP8 group quant packed kernel (#41326), FP8 on NVIDIA Thor/SM110 (#39712), CUTLASS scaled mm for non-compatible.",
+                "AMD ROCm: ROCm 7.2.2 (#41386), DBO (Dynamic Batch Optimization) (#34726), AITER Fused Allreduce+RMSNorm (#37646), Fused Shared Expert (FSE) for Qwen3-Next (#39280), DeepSeek V3.2 TP4 AITER MLA."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -2803,9 +2803,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.21.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "New architectures: MiMo-V2.5 (#40967), Laguna XS.2 (#41129, #41880), Moondream3 (#32325), Qianfan-OCR (#40136), Cohere MoE (#40817), Cohere Eagle (#42078) (#40967, #41129).",
-                "Speculative decoding: EAGLE for Mistral (#41024), Gemma4 MTP (#41745), MTP for MiMo-V2.5 (#41905), Cohere Eagle (#42078) (#41024, #41745).",
-                "Speculative decoding: Thinking budget support (#34668), independent drafter attention backend selection (#39930), multimodal model support with warning (#41752), per-step allocation elimination (#34668, #39930)."
+                "New architectures: MiMo-V2.5 (#40967), Laguna XS.2 (#41129, #41880), Moondream3 (#32325), Qianfan-OCR (#40136), Cohere MoE (#40817), Cohere Eagle (#42078).",
+                "Speculative decoding: EAGLE for Mistral (#41024), Gemma4 MTP (#41745), MTP for MiMo-V2.5 (#41905), Cohere Eagle (#42078).",
+                "Speculative decoding: Thinking budget support (#34668), independent drafter attention backend selection (#39930), multimodal model support with warning (#41752), per-step allocation elimination."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
               "config_snippet": ""
@@ -2821,10 +2821,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.21.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "KV offloading + HMA: Scheduler-side sliding window groups (#41228), full HMA enablement (#41445), multi-connector HMA (#39571), per-job store completion (#39186), DCP/PCP support in (#41228, #41445).",
-                "Disaggregated serving: Bi-directional KV cache transfers between P and D (#32553), NIXL transfer redesign (#40731), EPLB memory overhead optimization (#40013), NIXL connector bumped to 1.x (#42364) (#32553, #40731).",
-                "Ray: RayExecutorV2 enabled by default (#41421), actor name collision fix for DP > 1 (#40398) (#41421, #40398).",
-                "Compatibility: Vendor HCXVisionConfig for Transformers v5 (#38447), legacy `rope_type` checkpoint support (#41734) (#38447, #41734)."
+                "KV offloading + HMA: Scheduler-side sliding window groups (#41228), full HMA enablement (#41445), multi-connector HMA (#39571), per-job store completion (#39186), DCP/PCP support in.",
+                "Disaggregated serving: Bi-directional KV cache transfers between P and D (#32553), NIXL transfer redesign (#40731), EPLB memory overhead optimization (#40013), NIXL connector bumped to 1.x (#42364).",
+                "Ray: RayExecutorV2 enabled by default (#41421), actor name collision fix for DP > 1 (#40398).",
+                "Compatibility: Vendor HCXVisionConfig for Transformers v5 (#38447), legacy `rope_type` checkpoint support (#41734)."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -2840,10 +2840,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.21.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "CPU: FP8 attention for AMX/AVX-512 (#39445), FP8 W8A16 linear (#41186), FP8 W8A16 MoE (#41314), DNNL AVX2 W8A8 Int8 (#41318), Gated DeltaNet Attention for Qwen 3.5/3.6 (#41025), RISC-V OMP thread (#39445, #41186).",
-                "NVFP4: KV cache support (#40177), Triton dequant/QDQ emulation kernels for Hopper and AMD (#40033), GELU on TRT-LLM NvFP4 fused MoE for Gemma4 (#41050), ModelOpt NVFP4 W4A16 (#41769), NVFP4 (#40177, #40033).",
-                "MXFP4: Humming MXFP4 MoE backend (#41083), FlashInfer CUTLASS MXFP4-MXFP8 MoE fix (#42089) (#41083, #42089).",
-                "FP8: Bias loading fix (#41424), FlashInfer autotune temporarily disabled for correctness (#41524) (#41424, #41524)."
+                "CPU: FP8 attention for AMX/AVX-512 (#39445), FP8 W8A16 linear (#41186), FP8 W8A16 MoE (#41314), DNNL AVX2 W8A8 Int8 (#41318), Gated DeltaNet Attention for Qwen 3.5/3.6 (#41025), RISC-V OMP thread.",
+                "NVFP4: KV cache support (#40177), Triton dequant/QDQ emulation kernels for Hopper and AMD (#40033), GELU on TRT-LLM NvFP4 fused MoE for Gemma4 (#41050), ModelOpt NVFP4 W4A16 (#41769), NVFP4.",
+                "MXFP4: Humming MXFP4 MoE backend (#41083), FlashInfer CUTLASS MXFP4-MXFP8 MoE fix (#42089).",
+                "FP8: Bias loading fix (#41424), FlashInfer autotune temporarily disabled for correctness (#41524)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -2859,8 +2859,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.21.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Model Runner V2: Rejection sampling acceptance rate fix (#40651), skip metadata rebuild before draft prefill (#40410), rebuild metadata between draft decode steps (#41162), Qwen3.5/Mamba hybrid (#40651, #40410).",
-                "Model Runner V2: Qwen3.5/Mamba hybrid model support (#35520), `logprob_token_ids` support (#40559) (#35520, #40559).",
+                "Model Runner V2: Rejection sampling acceptance rate fix (#40651), skip metadata rebuild before draft prefill (#40410), rebuild metadata between draft decode steps (#41162), Qwen3.5/Mamba hybrid.",
+                "Model Runner V2: Qwen3.5/Mamba hybrid model support (#35520), `logprob_token_ids` support (#40559).",
                 "CUDA graph: ViT CUDA graph support for Qwen2.5-VL (#40830)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
@@ -2994,10 +2994,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.20.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Other: DeepGEMM integrated into the vLLM wheel via CMake (#37980), Lustre FS checkpoint prefetching enabled by default (#39422), Gemma4 fused routing Triton kernel (#39083), Gemma4 embed_input_ids (#37980, #39422).",
-                "New formats & methods: TurboQuant 2-bit KV cache compression (#38479) with FA3/FA4 prefill (#40092), per-token-head INT8/FP8 KV cache quantization (#38378), fused FP8/NVFP4 output quantization in MLA (#38479, #40092).",
-                "Intel XPU: torch 2.11 upgrade for XPU (#37947) \u2014 no longer pinned to 2.10, initial GDN attention for Qwen3-Next / Qwen3.5 (#33657), torch.compile for XPU GDN attention (#39466), XPU MXFP8 quant op (#37947, #33657).",
-                "Petit NVFP4 (#32694), `accept output buffer` in attention (#39125), `cprofile` / `cprofile_context` (#39100), `LLM.reward` offline API (#40688) (#32694, #39125)."
+                "Other: DeepGEMM integrated into the vLLM wheel via CMake (#37980), Lustre FS checkpoint prefetching enabled by default (#39422), Gemma4 fused routing Triton kernel (#39083), Gemma4 embed_input_ids.",
+                "New formats & methods: TurboQuant 2-bit KV cache compression (#38479) with FA3/FA4 prefill (#40092), per-token-head INT8/FP8 KV cache quantization (#38378), fused FP8/NVFP4 output quantization in MLA.",
+                "Intel XPU: torch 2.11 upgrade for XPU (#37947) \u2014 no longer pinned to 2.10, initial GDN attention for Qwen3-Next / Qwen3.5 (#33657), torch.compile for XPU GDN attention (#39466), XPU MXFP8 quant op.",
+                "Petit NVFP4 (#32694), `accept output buffer` in attention (#39125), `cprofile` / `cprofile_context` (#39100), `LLM.reward` offline API (#40688)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -3013,9 +3013,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.20.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Features: NUMA binding for GPU workers (#38635), opt-in `VLLM_MEDIA_CACHE` media URL caching (#37123), safe request abort when FSM fails to advance (#38663), KV connector prioritized over internal (#38635, #37123).",
-                "Model Runner V2: Full CUDA graph for eagle prefill (#37588), auto cudagraph mode/sizes based on attention backend (#32936), fused probabilistic rejection-sample kernels (#38496), config validation (#37588, #32936).",
-                "torch.compile: Opaque Objects on torch 2.11 (#39286), AOT compile with batch-invariance mode (#39201), Inductor cache nested under AOT dir (#39718), split FX graph via codegen (#38657), Inductor (#39286, #39201).",
+                "Features: NUMA binding for GPU workers (#38635), opt-in `VLLM_MEDIA_CACHE` media URL caching (#37123), safe request abort when FSM fails to advance (#38663), KV connector prioritized over internal.",
+                "Model Runner V2: Full CUDA graph for eagle prefill (#37588), auto cudagraph mode/sizes based on attention backend (#32936), fused probabilistic rejection-sample kernels (#38496), config validation.",
+                "torch.compile: Opaque Objects on torch 2.11 (#39286), AOT compile with batch-invariance mode (#39201), Inductor cache nested under AOT dir (#39718), split FX graph via codegen (#38657), Inductor.",
                 "Helion kernels: torch.compile support for Helion kernels (#38592)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
@@ -3032,10 +3032,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.20.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Other: Nano-Nemotron-VL static image inputs fix (#40724). Qwen3 MoE no longer calls gate twice (#40664) (#40724, #40664).",
-                "New architectures: DeepSeek V4 (#40860), Hunyuan v3 preview (#40681), Granite 4.1 Vision (#40282), EXAONE-4.5 (#39388), BharatGen Param2MoE (#38000), Phi-4-reasoning-vision-15B (#38306), Cheers (#40860, #40681).",
-                "Gemma4 series: fast prefill (#38879), quantized MoE (#39045), Eagle3 (#39450), block-local attention + YaRN for Gemma3 (#39823), bidirectional vision attention for sliding layers (#40534) (#38879, #39045).",
-                "LoRA: Qwen3ASRForConditionalGeneration (#37247), Gemma4ForConditionalGeneration (#39291, #38844), DeepSeek V3.2 (#35077), Qwen3.5 / Step3.x expert base_layer extension (#37114), MoE LoRA refactor (#37247, #39291)."
+                "Other: Nano-Nemotron-VL static image inputs fix (#40724). Qwen3 MoE no longer calls gate twice (#40664).",
+                "New architectures: DeepSeek V4 (#40860), Hunyuan v3 preview (#40681), Granite 4.1 Vision (#40282), EXAONE-4.5 (#39388), BharatGen Param2MoE (#38000), Phi-4-reasoning-vision-15B (#38306), Cheers.",
+                "Gemma4 series: fast prefill (#38879), quantized MoE (#39045), Eagle3 (#39450), block-local attention + YaRN for Gemma3 (#39823), bidirectional vision attention for sliding layers (#40534).",
+                "LoRA: Qwen3ASRForConditionalGeneration (#37247), Gemma4ForConditionalGeneration (#39291, #38844), DeepSeek V3.2 (#35077), Qwen3.5 / Step3.x expert base_layer extension (#37114), MoE LoRA refactor."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -3051,9 +3051,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.20.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "CPU: CPU draft-model speculative decoding (#32662), CPU int8 compute mode in AWQ (#35697), head_size 512 in `cpu_attn` (#38676), gelu in `cpu_fused_moe` (#38770), OMP replacement (#36487), BF16 GELU (#32662, #35697).",
-                "Speculative decoding: Eagle3 for MiniMax-M2 (#37512), Eagle3 for Gemma4 (#39450) (#37512, #39450).",
-                "Unified Synthetic Acceptance Rate for V1 and V2 (#40662). `SpecDecodeBaseProposer` moved out of `eagle.py` (#40732) (#40662, #40732).",
+                "CPU: CPU draft-model speculative decoding (#32662), CPU int8 compute mode in AWQ (#35697), head_size 512 in `cpu_attn` (#38676), gelu in `cpu_fused_moe` (#38770), OMP replacement (#36487), BF16 GELU.",
+                "Speculative decoding: Eagle3 for MiniMax-M2 (#37512), Eagle3 for Gemma4 (#39450).",
+                "Unified Synthetic Acceptance Rate for V1 and V2 (#40662). `SpecDecodeBaseProposer` moved out of `eagle.py` (#40732).",
                 "Mamba: default to `'align'` cache mode for Mamba-based models when speculative decoding is enabled (#40454)."
               ],
               "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
@@ -3070,10 +3070,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.20.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "EPLB: Alternative communication for EPLB weight exchange (#33176), nixl-based EPLB communicator (#36276), mapping optimization with router record for prefill (#36261), `TransferMetadata` (#33176, #36276).",
-                "Disaggregated / NIXL / Mamba: Full PD support for Mamba2-like models on Heterogeneous TP deployments (#37635), Nixl bumped to 0.10.1 (#39922), `TpKVTopology` + `HeteroTPTransferConfig` unified into (#37635, #39922).",
-                "Pooling ecosystem: Pooling entrypoints overhauled across scoring (#28631), pooling (#39153), and cleanup (#39675). preprocessing/postprocessing offloaded to thread pool (#39763) (#28631, #39153).",
-                "CUDA 13.0 default with updated architecture lists and cleaned build-args (#39878). CUDA bumped to 13.0.2 to match PyTorch 2.11.0 (#40669) (#39878, #40669)."
+                "EPLB: Alternative communication for EPLB weight exchange (#33176), nixl-based EPLB communicator (#36276), mapping optimization with router record for prefill (#36261), `TransferMetadata`.",
+                "Disaggregated / NIXL / Mamba: Full PD support for Mamba2-like models on Heterogeneous TP deployments (#37635), Nixl bumped to 0.10.1 (#39922), `TpKVTopology` + `HeteroTPTransferConfig` unified into.",
+                "Pooling ecosystem: Pooling entrypoints overhauled across scoring (#28631), pooling (#39153), and cleanup (#39675). preprocessing/postprocessing offloaded to thread pool (#39763).",
+                "CUDA 13.0 default with updated architecture lists and cleaned build-args (#39878). CUDA bumped to 13.0.2 to match PyTorch 2.11.0 (#40669)."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -3221,10 +3221,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.19.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "Compilation: Mega AOT artifact for torch 2.12+ (#37198), lazy graph module to defer recompile (#37609), remove model tag requirement for compile cache (#37345), Triton autotuning disk cache enabled (#37198, #37609).",
-                "B300/GB300 (SM 10.3): Allreduce fusion enabled by default (#37755), tuned all-reduce communicator (#37756) (#37755, #37756).",
-                "Disaggregated serving: PD kv_transfer_params for Anthropic Messages (#37535) and Responses API (#37424), Mooncake heterogeneous TP (#36869), Mamba N-1 prefill for P/D (#37310) (#37535, #37424).",
-                "UX: Log once per node by default (#37568), torch profiler with stack enabled (#37571) (#37568, #37571)."
+                "Compilation: Mega AOT artifact for torch 2.12+ (#37198), lazy graph module to defer recompile (#37609), remove model tag requirement for compile cache (#37345), Triton autotuning disk cache enabled.",
+                "B300/GB300 (SM 10.3): Allreduce fusion enabled by default (#37755), tuned all-reduce communicator (#37756).",
+                "Disaggregated serving: PD kv_transfer_params for Anthropic Messages (#37535) and Responses API (#37424), Mooncake heterogeneous TP (#36869), Mamba N-1 prefill for P/D (#37310).",
+                "UX: Log once per node by default (#37568), torch profiler with stack enabled (#37571)."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
               "config_snippet": ""
@@ -3240,10 +3240,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.19.0, teams operating extensible kv cache, memory budgeting & tiered offloading relied on older execution paths or manual tuning on NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers.",
               "tech_bullets": [
-                "Bugfixes: Fix gibberish from FP8 MLA KV scale inconsistency (#37054), Mamba state corruption (#37728), deadlock with pause/resume (#37024), FlashInfer MNNVL socket collisions (#36674), multimodal (#37054, #37728).",
-                "CPU: Enable tcmalloc by default (#37607), graceful degradation without tcmalloc/libiomp (#37561), 48.9% throughput improvement for pooling models (#38139), OpenMP thread fix for torch.compile (#37607, #37561).",
-                "Attention: Distinguish short extends vs decodes (#37303), allow qk_nope_head_dim=192 in FlashInfer MLA (#37475), skip sliding window attention layers with FP8 KV cache (#33695) (#37303, #37475).",
-                "Non-contiguous KV cache in TRTLLM FP8 dequant kernel (#36867), Qwen3 dual stream input projection (#36795) (#36867, #36795)."
+                "Bugfixes: Fix gibberish from FP8 MLA KV scale inconsistency (#37054), Mamba state corruption (#37728), deadlock with pause/resume (#37024), FlashInfer MNNVL socket collisions (#36674), multimodal.",
+                "CPU: Enable tcmalloc by default (#37607), graceful degradation without tcmalloc/libiomp (#37561), 48.9% throughput improvement for pooling models (#38139), OpenMP thread fix for torch.compile.",
+                "Attention: Distinguish short extends vs decodes (#37303), allow qk_nope_head_dim=192 in FlashInfer MLA (#37475), skip sliding window attention layers with FP8 KV cache (#33695).",
+                "Non-contiguous KV cache in TRTLLM FP8 dequant kernel (#36867), Qwen3 dual stream input projection (#36795)."
               ],
               "why_it_matters": "Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware",
               "config_snippet": ""
@@ -3259,10 +3259,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.19.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Tuned prefill configs for FP8 FA3 (#36265), tuned Triton MoE config for Qwen3.5 on H200 with 9.9% E2E improvement (#37340), H800 MoE configs (#31201) (#36265, #37340).",
-                "Removals: Per-tensor-per-channel FP8 removed (#32700), Sparse24 integration and kernels removed (#36799) (#32700, #36799).",
-                "GPT-OSS: Router GEMM kernel (#37205), eliminate padding with FlashInfer MXFP4/MXFP8 MoE (#30647), reduce redundant SparseMatrix creation (#37683) (#37205, #30647).",
-                "Performance fixes: FP8 DeepGEMM batch invariance (#37718), Triton autotuning for Qwen3.5 (#37338), TRTLLM NVFP4 routing precision (#36725) (#37718, #37338)."
+                "Tuned prefill configs for FP8 FA3 (#36265), tuned Triton MoE config for Qwen3.5 on H200 with 9.9% E2E improvement (#37340), H800 MoE configs (#31201).",
+                "Removals: Per-tensor-per-channel FP8 removed (#32700), Sparse24 integration and kernels removed (#36799).",
+                "GPT-OSS: Router GEMM kernel (#37205), eliminate padding with FlashInfer MXFP4/MXFP8 MoE (#30647), reduce redundant SparseMatrix creation (#37683).",
+                "Performance fixes: FP8 DeepGEMM batch invariance (#37718), Triton autotuning for Qwen3.5 (#37338), TRTLLM NVFP4 routing precision (#36725)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -3278,10 +3278,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.19.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New architectures: Gemma 4 (#38826), Cohere ASR (#35809), Cohere Transcribe (#38120), ColQwen3.5 4.5B (#36887), LFM2-ColBERT-350M (#37528), Granite 4.0 1B Speech (#38019), Qwen3-ForcedAligner (#38826, #35809).",
-                "LoRA expansion: H2OVL tower/connector LoRA (#31696), `--lora-target-modules` to restrict LoRA to specific modules (#34984), `language_model_only` respected (#37375), Mistral3 fix (#36928), Qwen3.5 (#31696, #34984).",
-                "Features: Temporal compression for Nemotron-3-VL videos (#36808), NemotronH Puzzle + MTP (#37803), torch.compile for InternVL vision encoder (#38049), multiple embedding types in single call (#35829) (#36808, #37803).",
-                "Features: Limit thinking tokens (hard limit) (#20859), multiple embedding types in single call (#35829), numpy array embeddings for multimodal (#38119), `--lora-target-modules` (#34984), `-sc` (#20859, #35829)."
+                "New architectures: Gemma 4 (#38826), Cohere ASR (#35809), Cohere Transcribe (#38120), ColQwen3.5 4.5B (#36887), LFM2-ColBERT-350M (#37528), Granite 4.0 1B Speech (#38019), Qwen3-ForcedAligner.",
+                "LoRA expansion: H2OVL tower/connector LoRA (#31696), `--lora-target-modules` to restrict LoRA to specific modules (#34984), `language_model_only` respected (#37375), Mistral3 fix (#36928), Qwen3.5.",
+                "Features: Temporal compression for Nemotron-3-VL videos (#36808), NemotronH Puzzle + MTP (#37803), torch.compile for InternVL vision encoder (#38049), multiple embedding types in single call (#35829).",
+                "Features: Limit thinking tokens (hard limit) (#20859), multiple embedding types in single call (#35829), numpy array embeddings for multimodal (#38119), `--lora-target-modules` (#34984), `-sc`."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -3297,10 +3297,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.19.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Model Runner V2: PP CUDA graphs (#35162), spec decode rejection sampler greedy (#37238) + logprobs (#37237), multimodal embeddings for spec decode (#36097), streaming inputs (#37028), configurable (#35162, #37238).",
-                "Performance: Optimize top-k in Triton sampler (#37225), optimize token_embed for pooling models with 1% improvement (#37347), fix slow hasattr in CUDAGraphWrapper (#37425), NFS prefetch auto-enabled (#37225, #37347).",
-                "EPLB: MRV2 support (#37488), improved responsiveness (#36271), EP weight filter fix (#37322) (#37488, #36271).",
-                "NVFP4 CUTLASS MoE non-gated support (#37320), fuse pack topk in TRTLLM MoE via torch.compile (#37695) (#37320, #37695)."
+                "Model Runner V2: PP CUDA graphs (#35162), spec decode rejection sampler greedy (#37238) + logprobs (#37237), multimodal embeddings for spec decode (#36097), streaming inputs (#37028), configurable.",
+                "Performance: Optimize top-k in Triton sampler (#37225), optimize token_embed for pooling models with 1% improvement (#37347), fix slow hasattr in CUDAGraphWrapper (#37425), NFS prefetch auto-enabled.",
+                "EPLB: MRV2 support (#37488), improved responsiveness (#36271), EP weight filter fix (#37322).",
+                "NVFP4 CUTLASS MoE non-gated support (#37320), fuse pack topk in TRTLLM MoE via torch.compile (#37695)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -3466,10 +3466,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.18.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Performance: Remove busy loop from idle buffer readers (#28053), 2.7% E2E throughput for pooling via worker-side maxsim (#36159), 3.2% via batched maxsim (#36710), CUDA graph memory accounting during (#28053, #36159).",
-                "Model Runner V2: Probabilistic rejection sampling for spec decode (#35461), pooling models (#36019), extensible CUDA graph dispatch (#35959), WhisperModelState (#35790), XD-RoPE (#36817), model_state (#35461, #36019).",
-                "Intel XPU: Model Runner V2 enabled (#36078), MLA Sparse backend for DeepSeek V3.2 (#33230), LoRA via torch.compile (#36962), block FP8 MoE fallback (#36458), deepseek_scaling_rope fused kernel (#36078, #33230).",
-                "torch.compile: FakeTensors instead of real GPU tensors for single-size compilation (#36093), non-contiguous fused RMSNorm + group quant (#36551), stop lazy compiling (#35472) (#36093, #36551)."
+                "Performance: Remove busy loop from idle buffer readers (#28053), 2.7% E2E throughput for pooling via worker-side maxsim (#36159), 3.2% via batched maxsim (#36710), CUDA graph memory accounting during.",
+                "Model Runner V2: Probabilistic rejection sampling for spec decode (#35461), pooling models (#36019), extensible CUDA graph dispatch (#35959), WhisperModelState (#35790), XD-RoPE (#36817), model_state.",
+                "Intel XPU: Model Runner V2 enabled (#36078), MLA Sparse backend for DeepSeek V3.2 (#33230), LoRA via torch.compile (#36962), block FP8 MoE fallback (#36458), deepseek_scaling_rope fused kernel.",
+                "torch.compile: FakeTensors instead of real GPU tensors for single-size compilation (#36093), non-contiguous fused RMSNorm + group quant (#36551), stop lazy compiling (#35472)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -3485,10 +3485,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.18.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Stability: VLM concurrent throughput degradation fix (#36557), DP deadlock fix (#35194), DeepSeek V3.2 OOM during CG profiling (#36691), Ray DP startup crash (#36665), NCCL rank calculation fix (#36557, #35194).",
-                "New architectures: Sarvam MoE (#33942), OLMo Hybrid (#32550), HyperCLOVAX-SEED-Think-32B VLM (#31471), HyperCLOVAX-SEED-Think-14B (#37107), Kimi-Audio-7B-Instruct (#36127), ColPali late-interaction (#33942, #32550).",
-                "Speculative decoding: Eagle3 for Qwen3.5 (#36658), Eagle3 for Kimi K2.5 MLA (#36361), Eagle for Mistral Large 3 with dense layers (#36163) (#36658, #36361).",
-                "NVIDIA: FA4 for MLA prefill (#34732), DeepSeek-V3.2 MLA kernel optimizations (#34917, #35290) (#34732, #34917)."
+                "Stability: VLM concurrent throughput degradation fix (#36557), DP deadlock fix (#35194), DeepSeek V3.2 OOM during CG profiling (#36691), Ray DP startup crash (#36665), NCCL rank calculation fix.",
+                "New architectures: Sarvam MoE (#33942), OLMo Hybrid (#32550), HyperCLOVAX-SEED-Think-32B VLM (#31471), HyperCLOVAX-SEED-Think-14B (#37107), Kimi-Audio-7B-Instruct (#36127), ColPali late-interaction.",
+                "Speculative decoding: Eagle3 for Qwen3.5 (#36658), Eagle3 for Kimi K2.5 MLA (#36361), Eagle for Mistral Large 3 with dense layers (#36163).",
+                "NVIDIA: FA4 for MLA prefill (#34732), DeepSeek-V3.2 MLA kernel optimizations (#34917, #35290)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -3504,10 +3504,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.18.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "PD Disaggregation: ~5% scheduler overhead reduction (#35781), KV transfer fix with spec decode (#35158), P/D for hybrid SSM-FA models via NIXL (#36687), PP for multimodal models on Transformers (#35781, #35158).",
-                "Fixes: DeepSeek-V3.2 tokenizer space stripping (#37004), Qwen3.5 tool calling (#36774), Qwen3-VL timestamp mismatch (#36136), Qwen3-Next TP>1 weight sharding (#36242), Qwen3-ASR torch.compile (#37004, #36774).",
-                "LoRA: Whisper LoRA (#29856), FP8 LoRA dense kernel (#35242) (#29856, #35242).",
-                "Performance: Qwen3 Next fused GDN kernel (#35777), LFM2 tuned H100 MoE configs (#36699) (#35777, #36699)."
+                "PD Disaggregation: ~5% scheduler overhead reduction (#35781), KV transfer fix with spec decode (#35158), P/D for hybrid SSM-FA models via NIXL (#36687), PP for multimodal models on Transformers.",
+                "Fixes: DeepSeek-V3.2 tokenizer space stripping (#37004), Qwen3.5 tool calling (#36774), Qwen3-VL timestamp mismatch (#36136), Qwen3-Next TP>1 weight sharding (#36242), Qwen3-ASR torch.compile.",
+                "LoRA: Whisper LoRA (#29856), FP8 LoRA dense kernel (#35242).",
+                "Performance: Qwen3 Next fused GDN kernel (#35777), LFM2 tuned H100 MoE configs (#36699)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -3523,9 +3523,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.18.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "ROCm: Quark W4A8 MXFP4/FP8 for LinearLayer (#35316), compressed-tensors fix for DeepSeek-R1 on MI300x (#36247) (#35316, #36247).",
-                "AMD ROCm: Sparse MLA CUDA graphs (#35719), MTP lens > 1 in Sparse MLA (#36681), MLA with nhead<16 + FP8 KV for TP=8 (#35850), RoPE+KV cache fusion for AITER FA (#35786), AITER MLA CPU sync avoidance (#35719, #36681).",
-                "Fixes: MLA crash with AWQ/GPTQ quantized models (#34695), score layer quantization for reranker models (#35849), GLM-4.1V non-default quantization (#36321), FP8 k_scale/v_scale loading for Qwen3-MoE (#34695, #35849).",
+                "ROCm: Quark W4A8 MXFP4/FP8 for LinearLayer (#35316), compressed-tensors fix for DeepSeek-R1 on MI300x (#36247).",
+                "AMD ROCm: Sparse MLA CUDA graphs (#35719), MTP lens > 1 in Sparse MLA (#36681), MLA with nhead<16 + FP8 KV for TP=8 (#35850), RoPE+KV cache fusion for AITER FA (#35786), AITER MLA CPU sync avoidance.",
+                "Fixes: MLA crash with AWQ/GPTQ quantized models (#34695), score layer quantization for reranker models (#35849), GLM-4.1V non-default quantization (#36321), FP8 k_scale/v_scale loading for Qwen3-MoE.",
                 "MXFP4 MoE routing simulation override for accuracy (#33595)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
@@ -3542,9 +3542,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.18.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "KV Connectors: HMA + NIXL connector (#35758), FlexKV offloading (#34328), worker\u2192scheduler metadata (#31964), All-to-All DCP backend (#34883) (#35758, #34328).",
-                "Performance: 5% E2E improvement for PD disaggregation scheduling (#35781), packed recurrent decode fast path (#36596), pooling model maxsim 2.7%+3.2% throughput (#36159, #36710) (#35781, #36596).",
-                "Elastic EP Milestone 2: NIXL-EP integration (#35627), `--enable-ep-weight-filter` for faster EP loading (#37351) (#35627, #37351).",
+                "KV Connectors: HMA + NIXL connector (#35758), FlexKV offloading (#34328), worker\u2192scheduler metadata (#31964), All-to-All DCP backend (#34883).",
+                "Performance: 5% E2E improvement for PD disaggregation scheduling (#35781), packed recurrent decode fast path (#36596), pooling model maxsim 2.7%+3.2% throughput (#36159, #36710).",
+                "Elastic EP Milestone 2: NIXL-EP integration (#35627), `--enable-ep-weight-filter` for faster EP loading (#37351).",
                 "Defaults: Cascade attention disabled by default (#36318)."
               ],
               "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
@@ -3699,7 +3699,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.17.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "NVIDIA: SM100 FMHA FP8 prefill for MLA (#31195), SM100 MXFP8 blockscaled grouped MM and quant kernels (#34448), SM100 Oink RMSNorm path (#31828), SM120 FP8 GEMM optimization (#34424), FlashInfer (#31195, #34448).",
+                "NVIDIA: SM100 FMHA FP8 prefill for MLA (#31195), SM100 MXFP8 blockscaled grouped MM and quant kernels (#34448), SM100 Oink RMSNorm path (#31828), SM120 FP8 GEMM optimization (#34424), FlashInfer.",
                 "Faster topKperRow decode kernel for DeepSeek-V3.2 sparse attention (#33680).",
                 "Fix routing for models without expert groups (MiniMax-M2.1) (#34673).",
                 "KV scale loading fix for MLA models (#35430)."
@@ -3718,10 +3718,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.17.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Performance: Qwen3.5 GDN projector fusion (#34697), FlashInfer cuDNN backend for Qwen3 VL ViT (#34580), Step3.5-Flash NVFP4 (#34478), Qwen3MoE tuned configs for H200 (#35457) (#34697, #34580).",
-                "AMD ROCm: AITER fused RoPE+KVCache (#33443), MXFP4 MoE weight pre-shuffling on gfx950 (#34192), bitsandbytes quantization (#34688), CK backend for MoE quantization (#34301), dynamic MXFP4 for (#33443, #34192).",
-                "AMD: CK backend for MoE (#34301), dynamic MXFP4 for DeepSeek V2 (#34157), bitsandbytes on ROCm (#34688), GPT-OSS Quark format (#29008) (#34301, #34157).",
-                "CPU: ARM BF16 cross-compilation (#33079), FP16 for s390x (#34116), KleidiAI INT8_W4A8 for all input dtypes (#34890), s390x vector intrinsics for attention (#34434), prefix caching for ppc64le (#33079, #34116)."
+                "Performance: Qwen3.5 GDN projector fusion (#34697), FlashInfer cuDNN backend for Qwen3 VL ViT (#34580), Step3.5-Flash NVFP4 (#34478), Qwen3MoE tuned configs for H200 (#35457).",
+                "AMD ROCm: AITER fused RoPE+KVCache (#33443), MXFP4 MoE weight pre-shuffling on gfx950 (#34192), bitsandbytes quantization (#34688), CK backend for MoE quantization (#34301), dynamic MXFP4 for.",
+                "AMD: CK backend for MoE (#34301), dynamic MXFP4 for DeepSeek V2 (#34157), bitsandbytes on ROCm (#34688), GPT-OSS Quark format (#29008).",
+                "CPU: ARM BF16 cross-compilation (#33079), FP16 for s390x (#34116), KleidiAI INT8_W4A8 for all input dtypes (#34890), s390x vector intrinsics for attention (#34434), prefix caching for ppc64le."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -3737,10 +3737,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.17.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New architectures: Qwen3.5 (#34110), COLQwen3 (#34398), ColModernVBERT (#34558), Ring 2.5 (#35102), skt/A.X-K1 (#32407), Ovis 2.6 (#34426), nvidia/llama-nemotron-embed-vl-1b-v2 (#35297) (#34110, #34398).",
-                "Fixes: DeepSeek-VL V2 simplified loading (#35203), Qwen3/Qwen3.5 reasoning parser (#34779), Qwen2.5-Omni/Qwen3-Omni mixed-modality (#35368), Ernie4.5-VL garbled output (#35587), Qwen-VL tokenizer (#35203, #34779).",
-                "ASR models: FunASR (#33247), FireRedASR2 (#35727), Qwen3-ASR realtime streaming (#34613) (#33247, #35727).",
-                "Multimodal: OpenPangu-VL video input (#34134), audio chunking for offline LLM (#34628), Parakeet audio encoder for nemotron-nano-vl (#35100), MiniCPM-o flagos (#34126) (#34134, #34628)."
+                "New architectures: Qwen3.5 (#34110), COLQwen3 (#34398), ColModernVBERT (#34558), Ring 2.5 (#35102), skt/A.X-K1 (#32407), Ovis 2.6 (#34426), nvidia/llama-nemotron-embed-vl-1b-v2 (#35297).",
+                "Fixes: DeepSeek-VL V2 simplified loading (#35203), Qwen3/Qwen3.5 reasoning parser (#34779), Qwen2.5-Omni/Qwen3-Omni mixed-modality (#35368), Ernie4.5-VL garbled output (#35587), Qwen-VL tokenizer.",
+                "ASR models: FunASR (#33247), FireRedASR2 (#35727), Qwen3-ASR realtime streaming (#34613).",
+                "Multimodal: OpenPangu-VL video input (#34134), audio chunking for offline LLM (#34628), Parakeet audio encoder for nemotron-nano-vl (#35100), MiniCPM-o flagos (#34126)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -3756,8 +3756,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.17.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Model Runner V2: Pipeline Parallel (#33960), Decode Context Parallel (#34179), piecewise & mixed CUDA graphs (#32771), Eagle3 with CUDA graphs (#35029, #35040), pooling models (#35120), DP+EP for (#33960, #34179).",
-                "Intel XPU: CUDA graph support (#34482), GPUDirect RDMA via NIXL (#35270), TORCH_SDPA/TRITON_ATTN as ViT backend (#35010), vllm-xpu-kernels v0.1.3 (#35984) (#34482, #35270).",
+                "Model Runner V2: Pipeline Parallel (#33960), Decode Context Parallel (#34179), piecewise & mixed CUDA graphs (#32771), Eagle3 with CUDA graphs (#35029, #35040), pooling models (#35120), DP+EP for.",
+                "Intel XPU: CUDA graph support (#34482), GPUDirect RDMA via NIXL (#35270), TORCH_SDPA/TRITON_ATTN as ViT backend (#35010), vllm-xpu-kernels v0.1.3 (#35984).",
                 "Eagle3 on Model Runner V2 with CUDA graphs (#35029, #35040), Eagle3 + disaggregated serving (#34529).",
                 "Decode Context Parallel in Model Runner V2 (#34179)."
               ],
@@ -3775,8 +3775,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.17.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "Fixes: allreduce_rms_fusion disabled by default with PP > 1 (#35424), DCP + FA3 crash (#35082), prefix caching for Mamba \"all\" mode (#34874), num_active_loras fix (#34119), async TP reduce-scatter (#35424, #35082).",
-                "NIXL: Token-based IPC API (#34175), version bound (#35495), NUMA core binding (#32365) (#34175, #35495).",
+                "Fixes: allreduce_rms_fusion disabled by default with PP > 1 (#35424), DCP + FA3 crash (#35082), prefix caching for Mamba \"all\" mode (#34874), num_active_loras fix (#34119), async TP reduce-scatter.",
+                "NIXL: Token-based IPC API (#34175), version bound (#35495), NUMA core binding (#32365).",
                 "Breaking: KV load failure policy default changed from \"recompute\" to \"fail\" (#34896).",
                 "Bound NIXL upper bound version (#35495)."
               ],
@@ -3944,10 +3944,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.16.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT warning (#33273), early (#33193, #33371).",
-                "Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP accuracy fix (#34385) (#33771, #33855).",
-                "NVIDIA: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series (#33540), FlashInfer MLA concat (#32954, #32437).",
-                "ARM CPU: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention dispatch by head_dim alignment (#33122, #32263)."
+                "UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT warning (#33273), early.",
+                "Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP accuracy fix (#34385).",
+                "NVIDIA: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series (#33540), FlashInfer MLA concat.",
+                "ARM CPU: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention dispatch by head_dim alignment."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -3963,10 +3963,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.16.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Intel XPU: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm kernel (#34117), FP8 MoE (#33379, #33659).",
-                "Removed BitBlas quantization (#32683) and Marlin 24 (#32688) (#32683, #32688).",
-                "Performance: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892), shared/routed overlap for latent MoE (#33782, #33548).",
-                "New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099) (#33280, #33786)."
+                "Intel XPU: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm kernel (#34117), FP8 MoE.",
+                "Removed BitBlas quantization (#32683) and Marlin 24 (#32688).",
+                "Performance: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892), shared/routed overlap for latent MoE.",
+                "New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -3982,10 +3982,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.16.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449), NemotronHPuzzle heterogeneous (#33005, #33312).",
-                "LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774), unpermute-aware fused (#32764, #32265).",
-                "Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE positioning fixes (#33010 (#29828, #33174).",
-                "Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak fix from Request (#33059, #33732)."
+                "New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449), NemotronHPuzzle heterogeneous.",
+                "LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774), unpermute-aware fused.",
+                "Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE positioning fixes (#33010.",
+                "Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak fix from Request."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -4019,9 +4019,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.16.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "AMD ROCm: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077) (#32042, #32492).",
+                "AMD ROCm: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077).",
                 "Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379).",
-                "Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509) (#33557, #33509)."
+                "Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -4162,7 +4162,7 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.15.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
                 "Metrics: Removed deprecated `vllm:time_per_output_token_seconds` metric - use `vllm:inter_token_latency_seconds` instead (#32661).",
-                "TPU: Pipeline parallelism support (#28506), backend option (#32438) (#28506, #32438).",
+                "TPU: Pipeline parallelism support (#28506), backend option (#32438).",
                 "MoRI EP: High-performance all2all backend for Expert Parallel (#28664).",
                 "Consumer GPU support: Flash Attention Triton backend on RDNA3/RDNA4 (#32944)."
               ],
@@ -4180,9 +4180,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.15.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "MoE performance: 1.2-2% E2E throughput improvement via grouped topk kernel fusion (#32058), NVFP4 small-batch decoding improvement (#30885), faster cold start for MoEs with torch.compile (#32805) (#32058, #30885).",
+                "MoE performance: 1.2-2% E2E throughput improvement via grouped topk kernel fusion (#32058), NVFP4 small-batch decoding improvement (#30885), faster cold start for MoEs with torch.compile (#32805).",
                 "Model Runner V2: VLM support (#32546), architecture improvements.",
-                "torch.compile: SiluAndMul and QuantFP8 CustomOp compilation (#32806), Triton prefill attention performance (#32403) (#32806, #32403).",
+                "torch.compile: SiluAndMul and QuantFP8 CustomOp compilation (#32806), Triton prefill attention performance (#32403).",
                 "AOT compilation: torch.compile inductor artifacts support (#25205)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
@@ -4199,7 +4199,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.15.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Quantization: DeepSpeedFp8 removed (#32679), RTN removed (#32697), HQQ deprecated (#32681) (#32679, #32697).",
+                "Quantization: DeepSpeedFp8 removed (#32679), RTN removed (#32697), HQQ deprecated (#32681).",
                 "MXFP4: W4A16 support for compressed-tensors MoE models (#32285).",
                 "Non-gated MoE: Quantization support with Marlin, NVFP4 CUTLASS, FP8, INT8, and compressed-tensors (#32257).",
                 "FP8 KV cache: Per-tensor and per-attention-head quantization via llmcompressor (#30141)."
@@ -4218,7 +4218,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.15.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "New architectures: Kimi-K2.5 (#33131), Molmo2 (#30997), Step3vl 10B (#32329), Step1 (#32511), GLM-Lite (#31386), Eagle2.5-8B VLM (#32456) (#33131, #30997).",
+                "New architectures: Kimi-K2.5 (#33131), Molmo2 (#30997), Step3vl 10B (#32329), Step1 (#32511), GLM-Lite (#31386), Eagle2.5-8B VLM (#32456).",
                 "Blackwell defaults: FlashInfer MLA is now the default MLA backend on Blackwell, with TRTLLM as default prefill (#32615).",
                 "FP4 support: MLA projection GEMMs with dynamic quantization (#32238).",
                 "DeepSeek: DeepSeek-V3.1 + DeepGEMM incompatible scale shapes fix (#32361)."
@@ -4237,8 +4237,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.15.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "LoRA expansion: Nemotron-H (#30802), InternVL2 (#32397), MiniMax M2 (#32763) (#30802, #32397).",
-                "Model enhancements: Voxtral streaming architecture (#32861), SharedFusedMoE for Qwen3MoE (#32082), dynamic resolution for Nemotron Nano VL (#32121), Molmo2 vision backbone quantization (#32385) (#32861, #32082).",
+                "LoRA expansion: Nemotron-H (#30802), InternVL2 (#32397), MiniMax M2 (#32763).",
+                "Model enhancements: Voxtral streaming architecture (#32861), SharedFusedMoE for Qwen3MoE (#32082), dynamic resolution for Nemotron Nano VL (#32121), Molmo2 vision backbone quantization (#32385).",
                 "LoRA: Inplace loading for memory efficiency (#31326).",
                 "Whisper API: `avg_logprob` and `compression_ratio` in verbose_json segments (#31059)."
               ],
@@ -4394,7 +4394,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.14.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "DeepSeek-OCR (#31569), Qwen3-Next (#31719), NemotronH (#31539), PLaMo 2/3 (#31569, #31719).",
+                "DeepSeek-OCR (#31569), Qwen3-Next (#31719), NemotronH (#31539), PLaMo 2/3.",
                 "Qwen3-VL as reranker (#31890).",
                 "GDN attention decode speedup (Qwen3-Next) (#31722).",
                 "Qwen3Moe B200 Triton configs (#31448)."
@@ -4414,7 +4414,7 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.14.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
                 "Deprecated quantization schemes removed (#31688, #31285).",
-                "XPU: FP8 streaming quant (#30944), custom workers (#30944, #30935).",
+                "XPU: FP8 streaming quant (#30944), custom workers.",
                 "Fused SiLU+Mul+Quant for NVFP4 (#31832).",
                 "NVFP4 stride fusion (#31837)."
               ],
@@ -4432,9 +4432,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.14.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "ROCm: AITER RMSNorm fusion (#26575), MTP for AITER MLA (#28624), moriio connector (#29304), xgrammar upstream (#26575, #28624).",
+                "ROCm: AITER RMSNorm fusion (#26575), MTP for AITER MLA (#28624), moriio connector (#29304), xgrammar upstream.",
                 "Async scheduling default with spec decode (#27614, #31998) and structured outputs.",
-                "TPU: tpu-inference path (#30808), Sophgo docs (#30808, #30949)."
+                "TPU: tpu-inference path (#30808), Sophgo docs."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -4637,8 +4637,8 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.13.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
                 "DeepEP High-Throughput CUDA graph enabled by default: 5.3% throughput, 4.4% TTFT improvement (#29558).",
-                "Model Runner V2: Min-p sampling (#30171), NaN detection in logits (#30187) (#30171, #30187).",
-                "Attention: PrefixLM support for FlexAttention (#27938) and TritonAttention (#30386), CUDA graphs for 3D Triton attention (#28306), `TRITON_MLA` without prefix-caching (#29125) (#27938, #30386)."
+                "Model Runner V2: Min-p sampling (#30171), NaN detection in logits (#30187).",
+                "Attention: PrefixLM support for FlexAttention (#27938) and TritonAttention (#30386), CUDA graphs for 3D Triton attention (#28306), `TRITON_MLA` without prefix-caching (#29125)."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -4654,10 +4654,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.13.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "AMD ROCm: Aiter quantization kernels (#25552), torch.compile layernorm/silu + FP8 quant (#25693), Triton ScaledMM fallback (#26668), MXFP4 w4a4 inference (#29775) (#25552, #25693).",
-                "New: W4A8 grouped GEMM on Hopper (#29691), online FP8 with streaming post-processing (#29196), FP8 weight reloading for RLHF (#28480) (#29691, #29196).",
-                "GGUF: MoE + GGUF restored for Qwen3 MoE (#30116), Qwen2 MoE (#30307), HF defaults override (#30118) (#30116, #30307).",
-                "EPLB: NVFP4 support (#29804), algorithm abstraction (#26471) (#29804, #26471)."
+                "AMD ROCm: Aiter quantization kernels (#25552), torch.compile layernorm/silu + FP8 quant (#25693), Triton ScaledMM fallback (#26668), MXFP4 w4a4 inference (#29775).",
+                "New: W4A8 grouped GEMM on Hopper (#29691), online FP8 with streaming post-processing (#29196), FP8 weight reloading for RLHF (#28480).",
+                "GGUF: MoE + GGUF restored for Qwen3 MoE (#30116), Qwen2 MoE (#30307), HF defaults override (#30118).",
+                "EPLB: NVFP4 support (#29804), algorithm abstraction (#26471)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
               "config_snippet": ""
@@ -4673,9 +4673,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.13.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Model enhancements: Qwen3-VL embeddings support (#30037), Qwen3-VL EVS (Efficient Video Sampling) (#29752), DeepSeek V3.2 proper `drop_thinking` logic (#30490), DeepSeek V3.2 top-k fix (#27568) (#30037, #29752).",
-                "Tool parsers: DeepSeek-V3.2 (#29848), Gigachat 3 (#29905), Holo2 reasoning (#30048) (#29848, #29905).",
-                "MLA FP8 optimization with ReduceScatterSum (#29795), direct k_nope/k_pe copy (#29795, #29710).",
+                "Model enhancements: Qwen3-VL embeddings support (#30037), Qwen3-VL EVS (Efficient Video Sampling) (#29752), DeepSeek V3.2 proper `drop_thinking` logic (#30490), DeepSeek V3.2 top-k fix (#27568).",
+                "Tool parsers: DeepSeek-V3.2 (#29848), Gigachat 3 (#29905), Holo2 reasoning (#30048).",
+                "MLA FP8 optimization with ReduceScatterSum (#29795), direct k_nope/k_pe copy.",
                 "Sparse prefill kernel for FP8 KV-cache in DeepSeek-V3.2 (#27532)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
@@ -4692,10 +4692,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.13.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Whisper: Major performance improvements - [V1 is now faster than V0](https://github.com/vllm-project/vllm/issues/24946#issuecomment-3680725754) (~3x speedup vs v0.12.0). Encoder batching (#29421) (#29421, #30072).",
-                "New models: BAGEL (AR only) (#28439), AudioFlamingo3 (#30539), JAIS 2 (#30188), latent MoE architecture support (#30203) (#28439, #30539).",
-                "Performance: Fused blockwise quant RMS norm (#27883), MoE LoRA loading reduction (#30243), encoder cache optimization (#30475), CPU KV offloading streams (#29013) (#27883, #30243).",
-                "CPU: Whisper support (#30062), Arm Optimized Routines vectorized exp (#30068), x86 CPU wheel pipeline (#28848) (#30062, #30068)."
+                "Whisper: Major performance improvements - [V1 is now faster than V0](https://github.com/vllm-project/vllm/issues/24946#issuecomment-3680725754) (~3x speedup vs v0.12.0). Encoder batching (#29421).",
+                "New models: BAGEL (AR only) (#28439), AudioFlamingo3 (#30539), JAIS 2 (#30188), latent MoE architecture support (#30203).",
+                "Performance: Fused blockwise quant RMS norm (#27883), MoE LoRA loading reduction (#30243), encoder cache optimization (#30475), CPU KV offloading streams (#29013).",
+                "CPU: Whisper support (#30062), Arm Optimized Routines vectorized exp (#30068), x86 CPU wheel pipeline (#28848)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -4711,8 +4711,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.13.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "NIXL: Compatibility checking in handshake (#29503), large batch proxy support (#28782) (#29503, #28782).",
-                "KV connectors: Mooncake Transfer Engine (#24718), cache reset via `/reset_prefix_cache` (#27170), KV events (#28309), failure recovery config (#26813) (#24718, #27170).",
+                "NIXL: Compatibility checking in handshake (#29503), large batch proxy support (#28782).",
+                "KV connectors: Mooncake Transfer Engine (#24718), cache reset via `/reset_prefix_cache` (#27170), KV events (#28309), failure recovery config (#26813).",
                 "Multi-node: External launcher mode (#29833).",
                 "Hybrid allocator: Optional KV connector integration (#29805)."
               ],
@@ -4875,10 +4875,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.12.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New model families: PLaMo-3 (#28834), OpenCUA-7B (#29068), HunyuanOCR (#29327), Mistral Large 3 and Ministral 3 (#29757) (#28834, #29068).",
-                "Multimodal enhancements: Qwen3 Omni audio-in-video support (#27721), Eagle3 multimodal support for Qwen3VL (#29594) (#27721, #29594).",
+                "New model families: PLaMo-3 (#28834), OpenCUA-7B (#29068), HunyuanOCR (#29327), Mistral Large 3 and Ministral 3 (#29757).",
+                "Multimodal enhancements: Qwen3 Omni audio-in-video support (#27721), Eagle3 multimodal support for Qwen3VL (#29594).",
                 "LoRA extra vocab (#28545).",
-                "Configuration: Flexible `inputs_embeds_size` separate from `hidden_size` (#29741), `--fully-sharded-loras` for fused_moe (#28761) (#29741, #28761)."
+                "Configuration: Flexible `inputs_embeds_size` separate from `hidden_size` (#29741), `--fully-sharded-loras` for fused_moe (#28761)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
               "config_snippet": ""
@@ -5097,9 +5097,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.11.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Performance: GLM-4.1V 916ms TTFT reduction via fused RMSNorm (#24733), GLM-4 MoE SharedFusedMoE optimization (#24849), Qwen2.5-VL CUDA sync removal (#24741), Qwen3-VL Triton MRoPE kernel (#25055) (#24733, #24849).",
-                "FP8: Per-token-group quantization (#24342), hardware-accelerated instructions (#24757), torch.compile KV cache (#22758), paged attention update (#22222) (#24342, #24757).",
-                "FP4: NVFP4 for dense models (#25609), Gemma3 (#22771), Llama 3.1 405B (#25135) (#25609, #22771).",
+                "Performance: GLM-4.1V 916ms TTFT reduction via fused RMSNorm (#24733), GLM-4 MoE SharedFusedMoE optimization (#24849), Qwen2.5-VL CUDA sync removal (#24741), Qwen3-VL Triton MRoPE kernel (#25055).",
+                "FP8: Per-token-group quantization (#24342), hardware-accelerated instructions (#24757), torch.compile KV cache (#22758), paged attention update (#22222).",
+                "FP4: NVFP4 for dense models (#25609), Gemma3 (#22771), Llama 3.1 405B (#25135).",
                 "Compressed tensors: Blocked FP8 for MoE (#25219)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
@@ -5116,10 +5116,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.11.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "DeepGEMM: Enabled by default (#24462), 5.5% throughput improvement (#24783) (#24462, #24783).",
-                "New architectures: DeepSeek-V3.2-Exp (#25896), Qwen3-VL series (#24727), Qwen3-Next (#24526), OLMo3 (#24534), LongCat-Flash (#23991), Dots OCR (#24645), Ling2.0 (#24627), CWM (#25611) (#25896, #24727).",
-                "MoE: Shared expert overlap optimization (#24254), SiLU kernel for DeepSeek-R1 (#24054), Enable Allgather/ReduceScatter backend for NaiveAllToAll (#23964) (#24254, #24054).",
-                "NVIDIA: FP8 FlashInfer MLA decode (#24705), BF16 fused MoE for Hopper/Blackwell expert parallel (#25503) (#24705, #25503)."
+                "DeepGEMM: Enabled by default (#24462), 5.5% throughput improvement (#24783).",
+                "New architectures: DeepSeek-V3.2-Exp (#25896), Qwen3-VL series (#24727), Qwen3-Next (#24526), OLMo3 (#24534), LongCat-Flash (#23991), Dots OCR (#24645), Ling2.0 (#24627), CWM (#25611).",
+                "MoE: Shared expert overlap optimization (#24254), SiLU kernel for DeepSeek-R1 (#24054), Enable Allgather/ReduceScatter backend for NaiveAllToAll (#23964).",
+                "NVIDIA: FP8 FlashInfer MLA decode (#24705), BF16 fused MoE for Hopper/Blackwell expert parallel (#25503)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -5135,8 +5135,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.11.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
               "tech_bullets": [
-                "Distributed: NCCL symmetric memory with 3-4% throughput improvement (#24532), enabled by default for TP (#25070) (#24532, #25070).",
-                "Disaggregated serving: KV transfer metrics (#22188), NIXL MLA latent dimension (#25902) (#22188, #25902).",
+                "Distributed: NCCL symmetric memory with 3-4% throughput improvement (#24532), enabled by default for TP (#25070).",
+                "Disaggregated serving: KV transfer metrics (#22188), NIXL MLA latent dimension (#25902).",
                 "Removes source compilation of nixl dependency (#24874).",
                 "Add Decode Context Parallelism (DCP) test to CI (#24487)."
               ],
@@ -5154,10 +5154,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.11.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "AMD: ROCm 7.0 (#25178), GLM-4.5 MI300X tuning (#25703) (#25178, #25703).",
+                "AMD: ROCm 7.0 (#25178), GLM-4.5 MI300X tuning (#25703).",
                 "Only enable +rms_norm based on aiter if not explicitly disabled (#25275).",
-                "Components: Attention backends (#25351), encoder-decoder (#24907), output processor (#25320), sampling metadata (#25345), Sequence/Sampler (#25332) (#25351, #24907).",
-                "PyTorch 2.8 for CPU (#25652), FlashInfer 0.3.1 (#24470), CUDA 13 (#24599), ROCm 7.0 (#25178) (#25652, #24470)."
+                "Components: Attention backends (#25351), encoder-decoder (#24907), output processor (#25320), sampling metadata (#25345), Sequence/Sampler (#25332).",
+                "PyTorch 2.8 for CPU (#25652), FlashInfer 0.3.1 (#24470), CUDA 13 (#24599), ROCm 7.0 (#25178)."
               ],
               "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
               "config_snippet": ""
@@ -5173,9 +5173,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.11.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "Features: Qwen3-VL text-only mode (#26000), EVS video token pruning (#22980), Mamba2 TP+quantization (#24593), MRoPE + YaRN (#25384), Whisper on XPU (#25123), LongCat-Flash-Chat tool calling (#24083) (#26000, #22980).",
-                "Data parallel for vision encoders: InternVL (#23909), Qwen2-VL (#25445), Qwen3-VL (#24955) (#23909, #25445).",
-                "Architecture: Tokenizer group removal (#24078), shared memory multimodal caching (#20452) (#24078, #20452).",
+                "Features: Qwen3-VL text-only mode (#26000), EVS video token pruning (#22980), Mamba2 TP+quantization (#24593), MRoPE + YaRN (#25384), Whisper on XPU (#25123), LongCat-Flash-Chat tool calling (#24083).",
+                "Data parallel for vision encoders: InternVL (#23909), Qwen2-VL (#25445), Qwen3-VL (#24955).",
+                "Architecture: Tokenizer group removal (#24078), shared memory multimodal caching (#20452).",
                 "Remove cuda hard-code in qwen3 next (#25243)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
@@ -5340,9 +5340,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.10.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Enhanced compatibility: BERT/RoBERTa with AutoWeightsLoader (#20534), HF format support for MiniMax (#20211), Gemini configuration (#20971), GLM-4 updates (#20736) (#20534, #20211).",
-                "NVIDIA Blackwell/SM100 optimizations: CUTLASS block scaled group GEMM for smaller batches (#20640), FP8 groupGEMM support (#20447), DeepGEMM integration (#20087), FlashInfer MoE blockscale FP8 (#20640, #20447).",
-                "Performance improvements: 48% request duration reduction via microbatch tokenization for concurrent requests (#19334), fused MLA QKV + strided layernorm (#21116), Triton causal-conv1d for Mamba (#19334, #21116).",
+                "Enhanced compatibility: BERT/RoBERTa with AutoWeightsLoader (#20534), HF format support for MiniMax (#20211), Gemini configuration (#20971), GLM-4 updates (#20736).",
+                "NVIDIA Blackwell/SM100 optimizations: CUTLASS block scaled group GEMM for smaller batches (#20640), FP8 groupGEMM support (#20447), DeepGEMM integration (#20087), FlashInfer MoE blockscale FP8.",
+                "Performance improvements: 48% request duration reduction via microbatch tokenization for concurrent requests (#19334), fused MLA QKV + strided layernorm (#21116), Triton causal-conv1d for Mamba.",
                 "Fix minimax model cache & lm_head precision (#19592)."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
@@ -5359,9 +5359,9 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.10.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "New quantization support: MXFP4 for MoE models (#17888), BNB support for Mixtral and additional MoE models (#20893, #21100), in-flight quantization for MoE (#20061) (#17888, #20893).",
-                "Hardware-specific: FP8 KV cache quantization on TPU (#19292), FP8 support for BatchedTritonExperts (#18864), optimized INT8 vectorization kernels (#20331) (#19292, #18864).",
-                "Performance optimizations: Triton backend for DeepGEMM per-token group quantization (#20841), CUDA kernel for per-token group quantization (#21083), CustomOp abstraction for FP8 (#19830) (#20841, #21083).",
+                "New quantization support: MXFP4 for MoE models (#17888), BNB support for Mixtral and additional MoE models (#20893, #21100), in-flight quantization for MoE (#20061).",
+                "Hardware-specific: FP8 KV cache quantization on TPU (#19292), FP8 support for BatchedTritonExperts (#18864), optimized INT8 vectorization kernels (#20331).",
+                "Performance optimizations: Triton backend for DeepGEMM per-token group quantization (#20841), CUDA kernel for per-token group quantization (#21083), CustomOp abstraction for FP8 (#19830).",
                 "Add SM100 Flashinfer MoE blockscale fp8 backend for low latency (#20645)."
               ],
               "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
@@ -5378,7 +5378,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.10.0, teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
               "tech_bullets": [
-                "New families: Llama 4 with EAGLE support (#20591), EXAONE 4.0 (#21060), Microsoft Phi-4-mini-flash-reasoning (#20702), Hunyuan V1 Dense + A13B with reasoning/tool parsing (#21368, #20625, #20820) (#20591, #21060).",
+                "New families: Llama 4 with EAGLE support (#20591), EXAONE 4.0 (#21060), Microsoft Phi-4-mini-flash-reasoning (#20702), Hunyuan V1 Dense + A13B with reasoning/tool parsing (#21368, #20625, #20820).",
                 "Fix EAGLE vocab embedding for multimodal target model (#19570).",
                 "Fix the speculative decoding test by setting the target dtype (#19633).",
                 "Fix speculative decoding CI - Fix test_ngram_e2e_greedy_correctness (#19644)."
@@ -5417,8 +5417,8 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.10.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
                 "Add fused MOE config for Qwen3 30B A3B on B200 (#19455).",
-                "CLI improvements: `--help=page` option for enhanced help documentation (#20961), default model changed to Qwen3-0.6B (#20335) (#20961, #20335).",
-                "VLM improvements: VLM support with transformers backend (#20543), PrithviMAE on V1 engine (#20577) (#20543, #20577).",
+                "CLI improvements: `--help=page` option for enhanced help documentation (#20961), default model changed to Qwen3-0.6B (#20335).",
+                "VLM improvements: VLM support with transformers backend (#20543), PrithviMAE on V1 engine (#20577).",
                 ": Support Qwen3 Embedding & Reranker (#19260)."
               ],
               "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
@@ -5579,8 +5579,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.9.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
-                "Structured Outputs: Thinking compatibility (#16577), Spec Decoding (#14702), Qwen3 reasoning parser (#17466), `tool_choice: required` for Xgrammar (#17845), Structural Tag with Guidance backend (#16577, #14702).",
-                "AMD: Enable FP8 KV cache on V1 (#17870), Tuned fused moe config for Qwen3 MoE on MI300X (#17535, #17530), AITER biased group topk (#17955), Block-Scaled GEMM (#14968), MLA (#17523), Radeon GPU use (#17870, #17535).",
+                "Structured Outputs: Thinking compatibility (#16577), Spec Decoding (#14702), Qwen3 reasoning parser (#17466), `tool_choice: required` for Xgrammar (#17845), Structural Tag with Guidance backend.",
+                "AMD: Enable FP8 KV cache on V1 (#17870), Tuned fused moe config for Qwen3 MoE on MI300X (#17535, #17530), AITER biased group topk (#17955), Block-Scaled GEMM (#14968), MLA (#17523), Radeon GPU use.",
                 ": Add Qwen/Qwen3-30B-A3B-FP8 fused moe config for MI300X (#17530).",
                 "Restrict ray version due to a breaking release (#17480)."
               ],
@@ -5598,7 +5598,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.9.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "Quantization: `nvidia/DeepSeek-R1-FP4` (#16362), Quark MXFP4 format (#16943), AutoRound (#17850), torchao models with `AOPerModuleConfig` (#17826), CUDA Graph support for V1 GGUF support (#16362, #16943).",
+                "Quantization: `nvidia/DeepSeek-R1-FP4` (#16362), Quark MXFP4 format (#16943), AutoRound (#17850), torchao models with `AOPerModuleConfig` (#17826), CUDA Graph support for V1 GGUF support.",
                 "NVIDIA: cutlass support for blackwell fp8 blockwise gemm (#14383).",
                 ": Add Qwen/Qwen3-235B-A22B-FP8 TP4 triton fused moe config (#17535).",
                 "Update nm to rht in doc links + refine fp8 doc (#17678)."
@@ -5617,7 +5617,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.9.0, teams operating model runner v2 relied on older execution paths or manual tuning on All CUDA and ROCm GPU fleets running vLLM's V2 execution engine.",
               "tech_bullets": [
-                "Spec Decode: EAGLE share input embedding (#17326), torch.compile & cudagraph to EAGLE (#17211), EAGLE3 (#17504), log accumulated metrics(#17913), Medusa (#17326, #17211).",
+                "Spec Decode: EAGLE share input embedding (#17326), torch.compile & cudagraph to EAGLE (#17211), EAGLE3 (#17504), log accumulated metrics(#17913), Medusa.",
                 "Apply torch.compile & cudagraph to EAGLE (#17211).",
                 "Apply torch.compile & cudagraph to EAGLE3 (#17504).",
                 "Support CUDAGraph capture for encoder-decoder on ROCm (#18104)."
@@ -5638,8 +5638,8 @@ window.__PUBLICATION_DATA__ = {
               "tech_bullets": [
                 "CLI: `deprecated=True` (#17426).",
                 "Reasoning: deprecate `--enable-reasoning` (#17452).",
-                "Frontend: progress bar for adding requests (#17525), `chat_template_kwargs` in `LLM.chat` (#17356), `/classify` endpoint (#17032), truncation control for embedding models (#14776), `cached_tokens` in (#17525, #17356).",
-                "Metrics: kv event publishing (#16750), API for accessing in-memory Prometheus metrics (#16750, #17010)."
+                "Frontend: progress bar for adding requests (#17525), `chat_template_kwargs` in `LLM.chat` (#17356), `/classify` endpoint (#17032), truncation control for embedding models (#14776), `cached_tokens` in.",
+                "Metrics: kv event publishing (#16750), API for accessing in-memory Prometheus metrics."
               ],
               "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
@@ -5655,10 +5655,10 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.9.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "Support MiMo-7B (#17433), MiniMax-VL-01 (#16328), Ovis 1.6 (#17861), Ovis 2 (#15826), GraniteMoeHybrid 4.0 (#17497), FalconH1\\* (#18406), LlamaGuard4 (#17433, #16328).",
+                "Support MiMo-7B (#17433), MiniMax-VL-01 (#16328), Ovis 1.6 (#17861), Ovis 2 (#15826), GraniteMoeHybrid 4.0 (#17497), FalconH1\\* (#18406), LlamaGuard4.",
                 "DeepSeek: perf enhancement by moving more calls into cuda-graph region(#17484, #17668), Function Call (#17784), MTP in V1.",
                 "Add files via uploadAdd fused MoE kernel tuning configs (fp8_w8a8) for DeepSeek V3/R1 on a single-node 8x NVIDIA H20 96GB setup (#18337).",
-                "Fix variable name bug due to change in variable name in PR #17483 (#17483, #17961)."
+                "Fix variable name bug due to change in variable name in PR #17483."
               ],
               "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
               "config_snippet": ""
@@ -6053,7 +6053,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.7.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
               "tech_bullets": [
-                "AMD: MI300 FP8 format for block_quant (#12134), Tuned MoE configurations for multiple models (#12408, #12049), block size heuristic for avg 2.8x speedup for int8 models (#12134, #12408).",
+                "AMD: MI300 FP8 format for block_quant (#12134), Tuned MoE configurations for multiple models (#12408, #12049), block size heuristic for avg 2.8x speedup for int8 models.",
                 "Fix CPU CI by lazy importing triton FP8 kernels (#11618).",
                 "Default to using per_token quantization for fp8 when cutlass is supported (#8651).",
                 "Remove comments re: pytorch for outlines + compressed-tensors dependencies (#12260)."
@@ -6072,7 +6072,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.7.0, teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.",
               "tech_bullets": [
-                "New generative models: CogAgent (#11742), Deepseek-VL2 (#11578, #12068, #12169), fairseq2 Llama (#11442), InternLM3 (#12037), Whisper (#11742, #11578).",
+                "New generative models: CogAgent (#11742), Deepseek-VL2 (#11578, #12068, #12169), fairseq2 Llama (#11442), InternLM3 (#12037), Whisper.",
                 "Remove hardcoded `head_size=256` for Deepseek v2 and v3 (#12067).",
                 "Port deepseek-vl2 processor and remove `deepseek_vl2` dependency (#12169).",
                 "Document Deepseek V3 support (#11535)."
@@ -6129,8 +6129,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.7.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New pooling models: Qwen2 PRM (#12202), InternLM2 reward models (#12202, #11571).",
-                "x86: Multi-LoRA (#11100) and MoE Support (#11100, #11831).",
+                "New pooling models: Qwen2 PRM (#12202), InternLM2 reward models.",
+                "x86: Multi-LoRA (#11100) and MoE Support.",
                 "Any model that implements merged multi-modal processor and the `get_*_embeddings` methods according to [this guide](https://docs.vllm.ai/en/latest/contributing/model/multimodal.html) is automatically.",
                 "Remove the duplicate imports of MultiModalKwargs and PlaceholderRange\u2026 (#11824)."
               ],
@@ -6285,7 +6285,7 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.6.0, teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
               "tech_bullets": [
                 "Asynchronous output processor overlaps the output data structures construction with GPU works, delivering 12% throughput increase (#7049, #7911).",
-                "TPU: single and multi-host TPUs on GKE (#7613), Async output processing (#7613, #8011).",
+                "TPU: single and multi-host TPUs on GKE (#7613), Async output processing.",
                 "Enabling tensorizer tests for ROCm (#7237).",
                 "allow rocm to override default env var (#7926)."
               ],
@@ -6304,7 +6304,7 @@ window.__PUBLICATION_DATA__ = {
               "before": "Prior to v0.6.0, teams operating extensible kv cache, memory budgeting & tiered offloading relied on older execution paths or manual tuning on NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers.",
               "tech_bullets": [
                 "Using FlashInfer backend for FP8 KV Cache (#7798, #7985), rejection sampling in Speculative Decoding.",
-                "Address #8009 and add model test for flashinfer fp8 kv cache (#8009, #8013).",
+                "Address #8009 and add model test for flashinfer fp8 kv cache.",
                 "Use FlashInfer backend for FP8 KV Cache when available (#7798).",
                 "Revert \"[Core][Kernels] Use FlashInfer backend for FP8 KV Cache when available.\" (#7982)."
               ],
@@ -6343,7 +6343,7 @@ window.__PUBLICATION_DATA__ = {
                 "NVIDIA GPU: extend cuda graph size for H200 (#7894).",
                 "extend cuda graph size for H200 (#7894).",
                 "remove reset (#7975).",
-                "Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#7898), skip compile for profiling (#7898, #7796)."
+                "Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#7898), skip compile for profiling."
               ],
               "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
               "config_snippet": ""
@@ -6359,8 +6359,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.6.0, teams operating model support enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
               "tech_bullets": [
-                "New LLMs: Exaone (#7819), Granite (#7436), Phi-3.5-MoE (#7819, #7436).",
-                "multi-image input support for LLaVA-Next (#7230), Phi-3-vision models (#7230, #7783).",
+                "New LLMs: Exaone (#7819), Granite (#7436), Phi-3.5-MoE.",
+                "multi-image input support for LLaVA-Next (#7230), Phi-3-vision models.",
                 "Support bitsandbytes 8-bit and FP4 quantized models (#7445).",
                 "A new tokenizer mode for mistral models to use the native mistral-commons package (#7739)."
               ],
@@ -6800,8 +6800,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v0.4.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
               "tech_bullets": [
-                "New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183) (#3433, #3346).",
-                "Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804) (#2762, #1804).",
+                "New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183).",
+                "Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804).",
                 "Add GPTQ support for Gemma (#3200).",
                 "Feature add lora support for Qwen2 (#3177)."
               ],
@@ -7008,7 +7008,7 @@ window.__PUBLICATION_DATA__ = {
                 "Support for Stable LM 2 (#2598).",
                 "AWQ: Up to 2.66x higher throughput (#2566).",
                 "Remove unused code in attention (#2384).",
-                "Update a more user-friendly error message, offering more considerate advice for beginners, when using V100 GPU #1901 (#1901, #2374)."
+                "Update a more user-friendly error message, offering more considerate advice for beginners, when using V100 GPU #1901."
               ],
               "why_it_matters": "Operational reliability and lower maintenance toil",
               "config_snippet": ""
@@ -8057,8 +8057,8 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v1.36, teams operating dynamic resource allocation relied on older execution paths or manual tuning on NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools.",
               "tech_bullets": [
-                "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` depends on enabling (#5055, #137170).",
-                "DRA: Graduated Device Binding Conditions (KEP #5007) to beta, enabled by default in `v1.36`. ([#137795](https://github.com/kubernetes/kubernetes/pull/137795) (#5007, #137795).",
+                "DRA: Graduated device taints and tolerations (KEP #5055) to beta. Support for DeviceTaints in ResourceSlices is on by default. Support for `DeviceTaintRules` depends on enabling.",
+                "DRA: Graduated Device Binding Conditions (KEP #5007) to beta, enabled by default in `v1.36`. ([#137795](https://github.com/kubernetes/kubernetes/pull/137795).",
                 "DRA ResourceSlice controller: Added optional `ReconcilePoolWithName` to allow per-pool reconciliation without setting `NodeName` on slices, so the scheduler can use `NodeSelector` or `allNodes` for (#137365).",
                 "ACTION REQUIRED: DRA (Dynamic Resource Allocation) drivers and controllers now require granular RBAC permissions to update ResourceClaim statuses when the (#134947)."
               ],
@@ -9263,7 +9263,7 @@ window.__PUBLICATION_DATA__ = {
               ],
               "before": "Prior to v1.30, teams operating native sidecar containers, checkpoint/restore & node lifecycle relied on older execution paths or manual tuning on Kubelet CRI runtime (containerd / CRI-O) and Linux/Windows worker nodes.",
               "tech_bullets": [
-                "Graduated \"Forensic Container Checkpointing\" (KEP #2008) from Alpha to Beta. ([#123215](https://github.com/kubernetes/kubernetes/pull/123215), [@adrianreber](https://github.com/adrianreber)) (#2008, #123215).",
+                "Graduated \"Forensic Container Checkpointing\" (KEP #2008) from Alpha to Beta. ([#123215](https://github.com/kubernetes/kubernetes/pull/123215), [@adrianreber](https://github.com/adrianreber)).",
                 "Revised node selection based on container image location. The kube-scheduler now considers whether nodes have the required images available for init containers, and for sidecar containers if the (#123366).",
                 "In kubelet configuration, the `.memorySwap.swapBehavior` field now accepts a new value `NoSwap`, which becomes the default if unspecified. The previously accepted `UnlimitedSwap` value has been (#122745).",
                 "Added the `disable-force-detach` CLI option for `kube-controller-manager`. By default, it's set to `false`. When enabled, it prevents force detaching volumes based on maximum unmount time and node (#120344)."
