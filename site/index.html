@@ -3,33 +3,36 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#060809" />
-  <title>Release Dossier — vLLM &amp; Kubernetes Adoption Decision Engine</title>
+  <meta name="theme-color" content="#07090b" />
+  <title>vLLM Pulse — What’s New in vLLM &amp; This Week in vLLM</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-0: #060809;
-      --bg-1: #0b0f11;
-      --bg-2: #101619;
-      --bg-3: #161f24;
-      --line: rgba(242, 247, 245, 0.09);
-      --line-strong: rgba(242, 247, 245, 0.18);
-      --text: #f2f7f5;
-      --muted: rgba(242, 247, 245, 0.64);
-      --dim: rgba(242, 247, 245, 0.42);
+      --bg: #07090b;
+      --surface-1: #0d1216;
+      --surface-2: #121920;
+      --surface-3: #18222c;
+      --border: rgba(240, 246, 252, 0.09);
+      --border-strong: rgba(240, 246, 252, 0.18);
+      --text: #f3f7fa;
+      --muted: #9fb0c2;
+      --dim: #687a8f;
       --lime: #d7f23a;
-      --lime-soft: rgba(215, 242, 58, 0.11);
-      --lime-edge: rgba(215, 242, 58, 0.36);
+      --lime-bg: rgba(215, 242, 58, 0.10);
+      --lime-border: rgba(215, 242, 58, 0.35);
       --cyan: #54e8d4;
-      --cyan-soft: rgba(84, 232, 212, 0.10);
-      --amber: #f5a623;
-      --amber-soft: rgba(245, 166, 35, 0.12);
-      --red: #ff5c5c;
-      --red-soft: rgba(255, 92, 92, 0.12);
+      --cyan-bg: rgba(84, 232, 212, 0.10);
+      --cyan-border: rgba(84, 232, 212, 0.32);
       --green: #3ddc84;
-      --green-soft: rgba(61, 220, 132, 0.12);
+      --green-bg: rgba(61, 220, 132, 0.11);
+      --green-border: rgba(61, 220, 132, 0.35);
+      --amber: #f5a623;
+      --amber-bg: rgba(245, 166, 35, 0.11);
+      --amber-border: rgba(245, 166, 35, 0.35);
+      --red: #ff6b6b;
+      --red-bg: rgba(255, 107, 107, 0.10);
       --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
       --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -47,22 +50,21 @@
 
     body {
       margin: 0;
-      background-color: var(--bg-0);
+      background-color: var(--bg);
       background-image:
-        radial-gradient(90% 60% at 85% -10%, rgba(84, 232, 212, 0.07), transparent 60%),
-        radial-gradient(70% 50% at 10% 10%, rgba(215, 242, 58, 0.05), transparent 60%);
+        radial-gradient(85% 50% at 80% -10%, rgba(84, 232, 212, 0.08), transparent 60%),
+        radial-gradient(65% 45% at 15% 0%, rgba(215, 242, 58, 0.06), transparent 60%);
       color: var(--text);
       font-family: var(--sans);
-      line-height: 1.55;
+      line-height: 1.6;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
       touch-action: manipulation;
-      -webkit-tap-highlight-color: rgba(215, 242, 58, 0.15);
     }
 
     ::selection {
       background: var(--lime);
-      color: #060809;
+      color: #07090b;
     }
 
     .skip-link {
@@ -70,7 +72,7 @@
       top: -48px;
       left: 16px;
       background: var(--lime);
-      color: #060809;
+      color: #07090b;
       font-weight: 700;
       padding: 8px 14px;
       border-radius: 6px;
@@ -99,24 +101,21 @@
     a {
       color: var(--cyan);
       text-decoration: none;
-      transition: color 140ms ease, border-color 140ms ease;
+      transition: color 140ms ease;
     }
     a:hover {
       color: var(--lime);
       text-decoration: underline;
     }
 
-    button, input, select {
+    button {
       font-family: inherit;
       font-size: inherit;
       color: inherit;
     }
 
     button:focus-visible,
-    a:focus-visible,
-    input:focus-visible,
-    select:focus-visible,
-    summary:focus-visible {
+    a:focus-visible {
       outline: 2px solid var(--lime);
       outline-offset: 2px;
     }
@@ -124,8 +123,8 @@
     h1, h2, h3, h4 {
       margin: 0;
       text-wrap: balance;
-      letter-spacing: -0.025em;
-      scroll-margin-top: 88px;
+      letter-spacing: -0.028em;
+      scroll-margin-top: 96px;
     }
 
     .num {
@@ -133,21 +132,21 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* TOP MASTHEAD */
-    .masthead {
+    /* TOP PUBLICATION NAVBAR */
+    .navbar {
       position: sticky;
       top: 0;
-      z-index: 40;
-      background: rgba(6, 8, 9, 0.88);
+      z-index: 50;
+      background: rgba(7, 9, 11, 0.88);
       -webkit-backdrop-filter: blur(16px);
       backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--border);
     }
 
-    .masthead-inner {
-      max-width: 1560px;
+    .navbar-inner {
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 14px 24px;
+      padding: 14px 28px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -155,579 +154,378 @@
       flex-wrap: wrap;
     }
 
-    .brand-cluster {
+    .brand-left {
       display: flex;
       align-items: center;
-      gap: 14px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--lime);
-      color: #060809;
-      font-family: var(--mono);
-      font-weight: 600;
-      font-size: 0.76rem;
-      letter-spacing: 0.06em;
-      padding: 6px 10px;
-      border-radius: 6px;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    .brand-copy {
-      min-width: 0;
-    }
-
-    .brand-title {
-      font-size: 1.02rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-
-    .brand-pitch {
-      font-size: 0.8rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 680px;
-    }
-
-    .nav-strip {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 16px;
       flex-wrap: wrap;
     }
 
-    .nav-btn {
+    .project-switcher {
+      display: inline-flex;
+      background: var(--surface-1);
+      border: 1px solid var(--border-strong);
+      border-radius: 9px;
+      padding: 3px;
+      gap: 3px;
+    }
+
+    .proj-btn {
       appearance: none;
+      border: none;
       background: transparent;
-      border: 1px solid var(--line);
       color: var(--muted);
-      padding: 7px 13px;
-      border-radius: 8px;
-      font-size: 0.83rem;
+      font-family: var(--mono);
+      font-size: 0.78rem;
       font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 140ms ease, color 140ms ease;
+    }
+    .proj-btn:hover {
+      color: var(--text);
+    }
+    .proj-btn[aria-pressed="true"] {
+      background: var(--lime);
+      color: #07090b;
+    }
+
+    .brand-tagline {
+      font-size: 0.84rem;
+      color: var(--muted);
+    }
+
+    .mode-tabs {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-btn {
+      appearance: none;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.86rem;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 8px;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
     }
-    .nav-btn:hover {
+    .mode-btn:hover {
       color: var(--text);
-      border-color: var(--line-strong);
-      background: rgba(255, 255, 255, 0.03);
+      border-color: var(--border-strong);
     }
-    .nav-btn[aria-current="page"] {
-      background: var(--lime);
-      color: #060809;
-      border-color: var(--lime);
+    .mode-btn[aria-current="page"] {
+      background: var(--cyan-bg);
+      border-color: var(--cyan-border);
+      color: var(--cyan);
     }
-    .nav-count {
+
+    .mode-badge {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.07);
+    }
+
+    /* VERSION BAR (UNDER NAVBAR IN RELEASE MODE) */
+    .version-bar {
+      background: var(--surface-1);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .version-bar-inner {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 10px 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      overflow-x: auto;
+    }
+
+    .version-bar-label {
       font-family: var(--mono);
       font-size: 0.72rem;
-      font-variant-numeric: tabular-nums;
-      padding: 1px 6px;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.18);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      margin-right: 4px;
+      white-space: nowrap;
     }
-    .nav-btn:not([aria-current="page"]) .nav-count {
-      background: rgba(255, 255, 255, 0.07);
+
+    .ver-pill {
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+      padding: 5px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+    .ver-pill:hover {
+      color: var(--text);
+      border-color: var(--border-strong);
+    }
+    .ver-pill[aria-current="true"] {
+      background: var(--lime-bg);
+      border-color: var(--lime-border);
+      color: var(--lime);
+    }
+
+    /* MAIN EDITORIAL CONTAINER */
+    .container {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 36px 28px 96px;
+    }
+
+    /* RELEASE ARTICLE LAYOUT (MAIN + STICKY RIGHT TOC) */
+    .article-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 260px;
+      gap: 44px;
+      align-items: start;
+    }
+
+    /* HERO HEADER */
+    .article-hero {
+      padding-bottom: 28px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+    }
+
+    .hero-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+      font-family: var(--mono);
+      font-size: 0.76rem;
       color: var(--muted);
     }
 
-    /* WORKSPACE SHELL */
-    .workspace {
-      max-width: 1560px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 320px minmax(0, 1fr);
-      min-height: calc(100vh - 67px);
-    }
-    .workspace.full-width {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    /* VERSION RAIL */
-    .rail {
-      border-right: 1px solid var(--line);
-      background: rgba(11, 15, 17, 0.65);
-      padding: 18px 14px 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .rail-search-wrap {
-      position: relative;
-    }
-
-    .rail-search {
-      width: 100%;
-      background: var(--bg-2);
-      border: 1px solid var(--line);
-      color: var(--text);
-      border-radius: 8px;
-      padding: 8px 34px 8px 11px;
-      font-size: 0.82rem;
-      transition: border-color 140ms ease;
-    }
-    .rail-search::placeholder {
-      color: var(--dim);
-    }
-    .rail-search:hover {
-      border-color: var(--line-strong);
-    }
-
-    .kbd-hint {
-      position: absolute;
-      right: 9px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      color: var(--dim);
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 1px 5px;
-      pointer-events: none;
-    }
-
-    .rail-heading {
+    .pill-badge {
       font-family: var(--mono);
       font-size: 0.7rem;
       font-weight: 600;
-      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--dim);
-      padding: 4px 6px 0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      letter-spacing: 0.05em;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+    .tone-green {
+      background: var(--green-bg);
+      color: var(--green);
+      border: 1px solid var(--green-border);
+    }
+    .tone-amber {
+      background: var(--amber-bg);
+      color: var(--amber);
+      border: 1px solid var(--amber-border);
+    }
+    .tone-cyan {
+      background: var(--cyan-bg);
+      color: var(--cyan);
+      border: 1px solid var(--cyan-border);
+    }
+    .tone-lime {
+      background: var(--lime-bg);
+      color: var(--lime);
+      border: 1px solid var(--lime-border);
     }
 
-    .rail-list {
+    .hero-title {
+      font-size: clamp(1.9rem, 3.4vw, 2.75rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+      margin-bottom: 18px;
+    }
+
+    .exec-summary-box {
+      background: var(--surface-1);
+      border: 1px solid var(--border-strong);
+      border-left: 4px solid var(--lime);
+      border-radius: 10px;
+      padding: 18px 22px;
+      font-size: 1.01rem;
+      color: #dce6f0;
+      line-height: 1.65;
+    }
+    .exec-summary-label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--lime);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* 5-PART SECTIONS */
+    .editorial-section {
+      padding: 32px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .editorial-section:last-child {
+      border-bottom: none;
+    }
+
+    .sec-kicker {
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: var(--lime);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    .sec-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .sec-desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    /* PART 1: SYSDIG-STYLE FEATURE DEEP-DIVE CARDS */
+    .feature-stack {
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 20px;
     }
 
-    .rail-btn {
-      appearance: none;
-      width: 100%;
-      text-align: left;
-      background: transparent;
-      border: 1px solid transparent;
-      border-radius: 9px;
-      padding: 10px 11px;
-      cursor: pointer;
+    .feature-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 140ms ease;
+    }
+    .feature-card:hover {
+      border-color: var(--border-strong);
+    }
+
+    .feature-card-head {
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      gap: 10px;
-      transition: background-color 140ms ease, border-color 140ms ease;
-    }
-    .rail-btn:hover {
-      background: var(--bg-2);
-      border-color: var(--line);
-    }
-    .rail-btn[aria-current="true"] {
-      background: var(--lime-soft);
-      border-color: var(--lime-edge);
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
     }
 
-    .rail-ver {
-      font-family: var(--mono);
-      font-weight: 600;
-      font-size: 0.86rem;
+    .feature-card-title {
+      font-size: 1.18rem;
+      font-weight: 700;
       color: var(--text);
-      font-variant-numeric: tabular-nums;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .rail-btn[aria-current="true"] .rail-ver {
-      color: var(--lime);
     }
 
-    .rail-sub {
-      font-size: 0.74rem;
-      color: var(--muted);
-      margin-top: 2px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .status-pill {
-      font-family: var(--mono);
-      font-size: 0.67rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 2px 7px;
-      border-radius: 999px;
-      white-space: nowrap;
-      flex-shrink: 0;
-    }
-    .status-pending_review {
-      background: var(--amber-soft);
-      color: var(--amber);
-      border: 1px solid rgba(245, 166, 35, 0.3);
-    }
-    .status-approved {
-      background: var(--green-soft);
-      color: var(--green);
-      border: 1px solid rgba(61, 220, 132, 0.3);
-    }
-    .status-disapproved {
-      background: var(--red-soft);
-      color: var(--red);
-      border: 1px solid rgba(255, 92, 92, 0.3);
-    }
-
-    /* MAIN STAGE */
-    .stage {
-      padding: 28px clamp(20px, 3.5vw, 44px) 72px;
-      min-width: 0;
-    }
-
-    /* EDITORIAL APPROVAL BAR */
-    .decision-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      padding: 12px 16px;
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      margin-bottom: 24px;
-    }
-
-    .decision-meta {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-      font-size: 0.82rem;
-    }
-
-    .decision-controls {
+    .feature-badges {
       display: flex;
       align-items: center;
       gap: 8px;
       flex-wrap: wrap;
     }
 
-    .note-input {
-      background: var(--bg-0);
-      border: 1px solid var(--line);
-      color: var(--text);
-      padding: 6px 11px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      min-width: 230px;
-      transition: border-color 140ms ease;
-    }
-    .note-input:hover {
-      border-color: var(--line-strong);
-    }
-
-    .action-btn {
-      appearance: none;
-      border: 1px solid var(--line-strong);
-      background: var(--bg-2);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      font-weight: 600;
-      padding: 7px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
-    }
-    .action-btn:hover {
-      background: var(--bg-3);
-    }
-    .action-btn.approve {
-      border-color: rgba(61, 220, 132, 0.45);
-      color: var(--green);
-      background: rgba(61, 220, 132, 0.08);
-    }
-    .action-btn.approve:hover {
-      background: rgba(61, 220, 132, 0.18);
-    }
-    .action-btn.disapprove {
-      border-color: rgba(255, 92, 92, 0.45);
-      color: var(--red);
-      background: rgba(255, 92, 92, 0.08);
-    }
-    .action-btn.disapprove:hover {
-      background: rgba(255, 92, 92, 0.18);
-    }
-
-    /* DOSSIER HERO */
-    .dossier-header {
-      border-bottom: 1px solid var(--line);
-      padding-bottom: 24px;
-      margin-bottom: 28px;
-    }
-
-    .dossier-kicker {
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      font-weight: 600;
-      color: var(--lime);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .dossier-title {
-      font-size: clamp(1.75rem, 3.2vw, 2.55rem);
-      font-weight: 800;
-      line-height: 1.08;
-      letter-spacing: -0.035em;
-    }
-
-    .dossier-thesis {
-      margin-top: 14px;
-      font-size: 1.02rem;
-      color: var(--muted);
-      max-width: 82ch;
-      line-height: 1.6;
-    }
-
-    /* TELEMETRY SPEC STRIP */
-    .telemetry-grid {
+    .before-now-grid {
       display: grid;
-      grid-template-columns: repeat(6, minmax(0, 1fr));
-      gap: 1px;
-      background: var(--line);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      overflow: hidden;
-      margin-top: 22px;
-    }
-
-    @media (max-width: 1220px) {
-      .telemetry-grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-      }
-    }
-    @media (max-width: 640px) {
-      .telemetry-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    .telemetry-cell {
-      background: var(--bg-1);
-      padding: 13px 16px;
-    }
-
-    .telemetry-label {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--dim);
-      margin-bottom: 4px;
-    }
-
-    .telemetry-val {
-      font-family: var(--mono);
-      font-size: 1.15rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      color: var(--text);
-    }
-    .telemetry-val.accent {
-      color: var(--lime);
-    }
-
-    /* 5-PART ARCHITECTURAL BLOCKS */
-    .part-section {
-      padding: 28px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .part-header {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 18px;
-    }
-
-    .part-index {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--lime);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 4px;
-    }
-
-    .part-title {
-      font-size: 1.38rem;
-      font-weight: 700;
-      letter-spacing: -0.025em;
-    }
-
-    .part-sub {
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-
-    /* PART 1: CAPABILITY THESIS CARDS */
-    .thesis-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      grid-template-columns: 1fr 1fr;
       gap: 14px;
+      margin-bottom: 16px;
     }
 
-    .thesis-card {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: border-color 140ms ease;
-    }
-    .thesis-card:hover {
-      border-color: var(--line-strong);
+    .before-box, .now-box {
+      border-radius: 9px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      line-height: 1.58;
     }
 
-    .thesis-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .thesis-rank {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: #060809;
-      background: var(--lime);
-      padding: 2px 7px;
-      border-radius: 4px;
-      font-variant-numeric: tabular-nums;
-      flex-shrink: 0;
-    }
-
-    .thesis-name {
-      font-size: 1.02rem;
-      font-weight: 700;
-      color: var(--text);
-      flex: 1;
-    }
-
-    .thesis-cites {
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-variant-numeric: tabular-nums;
-      color: var(--cyan);
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .thesis-body {
-      font-size: 0.86rem;
+    .before-box {
+      background: rgba(255, 107, 107, 0.05);
+      border: 1px solid rgba(255, 107, 107, 0.18);
       color: var(--muted);
-      line-height: 1.5;
-      margin: 0;
-      padding-left: 16px;
-      display: grid;
-      gap: 5px;
     }
 
-    .thesis-impact {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px solid var(--line);
-      font-size: 0.83rem;
+    .now-box {
+      background: rgba(61, 220, 132, 0.06);
+      border: 1px solid rgba(61, 220, 132, 0.22);
       color: var(--text);
     }
-    .thesis-impact strong {
-      color: var(--lime);
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-right: 6px;
-    }
 
-    /* LWKD / WEEKLY PULSE TERMINAL */
-    .pulse-terminal {
-      margin-top: 20px;
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-left: 3px solid var(--cyan);
+    .box-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .before-box .box-tag { color: var(--red); }
+    .now-box .box-tag { color: var(--green); }
+
+    .code-block {
+      margin: 0;
+      background: #050709;
+      border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 16px 20px;
-    }
-
-    .pulse-title {
+      padding: 13px 16px;
       font-family: var(--mono);
-      font-size: 0.76rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      color: var(--cyan);
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .pulse-list {
-      margin: 0;
-      padding-left: 18px;
-      display: grid;
-      gap: 6px;
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-
-    /* PART 2 & TABLES */
-    .table-wrap {
+      font-size: 0.8rem;
+      color: #d2e3f3;
       overflow-x: auto;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      background: var(--bg-1);
+      line-height: 1.5;
+    }
+
+    /* PART 2 & PART 4 TABLES */
+    .table-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      overflow-x: auto;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.86rem;
+      font-size: 0.9rem;
       font-variant-numeric: tabular-nums;
     }
 
     th, td {
-      padding: 12px 15px;
+      padding: 14px 16px;
       text-align: left;
       vertical-align: top;
-      border-bottom: 1px solid var(--line);
+      border-bottom: 1px solid var(--border);
     }
 
     tr:last-child td {
@@ -741,162 +539,203 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--muted);
-      background: var(--bg-2);
+      background: var(--surface-2);
     }
 
-    /* PART 3: JARGON GLOSSARY */
+    /* PART 3: JARGON CARDS */
     .jargon-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 14px;
     }
 
-    .jargon-item {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: 9px;
-      padding: 15px 17px;
+    .jargon-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px 20px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
 
-    .jargon-head {
+    .jargon-term {
       font-family: var(--mono);
-      font-size: 0.86rem;
-      font-weight: 600;
+      font-size: 0.95rem;
+      font-weight: 700;
       color: var(--cyan);
     }
 
-    .jargon-def {
-      font-size: 0.85rem;
+    .jargon-plain {
+      font-size: 0.88rem;
       color: var(--muted);
     }
 
-    .jargon-bottom {
+    .jargon-takeaway {
       margin-top: auto;
-      padding-top: 8px;
-      border-top: 1px dashed var(--line);
-      font-size: 0.81rem;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 0.84rem;
       color: var(--text);
     }
-    .jargon-bottom span {
+    .jargon-takeaway strong {
       color: var(--lime);
       font-family: var(--mono);
       font-size: 0.72rem;
       text-transform: uppercase;
-      font-weight: 600;
-      margin-right: 5px;
+      margin-right: 6px;
     }
 
-    /* PART 4: UPGRADE VERDICT & CHECKLIST */
-    .verdict-banner {
-      background: var(--lime-soft);
-      border: 1px solid var(--lime-edge);
-      border-radius: 9px;
-      padding: 14px 18px;
-      margin-bottom: 16px;
+    /* PART 5: BENCHMARK PROOF BARS */
+    .bench-list {
       display: flex;
-      align-items: center;
+      flex-direction: column;
       gap: 12px;
-      font-weight: 600;
-      font-size: 0.92rem;
-    }
-    .verdict-tag {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      background: var(--lime);
-      color: #060809;
-      padding: 3px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      font-weight: 700;
-      flex-shrink: 0;
     }
 
-    .checklist {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      display: grid;
-      gap: 8px;
+    .bench-row {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
     }
 
-    .checklist-item {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 11px 15px;
-      font-size: 0.86rem;
+    .bench-top {
       display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .checklist-badge {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      color: var(--amber);
-      background: var(--amber-soft);
-      border: 1px solid rgba(245, 166, 35, 0.3);
-      padding: 2px 7px;
-      border-radius: 4px;
-      flex-shrink: 0;
-      margin-top: 2px;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
     }
 
-    /* PART 5: PROOF & BARS */
-    .bar-track {
-      width: 100%;
+    .bench-title {
+      font-weight: 700;
+      font-size: 0.96rem;
+    }
+
+    .bench-hw {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .bench-gain {
+      font-family: var(--mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--lime);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .bench-track {
       height: 8px;
-      background: var(--bg-3);
+      background: var(--surface-3);
       border-radius: 999px;
       overflow: hidden;
-      margin-top: 6px;
     }
-    .bar-fill {
+
+    .bench-fill {
       height: 100%;
       background: linear-gradient(90deg, var(--cyan), var(--lime));
       border-radius: 999px;
     }
 
+    /* STICKY RIGHT TOC */
+    .toc-box {
+      position: sticky;
+      top: 86px;
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      padding: 18px;
+    }
+
+    .toc-heading {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      margin-bottom: 12px;
+    }
+
+    .toc-links {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.84rem;
+    }
+
+    .toc-links a {
+      color: var(--muted);
+      display: block;
+      padding: 4px 0;
+    }
+    .toc-links a:hover {
+      color: var(--lime);
+      text-decoration: none;
+    }
+
+    /* WEEKLY DIGEST (LWKD STYLE) */
+    .tldr-3col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .tldr-card {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
     code {
       font-family: var(--mono);
-      font-size: 0.82em;
-      background: rgba(255, 255, 255, 0.07);
-      padding: 1px 5px;
+      font-size: 0.84em;
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 5px;
       border-radius: 4px;
-      color: #e2f1ff;
+      color: #e4f2ff;
     }
 
-    pre {
-      background: var(--bg-1);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 16px;
-      overflow-x: auto;
-      font-family: var(--mono);
-      font-size: 0.79rem;
-      line-height: 1.5;
-      color: var(--muted);
+    .article-grid > *,
+    .before-now-grid > *,
+    .tldr-3col > *,
+    .jargon-grid > *,
+    .feature-card {
+      min-width: 0;
     }
 
-    @media (max-width: 980px) {
-      .workspace {
-        grid-template-columns: 1fr;
+    @media (max-width: 1024px) {
+      .navbar {
+        position: relative;
+        background: var(--bg);
       }
-      .rail {
-        border-right: none;
-        border-bottom: 1px solid var(--line);
+      .article-grid {
+        grid-template-columns: minmax(0, 1fr);
       }
-      .thesis-grid {
-        grid-template-columns: 1fr;
+      .toc-box {
+        display: none;
+      }
+      .before-now-grid, .tldr-3col {
+        grid-template-columns: minmax(0, 1fr);
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
@@ -907,873 +746,454 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
   <div id="live-announcer" class="sr-only" aria-live="polite"></div>
 
-  <header class="masthead">
-    <div class="masthead-inner">
-      <div class="brand-cluster">
-        <span class="brand-mark" translate="no">vLLM // K8S</span>
-        <div class="brand-copy">
-          <div class="brand-title">Release Adoption &amp; Evaluation Engine</div>
-          <div class="brand-pitch">
-            Translating inference engine &amp; cluster changes into adoption decisions for teams who don’t follow inference engineering full-time.
-          </div>
+  <!-- TOP PUBLICATION NAVBAR -->
+  <header class="navbar">
+    <div class="navbar-inner">
+      <div class="brand-left">
+        <div class="project-switcher" role="group" aria-label="Switch project">
+          <button type="button" class="proj-btn" id="proj-vllm" onclick="switchProject('vllm')" aria-pressed="true">
+            vLLM Pulse
+          </button>
+          <button type="button" class="proj-btn" id="proj-kubernetes" onclick="switchProject('kubernetes')" aria-pressed="false">
+            KubePulse (K8s)
+          </button>
+        </div>
+        <div class="brand-tagline" id="brand-tagline">
+          What changed in vLLM — for the models you serve, the GPUs you own, and your inference bill.
         </div>
       </div>
 
-      <nav class="nav-strip" aria-label="Primary views">
-        <button type="button" class="nav-btn" id="tab-vllm" onclick="switchTab('vllm')" aria-current="page">
-          <span translate="no">vLLM</span> Dossiers
-          <span class="nav-count" id="count-vllm">13</span>
+      <nav class="mode-tabs" aria-label="Publication format">
+        <button type="button" class="mode-btn" id="mode-releases" onclick="switchMode('releases')" aria-current="page">
+          <span>What’s New by Release</span>
+          <span class="mode-badge">Sysdig / Versionlog Style</span>
         </button>
-        <button type="button" class="nav-btn" id="tab-kubernetes" onclick="switchTab('kubernetes')">
-          <span translate="no">Kubernetes</span> Control
-          <span class="nav-count" id="count-k8s">11</span>
-        </button>
-        <button type="button" class="nav-btn" id="tab-ab_lab" onclick="switchTab('ab_lab')">
-          A/B Hill-Climb Lab
-          <span class="nav-count">95.8% → 99.6%</span>
-        </button>
-        <button type="button" class="nav-btn" id="tab-review_queue" onclick="switchTab('review_queue')">
-          Approval Queue
-          <span class="nav-count" id="count-queue">24</span>
+        <button type="button" class="mode-btn" id="mode-weekly" onclick="switchMode('weekly')">
+          <span id="weekly-tab-label">This Week in vLLM</span>
+          <span class="mode-badge">LWKD Weekly Style</span>
         </button>
       </nav>
     </div>
   </header>
 
-  <div class="workspace" id="workspace">
-    <aside class="rail" id="version-rail" aria-label="Release versions">
-      <div class="rail-search-wrap">
-        <label for="version-search" class="sr-only">Filter versions, models, GPUs, or PRs</label>
-        <input
-          id="version-search"
-          name="version-search"
-          type="search"
-          autocomplete="off"
-          spellcheck="false"
-          class="rail-search"
-          placeholder="Filter versions, models, GPUs…"
-          oninput="handleRailSearch(this.value)"
-        />
-        <span class="kbd-hint" aria-hidden="true">/</span>
-      </div>
-      <div class="rail-heading">
-        <span id="rail-label">Editions</span>
-        <span class="num" id="rail-count">0</span>
-      </div>
-      <div class="rail-list" id="rail-list" role="list"></div>
-    </aside>
+  <!-- VERSION SELECTOR BAR -->
+  <nav class="version-bar" id="version-bar" aria-label="Release versions">
+    <div class="version-bar-inner" id="version-bar-inner"></div>
+  </nav>
 
-    <main class="stage" id="main-content" tabindex="-1"></main>
-  </div>
+  <!-- MAIN READER CONTENT -->
+  <main class="container" id="main-content" tabindex="-1"></main>
 
-  <script src="data.js"></script>
+  <script src="publication_data.js"></script>
   <script>
-    const DATA = window.__RELEASE_TRANSLATOR_DATA__ || {
-      vllm_guides: [],
-      kubernetes_guides: [],
-      ab_eval_summary: {},
-      review_queue: { items: [], counts: {} }
-    };
+    const PUB = window.__PUBLICATION_DATA__ || {};
 
     let state = {
-      tab: 'vllm',
-      ver: null,
-      railQuery: '',
-      queueFilter: 'all',
-      labDomain: 'kubernetes'
+      project: 'vllm',
+      mode: 'releases', // 'releases' | 'weekly'
+      version: 'v0.34.0'
     };
 
-    function announce(msg) {
-      const el = document.getElementById('live-announcer');
-      if (el) el.textContent = msg;
+    function readUrl() {
+      const p = new URLSearchParams(window.location.search);
+      const proj = p.get('project');
+      if (proj === 'vllm' || proj === 'kubernetes') state.project = proj;
+      const mode = p.get('mode');
+      if (mode === 'releases' || mode === 'weekly') state.mode = mode;
+      const ver = p.get('ver');
+      if (ver) state.version = ver;
     }
 
-    function readUrlState() {
-      const params = new URLSearchParams(window.location.search);
-      const t = params.get('tab');
-      if (t && ['vllm', 'kubernetes', 'ab_lab', 'review_queue'].includes(t)) {
-        state.tab = t;
-      }
-      const v = params.get('ver');
-      if (v) state.ver = v;
+    function syncUrl() {
+      const p = new URLSearchParams();
+      p.set('project', state.project);
+      p.set('mode', state.mode);
+      if (state.mode === 'releases') p.set('ver', state.version);
+      window.history.replaceState(null, '', `${window.location.pathname}?${p.toString()}`);
     }
 
-    function syncUrlState() {
-      const params = new URLSearchParams();
-      params.set('tab', state.tab);
-      if ((state.tab === 'vllm' || state.tab === 'kubernetes') && state.ver) {
-        params.set('ver', state.ver);
-      }
-      const newUrl = `${window.location.pathname}?${params.toString()}`;
-      window.history.replaceState(null, '', newUrl);
-    }
-
-    function escapeHtml(raw) {
-      if (!raw) return '';
-      return String(raw)
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;');
     }
 
-    function formatRichText(text, project) {
-      if (!text) return '';
+    function formatInline(str, project) {
+      if (!str) return '';
       const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
-      let out = escapeHtml(text);
-      out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+      let out = escapeHtml(str);
       out = out.replace(/`([^`]+)`/g, '<code translate="no">$1</code>');
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+      out = out.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
       out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{4,6})\b/g, `<a class="num" href="https://github.com/${repo}/pull/$1" target="_blank" rel="noopener">#$1</a>`);
       out = out.replace(/\bKEP-(\d{3,5})\b/gi, '<a class="num" href="https://github.com/kubernetes/enhancements/issues/$1" target="_blank" rel="noopener">KEP-$1</a>');
       return out;
     }
 
-    function getActiveList() {
-      return state.tab === 'kubernetes' ? (DATA.kubernetes_guides || []) : (DATA.vllm_guides || []);
-    }
-
-    function getFilteredList() {
-      const list = getActiveList();
-      const q = state.railQuery.trim().toLowerCase();
-      if (!q) return list;
-      return list.filter(item => {
-        const hay = `${item.version} ${item.display_title || ''} ${item.markdown || ''}`.toLowerCase();
-        return hay.includes(q);
-      });
-    }
-
-    function getReviewRecord(project, version) {
-      const id = `${project}:${version}`;
-      const items = (DATA.review_queue && DATA.review_queue.items) || [];
-      return items.find(x => x.id === id) || { id, status: 'pending_review', reviewer_note: '' };
-    }
-
-    async function submitReviewDecision(project, version, status, customNoteId) {
-      const id = `${project}:${version}`;
-      const noteEl = document.getElementById(customNoteId || 'decision-note-input');
-      const note = noteEl ? noteEl.value.trim() : '';
-
-      try {
-        const res = await fetch('/api/review', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, status, note })
-        });
-        if (res.ok) {
-          const payload = await res.json();
-          DATA.review_queue = payload.review_queue;
-          announce(`Updated ${id} to ${status.replace('_', ' ')}`);
-          renderApp();
-          return;
-        }
-      } catch (_err) {
-        // Fallback when opened as static file
+    function formatPrBadge(ref, project) {
+      const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
+      if (String(ref).toUpperCase().startsWith('KEP-')) {
+        const num = ref.replace(/[^0-9]/g, '');
+        return `<a class="pill-badge tone-cyan num" href="https://github.com/kubernetes/enhancements/issues/${num}" target="_blank" rel="noopener">${escapeHtml(ref)}</a>`;
       }
-
-      const rec = getReviewRecord(project, version);
-      rec.status = status;
-      rec.reviewer_note = note;
-      announce(`Updated ${id} to ${status.replace('_', ' ')}`);
-      renderApp();
+      const num = String(ref).replace('#', '');
+      return `<a class="pill-badge tone-cyan num" href="https://github.com/${repo}/pull/${num}" target="_blank" rel="noopener">#${escapeHtml(num)}</a>`;
     }
 
-    function switchTab(tab) {
-      state.tab = tab;
-      state.railQuery = '';
-      const searchInput = document.getElementById('version-search');
-      if (searchInput) searchInput.value = '';
-      const list = getActiveList();
-      if ((tab === 'vllm' || tab === 'kubernetes') && list.length > 0) {
-        if (!list.some(x => x.version === state.ver)) {
-          state.ver = list[0].version;
-        }
+    function switchProject(proj) {
+      state.project = proj;
+      const projObj = PUB[proj];
+      if (projObj && projObj.releases && projObj.releases.length > 0) {
+        state.version = projObj.releases[0].version;
       }
-      syncUrlState();
-      renderApp();
+      syncUrl();
+      renderPage();
+    }
+
+    function switchMode(mode) {
+      state.mode = mode;
+      syncUrl();
+      renderPage();
     }
 
     function selectVersion(ver) {
-      state.ver = ver;
-      syncUrlState();
-      renderApp();
+      state.version = ver;
+      syncUrl();
+      renderPage();
     }
 
-    function handleRailSearch(val) {
-      state.railQuery = val;
-      renderRail();
-    }
+    function renderReleaseArticle(projObj, rel) {
+      const fp = rel.five_parts;
+      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
 
-    function setQueueFilter(filterVal) {
-      state.queueFilter = filterVal;
-      renderMainStage();
-    }
-
-    function setLabDomain(domain) {
-      state.labDomain = domain;
-      renderMainStage();
-    }
-
-    function renderMastheadCounts() {
-      const vllmEl = document.getElementById('count-vllm');
-      const k8sEl = document.getElementById('count-k8s');
-      const qEl = document.getElementById('count-queue');
-      if (vllmEl) vllmEl.textContent = (DATA.vllm_guides || []).length;
-      if (k8sEl) k8sEl.textContent = (DATA.kubernetes_guides || []).length;
-      if (qEl && DATA.review_queue && DATA.review_queue.items) {
-        const pending = DATA.review_queue.items.filter(x => x.status === 'pending_review').length;
-        qEl.textContent = `${pending} pending`;
-      }
-
-      ['vllm', 'kubernetes', 'ab_lab', 'review_queue'].forEach(t => {
-        const btn = document.getElementById(`tab-${t}`);
-        if (btn) {
-          if (state.tab === t) {
-            btn.setAttribute('aria-current', 'page');
-          } else {
-            btn.removeAttribute('aria-current');
-          }
-        }
-      });
-    }
-
-    function renderRail() {
-      const workspace = document.getElementById('workspace');
-      const rail = document.getElementById('version-rail');
-      if (state.tab === 'ab_lab' || state.tab === 'review_queue') {
-        rail.style.display = 'none';
-        workspace.classList.add('full-width');
-        return;
-      }
-
-      rail.style.display = 'flex';
-      workspace.classList.remove('full-width');
-
-      const filtered = getFilteredList();
-      if (filtered.length > 0 && !filtered.some(x => x.version === state.ver)) {
-        state.ver = filtered[0].version;
-      }
-
-      document.getElementById('rail-label').textContent =
-        state.tab === 'vllm' ? 'vLLM Releases & Weekly' : 'Kubernetes Control';
-      document.getElementById('rail-count').textContent = `${filtered.length}`;
-
-      const listEl = document.getElementById('rail-list');
-      if (filtered.length === 0) {
-        listEl.innerHTML = `<div style="padding:14px 8px; color:var(--muted); font-size:0.82rem;">No matching versions. Clear the filter to view all editions.</div>`;
-        return;
-      }
-
-      listEl.innerHTML = filtered.map(item => {
-        const isCurrent = item.version === state.ver;
-        const rev = getReviewRecord(item.project, item.version);
-        const score = item.eval ? (item.eval.composite_score * 100).toFixed(1) + '%' : '—';
-        const title = item.is_weekly ? 'Last Week Digest' : item.version;
-        const kindTag = item.is_weekly ? 'WEEKLY' : (item.is_patch ? 'PATCH' : 'MINOR');
-        return `
-          <button
-            type="button"
-            class="rail-btn"
-            aria-current="${isCurrent ? 'true' : 'false'}"
-            onclick="selectVersion('${escapeHtml(item.version)}')"
-          >
-            <div>
-              <div class="rail-ver">
-                <span translate="no">${escapeHtml(title)}</span>
-                <span style="font-size:0.65rem; color:var(--dim); border:1px solid var(--line); padding:0 4px; border-radius:3px;">${kindTag}</span>
+      return `
+        <div class="article-grid">
+          <article>
+            <header class="article-hero">
+              <div class="hero-meta">
+                <span class="pill-badge tone-lime">${escapeHtml(rel.badge)}</span>
+                <span>Released ${escapeHtml(rel.date)}</span>
+                <span>·</span>
+                <span>${escapeHtml(rel.stats)}</span>
               </div>
-              <div class="rail-sub">${escapeHtml(item.published_date || 'Release')} · ${item.total_raw_items || 0} items · ${score}</div>
-            </div>
-            <span class="status-pill status-${rev.status}">${rev.status === 'pending_review' ? 'Pending' : rev.status}</span>
-          </button>
-        `;
-      }).join('');
-    }
+              <h1 class="hero-title">What’s New in ${projName} ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
+              <div class="exec-summary-box">
+                <span class="exec-summary-label">Executive Summary // At a Glance</span>
+                ${formatInline(rel.executive_summary, state.project)}
+              </div>
+            </header>
 
-    function renderDossierStage() {
-      const stage = document.getElementById('main-content');
-      const list = getFilteredList();
-      const guide = list.find(x => x.version === state.ver) || list[0];
-      if (!guide) {
-        stage.innerHTML = `<p style="color:var(--muted);">Select a release from the left rail.</p>`;
-        return;
-      }
+            <!-- PART 1 -->
+            <section class="editorial-section" id="sec-big-deal" aria-labelledby="h-big-deal">
+              <span class="sec-kicker">Part 01 // What Changed &amp; Why It Matters</span>
+              <h2 class="sec-title" id="h-big-deal">1. What’s the Big Deal?</h2>
+              <p class="sec-desc">The headline architectural changes in ${projName} ${escapeHtml(rel.version)}, explained without assuming you follow upstream PRs full-time.</p>
 
-      const rev = getReviewRecord(guide.project, guide.version);
-      const secs = guide.sections || {};
-      const ev = guide.eval || {};
-      const repo = guide.project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
-      const projDisplay = guide.project === 'vllm' ? 'vLLM' : 'Kubernetes';
-      const cleanPitch = (guide.positioning || '')
-        .replace(/VLLM Last Week in VLLM/gi, 'Last Week in vLLM')
-        .replace(/\bVLLM\b/g, 'vLLM')
-        .replace(/\bKUBERNETES\b/g, 'Kubernetes');
-      const headingLabel = guide.display_title || `${projDisplay} ${guide.version}`;
+              <div class="feature-stack">
+                ${fp.big_deal.map(item => `
+                  <div class="feature-card">
+                    <div class="feature-card-head">
+                      <h3 class="feature-card-title">${escapeHtml(item.title)}</h3>
+                      <div class="feature-badges">
+                        <span class="pill-badge tone-${item.status_tone || 'green'}">${escapeHtml(item.status)}</span>
+                        ${(item.prs || []).map(p => formatPrBadge(p, state.project)).join('')}
+                      </div>
+                    </div>
 
-      const bigDeals = secs.whats_the_big_deal || [];
-      const whoBenefits = secs.who_benefits || [];
-      const jargonList = secs.jargon_glossary || [];
-      const upgradeRisks = secs.should_i_upgrade || [];
-      const proofs = secs.wheres_the_proof || [];
-      const pulse = secs.lwkd_patch_pulse || [];
+                    <div class="before-now-grid">
+                      <div class="before-box">
+                        <span class="box-tag">Before ${escapeHtml(rel.version)}</span>
+                        ${formatInline(item.before, state.project)}
+                      </div>
+                      <div class="now-box">
+                        <span class="box-tag">Now in ${escapeHtml(rel.version)}</span>
+                        ${formatInline(item.now, state.project)}
+                      </div>
+                    </div>
 
-      stage.innerHTML = `
-        <div class="decision-bar" role="region" aria-label="Editorial approval controls">
-          <div class="decision-meta">
-            <span class="status-pill status-${rev.status}">${rev.status.replace('_', ' ')}</span>
-            <span class="num" style="color:var(--muted);">ID: <code translate="no">${escapeHtml(guide.project)}:${escapeHtml(guide.version)}</code></span>
-            ${rev.reviewer_note ? `<span style="color:var(--lime); font-size:0.8rem;">Note: “${escapeHtml(rev.reviewer_note)}”</span>` : ''}
-          </div>
-          <div class="decision-controls">
-            <label for="decision-note-input" class="sr-only">Reviewer note</label>
-            <input
-              id="decision-note-input"
-              name="reviewer-note"
-              type="text"
-              autocomplete="off"
-              class="note-input"
-              placeholder="Add editorial note or sign-off…"
-              value="${escapeHtml(rev.reviewer_note || '')}"
-            />
-            <button type="button" class="action-btn approve" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'approved')">
-              Approve Edition
-            </button>
-            <button type="button" class="action-btn disapprove" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'disapproved')">
-              Flag for Revision
-            </button>
-            <button type="button" class="action-btn" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'pending_review')">
-              Reset
-            </button>
-          </div>
-        </div>
+                    ${item.config_snippet ? `<pre class="code-block"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
+                  </div>
+                `).join('')}
+              </div>
+            </section>
 
-        <div class="dossier-header">
-          <div class="dossier-kicker">
-            <span translate="no">${escapeHtml(guide.project.toUpperCase())} ADOPTION DOSSIER</span>
-            <span>·</span>
-            <span class="num">${escapeHtml(guide.published_date || 'Latest')}</span>
-          </div>
-          <h1 class="dossier-title">What’s New in <span translate="no">${escapeHtml(headingLabel)}</span></h1>
-          <p class="dossier-thesis">${escapeHtml(cleanPitch)}</p>
+            <!-- PART 2 -->
+            <section class="editorial-section" id="sec-who-benefits" aria-labelledby="h-who-benefits">
+              <span class="sec-kicker">Part 02 // Models, Hardware &amp; Unit Economics</span>
+              <h2 class="sec-title" id="h-who-benefits">2. Who Benefits? (Models, GPUs &amp; Your Bill)</h2>
+              <p class="sec-desc">How ${projName} ${escapeHtml(rel.version)} affects the models/workloads you serve, the GPUs/nodes you own, and your infrastructure spend.</p>
 
-          <div class="telemetry-grid" role="region" aria-label="Release telemetry metrics">
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Upstream Changes</div>
-              <div class="telemetry-val">${guide.total_raw_items || 0}&nbsp;items</div>
-            </div>
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Capability Themes</div>
-              <div class="telemetry-val">${bigDeals.length}&nbsp;clusters</div>
-            </div>
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Breaking / Upgrade Checks</div>
-              <div class="telemetry-val">${upgradeRisks.length}&nbsp;notices</div>
-            </div>
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Verified PR Citations</div>
-              <div class="telemetry-val">${(guide.cited_prs || []).length}&nbsp;PRs</div>
-            </div>
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Citation Precision</div>
-              <div class="telemetry-val">${((ev.factual_citation_precision || 1) * 100).toFixed(0)}%</div>
-            </div>
-            <div class="telemetry-cell">
-              <div class="telemetry-label">Eval Composite Score</div>
-              <div class="telemetry-val accent">${((ev.composite_score || 0.95) * 100).toFixed(1)}%</div>
-            </div>
-          </div>
-        </div>
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width:22%;">Team / Workload Profile</th>
+                      <th scope="col" style="width:26%;">Models / Workloads</th>
+                      <th scope="col" style="width:24%;">GPUs / Hardware</th>
+                      <th scope="col" style="width:28%;">Impact on Your Bill &amp; Latency</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${fp.who_benefits.map(w => `
+                      <tr>
+                        <td><strong>${escapeHtml(w.persona)}</strong></td>
+                        <td>${formatInline(w.models, state.project)}</td>
+                        <td>${formatInline(w.gpus, state.project)}</td>
+                        <td style="color:var(--lime); font-weight:500;">${formatInline(w.impact, state.project)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </section>
 
-        <!-- PART 1 -->
-        <section class="part-section" aria-labelledby="part-1-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">01 // Architectural Shifts</span>
-              <h2 class="part-title" id="part-1-heading">What’s the Big Deal?</h2>
-            </div>
-            <div class="part-sub">Multi-PR engineering clusters translated into operational outcomes</div>
-          </div>
+            <!-- PART 3 -->
+            <section class="editorial-section" id="sec-jargon" aria-labelledby="h-jargon">
+              <span class="sec-kicker">Part 03 // Plain-English Glossary</span>
+              <h2 class="sec-title" id="h-jargon">3. What Does the Jargon Mean?</h2>
+              <p class="sec-desc">Quick translations for the inference and systems terms introduced in this release.</p>
 
-          <div class="thesis-grid">
-            ${bigDeals.map((b, idx) => {
-              const prs = (b.prs || []).slice(0, 4);
-              const keps = (b.keps || []).slice(0, 3);
-              const rawBullets = String(b.what_changed || b.text || '')
-                .split(/;\s+/)
-                .map(s => s.trim())
-                .filter(Boolean)
-                .slice(0, 4);
-              return `
-                <article class="thesis-card">
-                  <div class="thesis-top">
-                    <span class="thesis-rank">0${idx + 1}</span>
-                    <h3 class="thesis-name">${escapeHtml(b.theme || b.category || 'Core Capability')}</h3>
-                    <div class="thesis-cites">
-                      ${keps.map(k => `<a href="https://github.com/kubernetes/enhancements/issues/${k}" target="_blank" rel="noopener">KEP-${k}</a>`).join(' ')}
-                      ${prs.map(p => `<a href="https://github.com/${repo}/pull/${p}" target="_blank" rel="noopener">#${p}</a>`).join(' ')}
+              <div class="jargon-grid">
+                ${fp.jargon_decoded.map(j => `
+                  <div class="jargon-card">
+                    <div class="jargon-term" translate="no">${escapeHtml(j.term)}</div>
+                    <div class="jargon-plain">${formatInline(j.plain_english, state.project)}</div>
+                    <div class="jargon-takeaway">
+                      <strong>Bottom Line:</strong> ${formatInline(j.bottom_line, state.project)}
                     </div>
                   </div>
-                  <ul class="thesis-body">
-                    ${rawBullets.map(item => `<li>${formatRichText(item, guide.project)}</li>`).join('')}
-                  </ul>
-                  ${b.why_it_matters ? `
-                    <div class="thesis-impact">
-                      <strong>Bottom Line</strong> ${formatRichText(b.why_it_matters, guide.project)}
-                    </div>
-                  ` : ''}
-                </article>
-              `;
-            }).join('')}
-          </div>
-
-          ${pulse.length > 0 ? `
-            <div class="pulse-terminal">
-              <div class="pulse-title">
-                <span>${guide.project === 'kubernetes' ? 'LWKD Patch &amp; Merge Pulse' : 'Last Week in vLLM // Merge &amp; Patch Pulse'}</span>
-                <span class="num">${pulse.length}&nbsp;highlights</span>
+                `).join('')}
               </div>
-              <ul class="pulse-list">
-                ${pulse.map(item => `<li>${formatRichText(item, guide.project)}</li>`).join('')}
+            </section>
+
+            <!-- PART 4 -->
+            <section class="editorial-section" id="sec-upgrade" aria-labelledby="h-upgrade">
+              <span class="sec-kicker">Part 04 // Adoption &amp; Migration Checklist</span>
+              <h2 class="sec-title" id="h-upgrade">4. Should I Upgrade?</h2>
+              <p class="sec-desc">Breaking changes, removed flags, and what to update in your deployment manifests before rolling out ${escapeHtml(rel.version)}.</p>
+
+              <div class="exec-summary-box" style="margin-bottom:18px; border-left-color:var(--amber);">
+                <span class="exec-summary-label" style="color:var(--amber);">Upgrade Verdict</span>
+                <strong>${escapeHtml(fp.upgrade_guide.verdict)}</strong>
+              </div>
+
+              <div class="table-card">
+                <table>
+                  <thead>
+                    <tr>
+                      <th scope="col" style="width:26%;">What Changed</th>
+                      <th scope="col" style="width:34%;">Operational Impact</th>
+                      <th scope="col" style="width:30%;">What You Need to Do</th>
+                      <th scope="col" style="width:10%;">Ref</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${fp.upgrade_guide.rows.map(r => `
+                      <tr>
+                        <td><strong>${formatInline(r.change, state.project)}</strong></td>
+                        <td>${formatInline(r.impact, state.project)}</td>
+                        <td style="color:var(--cyan);">${formatInline(r.action, state.project)}</td>
+                        <td class="num">${formatPrBadge(r.pr, state.project)}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- PART 5 -->
+            <section class="editorial-section" id="sec-proof" aria-labelledby="h-proof">
+              <span class="sec-kicker">Part 05 // Quantified Benchmarks &amp; Upstream PRs</span>
+              <h2 class="sec-title" id="h-proof">5. Where’s the Proof?</h2>
+              <p class="sec-desc">Measured throughput, latency, and capacity gains from upstream benchmarks with hardware conditions preserved.</p>
+
+              <div class="bench-list">
+                ${fp.proof_benchmarks.map(b => `
+                  <div class="bench-row">
+                    <div class="bench-top">
+                      <div>
+                        <div class="bench-title">${escapeHtml(b.label)}</div>
+                        <div class="bench-hw">Hardware / Condition: ${escapeHtml(b.hardware)}</div>
+                      </div>
+                      <div style="display:flex; align-items:center; gap:10px;">
+                        <span class="bench-gain">${escapeHtml(b.metric)}</span>
+                        ${formatPrBadge(b.pr, state.project)}
+                      </div>
+                    </div>
+                    <div class="bench-track">
+                      <div class="bench-fill" style="width:${b.pct_bar || 80}%;"></div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          </article>
+
+          <!-- STICKY 5-PART TABLE OF CONTENTS -->
+          <aside class="toc-box" aria-label="On this page">
+            <div class="toc-heading">5-Part Release Guide</div>
+            <ul class="toc-links">
+              <li><a href="#sec-big-deal">1. What’s the Big Deal?</a></li>
+              <li><a href="#sec-who-benefits">2. Who Benefits? (Models, GPUs &amp; Bill)</a></li>
+              <li><a href="#sec-jargon">3. What Does the Jargon Mean?</a></li>
+              <li><a href="#sec-upgrade">4. Should I Upgrade?</a></li>
+              <li><a href="#sec-proof">5. Where’s the Proof?</a></li>
+            </ul>
+            <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted);">
+              Want the weekly commit digest instead?<br />
+              <button
+                type="button"
+                onclick="switchMode('weekly')"
+                style="margin-top:8px; width:100%; background:var(--cyan-bg); border:1px solid var(--cyan-border); color:var(--cyan); padding:7px 10px; border-radius:6px; font-weight:600; cursor:pointer;"
+              >
+                Read This Week in ${projName} →
+              </button>
+            </div>
+          </aside>
+        </div>
+      `;
+    }
+
+    function renderWeeklyDigest(projObj) {
+      const w = projObj.weekly;
+      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
+
+      return `
+        <div>
+          <header class="article-hero">
+            <div class="hero-meta">
+              <span class="pill-badge tone-cyan">${escapeHtml(w.issue_number)}</span>
+              <span>${escapeHtml(w.date_range)}</span>
+              <span>·</span>
+              <span>${escapeHtml(w.reading_time)}</span>
+            </div>
+            <h1 class="hero-title">${escapeHtml(w.headline)}</h1>
+            <div class="exec-summary-box" style="border-left-color:var(--cyan);">
+              <span class="exec-summary-label" style="color:var(--cyan);">Weekly Digest // LWKD Style</span>
+              ${escapeHtml(w.intro)}
+            </div>
+          </header>
+
+          <section class="editorial-section">
+            <span class="sec-kicker">Top 3 Takeaways This Week</span>
+            <h2 class="sec-title" style="margin-bottom:18px;">What Merged &amp; Why You Care</h2>
+            <div class="tldr-3col">
+              ${w.tldr_cards.map(c => `
+                <div class="tldr-card">
+                  <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span class="pill-badge tone-lime">${escapeHtml(c.tag)}</span>
+                    <div style="display:flex; gap:5px;">
+                      ${(c.prs || []).map(p => formatPrBadge(p, state.project)).join('')}
+                    </div>
+                  </div>
+                  <h3 style="font-size:1.05rem; font-weight:700;">${escapeHtml(c.title)}</h3>
+                  <p style="margin:0; font-size:0.88rem; color:var(--muted);">${formatInline(c.summary, state.project)}</p>
+                  <div style="margin-top:auto; padding-top:10px; border-top:1px dashed var(--border); font-size:0.83rem; color:var(--lime);">
+                    <strong>Impact:</strong> ${formatInline(c.impact, state.project)}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="editorial-section">
+            <span class="sec-kicker">Featured PRs of the Week</span>
+            <h2 class="sec-title" style="margin-bottom:18px;">Deep Dives (Plain-English Translation)</h2>
+            <div class="feature-stack">
+              ${w.sections[0].items.map(it => `
+                <div class="feature-card">
+                  <div class="feature-card-head">
+                    <h3 class="feature-card-title">${escapeHtml(it.title)}</h3>
+                    ${formatPrBadge(it.pr, state.project)}
+                  </div>
+                  <div class="before-now-grid">
+                    <div class="before-box" style="background:rgba(255,255,255,0.03); border-color:var(--border-strong);">
+                      <span class="box-tag" style="color:var(--cyan);">What Changed Under the Hood</span>
+                      ${formatInline(it.what_it_is, state.project)}
+                    </div>
+                    <div class="now-box">
+                      <span class="box-tag">Why Operators Care</span>
+                      ${formatInline(it.why_you_care, state.project)}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="editorial-section" style="border-bottom:none;">
+            <span class="sec-kicker">15-Second Scan</span>
+            <h2 class="sec-title" style="margin-bottom:14px;">${escapeHtml(w.sections[1].category)}</h2>
+            <div class="feature-card">
+              <ul style="margin:0; padding-left:20px; display:grid; gap:10px; font-size:0.93rem;">
+                ${w.sections[1].bullets.map(b => `<li>${formatInline(b, state.project)}</li>`).join('')}
               </ul>
             </div>
-          ` : ''}
-        </section>
-
-        <!-- PART 2 -->
-        <section class="part-section" aria-labelledby="part-2-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">02 // Workload, Hardware &amp; Unit Economics</span>
-              <h2 class="part-title" id="part-2-heading">Who Benefits? (Models, GPUs &amp; Your Inference Bill)</h2>
-            </div>
-            <div class="part-sub">How this release maps to the models you serve and the hardware you own</div>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col" style="width:22%;">Capability Cluster</th>
-                  <th scope="col" style="width:26%;">Models &amp; Workloads Served</th>
-                  <th scope="col" style="width:25%;">GPUs &amp; Infrastructure Owned</th>
-                  <th scope="col" style="width:27%;">Impact on Your Bill &amp; SLAs</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${whoBenefits.map(row => `
-                  <tr>
-                    <td><strong>${escapeHtml(row.capability || 'Core')}</strong></td>
-                    <td>${formatRichText(row.models_workloads || '', guide.project)}</td>
-                    <td>${formatRichText(row.gpus_infra || '', guide.project)}</td>
-                    <td style="color:var(--lime);">${formatRichText(row.bill_impact || '', guide.project)}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- PART 3 -->
-        <section class="part-section" aria-labelledby="part-3-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">03 // Systems &amp; Inference Lexicon</span>
-              <h2 class="part-title" id="part-3-heading">What Does the Jargon Mean?</h2>
-            </div>
-            <div class="part-sub">Plain-English definitions for technical terms introduced in ${escapeHtml(guide.version)}</div>
-          </div>
-
-          <div class="jargon-grid">
-            ${jargonList.map(j => `
-              <div class="jargon-item">
-                <div class="jargon-head" translate="no">${escapeHtml(j.term)}</div>
-                <div class="jargon-def">${formatRichText(j.meaning, guide.project)}</div>
-                <div class="jargon-bottom">
-                  <span>Why You Care:</span> ${formatRichText(j.why_it_matters, guide.project)}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-        </section>
-
-        <!-- PART 4 -->
-        <section class="part-section" aria-labelledby="part-4-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">04 // Rollout &amp; Breaking-Change Triage</span>
-              <h2 class="part-title" id="part-4-heading">Should I Upgrade?</h2>
-            </div>
-            <div class="part-sub">Required flag migrations, removals, and operational readiness</div>
-          </div>
-
-          <div class="verdict-banner">
-            <span class="verdict-tag">Verdict</span>
-            <span>${escapeHtml(guide.verdict || 'Review upgrade checklist before rollout')}</span>
-          </div>
-
-          <ul class="checklist">
-            ${upgradeRisks.map(r => `
-              <li class="checklist-item">
-                <span class="checklist-badge">${escapeHtml(r.category || 'Upgrade Check')}</span>
-                <div>${formatRichText(r.text || '', guide.project)}</div>
-              </li>
-            `).join('')}
-          </ul>
-        </section>
-
-        <!-- PART 5 -->
-        <section class="part-section" style="border-bottom:none;" aria-labelledby="part-5-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">05 // Empirical Evidence &amp; Upstream Traceability</span>
-              <h2 class="part-title" id="part-5-heading">Where’s the Proof?</h2>
-            </div>
-            <div class="part-sub">Hardware-qualified benchmarks, KEP graduations, and verified PR citations</div>
-          </div>
-
-          <ul class="checklist">
-            ${proofs.map(p => `
-              <li class="checklist-item">
-                <span class="checklist-badge" style="color:var(--cyan); background:var(--cyan-soft); border-color:rgba(84,232,212,0.3);">
-                  ${escapeHtml(p.category || 'Proof')}
-                </span>
-                <div>
-                  ${formatRichText(p.text || '', guide.project)}
-                  ${(p.prs && p.prs.length) ? `<span class="num" style="margin-left:6px; color:var(--muted);">(${p.prs.slice(0, 3).map(pr => formatRichText('#' + pr, guide.project)).join(', ')})</span>` : ''}
-                </div>
-              </li>
-            `).join('')}
-          </ul>
-
-          <details style="margin-top:22px; background:var(--bg-1); border:1px solid var(--line); border-radius:8px; padding:12px 16px;">
-            <summary style="cursor:pointer; font-family:var(--mono); font-size:0.82rem; font-weight:600; color:var(--lime);">
-              Inspect Full Publication Markdown &amp; Complete Feature Graduation Index (${(guide.cited_prs || []).length}&nbsp;PRs)
-            </summary>
-            <pre style="margin-top:12px;">${escapeHtml(guide.markdown || '')}</pre>
-          </details>
-        </section>
-      `;
-    }
-
-    function renderAbLabStage() {
-      const stage = document.getElementById('main-content');
-      const ab = DATA.ab_eval_summary || {};
-      const k8s = ab.kubernetes_control_ab || {};
-      const vllm = ab.vllm_target_ab || {};
-      const diffs = (ab.domain_comparison_k8s_vs_vllm || {}).key_structural_differences_and_transfer_lessons || [];
-      const variants = Object.keys(k8s);
-
-      const renderVariantRows = (domainData) => variants.map(v => {
-        const r = domainData[v] || {};
-        const isWinner = v === 'v4_adoption_engine';
-        const compPct = ((r.composite_score || 0) * 100).toFixed(1);
-        return `
-          <tr style="${isWinner ? 'background:var(--lime-soft);' : ''}">
-            <td>
-              <code translate="no" style="${isWinner ? 'color:var(--lime); font-weight:700;' : ''}">${escapeHtml(v)}</code>
-              ${isWinner ? '<span class="status-pill status-approved" style="margin-left:8px;">Production</span>' : ''}
-            </td>
-            <td class="num">${((r.headline_salience_recall || 0) * 100).toFixed(1)}%</td>
-            <td class="num">${((r.upgrade_risk_recall || 0) * 100).toFixed(1)}%</td>
-            <td class="num">${((r.factual_citation_precision || 0) * 100).toFixed(1)}%</td>
-            <td class="num">${((r.five_part_completeness || 0) * 100).toFixed(1)}%</td>
-            <td class="num">${((r.jargon_translation_score || 0) * 100).toFixed(1)}%</td>
-            <td class="num">${((r.cluster_diversity_score || 0) * 100).toFixed(1)}%</td>
-            <td class="num" style="min-width:160px;">
-              <strong style="${isWinner ? 'color:var(--lime);' : ''}">${compPct}%</strong>
-              <div class="bar-track"><div class="bar-fill" style="width:${compPct}%;"></div></div>
-            </td>
-          </tr>
-        `;
-      }).join('');
-
-      const activeDomainObj = state.labDomain === 'kubernetes' ? k8s : vllm;
-      const perVersionRows = ((activeDomainObj['v4_adoption_engine'] || {}).per_version) || [];
-
-      stage.innerHTML = `
-        <div class="dossier-header">
-          <div class="dossier-kicker">CONTROL BENCHMARK &amp; CROSS-DOMAIN TRANSFER</div>
-          <h1 class="dossier-title">A/B Evaluation &amp; Auto-Research Hill-Climbing Lab</h1>
-          <p class="dossier-thesis">
-            We used 10 historical Kubernetes minor releases (<code translate="no">v1.28</code>–<code translate="no">v1.37</code>, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly digests as our ground-truth control benchmark against human-written Official Release Blogs, hill-climbing across 5 architectures (<code translate="no">32.4% → 95.8%</code>) before transferring to 10 vLLM releases (<code translate="no">v0.25.0</code>–<code translate="no">v0.34.0</code>, <code translate="no">44.6% → 99.6%</code>).
-          </p>
-        </div>
-
-        <section class="part-section" aria-labelledby="lab-k8s-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">01 // Control Experiment (10 Releases, 3,088 Items)</span>
-              <h2 class="part-title" id="lab-k8s-heading">Kubernetes Ground-Truth Hill-Climb (<span translate="no">v1.28 – v1.37</span>)</h2>
-            </div>
-            <div class="part-sub">Scored against held-out Official Kubernetes Release Spotlights</div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Architecture Variant</th>
-                  <th scope="col">Salience Recall</th>
-                  <th scope="col">Risk Recall</th>
-                  <th scope="col">Citation Precision</th>
-                  <th scope="col">5-Part Schema</th>
-                  <th scope="col">Jargon Coverage</th>
-                  <th scope="col">Cluster Diversity</th>
-                  <th scope="col">Composite Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderVariantRows(k8s)}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="part-section" aria-labelledby="lab-vllm-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">02 // Target Transfer Experiment (10 Releases + Weekly PRs)</span>
-              <h2 class="part-title" id="lab-vllm-heading">vLLM Target Domain Benchmark (<span translate="no">v0.25.0 – v0.34.0</span>)</h2>
-            </div>
-            <div class="part-sub">Scored against held-out human TL;DR, Highlights &amp; Upgrade tables</div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Architecture Variant</th>
-                  <th scope="col">Salience Recall</th>
-                  <th scope="col">Risk Recall</th>
-                  <th scope="col">Citation Precision</th>
-                  <th scope="col">5-Part Schema</th>
-                  <th scope="col">Jargon Coverage</th>
-                  <th scope="col">Cluster Diversity</th>
-                  <th scope="col">Composite Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderVariantRows(vllm)}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="part-section" aria-labelledby="lab-per-ver-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">03 // Per-Version Scorecard (<span translate="no">v4_adoption_engine</span>)</span>
-              <h2 class="part-title" id="lab-per-ver-heading">Release-by-Release Verification Breakdown</h2>
-            </div>
-            <div style="display:flex; gap:8px;">
-              <button type="button" class="action-btn ${state.labDomain === 'kubernetes' ? 'approve' : ''}" onclick="setLabDomain('kubernetes')">
-                Kubernetes (v1.28–v1.37)
-              </button>
-              <button type="button" class="action-btn ${state.labDomain === 'vllm' ? 'approve' : ''}" onclick="setLabDomain('vllm')">
-                vLLM (v0.25.0–v0.34.0)
-              </button>
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Version</th>
-                  <th scope="col">Matched Human Spotlights</th>
-                  <th scope="col">Salience Recall</th>
-                  <th scope="col">Upgrade Risk Recall</th>
-                  <th scope="col">Citation Precision</th>
-                  <th scope="col">Verified PRs Cited</th>
-                  <th scope="col">Composite Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${perVersionRows.map(r => `
-                  <tr>
-                    <td class="num"><strong translate="no">${escapeHtml(r.version)}</strong></td>
-                    <td class="num">${escapeHtml(r.matched_spotlights)}</td>
-                    <td class="num">${(r.headline_salience_recall * 100).toFixed(1)}%</td>
-                    <td class="num">${(r.upgrade_risk_recall * 100).toFixed(1)}%</td>
-                    <td class="num">${(r.factual_citation_precision * 100).toFixed(1)}%</td>
-                    <td class="num">${r.cited_prs_count}&nbsp;PRs</td>
-                    <td class="num"><strong style="color:var(--lime);">${(r.composite_score * 100).toFixed(1)}%</strong></td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <section class="part-section" style="border-bottom:none;" aria-labelledby="lab-diff-heading">
-          <div class="part-header">
-            <div>
-              <span class="part-index">04 // Cross-Domain Engineering Analysis</span>
-              <h2 class="part-title" id="lab-diff-heading">How Kubernetes &amp; vLLM Releases Differ Structurally</h2>
-            </div>
-            <div class="part-sub">Why naive Kubernetes changelog summarizers fail on vLLM without 3D hardware/model clustering</div>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col" style="width:20%;">Dimension</th>
-                  <th scope="col" style="width:26%;">Kubernetes (<span translate="no">v1.28–v1.37</span>)</th>
-                  <th scope="col" style="width:27%;">vLLM (<span translate="no">v0.25.0–v0.34.0</span>)</th>
-                  <th scope="col" style="width:27%;">Adaptation in <code translate="no">v4_adoption_engine</code></th>
-                </tr>
-              </thead>
-              <tbody>
-                ${diffs.map(d => `
-                  <tr>
-                    <td><strong>${escapeHtml(d.dimension)}</strong></td>
-                    <td>${formatRichText(d.kubernetes, 'kubernetes')}</td>
-                    <td>${formatRichText(d.vllm, 'vllm')}</td>
-                    <td style="color:var(--lime);">${formatRichText(d.adaptation_in_v3, 'vllm')}</td>
-                  </tr>
-                `).join('')}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      `;
-    }
-
-    function renderQueueStage() {
-      const stage = document.getElementById('main-content');
-      const allItems = (DATA.review_queue && DATA.review_queue.items) || [];
-      const filtered = state.queueFilter === 'all'
-        ? allItems
-        : allItems.filter(x => x.status === state.queueFilter);
-
-      stage.innerHTML = `
-        <div class="dossier-header">
-          <div class="dossier-kicker">HUMAN-IN-THE-LOOP GOVERNANCE &amp; TIMER DAEMON</div>
-          <h1 class="dossier-title">Release Approval Queue &amp; Upstream Watcher</h1>
-          <p class="dossier-thesis">
-            The scheduled watcher (<code translate="no">python3 -m harness.cli watch --interval 3600</code>) polls <code translate="no">vllm-project/vllm</code> and <code translate="no">kubernetes/kubernetes</code> for new releases and weekly merged PRs, runs <code translate="no">v4_adoption_engine</code>, verifies the <code translate="no">&gt;= 82%</code> quality gate, and stages drafts below for your sign-off.
-          </p>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
-          <div style="display:flex; gap:8px; flex-wrap:wrap;" role="group" aria-label="Filter queue by status">
-            <button type="button" class="action-btn ${state.queueFilter === 'all' ? 'approve' : ''}" onclick="setQueueFilter('all')">
-              All Editions (${allItems.length})
-            </button>
-            <button type="button" class="action-btn ${state.queueFilter === 'pending_review' ? 'approve' : ''}" onclick="setQueueFilter('pending_review')">
-              Pending Review (${allItems.filter(x => x.status === 'pending_review').length})
-            </button>
-            <button type="button" class="action-btn ${state.queueFilter === 'approved' ? 'approve' : ''}" onclick="setQueueFilter('approved')">
-              Approved (${allItems.filter(x => x.status === 'approved').length})
-            </button>
-            <button type="button" class="action-btn ${state.queueFilter === 'disapproved' ? 'approve' : ''}" onclick="setQueueFilter('disapproved')">
-              Disapproved (${allItems.filter(x => x.status === 'disapproved').length})
-            </button>
-          </div>
-        </div>
-
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th scope="col">Edition ID</th>
-                <th scope="col">Project</th>
-                <th scope="col">Version / Window</th>
-                <th scope="col">Eval Gate</th>
-                <th scope="col">Status</th>
-                <th scope="col">Reviewer Note</th>
-                <th scope="col">Decision</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${filtered.map((it, idx) => `
-                <tr>
-                  <td class="num"><code translate="no">${escapeHtml(it.id)}</code></td>
-                  <td class="num"><strong translate="no">${escapeHtml(it.project.toUpperCase())}</strong></td>
-                  <td>
-                    <button
-                      type="button"
-                      class="action-btn"
-                      onclick="state.tab='${escapeHtml(it.project)}'; state.ver='${escapeHtml(it.version)}'; syncUrlState(); renderApp();"
-                    >
-                      Open ${escapeHtml(it.version)} →
-                    </button>
-                  </td>
-                  <td class="num"><strong style="color:var(--lime);">${((it.composite_score || 0) * 100).toFixed(1)}%</strong></td>
-                  <td><span class="status-pill status-${it.status}">${it.status.replace('_', ' ')}</span></td>
-                  <td>
-                    <label for="q-note-${idx}" class="sr-only">Reviewer note for ${escapeHtml(it.id)}</label>
-                    <input
-                      id="q-note-${idx}"
-                      name="q-note-${idx}"
-                      type="text"
-                      autocomplete="off"
-                      class="note-input"
-                      style="min-width:180px;"
-                      placeholder="Add note…"
-                      value="${escapeHtml(it.reviewer_note || '')}"
-                    />
-                  </td>
-                  <td style="white-space:nowrap;">
-                    <button type="button" class="action-btn approve" onclick="submitReviewDecision('${escapeHtml(it.project)}', '${escapeHtml(it.version)}', 'approved', 'q-note-${idx}')">
-                      Approve
-                    </button>
-                    <button type="button" class="action-btn disapprove" onclick="submitReviewDecision('${escapeHtml(it.project)}', '${escapeHtml(it.version)}', 'disapproved', 'q-note-${idx}')">
-                      Disapprove
-                    </button>
-                  </td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
+          </section>
         </div>
       `;
     }
 
-    function renderMainStage() {
-      if (state.tab === 'vllm' || state.tab === 'kubernetes') {
-        renderDossierStage();
-      } else if (state.tab === 'ab_lab') {
-        renderAbLabStage();
+    function renderPage() {
+      const projObj = PUB[state.project] || PUB.vllm;
+      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
+
+      document.getElementById('proj-vllm').setAttribute('aria-pressed', state.project === 'vllm' ? 'true' : 'false');
+      document.getElementById('proj-kubernetes').setAttribute('aria-pressed', state.project === 'kubernetes' ? 'true' : 'false');
+      document.getElementById('brand-tagline').textContent = projObj.tagline;
+      document.getElementById('weekly-tab-label').textContent = `This Week in ${projName}`;
+
+      const relBtn = document.getElementById('mode-releases');
+      const wkBtn = document.getElementById('mode-weekly');
+      if (state.mode === 'releases') {
+        relBtn.setAttribute('aria-current', 'page');
+        wkBtn.removeAttribute('aria-current');
       } else {
-        renderQueueStage();
+        wkBtn.setAttribute('aria-current', 'page');
+        relBtn.removeAttribute('aria-current');
+      }
+
+      const verBar = document.getElementById('version-bar');
+      const verInner = document.getElementById('version-bar-inner');
+      const releases = projObj.releases || [];
+
+      if (state.mode === 'releases') {
+        verBar.style.display = 'block';
+        if (!releases.some(r => r.version === state.version) && releases.length > 0) {
+          state.version = releases[0].version;
+        }
+        verInner.innerHTML = `
+          <span class="version-bar-label">Select ${projName} Version:</span>
+          ${releases.map((r, i) => `
+            <button
+              type="button"
+              class="ver-pill"
+              aria-current="${r.version === state.version ? 'true' : 'false'}"
+              onclick="selectVersion('${escapeHtml(r.version)}')"
+            >
+              <span>${escapeHtml(r.version)}</span>
+              ${i === 0 ? '<span style="font-size:0.65rem; opacity:0.8;">LATEST</span>' : ''}
+            </button>
+          `).join('')}
+        `;
+      } else {
+        verBar.style.display = 'none';
+      }
+
+      const mainEl = document.getElementById('main-content');
+      if (state.mode === 'releases') {
+        const activeRel = releases.find(r => r.version === state.version) || releases[0];
+        mainEl.innerHTML = renderReleaseArticle(projObj, activeRel);
+      } else {
+        mainEl.innerHTML = renderWeeklyDigest(projObj);
       }
     }
 
-    function renderApp() {
-      renderMastheadCounts();
-      renderRail();
-      renderMainStage();
-    }
-
-    // Keyboard shortcuts: '/' focuses version filter; '[' and ']' step through versions
-    window.addEventListener('keydown', (e) => {
-      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
-      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-      if (e.key === '/') {
-        const searchEl = document.getElementById('version-search');
-        if (searchEl && searchEl.offsetParent !== null) {
-          e.preventDefault();
-          searchEl.focus();
-        }
-      } else if (e.key === '[' || e.key === ']') {
-        if (state.tab !== 'vllm' && state.tab !== 'kubernetes') return;
-        const list = getFilteredList();
-        if (!list.length) return;
-        const idx = list.findIndex(x => x.version === state.ver);
-        const nextIdx = e.key === ']'
-          ? Math.min(list.length - 1, idx + 1)
-          : Math.max(0, idx - 1);
-        if (nextIdx !== idx && list[nextIdx]) {
-          selectVersion(list[nextIdx].version);
-        }
-      }
-    });
-
-    readUrlState();
-    const initialList = getActiveList();
-    if (!state.ver && initialList.length > 0) {
-      const latestMinor = initialList.find(x => !x.is_weekly && !x.is_patch);
-      state.ver = latestMinor ? latestMinor.version : initialList[0].version;
-    }
-    renderApp();
+    readUrl();
+    renderPage();
   </script>
 </body>
 </html>
