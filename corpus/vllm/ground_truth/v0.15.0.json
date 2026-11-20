@@ -1,0 +1,76 @@
+{
+  "project": "vllm",
+  "version": "v0.15.0",
+  "published_date": "2026-01-29",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Bug Fixes",
+      "summary": "* **Speculative decoding**: Eagle draft_model_config fix (#31753). * **DeepSeek**: DeepSeek-V3.1 + DeepGEMM incompatible scale shapes fix (#32361). * **Distributed**: DP+MoE inference fix via CpuCommunicator (#31867), P/D with non-MoE DP fix (#33037). * **EPLB**: Possible deadlock fix (#32418). * **NIXL**: UCX memory leak fix by exporting UCX_MEM_MMAP_HOOK_MODE=none (#32181). * **Structured output**: Outlines byte fallback handling fix (#31391). ---",
+      "prs": [
+        "31753",
+        "32361",
+        "31867",
+        "33037",
+        "32418",
+        "32181",
+        "31391"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "**Metrics**: Removed deprecated `vllm:time_per_output_token_seconds` metric - use `vllm:inter_token_latency_seconds` instead (#32661).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32661"
+      ]
+    },
+    {
+      "change": "**Environment variables**: Removed deprecated environment variables (#32812).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32812"
+      ]
+    },
+    {
+      "change": "**Quantization**: DeepSpeedFp8 removed (#32679), RTN removed (#32697), HQQ deprecated (#32681).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32679",
+        "32697",
+        "32681"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "31753",
+    "32361",
+    "31867",
+    "33037",
+    "32418",
+    "32181",
+    "31391",
+    "32661",
+    "32812",
+    "32679",
+    "32697",
+    "32681"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "**Mamba prefix caching**: Block-aligned prefix caching for Mamba/hybrid models with `--enable-prefix-caching --mamba-cache-mode align`. Achieves ~2x speedup by caching Mamba states directly (#30877).",
+      "prs": [
+        "30877"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**FP4 kernel optimization**: Up to 65% faster FP4 quantization on Blackwell (SM100F) using 256-bit loads, ~4% E2E throughput improvement (#32520).",
+      "prs": [
+        "32520"
+      ]
+    }
+  ]
+}

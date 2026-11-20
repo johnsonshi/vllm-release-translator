@@ -748,6 +748,21 @@ def generate_v4_adoption_engine(
             if any(k in it.get("category", "").lower() for k in ("breaking", "deprecat", "removal", "security")):
                 if not any(set(it.get("prs", [])) & set(r.get("prs", [])) for r in risk_items if r.get("prs")):
                     risk_items.append(it)
+        if not risk_items:
+            for it in scored_all:
+                if re.search(r"\b(deprecat\w+|remov\w+|breaking|upgrade|migrat\w+|replace\w+|require\w+|drop\w+)\b", it.get("text", "").lower()):
+                    risk_items.append(it)
+                    if len(risk_items) >= 4:
+                        break
+        if not risk_items:
+            risk_items = [
+                {
+                    "category": "Upgrade Check",
+                    "text": "No breaking CLI/API removals flagged in top-level notes; verify standard PyTorch/CUDA wheel compatibility before rollout.",
+                    "prs": scored_all[0].get("prs", [])[:1] if scored_all else [],
+                    "keps": [],
+                }
+            ]
         risk_items = risk_items[:12]
 
     # Collect quantitative benchmarks / proof points
@@ -766,6 +781,8 @@ def generate_v4_adoption_engine(
         if it.get("keps") or re.search(r"(\d+(?:\.\d+)?[x×]|\d+(?:\.\d+)?%|gib|mib|latency|throughput|ttft|tpot|graduat|stable|beta|alpha)", it.get("text", "").lower()):
             if it not in benchmark_items:
                 benchmark_items.append(it)
+    if not benchmark_items:
+        benchmark_items = primary_pool[:6]
 
     # Build LWKD-style Patch & Weekly Pulse bullets
     lwkd_pulse: list[str] = []
@@ -897,6 +914,17 @@ def generate_v4_adoption_engine(
             "gpus_infra": c["gpus_infra"],
             "bill_impact": c["bill_impact"],
         })
+    fallback_themes = K8S_CLUSTER_THEMES if project == "kubernetes" else VLLM_CLUSTER_THEMES
+    for th in fallback_themes:
+        if len(who_benefits_records) >= 3:
+            break
+        if not any(w["capability"] == th["label"] for w in who_benefits_records):
+            who_benefits_records.append({
+                "capability": th["label"],
+                "models_workloads": th["models_workloads"],
+                "gpus_infra": th["gpus_infra"],
+                "bill_impact": th["bill_impact"],
+            })
 
     lines.extend([
         "",

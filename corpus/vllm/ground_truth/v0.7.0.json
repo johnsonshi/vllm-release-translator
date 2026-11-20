@@ -1,0 +1,225 @@
+{
+  "project": "vllm",
+  "version": "v0.7.0",
+  "published_date": "2025-01-27",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "vLLM's V1 engine is ready for testing! This is a rewritten engine designed for p",
+      "summary": "vLLM's V1 engine is ready for testing! This is a rewritten engine designed for performance and architectural simplicity. You can turn it on by setting environment variable `VLLM_USE_V1=1`. See [our blog](https://blog.vllm.ai/2025/01/27/v1-alpha-release.html) for more details. (44 commits).",
+      "prs": []
+    },
+    {
+      "heading": "New methods (`LLM.sleep`, `LLM.wake_up`, `LLM.collective_rpc`, `LLM.reset_prefix",
+      "summary": "New methods (`LLM.sleep`, `LLM.wake_up`, `LLM.collective_rpc`, `LLM.reset_prefix_cache`) in vLLM for the post training frameworks! (#12361, #12084, #12284).",
+      "prs": [
+        "12361",
+        "12084",
+        "12284"
+      ]
+    },
+    {
+      "heading": "`torch.compile` is now fully integrated in vLLM, and enabled by default in V1. Y",
+      "summary": "`torch.compile` is now fully integrated in vLLM, and enabled by default in V1. You can turn it on via `-O3` engine parameter. (#11614, #12243, #12043, #12191, #11677, #12182, #12246).",
+      "prs": [
+        "11614",
+        "12243",
+        "12043",
+        "12191",
+        "11677",
+        "12182",
+        "12246"
+      ]
+    },
+    {
+      "heading": "400 commits from 132 contributors, including 57 new contributors.",
+      "summary": "400 commits from 132 contributors, including 57 new contributors.",
+      "prs": []
+    },
+    {
+      "heading": "28 CI and build enhancements, including testing for nightly torch (#12270) and i",
+      "summary": "28 CI and build enhancements, including testing for nightly torch (#12270) and inclusion of genai-perf for benchmark (#10704).",
+      "prs": [
+        "12270",
+        "10704"
+      ]
+    },
+    {
+      "heading": "58 documentation enhancements, including reorganized documentation structure (#1",
+      "summary": "58 documentation enhancements, including reorganized documentation structure (#11645, #11755, #11766, #11843, #11896).",
+      "prs": [
+        "11645",
+        "11755",
+        "11766",
+        "11843",
+        "11896"
+      ]
+    },
+    {
+      "heading": "more than 161 bug fixes and miscellaneous enhancements",
+      "summary": "more than 161 bug fixes and miscellaneous enhancements",
+      "prs": []
+    },
+    {
+      "heading": "Features",
+      "summary": "*Models* * New generative models: CogAgent (#11742), Deepseek-VL2 (#11578, #12068, #12169), fairseq2 Llama (#11442), InternLM3 (#12037), Whisper (#11280) * New pooling models: Qwen2 PRM (#12202), InternLM2 reward models (#11571) * VLM: Merged multi-modal processor is now ready for model developers! (#11620, #11900, #11682, #11717, #11669, #11396) * Any model that implements merged multi-modal processor and the `get_*_embeddings` methods according to [this guide](https://docs.vllm.ai/en/latest/contributing/model/multimodal.html) is automatically supported by V1 engine. *Hardwares* * Apple: Nati",
+      "prs": [
+        "11742",
+        "11578",
+        "12068",
+        "12169",
+        "11442",
+        "12037",
+        "11280",
+        "12202",
+        "11571",
+        "11620",
+        "11900",
+        "11682",
+        "11717",
+        "11669",
+        "11396",
+        "11696",
+        "12134",
+        "12408",
+        "12049",
+        "11698",
+        "11785",
+        "11100",
+        "11831",
+        "12009",
+        "11981",
+        "11948",
+        "11609",
+        "12264",
+        "11516",
+        "11503",
+        "11369",
+        "11602",
+        "12071",
+        "12151",
+        "11256",
+        "12376",
+        "12093",
+        "11234",
+        "12222"
+      ]
+    },
+    {
+      "heading": "Others",
+      "summary": "* Benchmark: new script for CPU offloading  (#11533) * Security: Set `weights_only=True` when using `torch.load()` (#12366)",
+      "prs": [
+        "11533",
+        "12366"
+      ]
+    }
+  ],
+  "upgrade_rows": [],
+  "ground_truth_prs": [
+    "12361",
+    "12084",
+    "12284",
+    "11614",
+    "12243",
+    "12043",
+    "12191",
+    "11677",
+    "12182",
+    "12246",
+    "12270",
+    "10704",
+    "11645",
+    "11755",
+    "11766",
+    "11843",
+    "11896",
+    "11742",
+    "11578",
+    "12068",
+    "12169",
+    "11442",
+    "12037",
+    "11280",
+    "12202",
+    "11571",
+    "11620",
+    "11900",
+    "11682",
+    "11717",
+    "11669",
+    "11396",
+    "11696",
+    "12134",
+    "12408",
+    "12049",
+    "11698",
+    "11785",
+    "11100",
+    "11831",
+    "12009",
+    "11981",
+    "11948",
+    "11609",
+    "12264",
+    "11516",
+    "11503",
+    "11369",
+    "11602",
+    "12071",
+    "12151",
+    "11256",
+    "12376",
+    "12093",
+    "11234",
+    "12222",
+    "11533",
+    "12366"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Features",
+      "claim": "AMD: MI300 FP8 format for block_quant (#12134), Tuned MoE configurations for multiple models (#12408, #12049), block size heuristic for avg 2.8x speedup for int8 models (#11698)",
+      "prs": [
+        "12134",
+        "12408",
+        "12049",
+        "11698"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Update bnb.md with example for OpenAI by @bet0x (#11718)",
+      "prs": [
+        "11718"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Kernel][Triton][AMD] Use block size heuristic for avg 2.8x speedup for int8 models by @rasmith (#11698)",
+      "prs": [
+        "11698"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[CI] Pass local python version explicitly to pre-commit mypy.sh by @heheda12345 (#12224)",
+      "prs": [
+        "12224"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Benchmark] More accurate TPOT calc in `benchmark_serving.py` by @njhill (#12288)",
+      "prs": [
+        "12288"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[ROCm][MoE] MI300 tuned configs Mixtral-8x(7B,22B) | fp16, fp8  by @divakar-amd (#12408)",
+      "prs": [
+        "12408"
+      ]
+    }
+  ]
+}

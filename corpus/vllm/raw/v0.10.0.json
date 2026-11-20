@@ -1,0 +1,6412 @@
+{
+  "project": "vllm",
+  "version": "v0.10.0",
+  "published_date": "2025-07-24",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.10.0",
+  "commits_count": null,
+  "contributors_count": null,
+  "total_raw_items": 899,
+  "counts_by_category": {
+    "Model Support": 4,
+    "Engine Core": 7,
+    "Hardwares & Performance": 3,
+    "Quantization": 3,
+    "API & Frontend": 4,
+    "Dependencies": 2,
+    "What's Changed": 876
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "New families: Llama 4 with EAGLE support (#20591), EXAONE 4.0 (#21060), Microsoft Phi-4-mini-flash-reasoning (#20702), Hunyuan V1 Dense + A13B with reasoning/tool parsing (#21368, #20625, #20820), Ling MoE models (#20680), JinaVL Reranker (#20260), Nemotron-Nano-VL-8B-V1 (#20349), Arcee (#21296), Voxtral (#20970).",
+      "prs": [
+        "20591",
+        "21060",
+        "20702",
+        "21368",
+        "20625",
+        "20820",
+        "20680",
+        "20260",
+        "20349",
+        "21296",
+        "20970"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Enhanced compatibility: BERT/RoBERTa with AutoWeightsLoader (#20534), HF format support for MiniMax (#20211), Gemini configuration (#20971), GLM-4 updates (#20736).",
+      "prs": [
+        "20534",
+        "20211",
+        "20971",
+        "20736"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Architecture expansions: Attention-free model support (#20811), Hybrid SSM/Attention models on V1 (#20016), LlamaForSequenceClassification (#20807), expanded Mamba2 layer support (#20660).",
+      "prs": [
+        "20811",
+        "20016",
+        "20807",
+        "20660"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "VLM improvements: VLM support with transformers backend (#20543), PrithviMAE on V1 engine (#20577).",
+      "prs": [
+        "20543",
+        "20577"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Experimental async scheduling `--async-scheduling` flag to overlap engine core scheduling with GPU runner (#19970).",
+      "prs": [
+        "19970"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "V1 engine improvements: backend-agnostic local attention (#21093), MLA FlashInfer ragged prefill (#20034), hybrid KV cache with local chunked attention (#19351).",
+      "prs": [
+        "21093",
+        "20034",
+        "19351"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Multi-task support: models can now support multiple tasks (#20771), multiple poolers (#21227), and dynamic pooling parameter configuration (#21128).",
+      "prs": [
+        "20771",
+        "21227",
+        "21128"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "RLHF Support: new RPC methods for runtime weight reloading (#20096) and config updates (#20095), logprobs mode for selecting which stage of logprobs to return (#21398).",
+      "prs": [
+        "20096",
+        "20095",
+        "21398"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Enhanced caching: multi-modal caching for transformers backend (#21358), reproducible prefix cache hashing using SHA-256 + CBOR (#20511).",
+      "prs": [
+        "21358",
+        "20511"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Startup time reduction via CUDA graph capture speedup via frozen GC (#21146).",
+      "prs": [
+        "21146"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Elastic expert parallel for dynamic GPU scaling while preserving state (#20775).",
+      "prs": [
+        "20775"
+      ]
+    },
+    {
+      "category": "Hardwares & Performance",
+      "text": "NVIDIA Blackwell/SM100 optimizations: CUTLASS block scaled group GEMM for smaller batches (#20640), FP8 groupGEMM support (#20447), DeepGEMM integration (#20087), FlashInfer MoE blockscale FP8 backend (#20645), CUDNN prefill API for MLA (#20411), Triton Fused MoE kernel config for FP8 E=16 on B200 (#20516).",
+      "prs": [
+        "20640",
+        "20447",
+        "20087",
+        "20645",
+        "20411",
+        "20516"
+      ]
+    },
+    {
+      "category": "Hardwares & Performance",
+      "text": "Performance improvements: 48% request duration reduction via microbatch tokenization for concurrent requests (#19334), fused MLA QKV + strided layernorm (#21116), Triton causal-conv1d for Mamba models (#18218).",
+      "prs": [
+        "19334",
+        "21116",
+        "18218"
+      ]
+    },
+    {
+      "category": "Hardwares & Performance",
+      "text": "Hardware expansion: ARM CPU int8 quantization (#14129), PPC64LE/ARM V1 support (#20554), Intel XPU ray distributed execution (#20659), shared-memory pipeline parallel for CPU (#21289), FlashInfer ARM CUDA support (#21013).",
+      "prs": [
+        "14129",
+        "20554",
+        "20659",
+        "21289",
+        "21013"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "New quantization support: MXFP4 for MoE models (#17888), BNB support for Mixtral and additional MoE models (#20893, #21100), in-flight quantization for MoE (#20061).",
+      "prs": [
+        "17888",
+        "20893",
+        "21100",
+        "20061"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Hardware-specific: FP8 KV cache quantization on TPU (#19292), FP8 support for BatchedTritonExperts (#18864), optimized INT8 vectorization kernels (#20331).",
+      "prs": [
+        "19292",
+        "18864",
+        "20331"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Performance optimizations: Triton backend for DeepGEMM per-token group quantization (#20841), CUDA kernel for per-token group quantization (#21083), CustomOp abstraction for FP8 (#19830).",
+      "prs": [
+        "20841",
+        "21083",
+        "19830"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "OpenAI compatibility: Responses API implementation (#20504, #20975), image object support in llm.chat (#19635), tool calling with required choice and $defs (#20629).",
+      "prs": [
+        "20504",
+        "20975",
+        "19635",
+        "20629"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "New endpoints: `get_tokenizer_info` for tokenizer/chat-template information (#20575), cache_salt support for completions/responses (#20981).",
+      "prs": [
+        "20575",
+        "20981"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Model loading: Tensorizer S3 integration with arbitrary arguments (#19619), HF repo paths & URLs for GGUF models (#20793), tokenization_kwargs for embedding truncation (#21033).",
+      "prs": [
+        "19619",
+        "20793",
+        "21033"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "CLI improvements: `--help=page` option for enhanced help documentation (#20961), default model changed to Qwen3-0.6B (#20335).",
+      "prs": [
+        "20961",
+        "20335"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Updated PyTorch to 2.7.1 for CUDA (#21011)",
+      "prs": [
+        "21011"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "FlashInfer updated to v0.2.8rc1 (#20718)",
+      "prs": [
+        "20718"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Note that alternative structured output backends are supported by @russellb (#19426)",
+      "prs": [
+        "19426"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm][V1] Adding ROCm to the list of plaforms using V1 by default by @gshtras (#19440)",
+      "prs": [
+        "19440"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] use AutoWeightsLoader for commandr by @py-andy-c (#19399)",
+      "prs": [
+        "19399"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add H20-3e fused MoE kernel tuning configs for Qwen3-235B-A22B-FP8 by @Xu-Wenqing (#19401)",
+      "prs": [
+        "19401"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Allow use_cudagraph to work with dynamic VLLM_USE_V1 by @zou3519 (#19390)",
+      "prs": [
+        "19390"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[New Model]: Support Qwen3 Embedding & Reranker  by @noooop (#19260)",
+      "prs": [
+        "19260"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix docker build cpu-dev image error by @2niuhe (#19394)",
+      "prs": [
+        "19394"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix test_max_model_len in tests/entrypoints/llm/test_generate.py by @houseroad (#19451)",
+      "prs": [
+        "19451"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Disable failing GGUF model test by @mgoin (#19454)",
+      "prs": [
+        "19454"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove unused `MultiModalHasher.hash_prompt_mm_data` by @lgeiger (#19422)",
+      "prs": [
+        "19422"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add fused MOE config for Qwen3 30B A3B on B200 by @0xjunhao (#19455)",
+      "prs": [
+        "19455"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix Typo in Documentation and Function Name by @leopardracer (#19442)",
+      "prs": [
+        "19442"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] Add rules to automatically label ROCm related PRs by @houseroad (#19405)",
+      "prs": [
+        "19405"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Support deep_gemm for linear methods by @artetaout (#19085)",
+      "prs": [
+        "19085"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update V1 User Guide for Hardware and Models by @DarkLight1337 (#19474)",
+      "prs": [
+        "19474"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix quantization link titles by @DarkLight1337 (#19478)",
+      "prs": [
+        "19478"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Support \"important\" and \"announcement\" admonitions by @DarkLight1337 (#19479)",
+      "prs": [
+        "19479"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Reduce warning message introduced in env_override by @houseroad (#19476)",
+      "prs": [
+        "19476"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support non-string values in JSON keys from CLI by @DarkLight1337 (#19471)",
+      "prs": [
+        "19471"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add cache to cuda get_device_capability by @mgoin (#19436)",
+      "prs": [
+        "19436"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix some typo by @Ximingwang-09 (#19475)",
+      "prs": [
+        "19475"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support no privileged mode on CPU for docker and kubernetes deployments by @louie-tsai (#19241)",
+      "prs": [
+        "19241"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Update the example code, make it work with the latest lmcache by @runzhen (#19453)",
+      "prs": [
+        "19453"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Update FlashInfer to 0.2.6.post1 by @mgoin (#19297)",
+      "prs": [
+        "19297"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix \"Other AI accelerators\" getting started page by @davidxia (#19457)",
+      "prs": [
+        "19457"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix  misleading ROCm warning by @jeejeelee (#19486)",
+      "prs": [
+        "19486"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Remove WIP features in V1 guide by @WoosukKwon (#19498)",
+      "prs": [
+        "19498"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernels] Add activation chunking logic to FusedMoEModularKernel by @bnellnm (#19168)",
+      "prs": [
+        "19168"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[AMD] [Quantization] Add override flag for attention dtype instead of using kv_cache_dtype trigger by @rasmith (#17331)",
+      "prs": [
+        "17331"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[UX] Add Feedback During CUDAGraph Capture by @robertgshaw2-redhat (#19501)",
+      "prs": [
+        "19501"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix torch nightly CI dependencies by @zou3519 (#19505)",
+      "prs": [
+        "19505"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] change spell checker from codespell to typos by @andyxning (#18711)",
+      "prs": [
+        "18711"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Force registration of w8a8_block_fp8_matmul_deepgemm via lazy import by @varun-sundar-rabindranath (#19514)",
+      "prs": [
+        "19514"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add Triton Fused MoE kernel config for E=16 on B200 by @b8zhong (#19518)",
+      "prs": [
+        "19518"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Improve error message in tool_choice validation by @22quinn (#19239)",
+      "prs": [
+        "19239"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Work-around incremental detokenization edge case error by @njhill (#19449)",
+      "prs": [
+        "19449"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Handle missing sep_token for Qwen3-Reranker in Score API by @strutive07 (#19522)",
+      "prs": [
+        "19522"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[AMD][Kernel][BugFix] fix test_rocm_compressed_tensors_w8a8 for rocm by @rasmith (#19509)",
+      "prs": [
+        "19509"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix typo by @2niuhe (#19525)",
+      "prs": [
+        "19525"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Security] Prevent new imports of (cloud)pickle by @russellb (#18018)",
+      "prs": [
+        "18018"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][V1] Allow manual FlashAttention for Blackwell by @mgoin (#19492)",
+      "prs": [
+        "19492"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Respect num-gpu-blocks-override in v1 by @jmswen (#19503)",
+      "prs": [
+        "19503"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Improve AWQ logic by @jeejeelee (#19431)",
+      "prs": [
+        "19431"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add V1 column to supported models list by @DarkLight1337 (#19523)",
+      "prs": [
+        "19523"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[NixlConnector] Drop `num_blocks` check  by @NickLucche (#19532)",
+      "prs": [
+        "19532"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Vectorize static / dynamic INT8 quant kernels by @yewentao256 (#19233)",
+      "prs": [
+        "19233"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix TorchAOConfig skip layers by @mobicham (#19265)",
+      "prs": [
+        "19265"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[torch.compile][ROCm] Fuse quantization onto attention using a torch.compile pass by @ProExpertProg (#16756)",
+      "prs": [
+        "16756"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] Make top navigation sticky by @reidliu41 (#19540)",
+      "prs": [
+        "19540"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Spec Decode][Benchmark] Generalize spec decode offline benchmark to more methods and datasets by @ekagra-ranjan (#18847)",
+      "prs": [
+        "18847"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Turn MOE_DP_CHUNK_SIZE into an env var by @varun-sundar-rabindranath (#19506)",
+      "prs": [
+        "19506"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Enforce contiguous input for dynamic_per_token FP8/INT8 quant by @mgoin (#19452)",
+      "prs": [
+        "19452"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Unify structured outputs examples by @aarnphm (#18196)",
+      "prs": [
+        "18196"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Resolve failed concurrent structred output requests by @russellb (#19565)",
+      "prs": [
+        "19565"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Build/CI] Add tracing deps to vllm container image (#15224)\" by @kouroshHakha (#19378)",
+      "prs": [
+        "15224",
+        "19378"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] : Fix Batched DeepGemm Experts by @varun-sundar-rabindranath (#19515)",
+      "prs": [
+        "19515"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix EAGLE vocab embedding for multimodal target model by @zixi-qi (#19570)",
+      "prs": [
+        "19570"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] uses absolute links for structured outputs by @aarnphm (#19582)",
+      "prs": [
+        "19582"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix incorrect link by @reidliu41 (#19586)",
+      "prs": [
+        "19586"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Correct broken docs link by @Zerohertz (#19553)",
+      "prs": [
+        "19553"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CPU] Refine default config for the CPU backend by @bigPYJ1151 (#19539)",
+      "prs": [
+        "19539"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] bump mistral common to support magistral by @princepride (#19533)",
+      "prs": [
+        "19533"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] The zip function in Python 3.9 does not have the strict argument by @princepride (#19549)",
+      "prs": [
+        "19549"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "use base version for version comparison by @BoyuanFeng (#19587)",
+      "prs": [
+        "19587"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[torch.compile] reorganize the cache directory to support compiling multiple models by @youkaichao (#19064)",
+      "prs": [
+        "19064"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Honor `enable_caching` in connector-delayed kvcache load case by @njhill (#19435)",
+      "prs": [
+        "19435"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Fix minimax model cache & lm_head precision by @qscqesze (#19592)",
+      "prs": [
+        "19592"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove unused variables in `moe_permute_unpermute_kernel.inl` by @yewentao256 (#19573)",
+      "prs": [
+        "19573"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc][mkdocs] fix the  duplicate Supported features sections in GPU docs by @reidliu41 (#19606)",
+      "prs": [
+        "19606"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CUDA] Enable full cudagraph for FlashMLA by @ProExpertProg (#18581)",
+      "prs": [
+        "18581"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add troubleshooting section to k8s deployment by @annapendleton (#19377)",
+      "prs": [
+        "19377"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[torch.compile] Use custom ops when use_inductor=False by @WoosukKwon (#19618)",
+      "prs": [
+        "19618"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Adding \"AMD: Multi-step Tests\" to amdproduction. by @Concurrensee (#19508)",
+      "prs": [
+        "19508"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix DP Coordinator incorrect debug log message by @njhill (#19624)",
+      "prs": [
+        "19624"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1][Metrics] Deprecate metrics with gpu_ prefix for non GPU specific metrics. by @sahelib25 (#18354)",
+      "prs": [
+        "18354"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][1/n] Fix the speculative decoding test by setting the target dtype by @houseroad (#19633)",
+      "prs": [
+        "19633"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Modularize CLI Argument Parsing in Benchmark Scripts by @reidliu41 (#19593)",
+      "prs": [
+        "19593"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix auto dtype casting for BatchFeature by @Isotr0py (#19316)",
+      "prs": [
+        "19316"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][NVIDIA][kernel] Fp4 MOE quant kernel optimization by @jiahanc (#19500)",
+      "prs": [
+        "19500"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Only build CUTLASS MoE kernels on Hopper by @huydhn (#19648)",
+      "prs": [
+        "19648"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Don't attempt to use triton if no driver is active by @kzawora-intel (#19561)",
+      "prs": [
+        "19561"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Convert kv_transfer_config from dict to KVTransferConfig by @maobaolong (#19262)",
+      "prs": [
+        "19262"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Further tunings for SM100 FP8 CUTLASS kernel by @ilmarkov (#19566)",
+      "prs": [
+        "19566"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][2/n] Fix speculative decoding CI - Fix test_ngram_e2e_greedy_correctness by @houseroad (#19644)",
+      "prs": [
+        "19644"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Raise verbose error and consolidate `num_heads/num_kv_heads` divisibility check by @22quinn (#19339)",
+      "prs": [
+        "19339"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Refactor benchmark script for fp8 & int8 by @yewentao256 (#19627)",
+      "prs": [
+        "19627"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable prefix caching with full cuda graphs by @WoosukKwon (#19617)",
+      "prs": [
+        "19617"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix torch nightly CI dependencies part 2 by @zou3519 (#19589)",
+      "prs": [
+        "19589"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove duplicate multiproc method setting for CPU platform by @Isotr0py (#19649)",
+      "prs": [
+        "19649"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] Remove unused variableds in C++ by @houseroad (#19609)",
+      "prs": [
+        "19609"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Core] Prefix caching causes incorrect outputs due to outdated ComputedBlocksTracker by @quanliu1991 (#18957)",
+      "prs": [
+        "18957"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Frontend] passthrough `bad_words` by @f14-bertolotti (#19564)",
+      "prs": [
+        "19564"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix skipped max-model-len validation when deriving max model length from tokenizer config by @yeqcharlotte (#19660)",
+      "prs": [
+        "19660"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] support attention head dim smaller than 128 by @yaochengji (#19620)",
+      "prs": [
+        "19620"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] typo fix by @andyxning (#19672)",
+      "prs": [
+        "19672"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Add mteb testing for rerank models by @noooop (#19344)",
+      "prs": [
+        "19344"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Move multiproc doc to v1 dir by @russellb (#19651)",
+      "prs": [
+        "19651"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] GGUF MMVQ kernel for multiple input vectors by @SzymonOzog (#18754)",
+      "prs": [
+        "18754"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Don't catch BaseException when dumping execute_model errors by @njhill (#19626)",
+      "prs": [
+        "19626"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DOC] Add reasoning capability to vLLM streamlit code by @Navanit-git (#19557)",
+      "prs": [
+        "19557"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature]:Allow for Granite MoE Hybrid models with _only_ shared experts. by @shawntan (#19652)",
+      "prs": [
+        "19652"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix TP inference for Flex attention backend by @Isotr0py (#19657)",
+      "prs": [
+        "19657"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] bump huggingface_hub pkg to 0.33.0 by @andyxning (#19547)",
+      "prs": [
+        "19547"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] fix missing 'finish_reason': null in streaming chat by @chaunceyjiang (#19662)",
+      "prs": [
+        "19662"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernels] Use empty for modular MoE workspaces by @bnellnm (#19667)",
+      "prs": [
+        "19667"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add support for MiniMaxM1ForCausalLM (shares architecture with MiniMaxText01ForCausalLM) by @qscqesze (#19677)",
+      "prs": [
+        "19677"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Change return type on get_multimodal_embeddings() by @russellb (#19446)",
+      "prs": [
+        "19446"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Remove FP4 emulation; Fall-back to marlin for device < 100 by @dsikka (#19563)",
+      "prs": [
+        "19563"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Fall back to Gloo when NCCL backend is unavailable by @conroy-cheers (#19641)",
+      "prs": [
+        "19641"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] add project flag to gcloud TPU command by @davidxia (#19664)",
+      "prs": [
+        "19664"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Wheel Size] Only build FA2 8.0+PTX by @LucasWilkinson (#19336)",
+      "prs": [
+        "19336"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] add chunking audio for > 30s audio by @nguyenhoangthuan99 (#19597)",
+      "prs": [
+        "19597"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DOC] fix doc typos by @diliu0349 (#19600)",
+      "prs": [
+        "19600"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixes IMA for TP w/ flex-attention by @drisspg (#19712)",
+      "prs": [
+        "19712"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] add remove_seq_from_computed_blocks_tracker to BlockSpaceManager by @quanliu1991 (#19686)",
+      "prs": [
+        "19686"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add missing llava family multi-image examples by @Isotr0py (#19698)",
+      "prs": [
+        "19698"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add a doc on how to update PyTorch version by @huydhn (#19705)",
+      "prs": [
+        "19705"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Add Split-KV Support to Unified Triton Attention Kernel by @jvlunteren (#19152)",
+      "prs": [
+        "19152"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc][mkdocs] Add edit  button to documentation by @reidliu41 (#19637)",
+      "prs": [
+        "19637"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] split \"Other AI Accelerators\" tabs by @davidxia (#19708)",
+      "prs": [
+        "19708"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1][Kernel] Flashinfer HND KV cache layout by @NickLucche (#19280)",
+      "prs": [
+        "19280"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Mis] remove duplicate engine status checks by @googs1025 (#19647)",
+      "prs": [
+        "19647"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Update multimodel models mapping to fit new checkpoint after Transformers v4.52 by @Isotr0py (#19151)",
+      "prs": [
+        "19151"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Optimize `moe_align_block_size` CUDA kernel by @yewentao256 (#19572)",
+      "prs": [
+        "19572"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove sm120 arch from sm100 cutlass kernel arch list by @mgoin (#19716)",
+      "prs": [
+        "19716"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update lmcache connector with the latest connector apis by @YaoJiayi (#19441)",
+      "prs": [
+        "19441"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix faulty triton importing logic when using Ray for DP by @mgoin (#19734)",
+      "prs": [
+        "19734"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature][ROCm] Add full graph capture support for TritonAttentionBackend by @charlifu (#19158)",
+      "prs": [
+        "19158"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Update torch version to include paged attention kernel change by @Chenyaaang (#19706)",
+      "prs": [
+        "19706"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] correct copy_blocks src_to_dists param type by @andyxning (#19696)",
+      "prs": [
+        "19696"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] correct DeviceConfig device field static type analysis by @andyxning (#19699)",
+      "prs": [
+        "19699"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add __str__ for RequestStatus by @lk-chen (#19780)",
+      "prs": [
+        "19780"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Add API docs for EncoderCacheManager by @russellb (#19294)",
+      "prs": [
+        "19294"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1][P/D] An native implementation of xPyD based on P2P NCCL by @Abatom (#18242)",
+      "prs": [
+        "18242"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Decouple GPU and TPU `InputBatch` by @afeldman-nm (#19778)",
+      "prs": [
+        "19778"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor] Zero-initialize attn output buffer by @WoosukKwon (#19784)",
+      "prs": [
+        "19784"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix the incorrect label by @reidliu41 (#19787)",
+      "prs": [
+        "19787"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Platform] Allow platform use V1 Engine by default by @wangxiyuan (#19792)",
+      "prs": [
+        "19792"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Qwen] Add tagging rule for Qwen related PRs by @houseroad (#19799)",
+      "prs": [
+        "19799"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][AMD] integrate aiter chunked prefill into vllm by @Zzz9990 (#18596)",
+      "prs": [
+        "18596"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] fix RAY_CGRAPH_get_timeout is not set successfully by @chaunceyjiang (#19725)",
+      "prs": [
+        "19725"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add Huzaifa Sidhpurwala to vuln mgmt team doc by @russellb (#19808)",
+      "prs": [
+        "19808"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[v1] Support mamba2 by @heheda12345 (#19327)",
+      "prs": [
+        "19327"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "docs: fix Slack bulletpoint in README by @nathan-weinberg (#19811)",
+      "prs": [
+        "19811"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Disable \"Forbid direct 'import triton'\" check for `vllm/triton_utils/importing.py` in an extensible way by @afeldman-nm (#19783)",
+      "prs": [
+        "19783"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Do not copy array during hashing by @lgeiger (#19484)",
+      "prs": [
+        "19484"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Update torch-xla version to include paged attention tuned block change by @QiliangCui (#19813)",
+      "prs": [
+        "19813"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] More fixes to MultiModalEmbeddings type handling by @russellb (#19715)",
+      "prs": [
+        "19715"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Multimodal] Use fast processor for Qwen2/2.5-VL by @WoosukKwon (#19789)",
+      "prs": [
+        "19789"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix use_cudagraph=False by @zou3519 (#19612)",
+      "prs": [
+        "19612"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Expose custom args in OpenAI APIs by @afeldman-nm (#16862)",
+      "prs": [
+        "16862"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix FA2 fallback for Blackwell V1 by @mgoin (#19781)",
+      "prs": [
+        "19781"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][ROCm] Enforce no unused variable in ROCm C++ files by @houseroad (#19796)",
+      "prs": [
+        "19796"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Modify the logic of BNB double quantization by @jeejeelee (#19742)",
+      "prs": [
+        "19742"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support embedding models in V1 by @maxdebayser (#16188)",
+      "prs": [
+        "16188"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix the linter by @houseroad (#19826)",
+      "prs": [
+        "19826"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Add check_health to v1 async client. by @kouroshHakha (#19821)",
+      "prs": [
+        "19821"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Mark invariant normalizer in Gemma as non-persistent by @yhtang (#19788)",
+      "prs": [
+        "19788"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] [AITER] [Bugfix] Patch for AITER commit `648764942e552a8bb5fe16026703716a81f05374` by @tjtanaa (#18990)",
+      "prs": [
+        "18990"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] [ROCm] Prevent surplus tensor reshape by @zsolt-borbely-htec (#19803)",
+      "prs": [
+        "19803"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "raise exception for pin_lora by @andyxning (#19809)",
+      "prs": [
+        "19809"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor] Allow redirecting model path for HfRunner in test by @Isotr0py (#19795)",
+      "prs": [
+        "19795"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add xLAM tool parser support by @zuxin666 (#17148)",
+      "prs": [
+        "17148"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Add optional token-level progress bar to `LLM.beam_search` by @NekoMimiUnagi (#19301)",
+      "prs": [
+        "19301"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixing Chunked Prefill Test. by @Alexei-V-Ivanov-AMD (#19762)",
+      "prs": [
+        "19762"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update V1 user guide for embedding models by @22quinn (#19842)",
+      "prs": [
+        "19842"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI][CPU] Improve dummy Triton interfaces and fix the CPU CI by @bigPYJ1151 (#19838)",
+      "prs": [
+        "19838"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Bugfix] Fix Online MM Beam Search by @alex-jw-brooks (#19688)",
+      "prs": [
+        "19688"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] early return chat format resolution when specified by @xzbdmw (#19735)",
+      "prs": [
+        "19735"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark][Bugfix] Fix Dataset Length Calculation by @robertgshaw2-redhat (#19868)",
+      "prs": [
+        "19868"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][Bugfix] Fix deadlock on v1 engine test CI by @Isotr0py (#19872)",
+      "prs": [
+        "19872"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI][Neuron] Fail and exit on first error by @elaineyz (#19622)",
+      "prs": [
+        "19622"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Fix `Value of type \"SampleRequest\" is not indexable` by @b8zhong (#18032)",
+      "prs": [
+        "18032"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Chore]: qwen3-moe-type-hints-mistake by @Xerxes-cn (#19860)",
+      "prs": [
+        "19860"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Enable PP with AITER+V1 by @qli88 (#19822)",
+      "prs": [
+        "19822"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Ray] Set the cuda context eagerly in the ray worker  by @kouroshHakha (#19583)",
+      "prs": [
+        "19583"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] update cuda version by @reidliu41 (#19526)",
+      "prs": [
+        "19526"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] refactor example - openai_transcription_client by @reidliu41 (#19851)",
+      "prs": [
+        "19851"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] correct cpu worker function parameter type by @andyxning (#19745)",
+      "prs": [
+        "19745"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] import regex instead of re by @tdoublep (#19875)",
+      "prs": [
+        "19875"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] GPT2ForSequenceClassification model by @nie3e (#19663)",
+      "prs": [
+        "19663"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[custom_op][vllm-plugin] update custom_op class to use op_registry by @xuechendi (#19164)",
+      "prs": [
+        "19164"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Export NaNs in logits to scheduler_stats if output is corrupted by @vladmihailescu (#18777)",
+      "prs": [
+        "18777"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CPU][CI] Fallback sliding window to v0 and fix CPU pooling model tests by @bigPYJ1151 (#19901)",
+      "prs": [
+        "19901"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] mark TorchSDPABackend swap_blocks NotImplementedError by @andyxning (#19749)",
+      "prs": [
+        "19749"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Clean up useless code by @wangxiyuan (#19889)",
+      "prs": [
+        "19889"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix: Check the type of params to be a Sequence not list. by @rabinadk1 (#19910)",
+      "prs": [
+        "19910"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix bnb 8bit model weights loading by @Isotr0py (#19917)",
+      "prs": [
+        "19917"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[New model support]Support Tarsier2 by @princepride (#19887)",
+      "prs": [
+        "19887"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] add contact us in community by @reidliu41 (#19922)",
+      "prs": [
+        "19922"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Multimodal] Optimize Qwen2/2.5-VL startup time by @WoosukKwon (#19756)",
+      "prs": [
+        "19756"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add GPT2ForSequenceClassification to supported models in docs by @nie3e (#19932)",
+      "prs": [
+        "19932"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add vllm_config in __init__ by @andyxning (#19866)",
+      "prs": [
+        "19866"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] add cpu_kvcache_space_bytes to CacheConfig by @andyxning (#19812)",
+      "prs": [
+        "19812"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] fix request loss if \"ping\" is returned by @sywangyi (#19535)",
+      "prs": [
+        "19535"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Auto tag perf benchmarks related PRs by @22quinn (#19943)",
+      "prs": [
+        "19943"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] use snippets for contact us by @reidliu41 (#19944)",
+      "prs": [
+        "19944"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update model-specific PR tagging by @ywang96 (#19949)",
+      "prs": [
+        "19949"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Simplify vllm bench cli subcommand implementation by @yeqcharlotte (#19948)",
+      "prs": [
+        "19948"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Chore] dedup logs by @aarnphm (#19955)",
+      "prs": [
+        "19955"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Add an env to disable moe chunking to work around compile incompatibility by @yeqcharlotte (#19642)",
+      "prs": [
+        "19642"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf][CLI] Improve overall startup time by @aarnphm (#19941)",
+      "prs": [
+        "19941"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] feat: Implement Priority Scheduling in V1 Engine by @amitm02 (#19057)",
+      "prs": [
+        "19057"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Configurable timeout for execute_model RPC calls via env var by @jinqinn (#19544)",
+      "prs": [
+        "19544"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix(models/siglip): Add compatibility for Gemma models quantized by llm-compressor by @Flink-ddd (#19643)",
+      "prs": [
+        "19643"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] Fold long code blocks to improve readability by @reidliu41 (#19926)",
+      "prs": [
+        "19926"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[P/D][NixlConnector] Support `tp_size > num_kv_heads` deployments by @NickLucche (#19691)",
+      "prs": [
+        "19691"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][P/D] Fix for cases where _recving_transfers can be cleaned up when *all* transfer done by @lk-chen (#19874)",
+      "prs": [
+        "19874"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update V1 status for decoder-only embedding models by @Isotr0py (#19952)",
+      "prs": [
+        "19952"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] use MkDocs collapsible blocks - supplement by @reidliu41 (#19973)",
+      "prs": [
+        "19973"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix CI bitsandbytes failure by @jeejeelee (#19969)",
+      "prs": [
+        "19969"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] improve readability for long commands by @reidliu41 (#19920)",
+      "prs": [
+        "19920"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix syntax highlighting of shell commands by @lgeiger (#19870)",
+      "prs": [
+        "19870"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[EP+DP] Optimize the little operations in the DeepGEMM + DeepEP low latency case by @tlrmchlsmth (#19885)",
+      "prs": [
+        "19885"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][v1] Fix step pooler implementation and step pooling usage in v1 by @Isotr0py (#19956)",
+      "prs": [
+        "19956"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add type alias `ReqId` and `EngineId` for better readability by @lk-chen (#19880)",
+      "prs": [
+        "19880"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Support sequence parallelism for static fp8 quantization by @cascade812 (#19181)",
+      "prs": [
+        "19181"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Push latest tag for cpu and neuron docker image by @22quinn (#19897)",
+      "prs": [
+        "19897"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Feat Dynamic Quantization for MoE Layers in GPTQ Marlin Backend by @Jun-Howie (#19395)",
+      "prs": [
+        "19395"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Benchmark] Fix Marlin benchmark by @22quinn (#19929)",
+      "prs": [
+        "19929"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Fix tpu model runner test by @Chenyaaang (#19995)",
+      "prs": [
+        "19995"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update test case parameter to have the throughput above 8.0 by @QiliangCui (#19994)",
+      "prs": [
+        "19994"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Tools][Benchmark] Add profile to autotune script by @Chenyaaang (#19711)",
+      "prs": [
+        "19711"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] Fix broken link in the installation for CPU by @yankay (#19980)",
+      "prs": [
+        "19980"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "add some examples for other benchmark scripts by @reidliu41 (#19893)",
+      "prs": [
+        "19893"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PERF] Speedup of MRoPE prepare inputs by @vadiklyutiy (#19939)",
+      "prs": [
+        "19939"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][CPU] Fix InputBatch for pooling models in the CPU v1 by @bigPYJ1151 (#20014)",
+      "prs": [
+        "20014"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "refactor example - qwen3_reranker by @reidliu41 (#19847)",
+      "prs": [
+        "19847"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix][V1] Remove --scheduling-policy oracle by @amitm02 (#20010)",
+      "prs": [
+        "20010"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Improve/Fix-regression for FA3 in High QPS regimes by @LucasWilkinson (#19463)",
+      "prs": [
+        "19463"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Benchmarking] Add variable request-rate (\"ramp-up\") to the benchmarking client. by @dtransposed (#19423)",
+      "prs": [
+        "19423"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix multi-node offline data parallel by @njhill (#19937)",
+      "prs": [
+        "19937"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[P/D] Asynchronously do _nixl_handshake by @lk-chen (#19836)",
+      "prs": [
+        "19836"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Integrate new deepgemm by @yewentao256 (#19820)",
+      "prs": [
+        "19820"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Easy] Remove submodule added in #19463 by @b8zhong (#20039)",
+      "prs": [
+        "19463",
+        "20039"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "use .dev for version comparison with pytorch nightly release by @BoyuanFeng (#20031)",
+      "prs": [
+        "20031"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "cmake: Update vllm_flash_attn for vllm_kernels by @seemethere (#20032)",
+      "prs": [
+        "20032"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Llama4] Update `attn_temperature_tuning` by @b8zhong (#19997)",
+      "prs": [
+        "19997"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Feature] Integrate new deepgemm (#19820)\" by @yewentao256 (#20049)",
+      "prs": [
+        "19820",
+        "20049"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"Fix(models/siglip): Add compatibility for Gemma models quantized by llm-compressor\" by @Isotr0py (#20030)",
+      "prs": [
+        "20030"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Move to a faster base64 implementation by @h-avsha (#19984)",
+      "prs": [
+        "19984"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] speed up import time of vllm.config by @davidxia (#18036)",
+      "prs": [
+        "18036"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove duplicate `ceil_div` by @yewentao256 (#20023)",
+      "prs": [
+        "20023"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feat][CLI] enforce-include-usage by @max-wittig (#19695)",
+      "prs": [
+        "19695"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernels][Bugfix] Use torch op for all kernels in FusedMoE forward.  Add additional testing for cudagraphs. by @bnellnm (#19717)",
+      "prs": [
+        "19717"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Chore] debloat some initial logs by @aarnphm (#19438)",
+      "prs": [
+        "19438"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix full-cuda-graph illegal memory access in FA3 by @LucasWilkinson (#20057)",
+      "prs": [
+        "20057"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] add reference link for Intel XPU by @reidliu41 (#20064)",
+      "prs": [
+        "20064"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Guide for Incremental Compilation Workflow by @mgoin (#19109)",
+      "prs": [
+        "19109"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1][Speculative Decoding] Fix DeepSeek MTP by @cjackal (#20022)",
+      "prs": [
+        "20022"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Add `/v1/audio/translations` OpenAI API endpoint by @NickLucche (#19615)",
+      "prs": [
+        "19615"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Add compressed-tensors emulations support for NVFP4 by @dsikka (#19879)",
+      "prs": [
+        "19879"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Support cls pooling in ModernBertPooler by @lsz05 (#20067)",
+      "prs": [
+        "20067"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "static_scaled_fp8_quant should not run when scale.numel is not 1 by @eldarkurtic (#20076)",
+      "prs": [
+        "20076"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PD] let toy proxy handle /chat/completions by @lk-chen (#19730)",
+      "prs": [
+        "19730"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add parallel state `node_count` function by @njhill (#20045)",
+      "prs": [
+        "20045"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix the path to the testing script. by @QiliangCui (#20082)",
+      "prs": [
+        "20082"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] default set cuda_graph_sizes to max_num_seqs for v1 engine by @izhuhaoran (#20062)",
+      "prs": [
+        "20062"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] fix kv cache padding by @yaochengji (#20048)",
+      "prs": [
+        "20048"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[P/D] Avoid stranding blocks in P when aborted in D's waiting queue by @njhill (#19223)",
+      "prs": [
+        "19223"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Add TPU specific var VLLM_TPU_MOST_MODEL_LEN by @Chenyaaang (#19919)",
+      "prs": [
+        "19919"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Add SM120 to the Dockerfile by @mgoin (#19794)",
+      "prs": [
+        "19794"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Mistral tool-parser regex for nested JSON by @mgoin (#20093)",
+      "prs": [
+        "20093"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PD] Skip `tp_size` exchange with rank0 by @NickLucche (#19413)",
+      "prs": [
+        "19413"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark][Bug] Fix multiple bugs in bench and add args to spec_decode offline by @ekagra-ranjan (#20083)",
+      "prs": [
+        "20083"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Allow `CUDA_VISIBLE_DEVICES=''` in `Platform.device_id_to_physical_device_id` by @eicherseiji (#18979)",
+      "prs": [
+        "18979"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update docs for New Model Implementation by @DarkLight1337 (#20115)",
+      "prs": [
+        "20115"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove unused library by @yewentao256 (#20099)",
+      "prs": [
+        "20099"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CPU] Fix torch version in x86 CPU backend by @bigPYJ1151 (#19258)",
+      "prs": [
+        "19258"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Use collapsible blocks for benchmark examples. by @reidliu41 (#20017)",
+      "prs": [
+        "20017"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve frameworks/helm.md by @windsonsea (#20113)",
+      "prs": [
+        "20113"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][V1][ROCm] Fix AITER Flash Attention Backend (Fix API Break and Local Attention Logic: affecting Llama4) by @tjtanaa (#19904)",
+      "prs": [
+        "19904"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Bugfix] default set cuda_graph_sizes to max_num_seqs for v1 engine\" by @mgoin (#20128)",
+      "prs": [
+        "20128"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug Fix] Fix address/port already in use error for pplx test by @yewentao256 (#20094)",
+      "prs": [
+        "20094"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Automatically signed-off by PyCharm by @noooop (#20120)",
+      "prs": [
+        "20120"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Auto sign-off for VSCode by @DarkLight1337 (#20132)",
+      "prs": [
+        "20132"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Rename page titles by @DarkLight1337 (#20130)",
+      "prs": [
+        "20130"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Spam folks if config.py changes by @tlrmchlsmth (#20131)",
+      "prs": [
+        "20131"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][Intel GPU] Add v1 Intel GPU support with Flash attention backend. by @jikunshang (#19560)",
+      "prs": [
+        "19560"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] add kv cache update kernel by @yaochengji (#19928)",
+      "prs": [
+        "19928"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Rename commnication utils by @yewentao256 (#20091)",
+      "prs": [
+        "20091"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] correct LoRA capitalization by @kyolebu (#20135)",
+      "prs": [
+        "20135"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Expert Parallelism Load Balancer (EPLB) by @abmfy (#18343)",
+      "prs": [
+        "18343"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Failure] Fix OOM with test_oot_registration_embedding by @mgoin (#20144)",
+      "prs": [
+        "20144"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Bump to use latest `compressed-tensors` by @dsikka (#20033)",
+      "prs": [
+        "20033"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] SM100 FP8 GEMM Optimizations after cutlass_profiler by @ilmarkov (#20071)",
+      "prs": [
+        "20071"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Build moe_data for both sm100 and sm90 by @mgoin (#20086)",
+      "prs": [
+        "20086"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature][Rocm] add quick all reduce for rocm by @lihaoyang-amd (#19744)",
+      "prs": [
+        "19744"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Sync test dependency with test.in for torch nightly by @yangw-dev (#19632)",
+      "prs": [
+        "19632"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Fix gemma CI test failing on main by @tdoublep (#20124)",
+      "prs": [
+        "20124"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][1/N] Automatic conversion of CrossEncoding model by @noooop (#20012)",
+      "prs": [
+        "20012"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf][Frontend]: eliminate api_key and x_request_id headers middleware overhead by @Yazan-Sharaya (#19946)",
+      "prs": [
+        "19946"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Quick Fix by adding conditional import for flash_attn_varlen_func in flash_attn by @xuechendi (#20143)",
+      "prs": [
+        "20143"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Gemma3n (Text-only) by @robertgshaw2-redhat (#20134)",
+      "prs": [
+        "20134"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix flaky failure when getting DP ports by @mgoin (#20151)",
+      "prs": [
+        "20151"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf][Frontend] Cached resolution for resolving chat templates by @ilyal-cerebras (#20065)",
+      "prs": [
+        "20065"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix][ROCm] Remove unused variables to fix build error on GFX11/12 by @hyoon1 (#19891)",
+      "prs": [
+        "19891"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix][torch.compile] Enable custom ops by default when Inductor off by @ProExpertProg (#20102)",
+      "prs": [
+        "20102"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Mark 'hidden_states' as mutable in moe_forward registration. by @bnellnm (#20152)",
+      "prs": [
+        "20152"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix some narrowing conversion warnings by @tlrmchlsmth (#20141)",
+      "prs": [
+        "20141"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Allow hermetic builds by @fabiendupont (#18064)",
+      "prs": [
+        "18064"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Fix] Pin tests/models/registry.py MiniMaxText01ForCausalLM to revision due to model changes by @mgoin (#20199)",
+      "prs": [
+        "20199"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add type assertion of request_id for LLMEngine.add_request by @SHA-4096 (#19700)",
+      "prs": [
+        "19700"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix num_token_padding support for static per-tensor scaled_fp8_quant by @mgoin (#20188)",
+      "prs": [
+        "20188"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix ci issue distributed 4 gpu test by @yewentao256 (#20204)",
+      "prs": [
+        "20204"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Properly reject requests with empty list guided_choice by @mgoin (#20195)",
+      "prs": [
+        "20195"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix the incorrect func name in the comments. (config.py) by @1195343015 (#20185)",
+      "prs": [
+        "20185"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Add new CI job to validate Hybrid Models for every PR  by @tdoublep (#20147)",
+      "prs": [
+        "20147"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Generalize `v1/audio/transcriptions` endpoint by @NickLucche (#20179)",
+      "prs": [
+        "20179"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Correct behavior of GraniteMoeHybrid for TensorParallel execution by @s3woz (#20137)",
+      "prs": [
+        "20137"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Create a function util and cache the results for `has_deepgemm`, `has_deepep`, `has_pplx` by @yewentao256 (#20187)",
+      "prs": [
+        "20187"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Fix] Try fixing eagle e2e test OOM by reducing block allocation by @mgoin (#20213)",
+      "prs": [
+        "20213"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Add compressed-tensors NVFP4 MoE Support by @dsikka (#19990)",
+      "prs": [
+        "19990"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix cuda_archs_loose_intersection when handling sm_*a by @huydhn (#20207)",
+      "prs": [
+        "20207"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] support dots1 by @redmoe-moutain (#18254)",
+      "prs": [
+        "18254"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BUGFIX][DEEPSEEK][MODEL_LOAD] fix w13, w2 weight not initialized assert by @xuechendi (#20202)",
+      "prs": [
+        "20202"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix import by @WoosukKwon (#20233)",
+      "prs": [
+        "20233"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] Add Slack and Forum to the top navigation by @reidliu41 (#20208)",
+      "prs": [
+        "20208"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Skip loading extra parameters for modelopt Qwen3 MoE model by @noiji (#19598)",
+      "prs": [
+        "19598"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix processor initialization in transformers 4.53.0 by @Isotr0py (#20244)",
+      "prs": [
+        "20244"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Improve BitsAndBytesModelLoader by @jeejeelee (#20242)",
+      "prs": [
+        "20242"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix 1-2-3 list in v1/prefix_caching.md by @windsonsea (#20243)",
+      "prs": [
+        "20243"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] fix quark ptpc by @lihaoyang-amd (#20251)",
+      "prs": [
+        "20251"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Spec Decode] Refactor spec decoding into a separate function by @WoosukKwon (#20238)",
+      "prs": [
+        "20238"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Spec Decode] Clean up spec decode example by @WoosukKwon (#20240)",
+      "prs": [
+        "20240"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Optimization] Use Shared `CachedRequestData` Instance Across All Requests by @WoosukKwon (#20232)",
+      "prs": [
+        "20232"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Unit Test] Add unit test for deep gemm by @yewentao256 (#20090)",
+      "prs": [
+        "20090"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] [Bugfix] [Multimodal] Fix multimodal profiling and generation for SFT/PTQed models by @kylesayrs (#20058)",
+      "prs": [
+        "20058"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove useless pdb comment by @yewentao256 (#20266)",
+      "prs": [
+        "20266"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][V1][P/D]Fix the issue of occasional garbled output  for P2pNcclConnector by @Abatom (#20263)",
+      "prs": [
+        "20263"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CLI] Improve CLI arg parsing for `-O`/`--compilation-config` by @ProExpertProg (#20156)",
+      "prs": [
+        "20156"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix include prompt in stream response when echo=true by @fyuan1316 (#15233)",
+      "prs": [
+        "15233"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix spec decode example by @WoosukKwon (#20296)",
+      "prs": [
+        "20296"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Example] add one-click runnable example for P2P NCCL XpYd by @KuntaiDu (#20246)",
+      "prs": [
+        "20246"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI][Intel Gaudi][vllm-Plugin]Add CI for hpu-plugin-v1-test by @xuechendi (#20196)",
+      "prs": [
+        "20196"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] add config and troubleshooting guide for NCCL & GPUDirect RDMA by @chewong (#15897)",
+      "prs": [
+        "15897"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] A calibration-free RTN-based quantization for accurate and accelerated INT4/INT8 inference by @sakogan (#18768)",
+      "prs": [
+        "18768"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Only print cudagraph tqdm on rank 0 with `is_global_first_rank` by @mgoin (#19516)",
+      "prs": [
+        "19516"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix `numel()` downcast in vllm/csrc/moe/moe_align_sum_kernels.cu +2 by @r-barnes (#17082)",
+      "prs": [
+        "17082"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add xgrammar for arm64 by @prashantgupta24 (#18359)",
+      "prs": [
+        "18359"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable ZP Support for Machete by @czhu-cohere (#20268)",
+      "prs": [
+        "20268"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CPU] Update custom ops for the CPU backend by @bigPYJ1151 (#20255)",
+      "prs": [
+        "20255"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix deepep tests by @varun-sundar-rabindranath (#20288)",
+      "prs": [
+        "20288"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] remove redundant char by @kebe7jun (#20287)",
+      "prs": [
+        "20287"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][V1][ROCm] Triton MLA uses V0 backend on V1 engine by @tywuAMD (#19067)",
+      "prs": [
+        "19067"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix the incorrect logo in dark mode by @reidliu41 (#20289)",
+      "prs": [
+        "20289"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Validate @config in pre-commit instead of dynamically by @lionelvillard (#20200)",
+      "prs": [
+        "20200"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quant] [Bugfix] Fix quantization config matching with `hf_to_vllm_mapper` by @kylesayrs (#20046)",
+      "prs": [
+        "20046"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Minor refactor of NIXL background handshake by @NickLucche (#20068)",
+      "prs": [
+        "20068"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add GLM-4.1V model by @zRzRzRzRzRzRzR (#19331)",
+      "prs": [
+        "19331"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model]Add Tencent HunYuanMoEV1 Model Support by @aiyiwang2025 (#20114)",
+      "prs": [
+        "20114"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Minor refactoring for scheduler by @WoosukKwon (#20299)",
+      "prs": [
+        "20299"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Update transcriptions API to use openai client with `stream=True`  by @NickLucche (#20271)",
+      "prs": [
+        "20271"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CUDA graphs] Enable full cuda graphs with FA3 AoT scheduling by @WoosukKwon (#20301)",
+      "prs": [
+        "20301"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Expand tools even if tool_choice=\"none\" by @okdshin (#17177)",
+      "prs": [
+        "17177"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [ROCm] Enable EP with AITER Fused MoE by @tjtanaa (#20270)",
+      "prs": [
+        "20270"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Optimization] Cache sampled token ids in model runner by @WoosukKwon (#20291)",
+      "prs": [
+        "20291"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "remove unused variables in marlin_template.h by @zhoutianzi666 (#20236)",
+      "prs": [
+        "20236"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Refactor import utils by @yewentao256 (#20269)",
+      "prs": [
+        "20269"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable group size 64 for Machete by @czhu-cohere (#20290)",
+      "prs": [
+        "20290"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel][Bugfix] Fixup some warnings in nvfp4_blockwise_moe when CUDA < 12.8 by @tlrmchlsmth (#20324)",
+      "prs": [
+        "20324"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[UT][intel GPU] use current_platform instead of device hardcode in v1 tests by @Liangliang-Ma (#20169)",
+      "prs": [
+        "20169"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove duplicate `find_free_port` by @yewentao256 (#20333)",
+      "prs": [
+        "20333"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Remove Unused Env `VLLM_ENABLE_MOE_ALIGN_BLOCK_SIZE_TRITON` by @yewentao256 (#20334)",
+      "prs": [
+        "20334"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Doc] Add missing comment for LLM by @draftbk (#20285)",
+      "prs": [
+        "20285"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[FIX][Intel GPU]fix ipex flash_attn_varlen_func api missing parameter by @jikunshang (#20348)",
+      "prs": [
+        "20348"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix dynamic rotary embedding by @DarkLight1337 (#20343)",
+      "prs": [
+        "20343"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix[Docs]: link anchor is incorrect #20309 by @yyzxw (#20315)",
+      "prs": [
+        "20309",
+        "20315"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc][TPU] Add models and features supporting matrix. by @QiliangCui (#20230)",
+      "prs": [
+        "20230"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] kv cache update kernel supports dynamic grid by @yaochengji (#20235)",
+      "prs": [
+        "20235"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Support configurable mm placeholder strings & flexible video sampling policies via CLI flags. by @huachenheli (#20105)",
+      "prs": [
+        "20105"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][VLM] Support Keye-VL-8B-Preview by @Kwai-Keye (#20126)",
+      "prs": [
+        "20126"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Keye-VL compatibility with `tok_kwargs` (#20058) by @DarkLight1337 (#20353)",
+      "prs": [
+        "20058",
+        "20353"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix indentations for 2-level items in deprecation_policy.md by @windsonsea (#20352)",
+      "prs": [
+        "20352"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Make TPU ref prettier in google_tpu.md by @windsonsea (#20356)",
+      "prs": [
+        "20356"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add Ernie4.5 and Ernie4.5MoE Model Support by @CSWYF3634076 (#20220)",
+      "prs": [
+        "20220"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Build/CI] Automatically tag DeepSeek related PRs by @houseroad (#20370)",
+      "prs": [
+        "20370"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[NVIDIA] Support Cutlass w8a8 FP8 for Blackwell Geforce GPUs (sm120) by @kaln27 (#17280)",
+      "prs": [
+        "17280"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix the max_seq_len limit of 16384 for DeepSeek models by @huaqiangwang (#20322)",
+      "prs": [
+        "20322"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Adds support for SlimMoE models Phi-tiny-MoE-instruct by @zichongli5 (#20286)",
+      "prs": [
+        "20286"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Documentation update tool_calling: mapping back to function from response by @cronoik-inceptionai (#20373)",
+      "prs": [
+        "20373"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernels] MoE refactor by @bnellnm (#19636)",
+      "prs": [
+        "19636"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] LogitsProcessor programming model by @afeldman-nm (#16728)",
+      "prs": [
+        "16728"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor] Clean up incorrect comment in test by @njhill (#20382)",
+      "prs": [
+        "20382"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add handler HF_TOKEN is emptry string by @lengrongfu (#20369)",
+      "prs": [
+        "20369"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm][FEAT] Enable Full Graph Mode in AITER MLA V1 Attn Backend (Decode Phase only) by @vllmellm (#20254)",
+      "prs": [
+        "20254"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DP] Support external DP Load Balancer mode by @njhill (#19790)",
+      "prs": [
+        "19790"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Update EAGLE example by @NickLucche (#20375)",
+      "prs": [
+        "20375"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fixes for FlashInfer's TORCH_CUDA_ARCH_LIST by @tlrmchlsmth (#20136)",
+      "prs": [
+        "20136"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix DP headless mode arg validation by @njhill (#20398)",
+      "prs": [
+        "20398"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable CPU nightly performance benchmark and its Markdown report by @louie-tsai (#18444)",
+      "prs": [
+        "18444"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix import of CutlassExpertsFp8 in compressed_tensors_moe.py by @bnellnm (#20381)",
+      "prs": [
+        "20381"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Small: Fix video loader return type annotations. by @huachenheli (#20389)",
+      "prs": [
+        "20389"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][CI/CD][CPU] Fix CPU CI tests by @bigPYJ1151 (#20383)",
+      "prs": [
+        "20383"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Add a case to cover RedHatAI/Meta-Llama-3.1-8B-Instruct-quantized.w8a8 by @QiliangCui (#20385)",
+      "prs": [
+        "20385"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Support MiniMax-M1 function calls features by @qscqesze (#20297)",
+      "prs": [
+        "20297"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Tests] Update online DP tests to verify that requests are balanced by @njhill (#20157)",
+      "prs": [
+        "20157"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add rules to label Speculative Decoding Related PRs by @draftbk (#20406)",
+      "prs": [
+        "20406"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix link by @reidliu41 (#20417)",
+      "prs": [
+        "20417"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Replace two list with tables in intel_gaudi.md by @windsonsea (#20414)",
+      "prs": [
+        "20414"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Move multimodal placeholder from chat utils to model definition by @DarkLight1337 (#20355)",
+      "prs": [
+        "20355"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] refactor cpu worker v0 cache dtype by @andyxning (#20080)",
+      "prs": [
+        "20080"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][CPU] Enable cross compilation in CPU release pipeline by @bigPYJ1151 (#20423)",
+      "prs": [
+        "20423"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Bump to use latest bitsandbytes by @jeejeelee (#20424)",
+      "prs": [
+        "20424"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][2/N] Automatic conversion of CrossEncoding model by @noooop (#19978)",
+      "prs": [
+        "19978"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Automatically tag PRs to add new models by @Isotr0py (#20222)",
+      "prs": [
+        "20222"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] improve vllm bench <bench_type> --help display by @reidliu41 (#20430)",
+      "prs": [
+        "20430"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix flaky `test_streaming_response` test by @NickLucche (#20363)",
+      "prs": [
+        "20363"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] fix duplicate output for bench subcmd by @reidliu41 (#20446)",
+      "prs": [
+        "20446"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Trimming some failing test groups from AMDPRODUCTION. by @Alexei-V-Ivanov-AMD (#20390)",
+      "prs": [
+        "20390"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Clean up InternVL family config registration by @Isotr0py (#19992)",
+      "prs": [
+        "19992"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] adjust for ipv6 for mookcacke url parse by @andyxning (#20107)",
+      "prs": [
+        "20107"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove _maybe_ignore_quant_config from GLM4.1v by @zRzRzRzRzRzRzR (#20432)",
+      "prs": [
+        "20432"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Enable fp8 support for pplx and BatchedTritonExperts. by @bnellnm (#18864)",
+      "prs": [
+        "18864"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix `Unable to detect current VLLM config. Defaulting to NHD kv cache layout` warning by @NickLucche (#20400)",
+      "prs": [
+        "20400"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Register reducer even if transformers_modules not available by @eicherseiji (#19510)",
+      "prs": [
+        "19510"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Change warn_for_unimplemented_methods to debug by @mgoin (#20455)",
+      "prs": [
+        "20455"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Platform] Add custom default max tokens by @gmarinho2 (#18557)",
+      "prs": [
+        "18557"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add ignore consolidated file in mistral example code by @princepride (#20420)",
+      "prs": [
+        "20420"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] small update by @reidliu41 (#20462)",
+      "prs": [
+        "20462"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Structured Outputs][V1] Skipping with models doesn't contain tokenizers by @aarnphm (#20365)",
+      "prs": [
+        "20365"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Optimize Vectorization Utils for Int 8 Quantization Kernels by @yewentao256 (#20331)",
+      "prs": [
+        "20331"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add SPDX-FileCopyrightText by @jeejeelee (#20428)",
+      "prs": [
+        "20428"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support Llama 4 for fused_marlin_moe by @mgoin (#20457)",
+      "prs": [
+        "20457"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug][Frontend] Fix structure of transcription's decoder_prompt by @sangbumlikeagod (#18809)",
+      "prs": [
+        "18809"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][3/N] Automatic conversion of CrossEncoding model by @noooop (#20168)",
+      "prs": [
+        "20168"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix classification table in list of supported models by @DarkLight1337 (#20489)",
+      "prs": [
+        "20489"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] add kvcache-connector dependency definition and add into CI build by @panpan0000 (#18193)",
+      "prs": [
+        "18193"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Small: Remove global media connector. Each test should have its own test connector object. by @huachenheli (#20395)",
+      "prs": [
+        "20395"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable V1 for Hybrid SSM/Attention Models by @tdoublep (#20016)",
+      "prs": [
+        "20016"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[feat]: CUTLASS block scaled group gemm for SM100 by @djmmoss (#19757)",
+      "prs": [
+        "19757"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Bugfix] Fix pre-commit failures on main by @mgoin (#20502)",
+      "prs": [
+        "20502"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] fix mutltimodal_inputs.md gh examples link by @GuyStone (#20497)",
+      "prs": [
+        "20497"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add security warning for development mode endpoints by @reidliu41 (#20508)",
+      "prs": [
+        "20508"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] small fix by @reidliu41 (#20506)",
+      "prs": [
+        "20506"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove the unused LoRA test code by @jeejeelee (#20494)",
+      "prs": [
+        "20494"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix unknown attribute of topk_indices_dtype in CompressedTensorsW8A8Fp8MoECutlassMethod by @luccafong (#20507)",
+      "prs": [
+        "20507"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[v1] Re-add fp32 support to v1 engine through FlexAttention by @Isotr0py (#19754)",
+      "prs": [
+        "19754"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add logger.exception for TPU information collection failures by @reidliu41 (#20510)",
+      "prs": [
+        "20510"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] remove unused import by @reidliu41 (#20517)",
+      "prs": [
+        "20517"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "test_attention compat with coming xformers change by @bottler (#20487)",
+      "prs": [
+        "20487"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BUG] Fix #20484. Support empty sequence in cuda penalty kernel by @vadiklyutiy (#20491)",
+      "prs": [
+        "20484",
+        "20491"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix missing per_act_token parameter in compressed_tensors_moe by @luccafong (#20509)",
+      "prs": [
+        "20509"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix: ImportError when building on hopper systems by @LucasWilkinson (#20513)",
+      "prs": [
+        "20513"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] fix the MoE OOM issue by @yaochengji (#20339)",
+      "prs": [
+        "20339"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Support image object in llm.chat by @sfeng33 (#19635)",
+      "prs": [
+        "19635"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Add support for multiple batch size benchmark through CLI in `benchmark_moe.py` + Add Triton Fused MoE kernel config for FP8 E=16 on B200 by @b8zhong (#20516)",
+      "prs": [
+        "20516"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] call the pre-defined func by @reidliu41 (#20518)",
+      "prs": [
+        "20518"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 deprecation] Remove V0 CPU/XPU/TPU backends by @WoosukKwon (#20412)",
+      "prs": [
+        "20412"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Support any head size for FlexAttention backend by @DarkLight1337 (#20467)",
+      "prs": [
+        "20467"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][Spec Decode] Fix spec token ids in model runner by @WoosukKwon (#20530)",
+      "prs": [
+        "20530"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Add `use_cross_encoder` flag to use correct activation in `ClassifierPooler` by @DarkLight1337 (#20527)",
+      "prs": [
+        "20527"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Implement OpenAI Responses API [1/N] by @WoosukKwon (#20504)",
+      "prs": [
+        "20504"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add a tip for pre-commit by @reidliu41 (#20536)",
+      "prs": [
+        "20536"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor]Abstract Platform Interface for Distributed Backend and Add xccl Support for Intel XPU by @dbyoung18 (#19410)",
+      "prs": [
+        "19410"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Enable phi2 lora test by @jeejeelee (#20540)",
+      "prs": [
+        "20540"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU][CI] add v1/core test in xpu hardware ci by @Liangliang-Ma (#20537)",
+      "prs": [
+        "20537"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add docstrings to url_schemes.py to improve readability by @windsonsea (#20545)",
+      "prs": [
+        "20545"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU] log clean up for XPU platform by @yma11 (#20553)",
+      "prs": [
+        "20553"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Clean up tables in supported_models.md by @windsonsea (#20552)",
+      "prs": [
+        "20552"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] remove unused jinaai_serving_reranking by @Abirdcfly (#18878)",
+      "prs": [
+        "18878"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Set the minimum openai version by @jeejeelee (#20539)",
+      "prs": [
+        "20539"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Remove extra whitespace from CI failures doc by @hmellor (#20565)",
+      "prs": [
+        "20565"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Use `gh-pr` and `gh-issue` everywhere we can in the docs by @hmellor (#20564)",
+      "prs": [
+        "20564"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix internal links so they don't always point to latest by @hmellor (#20563)",
+      "prs": [
+        "20563"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add outline for content tabs by @hmellor (#20571)",
+      "prs": [
+        "20571"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix some MkDocs snippets used in the installation docs by @hmellor (#20572)",
+      "prs": [
+        "20572"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][Last/4] Automatic conversion of CrossEncoding model by @noooop (#19675)",
+      "prs": [
+        "19675"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Prevent IndexError for cached requests when pipeline parallelism is disabled by @panpan0000 (#20486)",
+      "prs": [
+        "20486"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] microbatch tokenization by @ztang2370 (#19334)",
+      "prs": [
+        "19334"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DP] Copy environment variables to Ray DPEngineCoreActors by @ruisearch42 (#20344)",
+      "prs": [
+        "20344"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Optimize Prefill Attention in Unified Triton Attention Kernel by @jvlunteren (#20308)",
+      "prs": [
+        "20308"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add fully interleaved support for multimodal 'string' content format by @Dekakhrone (#14047)",
+      "prs": [
+        "14047"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] feat output content in stream response by @lengrongfu (#19608)",
+      "prs": [
+        "19608"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix links in multi-modal model contributing page by @hmellor (#18615)",
+      "prs": [
+        "18615"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Config] Refactor mistral configs  by @patrickvonplaten (#20570)",
+      "prs": [
+        "20570"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Improve logging for dynamic shape cache compilation by @kyolebu (#20573)",
+      "prs": [
+        "20573"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Maverick correctness by filling zero to cache space in cutlass_moe by @minosfuture (#20167)",
+      "prs": [
+        "20167"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Optimize] Don't send token ids when kv connector is not used by @WoosukKwon (#20586)",
+      "prs": [
+        "20586"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Make distinct `code` and `console` admonitions so readers are less likely to miss them by @hmellor (#20585)",
+      "prs": [
+        "20585"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix]: Fix messy code when using logprobs by @chaunceyjiang (#19209)",
+      "prs": [
+        "19209"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Syntax highlight request responses as JSON instead of bash by @hmellor (#20582)",
+      "prs": [
+        "20582"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Rewrite offline inference guide by @crypdick (#20594)",
+      "prs": [
+        "20594"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve docstring for ray data llm example by @crypdick (#20597)",
+      "prs": [
+        "20597"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add Ray Serve LLM section to openai compatible server guide by @crypdick (#20595)",
+      "prs": [
+        "20595"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add Anyscale to frameworks by @crypdick (#20590)",
+      "prs": [
+        "20590"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] improve error msg by @reidliu41 (#20604)",
+      "prs": [
+        "20604"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][CPU] Fix CPU CI and remove all CPU V0 files by @bigPYJ1151 (#20560)",
+      "prs": [
+        "20560"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Temporary fix vmem oom for long model len by reducing page size by @Chenyaaang (#20278)",
+      "prs": [
+        "20278"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] [Core] Integrate Tensorizer in to S3 loading machinery, allow passing arbitrary arguments during save/load by @sangstar (#19619)",
+      "prs": [
+        "19619"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PD][Nixl] Remote consumer READ timeout for clearing request blocks  by @NickLucche (#20139)",
+      "prs": [
+        "20139"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve documentation for Deepseek R1 on Ray Serve LLM by @crypdick (#20601)",
+      "prs": [
+        "20601"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove unnecessary explicit title anchors and use relative links instead by @hmellor (#20620)",
+      "prs": [
+        "20620"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Stop using title frontmatter and fix doc that can only be reached by search by @hmellor (#20623)",
+      "prs": [
+        "20623"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[xpu]feat: support multi-lora on xpu by @yma11 (#20616)",
+      "prs": [
+        "20616"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update torch/xla pin to 20250703 by @vanbasten23 (#20589)",
+      "prs": [
+        "20589"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Implement missing `get_language_model` for Keye-VL by @DarkLight1337 (#20631)",
+      "prs": [
+        "20631"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert invalid spellchecker fix on deepseek_vl2 by @viravera (#20618)",
+      "prs": [
+        "20618"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Increase the threshold of the MTEB RERANK tests by @noooop (#20615)",
+      "prs": [
+        "20615"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix topk_ids indices_type for CUTLASS w8a8 FP8 MoE by @minosfuture (#20166)",
+      "prs": [
+        "20166"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Rename `get_max_tokens_per_item` for backward compatibility by @DarkLight1337 (#20630)",
+      "prs": [
+        "20630"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix GLM-4.1-V video prompt update by @Isotr0py (#20635)",
+      "prs": [
+        "20635"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] disable phi-3 test by @QiliangCui (#20632)",
+      "prs": [
+        "20632"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Replace `multiply_add` with `homogeneous_multiply_add` to Address Clang Template Parameter Issue by @wenxin0319 (#20142)",
+      "prs": [
+        "20142"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[misc]refactor `Platform.set_device` method by @jikunshang (#20262)",
+      "prs": [
+        "20262"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[tech debt] Revisit lora request model checker by @kouroshHakha (#20636)",
+      "prs": [
+        "20636"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][Intel GPU] Use refactored API for dist_backend in V1 worker by @ratnampa (#20596)",
+      "prs": [
+        "20596"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve documentation for multi-node service helper script by @crypdick (#20600)",
+      "prs": [
+        "20600"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][PPC64LE] Enable V1 for ppc64le and ARM by @Akashcodes732 (#20554)",
+      "prs": [
+        "20554"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] set default set cuda_graph_sizes to min(self.max_num_seqs * 2, 512) by @izhuhaoran (#20628)",
+      "prs": [
+        "20628"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[feat] enable SM100 CUTLASS block scaled group gemm for smaller batch sizes by @djmmoss (#20640)",
+      "prs": [
+        "20640"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix bullets in incremental_build.md by @mgoin (#20642)",
+      "prs": [
+        "20642"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix the size of batched_dummy_mm_inputs in profile_run by @B-201 (#20434)",
+      "prs": [
+        "20434"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU] Use spawn with XPU multiprocessing by @dvrogozh (#20649)",
+      "prs": [
+        "20649"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Intel GPU] support ray as distributed executor backend for XPU. by @jikunshang (#20659)",
+      "prs": [
+        "20659"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] fix minimax tool_calling docs error by @qscqesze (#20667)",
+      "prs": [
+        "20667"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix the issue where `reasoning_content` is `None` when Thinkng is enabled and `tool_choice` is set to `'required'`. by @chaunceyjiang (#20662)",
+      "prs": [
+        "20662"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [Doc] Update V1 docs for Mamba models by @tdoublep (#20499)",
+      "prs": [
+        "20499"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update notes by @DarkLight1337 (#20668)",
+      "prs": [
+        "20668"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Parameterization of streaming loading of multimodal datasets by @Potabk (#20528)",
+      "prs": [
+        "20528"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve docs for RLHF co-location example by @crypdick (#20599)",
+      "prs": [
+        "20599"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] update doc format by @reidliu41 (#20673)",
+      "prs": [
+        "20673"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix handling of Tensorizer arguments for LoadConfig by @sangstar (#20643)",
+      "prs": [
+        "20643"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] fix test_pallas by @yaochengji (#20666)",
+      "prs": [
+        "20666"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU][CI] enhance xpu test support by @Liangliang-Ma (#20652)",
+      "prs": [
+        "20652"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bench] Add NVFP4 GEMM benchmark script by @mgoin (#20578)",
+      "prs": [
+        "20578"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Update CPU doc by @bigPYJ1151 (#20676)",
+      "prs": [
+        "20676"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove heading from installation `inc.md` file by @hmellor (#20697)",
+      "prs": [
+        "20697"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Enlarge tolerance for a CPU multi-modal test by @bigPYJ1151 (#20684)",
+      "prs": [
+        "20684"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support Llama 4 for cutlass_moe_fp4 by @mgoin (#20453)",
+      "prs": [
+        "20453"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Triton implementation of causal-conv1d for Mamba-based models by @thoangtrvn (#18218)",
+      "prs": [
+        "18218"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Add Conch backend for mixed-precision linear layer by @jmanning-stackav (#19818)",
+      "prs": [
+        "19818"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature][Quantization] MXFP4 support for MOE models by @fxmarty-amd (#17888)",
+      "prs": [
+        "17888"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix]: Properly set engine_id when using multi connector by @Missmiaom (#19487)",
+      "prs": [
+        "19487"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Simplify the prefix caching logic on draft tokens by @WoosukKwon (#20701)",
+      "prs": [
+        "20701"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix FlashInfer double build in Dockerfile by @mgoin (#20651)",
+      "prs": [
+        "20651"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] DP : Add ExpertTokensMetadata by @varun-sundar-rabindranath (#20332)",
+      "prs": [
+        "20332"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Use NVCC `--compress-mode` to reduce binary size by 30% by @mgoin (#20694)",
+      "prs": [
+        "20694"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Correct PPMissingLayer handling in Deepseek-V2-Lite PP deployment by @eicherseiji (#20665)",
+      "prs": [
+        "20665"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Support Tool Calling with both `tool_choice='required'` and `$defs`. by @chaunceyjiang (#20629)",
+      "prs": [
+        "20629"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][CPU] Fix CPU worker dependency on cumem_allocator by @njhill (#20696)",
+      "prs": [
+        "20696"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix `VllmConfig()` construction on all platforms by @njhill (#20695)",
+      "prs": [
+        "20695"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Core]Make load weight exceed hbm error more instructive for customers by @Chenyaaang (#20644)",
+      "prs": [
+        "20644"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[KVConnector] Aggregate finished requests on the scheduler by @orozery (#19555)",
+      "prs": [
+        "19555"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] loose new-model tagger conditions by @Isotr0py (#20747)",
+      "prs": [
+        "20747"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix Basic Models Test by @jeejeelee (#20728)",
+      "prs": [
+        "20728"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Build][Non-CUDA] Only referencing CMAKE_CUDA_COMPILER_VERSION on CUDA where it is defined by @gshtras (#20738)",
+      "prs": [
+        "20738"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix ordered list by @reidliu41 (#20749)",
+      "prs": [
+        "20749"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Bugfix] Skip failing Tensorizer+LoRA test by @mgoin (#20724)",
+      "prs": [
+        "20724"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Normalize lm-eval command between baseline and correctness test by @mgoin (#18560)",
+      "prs": [
+        "18560"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Clean up mark to fork process in BNB tests by @Isotr0py (#20692)",
+      "prs": [
+        "20692"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add engine args back in to the docs by @hmellor (#20674)",
+      "prs": [
+        "20674"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update Dockerfile FlashInfer to v0.2.8rc1 by @mgoin (#20718)",
+      "prs": [
+        "20718"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][CPU] Vllm int8 quantization enablement for ARM CPU by @nishith-fujitsu (#14129)",
+      "prs": [
+        "14129"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm][Regression] Remove tensor creation that harms performance on ROCm by @gshtras (#20741)",
+      "prs": [
+        "20741"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add reason parser for Hunyuan A13B Model. by @kzjeef (#20625)",
+      "prs": [
+        "20625"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][VLM] Support JinaVL Reranker by @shineran96 (#20260)",
+      "prs": [
+        "20260"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix DeepSeek-R1-0528 chat template by @sfbemerk (#20717)",
+      "prs": [
+        "20717"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Test] Remove docker build from test. by @QiliangCui (#20542)",
+      "prs": [
+        "20542"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] [CI] Fix Tensorizer LoRA test by @sangstar (#20760)",
+      "prs": [
+        "20760"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0][V1][Core] Add outlines integration for V1, and update V0 integration. by @unaidedelf8777 (#15975)",
+      "prs": [
+        "15975"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Fix pre commit issue by @yewentao256 (#20782)",
+      "prs": [
+        "20782"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Remove assertion of expert_map being None by @minosfuture (#20714)",
+      "prs": [
+        "20714"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add Support for Default Modality Specific LoRAs [generate / chat completions] by @alex-jw-brooks (#19126)",
+      "prs": [
+        "19126"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fused MoE Modular Kernel chunking loop by @varun-sundar-rabindranath (#20392)",
+      "prs": [
+        "20392"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[KVConnector] Always call connector `clear_metadata()` at end of step by @njhill (#20756)",
+      "prs": [
+        "20756"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] MoE ModularKernel : Introduce TopKWeightAndReduce  by @varun-sundar-rabindranath (#20648)",
+      "prs": [
+        "20648"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Benchmark] Make sure the output length > 0 when testing prefill workload. by @KuntaiDu (#20786)",
+      "prs": [
+        "20786"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Lazy import gguf by @simon-mo (#20785)",
+      "prs": [
+        "20785"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Bugfix] Specify same TORCH_CUDA_ARCH_LIST for flashinfer aot and install by @mgoin (#20772)",
+      "prs": [
+        "20772"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add kimi-k2 tool parser by @MoyanZitto (#20789)",
+      "prs": [
+        "20789"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[fix]: disable cutlass block scaled group gemm for EP by @djmmoss (#20781)",
+      "prs": [
+        "20781"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Support HF format of minimax by @mgoin (#20211)",
+      "prs": [
+        "20211"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Attention] MLA - Flashinfer Ragged Prefill by @alexm-redhat (#20034)",
+      "prs": [
+        "20034"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Integrate SM100 DeepGEMM support by @yewentao256 (#20087)",
+      "prs": [
+        "20087"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU] XCCL support enabled in torch 2.8.0.dev nightly builds by @ratnampa (#20705)",
+      "prs": [
+        "20705"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf][fp8] Use CustomOp abstraction for fp8 quant for better perf by @ProExpertProg (#19830)",
+      "prs": [
+        "19830"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Enable Mamba2 layers other than MambaMixer2 in the v1 engine by @nopperl (#20660)",
+      "prs": [
+        "20660"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fold long code block by @reidliu41 (#20795)",
+      "prs": [
+        "20795"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Upgrade depyf to 0.19 and streamline custom pass logging by @ProExpertProg (#20777)",
+      "prs": [
+        "20777"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization][1/N] MoE support BNB-Inflight Quantization by @jeejeelee (#20061)",
+      "prs": [
+        "20061"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add Flashinfer TRTLLM Backend for Flashinfer decode path (SM100).  by @pavanimajety (#19825)",
+      "prs": [
+        "19825"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Refactor `/invocations` to be task-agnostic by @DarkLight1337 (#20764)",
+      "prs": [
+        "20764"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Temporarily suspend google/gemma-3-1b-it. by @QiliangCui (#20722)",
+      "prs": [
+        "20722"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Add missing field to TritonLanguagePlaceholder by @bigPYJ1151 (#20812)",
+      "prs": [
+        "20812"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] fix ordered list issue by @reidliu41 (#20819)",
+      "prs": [
+        "20819"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add unit tests for MoE ModularKernel combinations + Profiling utility by @varun-sundar-rabindranath (#20449)",
+      "prs": [
+        "20449"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Basic tuned configs for NVFP4 CUTLASS dense GEMM by @mgoin (#20646)",
+      "prs": [
+        "20646"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Data Parallel deployment documentation by @njhill (#20768)",
+      "prs": [
+        "20768"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix OOM in language generation test by @Isotr0py (#20814)",
+      "prs": [
+        "20814"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update kimi-k2 tool calling docs, enable unit tests by @MoyanZitto (#20821)",
+      "prs": [
+        "20821"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI Bug] Fix Async Engine, Inputs, Utils, Worker Test: 'State' object has no attribute 'enable_server_load_tracking' by @yewentao256 (#20845)",
+      "prs": [
+        "20845"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Integration SM100 FlashInfer fused allreduce RMSNorm by @ilmarkov (#20691)",
+      "prs": [
+        "20691"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add pynccl all-gatherv and reducescatterv by @trevor-m (#20154)",
+      "prs": [
+        "20154"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Restrict deep_gemm's log output by @jeejeelee (#20827)",
+      "prs": [
+        "20827"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Lazy import fused_experts in BitsAndBytesMoEMethod to avoid break not-cuda-alike devices  by @bigPYJ1151 (#20822)",
+      "prs": [
+        "20822"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix tensor parallel issue in Qwen3 reranker weight loading by @yurhett (#20682)",
+      "prs": [
+        "20682"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Ensure compatability with Transformers v4.53 by @Isotr0py (#20541)",
+      "prs": [
+        "20541"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] : Fix typo - logger.warn_once -> logger.warning_once by @varun-sundar-rabindranath (#20852)",
+      "prs": [
+        "20852"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Abstract prompt and SpeechToTextConfig for transcriptions models by @NickLucche (#20637)",
+      "prs": [
+        "20637"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Replace unavailable video url in multimodal test by @Isotr0py (#20854)",
+      "prs": [
+        "20854"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Respect `no_use_tqdm_on_load` flag while capturing CUDA graph by @lk-chen (#20834)",
+      "prs": [
+        "20834"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug] Fix DeepGemm for EP low latency case by @yewentao256 (#20833)",
+      "prs": [
+        "20833"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Update basic.md by @luccafong (#20846)",
+      "prs": [
+        "20846"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix torch.compile x LoRA for PyTorch 2.8  by @zou3519 (#20823)",
+      "prs": [
+        "20823"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[cold start time] add envs.VLLM_COMPILE_DEPYF to guard decompile by @BoyuanFeng (#20790)",
+      "prs": [
+        "20790"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove extra tensor on CPU by @maxdebayser (#20693)",
+      "prs": [
+        "20693"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable ModelOpt Llama4 fp8 checkpoint deployment by @Edwardf0t1 (#20419)",
+      "prs": [
+        "20419"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"Use NVCC --compress-mode to reduce binary size by 30% #20694\" by @mgoin (#20853)",
+      "prs": [
+        "20694",
+        "20853"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] New model support for microsoft/Phi-4-mini-flash-reasoning by @congcongchen123 (#20702)",
+      "prs": [
+        "20702"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Tensor Parallelism Padding Consistency in Granite Models by @alex-jw-brooks (#20843)",
+      "prs": [
+        "20843"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[docs] convert supported configs to table by @reidliu41 (#20858)",
+      "prs": [
+        "20858"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Restrict Machete to only run on Hopper by @mgoin (#20830)",
+      "prs": [
+        "20830"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Sched] Enhance the logic to remove stopped requests from queues by @WoosukKwon (#20739)",
+      "prs": [
+        "20739"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Use Triton instead of Torch for DeepGEMM Per Token Group Quant by @yewentao256 (#20841)",
+      "prs": [
+        "20841"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix a couple PPLX+CUTLASS MoE bugs by @ElizaWszola (#20825)",
+      "prs": [
+        "20825"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Change the way of import triton by @yewentao256 (#20774)",
+      "prs": [
+        "20774"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Support multiple tasks per model by @NickLucche (#20771)",
+      "prs": [
+        "20771"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Renable google/gemma-3-1b-it accuracy test. by @QiliangCui (#20866)",
+      "prs": [
+        "20866"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support for LlamaForSequenceClassification by @thechaos16 (#20807)",
+      "prs": [
+        "20807"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix: add patch_rope_scaling after hf override by @Wangmerlyn (#20857)",
+      "prs": [
+        "20857"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] fix define of RerankDocument by @Liuchenlong (#20877)",
+      "prs": [
+        "20877"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [ROCm] [AITER] Upgrade AITER to commit `916bf3c` and bugfix APIs by @tjtanaa (#20880)",
+      "prs": [
+        "20880"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Hybrid allocator without prefix caching by @nopperl (#20661)",
+      "prs": [
+        "20661"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add `update_config` RPC method by @22quinn (#20095)",
+      "prs": [
+        "20095"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Prefix Cache] Add reproducible prefix-cache block hashing using SHA-256 + CBOR (64bit) by @vMaroon (#20511)",
+      "prs": [
+        "20511"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Removing redundant python version check by @Dannyso05 (#20888)",
+      "prs": [
+        "20888"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix: Add missing EOFError handling in CLI complete command by @reidliu41 (#20896)",
+      "prs": [
+        "20896"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] [Bugfix] [Critical]: Fix mamba compilation bug by @tjtanaa (#20883)",
+      "prs": [
+        "20883"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] add BNB for MixtralForCausalLM by @jeejeelee (#20893)",
+      "prs": [
+        "20893"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor][V1] Move outlines utils for V1 imports by @aarnphm (#20878)",
+      "prs": [
+        "20878"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] Move bind_kv_cache to worker module by @wangxiyuan (#20900)",
+      "prs": [
+        "20900"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix OOM issue in Jina-VL test by @DarkLight1337 (#20907)",
+      "prs": [
+        "20907"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Bump up mistral_common to support v13 tokenizer by @22quinn (#20905)",
+      "prs": [
+        "20905"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove unused function by @reidliu41 (#20909)",
+      "prs": [
+        "20909"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix]: Fix messy code when using logprobs by @chaunceyjiang (#20910)",
+      "prs": [
+        "20910"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Log the reason for falling back to FlexAttention by @DarkLight1337 (#20699)",
+      "prs": [
+        "20699"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add Ling implementation by @ant-yy (#20680)",
+      "prs": [
+        "20680"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] cc folks on changes to vllm/compilation by @zou3519 (#20925)",
+      "prs": [
+        "20925"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Update codeowner for compilation code by @houseroad (#20929)",
+      "prs": [
+        "20929"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Clean up Aimv2 config registration in Ovis config by @Isotr0py (#20921)",
+      "prs": [
+        "20921"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Add Transformers nightly tests in CI by @Isotr0py (#20924)",
+      "prs": [
+        "20924"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Change default model to Qwen3-0.6B by @tlrmchlsmth (#20335)",
+      "prs": [
+        "20335"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add benchmark dataset for mlperf llama tasks by @mgoin (#20338)",
+      "prs": [
+        "20338"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] ModularKernel : Perform WeightAndReduce inside TritonExperts & DeepGemmExperts by @varun-sundar-rabindranath (#20725)",
+      "prs": [
+        "20725"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Relax translations tests by @NickLucche (#20856)",
+      "prs": [
+        "20856"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix overflow indexing in causal_conv1d kernel by @tdoublep (#20938)",
+      "prs": [
+        "20938"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] remove outdated performance benchmark by @KuntaiDu (#20935)",
+      "prs": [
+        "20935"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fall back if flashinfer comm module not found by @sarckk (#20936)",
+      "prs": [
+        "20936"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "SM100 Cutlass MLA decode with unrestricted num_heads (< 128) for DeepSeek TP by @alexm-redhat (#20769)",
+      "prs": [
+        "20769"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] VLLM_DISABLE_COMPILE_CACHE=1 should disable all reads and writes from the cache by @zou3519 (#20942)",
+      "prs": [
+        "20942"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix incorrect dispatch for CutlassBlockScaledGroupedGemm and DeepGEMM by @mgoin (#20933)",
+      "prs": [
+        "20933"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Split Entrypoints Test into LLM and API Server by @mgoin (#20945)",
+      "prs": [
+        "20945"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Use w8a8 quantized matmul Pallas kernel by @vanbasten23 (#19170)",
+      "prs": [
+        "19170"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add Kuberay to deployment integrations by @crypdick (#20592)",
+      "prs": [
+        "20592"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "feat: add image zoom to improve image viewing experience by @reidliu41 (#20763)",
+      "prs": [
+        "20763"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Fix flaky `test_streaming_response` test by @NickLucche (#20913)",
+      "prs": [
+        "20913"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enabled BnB NF4 inference on Gaudi by @rsshaik1 (#20172)",
+      "prs": [
+        "20172"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Switch bailout logic for kv-cache-dtype with SM100 Flashinfer by @pavanimajety (#20934)",
+      "prs": [
+        "20934"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Clearer mistral3 and pixtral model support description by @Isotr0py (#20926)",
+      "prs": [
+        "20926"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[cold start] replace VLLM_COMPILE_DEPYF with debug_dump_dir by @BoyuanFeng (#20940)",
+      "prs": [
+        "20940"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add AutoWeightsLoader support for BERT, RoBERTa by @jennifurhe (#20534)",
+      "prs": [
+        "20534"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Implement Async Scheduling by @WoosukKwon (#19970)",
+      "prs": [
+        "19970"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Refactor AllReduceFusionPass. Remove parameter by @ilmarkov (#20918)",
+      "prs": [
+        "20918"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[frontend] Add --help=page option for paginated help output by @reidliu41 (#20961)",
+      "prs": [
+        "20961"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve documentation for RLHF example by @crypdick (#20598)",
+      "prs": [
+        "20598"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[frontend] Refactor CLI Args for a better modular integration by @kouroshHakha (#20206)",
+      "prs": [
+        "20206"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve documentation for ray cluster launcher helper script by @crypdick (#20602)",
+      "prs": [
+        "20602"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Optimize kv cache update kernel by @tengyifei (#20415)",
+      "prs": [
+        "20415"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [Hybrid] Refactor mamba state shape calculation; enable V1 via cli  by @tdoublep (#20840)",
+      "prs": [
+        "20840"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] Add init files for python package by @Potabk (#20908)",
+      "prs": [
+        "20908"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[doc] Add more details for Ray-based DP by @ruisearch42 (#20948)",
+      "prs": [
+        "20948"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Deprecation] Remove `TokenizerPoolConfig` by @hmellor (#20968)",
+      "prs": [
+        "20968"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[v1][core] Support for attention free models by @christian-pinto (#20811)",
+      "prs": [
+        "20811"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Voxtral by @patrickvonplaten (#20970)",
+      "prs": [
+        "20970"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix wrong path in Transformers Nightly Models Test by @DarkLight1337 (#20994)",
+      "prs": [
+        "20994"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Deprecation] Remove everything scheduled for removal in v0.10.0 by @hmellor (#20979)",
+      "prs": [
+        "20979"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Configure Gemini by @hmellor (#20971)",
+      "prs": [
+        "20971"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Deprecation] Remove `nullable_kvs` by @hmellor (#20969)",
+      "prs": [
+        "20969"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add full serve CLI reference back to docs by @hmellor (#20978)",
+      "prs": [
+        "20978"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] warpSize is being made non constexpr in ROCm 7.0 by @gshtras (#20330)",
+      "prs": [
+        "20330"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] fix 3 issues: (1) using metadata for causal-conv1d, (2) indexing overflow in v1 vLLM, and (3) init_states in v0 by @thoangtrvn (#20838)",
+      "prs": [
+        "20838"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Support cache_salt in /v1/completions and /v1/responses by @dr75 (#20981)",
+      "prs": [
+        "20981"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug Fix] get_distributed_init_method should get the ip from get_ip i\u2026 by @Relics (#20889)",
+      "prs": [
+        "20889"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Nvidia] Integrate SM100 cudnn prefill API to MLA prefill by @elfiegg (#20411)",
+      "prs": [
+        "20411"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] OpenAI Responses API supports input image by @chaunceyjiang (#20975)",
+      "prs": [
+        "20975"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Remove print left in FrontendArgs.add_cli_args by @mgoin (#21004)",
+      "prs": [
+        "21004"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add ModelConfig class for GraniteMoeHybrid to override default max_seq_len_to_capture by @tdoublep (#20923)",
+      "prs": [
+        "20923"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] bump xgrammar version to v0.1.21 by @chaunceyjiang (#20992)",
+      "prs": [
+        "20992"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Chore] Remove outdated transformers check by @b8zhong (#20989)",
+      "prs": [
+        "20989"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Refactor: Improve argument handling for `conda` command by @reidliu41 (#20481)",
+      "prs": [
+        "20481"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Enhance Anyscale documentation, add quickstart links for vLLM by @crypdick (#21018)",
+      "prs": [
+        "21018"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Correct per_act_token in CompressedTensorsW8A8Fp8MoECutlassM\u2026 by @minosfuture (#20937)",
+      "prs": [
+        "20937"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add Dockerfile argument for VLLM_USE_PRECOMPILED environment by @dougbtv (#20943)",
+      "prs": [
+        "20943"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI][HPU] update for v0 deprecate by switching to VLLM_TARGET_DEVICE=empty by @xuechendi (#21006)",
+      "prs": [
+        "21006"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Mistral3 support on SM100/SM120 by @mgoin (#20998)",
+      "prs": [
+        "20998"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Remove duplicate docstring by @yewentao256 (#21012)",
+      "prs": [
+        "21012"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Voxtral] Add more tests by @patrickvonplaten (#21010)",
+      "prs": [
+        "21010"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Avoid direct comparison of floating point numbers by @maxdebayser (#21002)",
+      "prs": [
+        "21002"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Meta] Llama4 EAGLE Support by @morgendave (#20591)",
+      "prs": [
+        "20591"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] fix kv_cache_update kernel block size choosing logic by @yaochengji (#21007)",
+      "prs": [
+        "21007"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix import error on non-blackwell machines by @LucasWilkinson (#21020)",
+      "prs": [
+        "21020"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix inadvertently silenced PP tests for `mp`, add DeepSeek V2/V3 model family to PP tests by @eicherseiji (#20831)",
+      "prs": [
+        "20831"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add intro and fix 1-2-3 list in frameworks/open-webui.md by @windsonsea (#19199)",
+      "prs": [
+        "19199"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Consolidate pooler implementations by @DarkLight1337 (#20927)",
+      "prs": [
+        "20927"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "feat - add a new endpoint `get_tokenizer_info` to provide tokenizer/chat-template information by @m-misiura (#20575)",
+      "prs": [
+        "20575"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[fix] fix qwen image_embeds input by @h-avsha (#21049)",
+      "prs": [
+        "21049"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove Qwen Omni workaround that's no longer necessary by @hmellor (#21057)",
+      "prs": [
+        "21057"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Remove model sampler by @DarkLight1337 (#21059)",
+      "prs": [
+        "21059"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support FP8 Quantization and Inference Run on Intel Gaudi (HPU) using INC (Intel Neural Compressor) by @nirda7 (#12010)",
+      "prs": [
+        "12010"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove torch_xla.tpu.version() from pallas.py. by @QiliangCui (#21065)",
+      "prs": [
+        "21065"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update PyTorch to `torch==2.7.1` for CUDA by @mgoin (#21011)",
+      "prs": [
+        "21011"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] weight loading use correct tp_group with patch_tensor_parallel_group by @Kevin-XiongC (#21024)",
+      "prs": [
+        "21024"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docker] Allow FlashInfer to be built in the ARM CUDA Dockerfile by @mgoin (#21013)",
+      "prs": [
+        "21013"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Start using python 3.12 by @vanbasten23 (#21000)",
+      "prs": [
+        "21000"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Machete zero point issue for GPTQ models on SM90 by @mgoin (#21066)",
+      "prs": [
+        "21066"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Attention] Refactor attention metadata builder interface by @LucasWilkinson (#20466)",
+      "prs": [
+        "20466"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1][P/D]Enhance Performance and code readability for P2pNcclConnector by @Abatom (#20906)",
+      "prs": [
+        "20906"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [KVConnector] Fix MultiprocExecutor worker output aggregation by @sdavidbd (#21048)",
+      "prs": [
+        "21048"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix PhiMoE expert mapping by @jeejeelee (#21085)",
+      "prs": [
+        "21085"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix]: Fix final_res_batch list index out of range error by @chaunceyjiang (#21055)",
+      "prs": [
+        "21055"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] DeepGemm MoE : Integrate triton permute / unpermute kernels  by @varun-sundar-rabindranath (#20903)",
+      "prs": [
+        "20903"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add ToolParser and MoE Config for Hunyuan A13B  by @kzjeef (#20820)",
+      "prs": [
+        "20820"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[VLM] Add Nemotron-Nano-VL-8B-V1 support by @kylehh (#20349)",
+      "prs": [
+        "20349"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Improve docstring formatting for `FusedMoEParallelConfig.make` by @hmellor (#21117)",
+      "prs": [
+        "21117"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Avoid unnecessary import by @wangxiyuan (#21106)",
+      "prs": [
+        "21106"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Move code block out of admonition now that it's short by @hmellor (#21118)",
+      "prs": [
+        "21118"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Performance] Performance improvements in non-blockwise fp8 CUTLASS MoE by @ElizaWszola (#20762)",
+      "prs": [
+        "20762"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Update pooling model interface by @DarkLight1337 (#21058)",
+      "prs": [
+        "21058"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Qwen MoE model supports LoRA by @jeejeelee (#20932)",
+      "prs": [
+        "20932"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "On environments where numa cannot be detected we get 0 by @ericcurtin (#21115)",
+      "prs": [
+        "21115"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 deprecation] Remove V0 HPU backend by @WoosukKwon (#21131)",
+      "prs": [
+        "21131"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Log] Debugging Log with more Information by @yewentao256 (#20770)",
+      "prs": [
+        "20770"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix the tensor non-contiguous issue for Flashinfer TRT-LLM backend attention kernel by @elvischenv (#21133)",
+      "prs": [
+        "21133"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add minimal demo of Ray Data API usage by @crypdick (#21080)",
+      "prs": [
+        "21080"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Update supported models documentation with missing models by @luccafong (#20844)",
+      "prs": [
+        "20844"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Attention] Make local attention backend agnostic by @LucasWilkinson (#21093)",
+      "prs": [
+        "21093"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add inplace weights loading example by @22quinn (#19640)",
+      "prs": [
+        "19640"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] FlashInfer CUTLASS fused MoE backend (NVFP4) by @wenscarl (#20037)",
+      "prs": [
+        "20037"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Add swap_ab to SM90 FP8 non-block CUTLASS moe grouped gemm by @shixianc (#20911)",
+      "prs": [
+        "20911"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Do not print async output warning for v1 by @WoosukKwon (#21151)",
+      "prs": [
+        "21151"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[benchmark] Sending request strictly follows the random intervals by @Jialin (#21108)",
+      "prs": [
+        "21108"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Make MM embedding merge interface explicit in model runner by @ywang96 (#21147)",
+      "prs": [
+        "21147"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Re-add the implicit conversion feature for as_seq_cls_model by @noooop (#21103)",
+      "prs": [
+        "21103"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] The special_tokens in tokenizer should also be controlled by do_lower_case in encoder_config. by @noooop (#20750)",
+      "prs": [
+        "20750"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix typo in model name by @DarkLight1337 (#21178)",
+      "prs": [
+        "21178"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Allocate less memory in non-batched CUTLASS MoE by @ElizaWszola (#21121)",
+      "prs": [
+        "21121"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Set pooling params based on task and model by @DarkLight1337 (#21128)",
+      "prs": [
+        "21128"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Let GraniteMoeAttention use YaRN by @tdoublep (#21174)",
+      "prs": [
+        "21174"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Update CODEOWNERS for vllm/compilation by @zou3519 (#21185)",
+      "prs": [
+        "21185"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Apply torch.Tag.needs_fixed_stride_order only for torch==2.6.0 by @zou3519 (#19346)",
+      "prs": [
+        "19346"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Avoid KVCacheBlock.__eq__ invocations in FreeKVCacheBlockQueue by @JialinOuyang-Meta (#21005)",
+      "prs": [
+        "21005"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Voxtral on Blackwell GPUs (RTX 50 series) by @hax0r31337 (#21077)",
+      "prs": [
+        "21077"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Elastic Expert Parallel Initial Support by @ruisearch42 (#20775)",
+      "prs": [
+        "20775"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Quantization] Enable BNB support for more MoE models by @jeejeelee (#21100)",
+      "prs": [
+        "21100"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Support Local Chunked Attention for Hybrid KV Cache by @luccafong (#19351)",
+      "prs": [
+        "19351"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Model] Fix LoRA for Mistral-Small-3.1-24B-Instruct-2503 by @varun-sundar-rabindranath (#21183)",
+      "prs": [
+        "21183"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 Deprecation] Remove V0 Spec Decode workers by @WoosukKwon (#21152)",
+      "prs": [
+        "21152"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel][Performance] Tweak MoE Batched silu_mul_fp8_quant_deep_gemm kernel by @varun-sundar-rabindranath (#21193)",
+      "prs": [
+        "21193"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][CPU] Fix `TorchSDPABackendImpl` doesn't have `use_irope`  by @LucasWilkinson (#21200)",
+      "prs": [
+        "21200"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug] DeepGemm: Fix TypeError: per_block_cast_to_fp8() missing 1 required positional argument: 'use_ue8m0' for SM100 by @yewentao256 (#21187)",
+      "prs": [
+        "21187"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] EXAONE 4.0 model support by @Deepfocused (#21060)",
+      "prs": [
+        "21060"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Tools][Benchmark] Add readme file for auto_tune script by @Chenyaaang (#20779)",
+      "prs": [
+        "20779"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix a couple of Voxtral tests by @huydhn (#21218)",
+      "prs": [
+        "21218"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 deprecation] Remove long context LoRA by @jeejeelee (#21169)",
+      "prs": [
+        "21169"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix ndarray video color from VideoAsset by @Isotr0py (#21064)",
+      "prs": [
+        "21064"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix potential cuda-graph IMA by @LucasWilkinson (#21196)",
+      "prs": [
+        "21196"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add torch golden impl for moe_align_block_size kernel test by @shixianc (#20653)",
+      "prs": [
+        "20653"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[NVIDIA] Add SM100 Flashinfer MoE blockscale fp8 backend for low latency by @kaixih (#20645)",
+      "prs": [
+        "20645"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Frontend] Fix openai CLI arg `middleware` by @22quinn (#21220)",
+      "prs": [
+        "21220"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[bugfix] Fix auto thread-binding when world_size > 1 in CPU backend and refactor code by @bigPYJ1151 (#21032)",
+      "prs": [
+        "21032"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix/remove some broken model executor tests by @rabi (#21224)",
+      "prs": [
+        "21224"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/CD][bugfix]fix: error argument to loads has incompatible type by @llsj14 (#21223)",
+      "prs": [
+        "21223"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Update the link to the 'Prometheus/Grafana' example by @1195343015 (#21225)",
+      "prs": [
+        "21225"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Make PD work with Ray by @kouroshHakha (#21072)",
+      "prs": [
+        "21072"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [Hybrid] Enable piecewise CUDA Graph for mamba layers  by @tdoublep (#21194)",
+      "prs": [
+        "21194"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 Deprecation] Deprecate BlockSparse Attention & Phi3-Small by @WoosukKwon (#21217)",
+      "prs": [
+        "21217"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix full cuda graph slot_mapping by @fhl2000 (#21228)",
+      "prs": [
+        "21228"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "GLM-4 Update by @zRzRzRzRzRzRzR (#20736)",
+      "prs": [
+        "20736"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] [V1] Update docs to remove enforce_eager limitation for hybrid models. by @tdoublep (#21233)",
+      "prs": [
+        "21233"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] support fp8 kv cache quantization by @yaochengji (#19292)",
+      "prs": [
+        "19292"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable v1 metrics tests by @eicherseiji (#20953)",
+      "prs": [
+        "20953"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] use AutoWeightsLoader for bart by @calvin0327 (#18299)",
+      "prs": [
+        "18299"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Support VLMs with transformers backend by @zucchini-nlp (#20543)",
+      "prs": [
+        "20543"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[bugfix] fix syntax warning caused by backslash by @1195343015 (#21251)",
+      "prs": [
+        "21251"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Cleanup modelscope version constraint in Dockerfile by @yankay (#21243)",
+      "prs": [
+        "21243"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add RFC Meeting to Issue Template by @simon-mo (#21279)",
+      "prs": [
+        "21279"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add the instruction to run e2e validation manually before release by @huydhn (#21023)",
+      "prs": [
+        "21023"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix missing placeholder in logger debug by @DarkLight1337 (#21280)",
+      "prs": [
+        "21280"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][1/N] Support multiple poolers at model level by @DarkLight1337 (#21227)",
+      "prs": [
+        "21227"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix hardcoded links in docs by @hmellor (#21287)",
+      "prs": [
+        "21287"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Make tables more space efficient in `supported_models.md` by @hmellor (#21291)",
+      "prs": [
+        "21291"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] unify variable for LLM instance by @andyxning (#20996)",
+      "prs": [
+        "20996"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add Nvidia ModelOpt config adaptation by @Edwardf0t1 (#19815)",
+      "prs": [
+        "19815"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add sliding window to flashinfer test by @WoosukKwon (#21282)",
+      "prs": [
+        "21282"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CPU] Enable shared-memory based pipeline parallel for CPU backend by @bigPYJ1151 (#21289)",
+      "prs": [
+        "21289"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] make utils.current_stream thread-safety (#21252) by @simpx (#21253)",
+      "prs": [
+        "21252",
+        "21253"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add dummy maverick test by @minosfuture (#21199)",
+      "prs": [
+        "21199"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Attention] Clean up iRoPE in V1 by @LucasWilkinson (#21188)",
+      "prs": [
+        "21188"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DP] Fix Prometheus Logging by @robertgshaw2-redhat (#21257)",
+      "prs": [
+        "21257"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix bad lm-eval fork by @mgoin (#21318)",
+      "prs": [
+        "21318"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[perf] Speed up align sum kernels by @hj-mistral (#21079)",
+      "prs": [
+        "21079"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[v1][sampler] Inplace logprobs comparison to get the token rank by @houseroad (#21283)",
+      "prs": [
+        "21283"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU] Enable external_launcher to serve as an executor via torchrun by @chaojun-zhang (#21021)",
+      "prs": [
+        "21021"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Fix CPU doc format by @bigPYJ1151 (#21316)",
+      "prs": [
+        "21316"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Intel GPU] Ray Compiled Graph avoid NCCL for Intel GPU by @ratnampa (#21338)",
+      "prs": [
+        "21338"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Performance] Performance improvements in non-blockwise fp8 CUTLASS MoE (#20762) by @minosfuture (#21334)",
+      "prs": [
+        "20762",
+        "21334"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Minimize number of dict lookup in _maybe_evict_cached_block by @Jialin (#21281)",
+      "prs": [
+        "21281"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] [Hybrid] Add new test to verify that hybrid views into KVCacheTensor are compatible by @tdoublep (#21300)",
+      "prs": [
+        "21300"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Refactor] Fix Compile Warning #1444-D by @yewentao256 (#21208)",
+      "prs": [
+        "1444",
+        "21208"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix kv_cache_dtype handling for out-of-tree HPU plugin by @kzawora-intel (#21302)",
+      "prs": [
+        "21302"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] DeepEPHighThroughtput - Enable Inductor pass by @varun-sundar-rabindranath (#21311)",
+      "prs": [
+        "21311"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bug] DeepGemm: Fix Cuda Init Error by @yewentao256 (#21312)",
+      "prs": [
+        "21312"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update fp4 quantize API by @wenscarl (#21327)",
+      "prs": [
+        "21327"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature][eplb] add verify ep or tp or dp by @lengrongfu (#21102)",
+      "prs": [
+        "21102"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add arcee model by @alyosha-swamy (#21296)",
+      "prs": [
+        "21296"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix eviction cached blocked logic by @simon-mo (#21357)",
+      "prs": [
+        "21357"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove deprecated args in v0.10 by @kebe7jun (#21349)",
+      "prs": [
+        "21349"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Optimize update checks in LogitsProcessor by @Jialin (#21245)",
+      "prs": [
+        "21245"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[benchmark] Port benchmark request sent optimization to benchmark_serving by @Jialin (#21209)",
+      "prs": [
+        "21209"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Introduce popleft_n and append_n in FreeKVCacheBlockQueue to further optimize block_pool by @Jialin (#21222)",
+      "prs": [
+        "21222"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] unify variable for LLM instance v2 by @andyxning (#21356)",
+      "prs": [
+        "21356"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[perf] Add fused MLA QKV + strided layernorm by @mickaelseznec (#21116)",
+      "prs": [
+        "21116"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[feat]: add SM100 support for cutlass FP8 groupGEMM by @djmmoss (#20447)",
+      "prs": [
+        "20447"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Perf] Cuda Kernel for Per Token Group Quant by @yewentao256 (#21083)",
+      "prs": [
+        "21083"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Adds parallel model weight loading for runai_streamer by @bbartels (#21330)",
+      "prs": [
+        "21330"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[feat] Enable mm caching for transformers backend by @zucchini-nlp (#21358)",
+      "prs": [
+        "21358"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Refactor] Fix Compile Warning #1444-D (#21208)\" by @yewentao256 (#21384)",
+      "prs": [
+        "1444",
+        "21208",
+        "21384"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add tokenization_kwargs to encode for embedding model truncation by @Receiling (#21033)",
+      "prs": [
+        "21033"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Decode Tokenized IDs to Strings for `hf_processor` in `llm.chat()` with `model_impl=transformers` by @ariG23498 (#21353)",
+      "prs": [
+        "21353"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix test failure due to updated model repo by @DarkLight1337 (#21375)",
+      "prs": [
+        "21375"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix Flashinfer Allreduce+Norm enable disable calculation based on `fi_allreduce_fusion_max_token_num` by @xinli-git (#21325)",
+      "prs": [
+        "21325"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add Qwen3CoderToolParser by @ranpox (#21396)",
+      "prs": [
+        "21396"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Copy HF_TOKEN env var to Ray workers by @ruisearch42 (#21406)",
+      "prs": [
+        "21406"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix ray import error mem cleanup bug by @joerunde (#21381)",
+      "prs": [
+        "21381"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix model executor tests by @DarkLight1337 (#21387)",
+      "prs": [
+        "21387"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][ROCm][Build] Fix build regression on ROCm by @gshtras (#21393)",
+      "prs": [
+        "21393"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Simplify weight loading in Transformers backend by @hmellor (#21382)",
+      "prs": [
+        "21382"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Update python to python3 calls for image; fix prefix & input calculations. by @ericehanley (#21391)",
+      "prs": [
+        "21391"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BUGFIX] deepseek-v2-lite failed due to fused_qkv_a_proj name update by @xuechendi (#21414)",
+      "prs": [
+        "21414"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][CUDA] fixes CUDA FP8 kv cache dtype supported by @elvischenv (#21420)",
+      "prs": [
+        "21420"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Changing \"amdproduction\" allocation. by @Alexei-V-Ivanov-AMD (#21409)",
+      "prs": [
+        "21409"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix nightly transformers CI failure by @Isotr0py (#21427)",
+      "prs": [
+        "21427"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add basic unit test for maybe_evict_cached_block by @Jialin (#21400)",
+      "prs": [
+        "21400"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Cleanup] Only log MoE DP setup warning if DP is enabled by @mgoin (#21315)",
+      "prs": [
+        "21315"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "add clear messages for deprecated models by @youkaichao (#21424)",
+      "prs": [
+        "21424"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] ensure tool_choice is popped when `tool_choice:null` is passed in json payload by @gcalmettes (#19679)",
+      "prs": [
+        "19679"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixed typo in profiling logs by @sergiopaniego (#21441)",
+      "prs": [
+        "21441"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix bullets and grammars in tool_calling.md by @windsonsea (#21440)",
+      "prs": [
+        "21440"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Sampler] Introduce logprobs mode for logging by @houseroad (#21398)",
+      "prs": [
+        "21398"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Mamba V2 Test not Asserting Failures.  by @fabianlim (#21379)",
+      "prs": [
+        "21379"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] fixed nvfp4_moe test failures due to invalid kwargs by @chenyang78 (#21246)",
+      "prs": [
+        "21246"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Clean up v1/metrics.md by @windsonsea (#21449)",
+      "prs": [
+        "21449"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] add Hunyuan V1 Dense Model support. by @kzjeef (#21368)",
+      "prs": [
+        "21368"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Check all pooling tasks during profiling by @DarkLight1337 (#21299)",
+      "prs": [
+        "21299"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Qwen][DCA] fixes bug in dual-chunk-flash-attn backend for qwen 1m models. by @sighingnow (#21364)",
+      "prs": [
+        "21364"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Tests] Add tests for headless internal DP LB by @njhill (#21450)",
+      "prs": [
+        "21450"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Model] PrithviMAE Enablement on vLLM v1 engine by @christian-pinto (#20577)",
+      "prs": [
+        "20577"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add test case for compiling multiple graphs by @sarckk (#21044)",
+      "prs": [
+        "21044"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][TEST] Fix the downloading issue in TPU v1 test 11.  by @QiliangCui (#21418)",
+      "prs": [
+        "21418"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add `reload_weights` RPC method by @22quinn (#20096)",
+      "prs": [
+        "20096"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V1] Fix local chunked attention always disabled by @sarckk (#21419)",
+      "prs": [
+        "21419"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[V0 Deprecation] Remove Prompt Adapters by @mgoin (#20588)",
+      "prs": [
+        "20588"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Freeze gc during cuda graph capture to speed up init by @mgoin (#21146)",
+      "prs": [
+        "21146"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "feat(gguf_loader): accept HF repo paths & URLs for GGUF by @hardikkgupta (#20793)",
+      "prs": [
+        "20793"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Set MAX_AUDIO_CLIP_FILESIZE_MB via env var instead of hardcoding by @deven-labovitch (#21374)",
+      "prs": [
+        "21374"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Add dummy maverick test to CI by @minosfuture (#21324)",
+      "prs": [
+        "21324"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[XPU][UT] increase intel xpu CI test scope by @Liangliang-Ma (#21492)",
+      "prs": [
+        "21492"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix casing warning by @MatthewBonanni (#21468)",
+      "prs": [
+        "21468"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix example disagg_example_p2p_nccl_xpyd.sh zombie process by @david6666666 (#21437)",
+      "prs": [
+        "21437"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix]: Batch generation from prompt_embeds fails for long prompts by @KazusatoOoko (#21390)",
+      "prs": [
+        "21390"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix KVConnector TP worker aggregation by @njhill (#21473)",
+      "prs": [
+        "21473"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DP] Internal Load Balancing Per Node [`one-pod-per-node`] by @robertgshaw2-redhat (#21238)",
+      "prs": [
+        "21238"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Dump input metadata on crash for async scheduling by @WoosukKwon (#21258)",
+      "prs": [
+        "21258"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Set CUDA_VISIBLE_DEVICES before spawning the subprocesses by @yinghai (#21211)",
+      "prs": [
+        "21211"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add think chunk by @juliendenize (#21333)",
+      "prs": [
+        "21333"
+      ]
+    }
+  ],
+  "upgrade_notices": [],
+  "benchmarks": [
+    {
+      "category": "What's Changed",
+      "claim": "Add fused MOE config for Qwen3 30B A3B on B200 by @0xjunhao (#19455)",
+      "prs": [
+        "19455"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Doc] Fix quantization link titles by @DarkLight1337 (#19478)",
+      "prs": [
+        "19478"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Doc] Rename page titles by @DarkLight1337 (#20130)",
+      "prs": [
+        "20130"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Remove unnecessary explicit title anchors and use relative links instead by @hmellor (#20620)",
+      "prs": [
+        "20620"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Stop using title frontmatter and fix doc that can only be reached by search by @hmellor (#20623)",
+      "prs": [
+        "20623"
+      ]
+    }
+  ]
+}

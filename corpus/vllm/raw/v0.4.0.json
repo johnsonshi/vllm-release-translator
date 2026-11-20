@@ -1,0 +1,1450 @@
+{
+  "project": "vllm",
+  "version": "v0.4.0",
+  "published_date": "2024-03-30",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.4.0",
+  "commits_count": null,
+  "contributors_count": null,
+  "total_raw_items": 202,
+  "counts_by_category": {
+    "Models": 2,
+    "Production features": 5,
+    "Hardware": 2,
+    "Ecosystem": 2,
+    "What's Changed": 191
+  },
+  "items": [
+    {
+      "category": "Models",
+      "text": "New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183).",
+      "prs": [
+        "3433",
+        "3346",
+        "3660",
+        "3610",
+        "3183"
+      ]
+    },
+    {
+      "category": "Models",
+      "text": "New vision language model: LLaVA (#3042)",
+      "prs": [
+        "3042"
+      ]
+    },
+    {
+      "category": "Production features",
+      "text": "Automatic prefix caching (#2762, #3703) supporting long system prompt to be automatically cached across requests. Use the flag `--enable-prefix-caching` to turn it on.",
+      "prs": [
+        "2762",
+        "3703"
+      ]
+    },
+    {
+      "category": "Production features",
+      "text": "Support `json_object` in OpenAI server for arbitrary JSON, `--use-delay` flag to improve time to first token across many requests, and `min_tokens` to EOS suppression.",
+      "prs": []
+    },
+    {
+      "category": "Production features",
+      "text": "Progress in chunked prefill scheduler (#3236, #3538), and speculative decoding (#3103).",
+      "prs": [
+        "3236",
+        "3538",
+        "3103"
+      ]
+    },
+    {
+      "category": "Production features",
+      "text": "Custom all reduce kernel has been re-enabled after more robustness fixes.",
+      "prs": []
+    },
+    {
+      "category": "Production features",
+      "text": "Replaced cupy dependency due to its bugs.",
+      "prs": []
+    },
+    {
+      "category": "Hardware",
+      "text": "Improved Neuron support for AWS Inferentia.",
+      "prs": []
+    },
+    {
+      "category": "Hardware",
+      "text": "CMake based build system for extensibility.",
+      "prs": []
+    },
+    {
+      "category": "Ecosystem",
+      "text": "Extensive serving benchmark refactoring (#3277)",
+      "prs": [
+        "3277"
+      ]
+    },
+    {
+      "category": "Ecosystem",
+      "text": "Usage statistics collection (#2852)",
+      "prs": [
+        "2852"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "allow user chose log level by --log-level instead of fixed 'info'. by @AllenDou (#3109)",
+      "prs": [
+        "3109"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Reorder kv dtype check to avoid nvcc not found error on AMD platform by @cloudhan (#3104)",
+      "prs": [
+        "3104"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add Automatic Prefix Caching by @SageMoore (#2762)",
+      "prs": [
+        "2762"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add vLLM version info to logs and openai API server by @jasonacox (#3161)",
+      "prs": [
+        "3161"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[FIX] Fix styles in automatic prefix caching & add a automatic prefix caching benchmark by @zhuohan123 (#3158)",
+      "prs": [
+        "3158"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Make it easy to profile workers with nsight by @pcmoritz (#3162)",
+      "prs": [
+        "3162"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[DOC] add setup document to support neuron backend by @liangfu (#2777)",
+      "prs": [
+        "2777"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111 (#3171)",
+      "prs": [
+        "3171"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add document for vllm paged attention kernel. by @pian13131 (#2978)",
+      "prs": [
+        "2978"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou (#3175)",
+      "prs": [
+        "3175"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor fix] The domain dns.google may cause a socket.gaierror exception by @ttbachyinsda (#3176)",
+      "prs": [
+        "3176"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Push logprob generation to LLMEngine by @Yard1 (#3065)",
+      "prs": [
+        "3065"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add health check, make async Engine more robust by @Yard1 (#3015)",
+      "prs": [
+        "3015"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix the openai benchmarking requests to work with latest OpenAI apis by @wangchen615 (#2992)",
+      "prs": [
+        "2992"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] enable cupy in order to enable  cudagraph mode for AMD GPUs by @hongxiayang (#3123)",
+      "prs": [
+        "3123"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Store `eos_token_id` in `Sequence` for easy access by @njhill (#3166)",
+      "prs": [
+        "3166"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Avoid pickling entire LLMEngine for Ray workers by @njhill (#3207)",
+      "prs": [
+        "3207"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Tests] Add block manager and scheduler tests by @rkooo567 (#3108)",
+      "prs": [
+        "3108"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Testing] Fix core tests by @cadedaniel (#3224)",
+      "prs": [
+        "3224"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "A simple addition of `dynamic_ncols=True` by @chujiezheng (#3242)",
+      "prs": [
+        "3242"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add GPTQ support for Gemma by @TechxGenus (#3200)",
+      "prs": [
+        "3200"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update requirements-dev.txt to include package for benchmarking scripts. by @wangchen615 (#3181)",
+      "prs": [
+        "3181"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Separate attention backends by @WoosukKwon (#3005)",
+      "prs": [
+        "3005"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Measure model memory usage by @mgoin (#3120)",
+      "prs": [
+        "3120"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804) by @jacobthebanana (#3263)",
+      "prs": [
+        "2762",
+        "1804",
+        "3263"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix auto prefix bug by @ElizaWszola (#3239)",
+      "prs": [
+        "3239"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Connect engine healthcheck to openai server by @njhill (#3260)",
+      "prs": [
+        "3260"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Feature add lora support for Qwen2 by @whyiug (#3177)",
+      "prs": [
+        "3177"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor Fix] Fix comments in benchmark_serving by @gty111 (#3252)",
+      "prs": [
+        "3252"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Fix Unmocked Imports by @ywang96 (#3275)",
+      "prs": [
+        "3275"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[FIX] Make `flash_attn` optional by @WoosukKwon (#3269)",
+      "prs": [
+        "3269"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Move model filelocks from `/tmp/` to `~/.cache/vllm/locks/` dir by @mgoin (#3241)",
+      "prs": [
+        "3241"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[FIX] Fix prefix test error on main by @zhuohan123 (#3286)",
+      "prs": [
+        "3286"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Speculative decoding 3/9] Worker which speculates, scores, and applies rejection sampling by @cadedaniel (#3103)",
+      "prs": [
+        "3103"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enhance lora tests with more layer and rank variations by @tterrysun (#3243)",
+      "prs": [
+        "3243"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCM] Fix blockReduceSum to use correct warp counts for ROCm and CUDA by @dllehr-amd (#3262)",
+      "prs": [
+        "3262"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix get tokenizer when using ray  by @esmeetu (#3301)",
+      "prs": [
+        "3301"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Fix best_of behavior when n=1 by @njhill (#3298)",
+      "prs": [
+        "3298"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Re-enable the 80 char line width limit by @zhuohan123 (#3305)",
+      "prs": [
+        "3305"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[docs] Add LoRA support information for models by @pcmoritz (#3299)",
+      "prs": [
+        "3299"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add distributed model executor abstraction by @zhuohan123 (#3191)",
+      "prs": [
+        "3191"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm] Fix warp and lane calculation in blockReduceSum by @kliuae (#3321)",
+      "prs": [
+        "3321"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support Mistral Model Inference with transformers-neuronx by @DAIZHENWEI (#3153)",
+      "prs": [
+        "3153"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "docs: Add BentoML deployment doc by @Sherlock113 (#3336)",
+      "prs": [
+        "3336"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixes #1556 double free by @br3no (#3347)",
+      "prs": [
+        "1556",
+        "3347"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add kernel for GeGLU with approximate GELU by @WoosukKwon (#3337)",
+      "prs": [
+        "3337"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] fix quantization arg when using marlin by @DreamTeamWangbowen (#3319)",
+      "prs": [
+        "3319"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "add hf_transfer to requirements.txt by @RonanKMcGovern (#3031)",
+      "prs": [
+        "3031"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix bias in if, ambiguous by @hliuca (#3259)",
+      "prs": [
+        "3259"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048 (#3256)",
+      "prs": [
+        "3256"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add missing kernel for CodeLlama-34B on A/H100 (no tensor parallelism) when using Multi-LoRA. by @orsharir (#3350)",
+      "prs": [
+        "3350"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add batched RoPE kernel by @tterrysun (#3095)",
+      "prs": [
+        "3095"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix lint by @Yard1 (#3388)",
+      "prs": [
+        "3388"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[FIX] Simpler fix for async engine running on ray by @zhuohan123 (#3371)",
+      "prs": [
+        "3371"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hotfix] [Debug] test_openai_server.py::test_guided_regex_completion by @simon-mo (#3383)",
+      "prs": [
+        "3383"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "allow user to chose which vllm's merics to display in grafana by @AllenDou (#3393)",
+      "prs": [
+        "3393"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] change benchmark script so that result can be directly used; tune moe kernel in A100/H100 with tp=2,4,8 by @youkaichao (#3389)",
+      "prs": [
+        "3389"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Install `flash_attn` in Docker image by @tdoublep (#3396)",
+      "prs": [
+        "3396"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add args for mTLS support by @declark1 (#3410)",
+      "prs": [
+        "3410"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[issue templates] add some issue templates by @youkaichao (#3412)",
+      "prs": [
+        "3412"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix assertion failure in Qwen 1.5 with prefix caching enabled by @chenxu2048 (#3373)",
+      "prs": [
+        "3373"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix marlin config repr by @qeternity (#3414)",
+      "prs": [
+        "3414"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Feature: dynamic shared mem moe_align_block_size_kernel by @akhoroshev (#3376)",
+      "prs": [
+        "3376"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add HOST_IP env var by @youkaichao (#3419)",
+      "prs": [
+        "3419"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add chat templates for Falcon by @Dinghow (#3420)",
+      "prs": [
+        "3420"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add chat templates for ChatGLM by @Dinghow (#3418)",
+      "prs": [
+        "3418"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix `dist.broadcast` stall without group argument by @GindaChen (#3408)",
+      "prs": [
+        "3408"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix tie_word_embeddings for Qwen2. by @fyabc (#3344)",
+      "prs": [
+        "3344"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Fix] Add args for mTLS support by @declark1 (#3430)",
+      "prs": [
+        "3430"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixes the misuse/mixuse of time.time()/time.monotonic() by @sighingnow (#3220)",
+      "prs": [
+        "3220"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add error message in non linux platform by @youkaichao (#3438)",
+      "prs": [
+        "3438"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix issue templates by @hmellor (#3436)",
+      "prs": [
+        "3436"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix document error for value and v_vec illustration by @laneeeee (#3421)",
+      "prs": [
+        "3421"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Asynchronous tokenization by @Yard1 (#2879)",
+      "prs": [
+        "2879"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Removed Extraneous Print Message From OAI Server by @robertgshaw2-neuralmagic (#3440)",
+      "prs": [
+        "3440"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] PR templates by @youkaichao (#3413)",
+      "prs": [
+        "3413"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fixes the incorrect argument in the prefix-prefill test cases by @sighingnow (#3246)",
+      "prs": [
+        "3246"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Replace `lstrip()` with `removeprefix()` to fix Ruff linter warning by @ronensc (#2958)",
+      "prs": [
+        "2958"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix Baichuan chat template by @Dinghow (#3340)",
+      "prs": [
+        "3340"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] fix line length for entire codebase by @simon-mo (#3444)",
+      "prs": [
+        "3444"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support arbitrary json_object in OpenAI and Context Free Grammar by @simon-mo (#3211)",
+      "prs": [
+        "3211"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix setup.py neuron-ls issue by @simon-mo (#2671)",
+      "prs": [
+        "2671"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Define from_dict and to_dict in InputMetadata by @WoosukKwon (#3452)",
+      "prs": [
+        "3452"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Shard tests for LoRA and Kernels to speed up by @simon-mo (#3445)",
+      "prs": [
+        "3445"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Make moe_align_block_size AMD-compatible by @WoosukKwon (#3470)",
+      "prs": [
+        "3470"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "CI: Add ROCm Docker Build by @simon-mo (#2886)",
+      "prs": [
+        "2886"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Testing] Add test_config.py to CI by @cadedaniel (#3437)",
+      "prs": [
+        "3437"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Fix Bad Import In Test by @robertgshaw2-neuralmagic (#3473)",
+      "prs": [
+        "3473"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix PR Template by @zhuohan123 (#3478)",
+      "prs": [
+        "3478"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Cmake based build system by @bnellnm (#2830)",
+      "prs": [
+        "2830"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Zero-copy asdict for InputMetadata by @Yard1 (#3475)",
+      "prs": [
+        "3475"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update README for the Third vLLM Meetup by @zhuohan123 (#3479)",
+      "prs": [
+        "3479"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Cache some utils by @Yard1 (#3474)",
+      "prs": [
+        "3474"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] print error before deadlock by @youkaichao (#3459)",
+      "prs": [
+        "3459"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] Add docs about OpenAI compatible server by @simon-mo (#3288)",
+      "prs": [
+        "3288"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Avoid initializing CUDA too early by @njhill (#3487)",
+      "prs": [
+        "3487"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Update dockerfile with ModelScope support by @ifsheldon (#3429)",
+      "prs": [
+        "3429"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] minor fix to neuron-installation.rst by @jimburtoft (#3505)",
+      "prs": [
+        "3505"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Core] Cache some utils\" by @simon-mo (#3507)",
+      "prs": [
+        "3507"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] minor fix of spelling in amd-installation.rst by @jimburtoft (#3506)",
+      "prs": [
+        "3506"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Use lru_cache for some environment detection utils by @simon-mo (#3508)",
+      "prs": [
+        "3508"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PREFIX CACHING FOLLOW UP] A bunch of fixes to block allocator performance when automatic prefix caching is disabled by @ElizaWszola (#3357)",
+      "prs": [
+        "3357"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add generic typing to `LRUCache` by @njhill (#3511)",
+      "prs": [
+        "3511"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove cache stream and cache events by @WoosukKwon (#3461)",
+      "prs": [
+        "3461"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Abort when nvcc command is not found in the PATH by @AllenDou (#3527)",
+      "prs": [
+        "3527"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Check for _is_cuda() in compute_num_jobs by @bnellnm (#3481)",
+      "prs": [
+        "3481"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix ROCm support in CMakeLists.txt by @jamestwhedbee (#3534)",
+      "prs": [
+        "3534"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[1/n] Triton sampling kernel by @Yard1 (#3186)",
+      "prs": [
+        "3186"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[1/n][Chunked Prefill] Refactor input query shapes by @rkooo567 (#3236)",
+      "prs": [
+        "3236"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Migrate `logits` computation and gather to `model_runner` by @esmeetu (#3233)",
+      "prs": [
+        "3233"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Hot fix in setup.py for neuron build by @zhuohan123 (#3537)",
+      "prs": [
+        "3537"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[PREFIX CACHING FOLLOW UP] OrderedDict-based evictor by @ElizaWszola (#3431)",
+      "prs": [
+        "3431"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix 1D query issue from `_prune_hidden_states` by @rkooo567 (#3539)",
+      "prs": [
+        "3539"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[\ud83d\ude80 Ready to be merged] Added support for Jais models by @grandiose-pizza (#3183)",
+      "prs": [
+        "3183"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc][Log] Add log for tokenizer length not equal to vocabulary size by @esmeetu (#3500)",
+      "prs": [
+        "3500"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Bump up transformers to v4.39.0 & Remove StarCoder2Config by @WoosukKwon (#3551)",
+      "prs": [
+        "3551"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] gemma loading after quantization or LoRA. by @taeminlee (#3553)",
+      "prs": [
+        "3553"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][Model] Fix Qwen2 by @esmeetu (#3554)",
+      "prs": [
+        "3554"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][Neuron] Refactor neuron support by @zhuohan123 (#3471)",
+      "prs": [
+        "3471"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Some fixes for custom allreduce kernels by @hanzhi713 (#2760)",
+      "prs": [
+        "2760"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Dynamic scheduler delay to improve ITL performance  by @tdoublep (#3279)",
+      "prs": [
+        "3279"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Improve detokenization performance for prefill by @Yard1 (#3469)",
+      "prs": [
+        "3469"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] use SoftLockFile instead of LockFile by @kota-iizuka (#3578)",
+      "prs": [
+        "3578"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Fix BLOOM copyright notice by @WoosukKwon (#3591)",
+      "prs": [
+        "3591"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Bump transformers version by @ywang96 (#3592)",
+      "prs": [
+        "3592"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix Falcon tied embeddings by @WoosukKwon (#3590)",
+      "prs": [
+        "3590"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] 1D query fix for MoE models by @njhill (#3597)",
+      "prs": [
+        "3597"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] typo fix: is_hip --> is_hip() by @youkaichao (#3595)",
+      "prs": [
+        "3595"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] respect the common environment variable MAX_JOBS by @youkaichao (#3600)",
+      "prs": [
+        "3600"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] fix flaky test by @youkaichao (#3602)",
+      "prs": [
+        "3602"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] minor fix: method typo in `rotary_embedding.py` file, get_device() -> device by @jikunshang (#3604)",
+      "prs": [
+        "3604"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Revert \"[Bugfix] use SoftLockFile instead of LockFile (#3578)\" by @WoosukKwon (#3599)",
+      "prs": [
+        "3578",
+        "3599"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add starcoder2 awq support by @shaonianyr (#3569)",
+      "prs": [
+        "3569"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Refactor Attention Take 2 by @WoosukKwon (#3462)",
+      "prs": [
+        "3462"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] fix automatic prefix args and add log info by @gty111 (#3608)",
+      "prs": [
+        "3608"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Try introducing isort.  by @rkooo567 (#3495)",
+      "prs": [
+        "3495"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Adding token ranks along with logprobs by @SwapnilDreams100 (#3516)",
+      "prs": [
+        "3516"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "feat: implement the min_tokens sampling parameter by @tjohnson31415 (#3124)",
+      "prs": [
+        "3124"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] API stream returning two stops by @dylanwhawk (#3450)",
+      "prs": [
+        "3450"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "hotfix isort on logprobs ranks pr by @simon-mo (#3622)",
+      "prs": [
+        "3622"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] Add vision language model support. by @xwjiang2010 (#3042)",
+      "prs": [
+        "3042"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Optimize `_get_ranks` in Sampler by @Yard1 (#3623)",
+      "prs": [
+        "3623"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Include matched stop string/token in responses by @njhill (#2976)",
+      "prs": [
+        "2976"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Enable more models to  inference based on LoRA by @jeejeelee (#3382)",
+      "prs": [
+        "3382"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix ipv6 address parsing bug by @liiliiliil (#3641)",
+      "prs": [
+        "3641"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix ipv4 address parsing regression by @njhill (#3645)",
+      "prs": [
+        "3645"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] support non-zero cuda devices  in punica kernels by @jeejeelee (#3636)",
+      "prs": [
+        "3636"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc]add lora support by @jeejeelee (#3649)",
+      "prs": [
+        "3649"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Minor fix in KVCache type by @WoosukKwon (#3652)",
+      "prs": [
+        "3652"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] remove cupy dependency by @youkaichao (#3625)",
+      "prs": [
+        "3625"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] More faithful implementation of Gemma by @WoosukKwon (#3653)",
+      "prs": [
+        "3653"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] [Hotfix] fix nccl library name by @youkaichao (#3661)",
+      "prs": [
+        "3661"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add support for DBRX by @megha95 (#3660)",
+      "prs": [
+        "3660"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan (#3621)",
+      "prs": [
+        "3621"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "feat(benchmarks): Add Prefix Caching Benchmark to Serving Benchmark by @ywang96 (#3277)",
+      "prs": [
+        "3277"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add support for Cohere's Command-R model by @zeppombal (#3433)",
+      "prs": [
+        "3433"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Docs] Add Command-R to supported models by @WoosukKwon (#3669)",
+      "prs": [
+        "3669"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Fix and clean commandr by @esmeetu (#3671)",
+      "prs": [
+        "3671"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add support for xverse  by @hxer7963 (#3610)",
+      "prs": [
+        "3610"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] update default number of jobs and nvcc threads to avoid overloading the system by @youkaichao (#3675)",
+      "prs": [
+        "3675"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Add Triton MoE kernel configs for DBRX + A100 by @WoosukKwon (#3679)",
+      "prs": [
+        "3679"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] [Bugfix] Refactor block manager subsystem for better testability by @cadedaniel (#3492)",
+      "prs": [
+        "3492"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add support for Qwen2MoeModel by @wenyujin333 (#3346)",
+      "prs": [
+        "3346"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] DBRX Triton MoE kernel H100 by @ywang96 (#3692)",
+      "prs": [
+        "3692"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[2/N] Chunked prefill data update by @rkooo567 (#3538)",
+      "prs": [
+        "3538"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Update neuron_executor.py to add optional vision_language_config. by @adamrb (#3695)",
+      "prs": [
+        "3695"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix benchmark format reporting in buildkite by @simon-mo (#3693)",
+      "prs": [
+        "3693"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Add test case to run examples scripts by @simon-mo (#3638)",
+      "prs": [
+        "3638"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Support multi-node inference(eager and cuda graph) by @esmeetu (#3686)",
+      "prs": [
+        "3686"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Add MoE Triton kernel configs for A100 40GB by @WoosukKwon (#3700)",
+      "prs": [
+        "3700"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Set enable_prefix_caching=True in prefix caching example by @WoosukKwon (#3703)",
+      "prs": [
+        "3703"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "fix logging msg for block manager by @simon-mo (#3701)",
+      "prs": [
+        "3701"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] fix del of communicator by @youkaichao (#3702)",
+      "prs": [
+        "3702"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Change mii to use persistent deployment and support tensor parallel by @IKACE (#3628)",
+      "prs": [
+        "3628"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "bump version to v0.4.0 by @simon-mo (#3705)",
+      "prs": [
+        "3705"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"bump version to v0.4.0\" by @youkaichao (#3708)",
+      "prs": [
+        "3708"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Test] Make model tests run again and remove --forked from pytest by @rkooo567 (#3631)",
+      "prs": [
+        "3631"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Minor type annotation fix by @WoosukKwon (#3716)",
+      "prs": [
+        "3716"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Test] move local_rank to the last arg with default value to keep api compatible by @youkaichao (#3711)",
+      "prs": [
+        "3711"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "add ccache to docker build image by @simon-mo (#3704)",
+      "prs": [
+        "3704"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Usage Stats Collection by @yhu422 (#2852)",
+      "prs": [
+        "2852"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Fix tokenizer out of vocab size by @esmeetu (#3685)",
+      "prs": [
+        "3685"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][Frontend] Fix completion logprobs=0 error by @esmeetu (#3731)",
+      "prs": [
+        "3731"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Command-R Max Model Length by @ywang96 (#3727)",
+      "prs": [
+        "3727"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "bump version to v0.4.0 by @simon-mo (#3712)",
+      "prs": [
+        "3712"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ROCm][Bugfix] Fixed several bugs related to rccl path and attention selector logic by @hongxiayang (#3699)",
+      "prs": [
+        "3699"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "usage lib get version another way by @simon-mo (#3735)",
+      "prs": [
+        "3735"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix] Use consistent logger everywhere by @njhill (#3738)",
+      "prs": [
+        "3738"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Bugfix] cache len of tokenizer by @youkaichao (#3741)",
+      "prs": [
+        "3741"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Fix build when nvtools is missing by @bnellnm (#3698)",
+      "prs": [
+        "3698"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "CMake build elf without PTX by @simon-mo (#3739)",
+      "prs": [
+        "3739"
+      ]
+    }
+  ],
+  "upgrade_notices": [],
+  "benchmarks": [
+    {
+      "category": "What's Changed",
+      "claim": "[Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048 (#3256)",
+      "prs": [
+        "3256"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Dynamic scheduler delay to improve ITL performance  by @tdoublep (#3279)",
+      "prs": [
+        "3279"
+      ]
+    }
+  ]
+}

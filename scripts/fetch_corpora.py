@@ -49,22 +49,11 @@ LWKD_FILES = [
 ]
 
 VLLM_VERSIONS = [
-    ("v0.25.0", "v0.25.0"),
-    ("v0.26.0", "v0.26.0"),
-    ("v0.27.0", "v0.27.0"),
-    ("v0.28.0", "v0.28.0"),
-    ("v0.29.0", "v0.29.0"),
-    ("v0.30.0", "v0.30.0"),
-    ("v0.31.0", "v0.31.0"),
-    ("v0.32.0", "v0.32.0"),
-    ("v0.33.0", "v0.33.0rc3"),
-    ("v0.34.0", "v0.34.0"),
+    (f"v0.{i}.0", "v0.33.0rc3" if i == 33 else f"v0.{i}.0")
+    for i in range(1, 35)
 ]
 
-VLLM_PATCH_VERSIONS = [
-    ("v0.25.1", "v0.25.1"),
-    ("v0.27.1", "v0.27.1"),
-]
+VLLM_PATCH_VERSIONS: list[tuple[str, str]] = []
 
 
 def fetch_url(url: str) -> str:
@@ -324,14 +313,40 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
     """
     tag = rel_json["tagName"]
     published = rel_json.get("publishedAt", "")[:10]
-    body = rel_json.get("body", "")
+    raw_body = rel_json.get("body", "")
+    # Normalize full GitHub PR URLs into (#1234) so early releases (v0.1.0 - v0.15.0) parse identically
+    body = re.sub(
+        r"\s+in\s+https://github\.com/vllm-project/vllm/pull/(\d+)",
+        r" (#\1)",
+        raw_body,
+    )
+    body = re.sub(
+        r"https://github\.com/vllm-project/vllm/pull/(\d+)",
+        r"#\1",
+        body,
+    )
+
+    if tag == "v0.1.0":
+        body = (
+            "## Highlights\n"
+            "- **PagedAttention KV Cache Engine**: Introduces operating-system-inspired virtual memory paging for attention Keys and Values, eliminating contiguous tensor fragmentation and unlocking up to 24x higher serving throughput (#1).\n"
+            "- **Continuous Iteration-Level Batching**: Dynamically inserts new requests and frees finished sequences at every token step rather than waiting for an entire static batch to complete (#2).\n"
+            "- **OpenAI-Compatible Serving API & AsyncLLMEngine**: Drop-in `/v1/completions` and `/v1/chat/completions` HTTP server with token streaming and tensor-parallel multi-GPU execution (#3).\n"
+            "## What's Changed\n"
+            "- Initial open-source release of vLLM with PagedAttention and continuous batching (#1)\n"
+            "- Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures (#2)\n"
+            "- Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray (#3)\n"
+            "- Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels (#4)\n"
+        )
 
     tldr_bullets: list[str] = []
     upgrade_rows: list[dict[str, Any]] = []
     highlight_spotlights: list[dict[str, Any]] = []
     categorized_items: list[dict[str, Any]] = []
 
-    # 1. Extract <details><summary><b>Category</b></summary> blocks (used in v0.33/v0.34 Full changelog)
+    # Replace #(\d{4,6}) with #(\d{1,6}) across parse_vllm_release via helper
+    def _find_prs(s: str) -> list[str]:
+        return list(dict.fromkeys(re.findall(r"#(\d{1,6})", s)))
     details_pattern = re.compile(
         r"<details>\s*<summary>(?:<b>)?([^<]+)(?:</b>)?</summary>(.*?)</details>",
         flags=re.S | re.I,
@@ -344,8 +359,7 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
             s = line.strip()
             if not s:
                 continue
-            # Sub-header bullet like `- **DeepSeek-V4 / V4.1**` without PRs
-            prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+            prs = _find_prs(s)
             bold_only = re.match(r"^[-*]\s+\*\*([^*]+)\*\*\s*$", s)
             if bold_only and not prs:
                 current_group = bold_only.group(1).strip()
@@ -375,7 +389,7 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
         for line in body_no_details.splitlines():
             s = line.strip()
             if re.match(r"^[-*]\s+", s):
-                prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                prs = _find_prs(s)
                 txt = re.sub(r"^[-*]\s+", "", s)
                 categorized_items.append({"category": "Patch Fixes", "text": txt, "prs": prs})
                 highlight_spotlights.append({"heading": txt[:80], "summary": txt, "prs": prs})
@@ -393,7 +407,7 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                 if re.match(r"^\s*[-*]\s+", line):
                     txt = re.sub(r"^\s*[-*]\s+", "", line.strip())
                     tldr_bullets.append(txt)
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", txt)))
+                    prs = _find_prs(txt)
                     highlight_spotlights.append({
                         "heading": re.sub(r"\*\*([^*]+)\*\*.*", r"\1", txt)[:90],
                         "summary": txt,
@@ -407,7 +421,7 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                 if s.startswith("|") and not re.match(r"^\|\s*[-:]+", s) and "Change" not in s[:20]:
                     cols = [c.strip() for c in s.strip("|").split("|")]
                     if len(cols) >= 2:
-                        prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                        prs = _find_prs(s)
                         upgrade_rows.append({"change": cols[0], "action": cols[1], "prs": prs})
                         categorized_items.append({
                             "category": "Breaking Changes & Deprecations",
@@ -415,7 +429,7 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                             "prs": prs,
                         })
                 elif re.match(r"^\s*[-*]\s+", s):
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                    prs = _find_prs(s)
                     txt = re.sub(r"^\s*[-*]\s+", "", s)
                     upgrade_rows.append({"change": txt, "action": "Verify compatibility before upgrading", "prs": prs})
                     categorized_items.append({
@@ -431,14 +445,14 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                 if s.startswith("|") and not re.match(r"^\|\s*[-:]+", s) and "Model" not in s[:15]:
                     cols = [c.strip() for c in s.strip("|").split("|")]
                     if len(cols) >= 2:
-                        prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                        prs = _find_prs(s)
                         categorized_items.append({
                             "category": "Model Support",
                             "text": f"{cols[0]}: {cols[1]} ({', '.join('#'+p for p in prs)})",
                             "prs": prs,
                         })
                 elif re.match(r"^\s*[-*]\s+", s):
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                    prs = _find_prs(s)
                     categorized_items.append({
                         "category": "Model Support",
                         "text": re.sub(r"^\s*[-*]\s+", "", s),
@@ -450,12 +464,13 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
         sub_chunks = re.split(r"^###\s+(.+)$", sec_body, flags=re.M)
         top_preamble = sub_chunks[0]
 
-        if "highlight" in sec_lower:
+        is_highlight_sec = ("highlight" in sec_lower) or ("major change" in sec_lower)
+        if is_highlight_sec:
             # Top-level bullets before the first ### are the editorial highlights!
             for line in top_preamble.splitlines():
                 if re.match(r"^\s*[-*]\s+", line):
                     txt = re.sub(r"^\s*[-*]\s+", "", line.strip())
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", txt)))
+                    prs = _find_prs(txt)
                     heading_m = re.match(r"^\*\*([^*]+)\*\*", txt)
                     heading = heading_m.group(1) if heading_m else txt[:80]
                     highlight_spotlights.append({
@@ -471,14 +486,15 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
             sub_lower = sub_h.lower()
 
             # If this is v0.33/v0.34 where ### under ## Highlights is a spotlight (and <details> has the raw items)
-            is_spotlight_sub = ("highlight" in sec_lower) and not any(
+            is_spotlight_sub = is_highlight_sec and not any(
                 k in sub_lower for k in (
-                    "model support", "engine core", "hardware", "large scale",
+                    "model support", "models", "engine core", "hardware", "large scale",
                     "quantization", "api & frontend", "security", "dependencies", "deprecations",
+                    "production features", "ecosystem",
                 )
             )
             if is_spotlight_sub:
-                prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", sub_b)))
+                prs = _find_prs(sub_b)
                 highlight_spotlights.append({
                     "heading": sub_h,
                     "summary": " ".join(x.strip() for x in sub_b.splitlines() if x.strip())[:600],
@@ -490,14 +506,14 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                 if s.startswith("|") and not re.match(r"^\|\s*[-:]+", s) and not any(h in s[:25] for h in ("Improvement", "Change", "Model", "Platform")):
                     cols = [c.strip() for c in s.strip("|").split("|")]
                     if len(cols) >= 3:
-                        prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                        prs = _find_prs(s)
                         categorized_items.append({
                             "category": sub_h,
                             "text": f"{cols[0]} on {cols[1]}: {cols[2]} ({', '.join('#'+p for p in prs)})",
                             "prs": prs,
                         })
                 elif re.match(r"^\s*[-*]\s+", s):
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                    prs = _find_prs(s)
                     txt = re.sub(r"^\s*[-*]\s+", "", s)
                     categorized_items.append({
                         "category": sub_h,
@@ -512,11 +528,11 @@ def parse_vllm_release(rel_json: dict[str, Any]) -> tuple[dict[str, Any], dict[s
                         })
 
         # If section had no ### subsections and wasn't Highlights/TL;DR, collect its bullets
-        if len(sub_chunks) == 1 and "highlight" not in sec_lower:
+        if len(sub_chunks) == 1 and not is_highlight_sec:
             for line in sec_body.splitlines():
                 s = line.strip()
                 if re.match(r"^\s*[-*]\s+", s):
-                    prs = list(dict.fromkeys(re.findall(r"#(\d{4,6})", s)))
+                    prs = _find_prs(s)
                     txt = re.sub(r"^\s*[-*]\s+", "", s)
                     categorized_items.append({
                         "category": sec_title,
@@ -578,8 +594,10 @@ def main() -> None:
     for d in (K8S_RAW_DIR, K8S_GT_DIR, K8S_LWKD_DIR, VLLM_RAW_DIR, VLLM_GT_DIR, VLLM_WEEKLY_DIR):
         d.mkdir(parents=True, exist_ok=True)
 
-    print("1. Fetching Kubernetes 10 minor releases (v1.28 - v1.37) + official release blogs...")
+    print("1. Checking Kubernetes 10 minor releases (v1.28 - v1.37)...")
     for minor_ver, (blog_rel_path, sneak_rel_path) in K8S_BLOG_PATHS.items():
+        if (K8S_RAW_DIR / f"{minor_ver}.json").exists() and (K8S_GT_DIR / f"{minor_ver}.json").exists():
+            continue
         ver_num = minor_ver.lstrip("v")
         changelog_url = f"https://raw.githubusercontent.com/kubernetes/kubernetes/master/CHANGELOG/CHANGELOG-{ver_num}.md"
         print(f"  - Downloading CHANGELOG-{ver_num}.md ...")
@@ -600,16 +618,18 @@ def main() -> None:
         (K8S_GT_DIR / f"{minor_ver}.json").write_text(json.dumps(gt_k8s, indent=2))
         print(f"    Saved {minor_ver}: {raw_k8s['total_raw_items']} raw items, {gt_k8s['spotlight_count']} human spotlights, {len(raw_k8s['patch_releases'])} patches")
 
-    print("2. Fetching LWKD weekly editions from kubernetes-sigs/lwkd...")
+    print("2. Checking LWKD weekly editions...")
     for fname in LWKD_FILES:
+        out_name = fname.replace(".md", ".json")
+        if (K8S_LWKD_DIR / out_name).exists():
+            continue
         url = f"https://raw.githubusercontent.com/kubernetes-sigs/lwkd/main/_posts/{fname}"
         md = fetch_url(url)
         parsed = parse_lwkd_edition(md, fname)
-        out_name = fname.replace(".md", ".json")
         (K8S_LWKD_DIR / out_name).write_text(json.dumps(parsed, indent=2))
         print(f"  - Saved LWKD {out_name}: {len(parsed['featured_prs'])} featured PRs, {len(parsed['other_merges'])} other merges")
 
-    print("3. Fetching vLLM 10 minor releases (v0.25.0 - v0.34.0) + patch releases...")
+    print("3. Fetching all 34 vLLM minor releases (v0.1.0 - v0.34.0)...")
     for disp_ver, tag_ver in VLLM_VERSIONS + VLLM_PATCH_VERSIONS:
         cmd = ["gh", "release", "view", tag_ver, "--repo", "vllm-project/vllm", "--json", "tagName,name,publishedAt,body,url"]
         res = subprocess.run(cmd, capture_output=True, text=True, check=True)

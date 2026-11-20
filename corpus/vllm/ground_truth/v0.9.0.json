@@ -1,0 +1,450 @@
+{
+  "project": "vllm",
+  "version": "v0.9.0",
+  "published_date": "2025-05-15",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "vLLM has upgraded to PyTorch 2.7!  (#16859) This is a breaking change for enviro",
+      "summary": "vLLM has upgraded to PyTorch 2.7!  (#16859) This is a breaking change for environment dependency.",
+      "prs": [
+        "16859"
+      ]
+    },
+    {
+      "heading": "The default wheel has been upgraded from CUDA 12.4 to CUDA 12.8. We will distrib",
+      "summary": "The default wheel has been upgraded from CUDA 12.4 to CUDA 12.8. We will distribute CUDA 12.6 wheel on GitHub artifact.",
+      "prs": []
+    },
+    {
+      "heading": "As a general rule of thumb, our CUDA version policy follow PyTorch's CUDA versio",
+      "summary": "As a general rule of thumb, our CUDA version policy follow PyTorch's CUDA version policy.",
+      "prs": []
+    },
+    {
+      "heading": "Enhanced NVIDIA Blackwell support. vLLM now ships with initial set of optimized ",
+      "summary": "Enhanced NVIDIA Blackwell support. vLLM now ships with initial set of optimized kernels on NVIDIA Blackwell with both attention and mlp.",
+      "prs": []
+    },
+    {
+      "heading": "You can use our docker image or install FlashInfer nightly wheel `pip install ht",
+      "summary": "You can use our docker image or install FlashInfer nightly wheel `pip install https://download.pytorch.org/whl/cu128/flashinfer/flashinfer_python-0.2.5%2Bcu128torch2.7-cp38-abi3-linux_x86_64.whl` then set `VLLM_ATTENTION_BACKEND=FLASHINFER` for better performance.",
+      "prs": []
+    },
+    {
+      "heading": "Upgraded support for the new FlashInfer main branch. (#15777)",
+      "summary": "Upgraded support for the new FlashInfer main branch. (#15777)",
+      "prs": [
+        "15777"
+      ]
+    },
+    {
+      "heading": "Please checkout https://github.com/vllm-project/vllm/issues/18153 for the full r",
+      "summary": "Please checkout https://github.com/vllm-project/vllm/issues/18153 for the full roadmap",
+      "prs": []
+    },
+    {
+      "heading": "Initial DP, EP, PD support for large scale inference",
+      "summary": "Initial DP, EP, PD support for large scale inference",
+      "prs": []
+    },
+    {
+      "heading": "EP:",
+      "summary": "EP:",
+      "prs": []
+    },
+    {
+      "heading": "Permute and unpermute kernel for moe optimization (#14568)",
+      "summary": "Permute and unpermute kernel for moe optimization (#14568)",
+      "prs": [
+        "14568"
+      ]
+    },
+    {
+      "heading": "Modularize fused experts and integrate PPLX kernels (#15956)",
+      "summary": "Modularize fused experts and integrate PPLX kernels (#15956)",
+      "prs": [
+        "15956"
+      ]
+    },
+    {
+      "heading": "Refactor pplx init logic to make it modular (prepare for deepep) (#18200)",
+      "summary": "Refactor pplx init logic to make it modular (prepare for deepep) (#18200)",
+      "prs": [
+        "18200"
+      ]
+    },
+    {
+      "heading": "Add ep group and all2all interface (#18077)",
+      "summary": "Add ep group and all2all interface (#18077)",
+      "prs": [
+        "18077"
+      ]
+    },
+    {
+      "heading": "DP:",
+      "summary": "DP:",
+      "prs": []
+    },
+    {
+      "heading": "Decouple engine process management and comms (#15977)",
+      "summary": "Decouple engine process management and comms (#15977)",
+      "prs": [
+        "15977"
+      ]
+    },
+    {
+      "heading": "PD:",
+      "summary": "PD:",
+      "prs": []
+    },
+    {
+      "heading": "NIXL Integration (#17751)",
+      "summary": "NIXL Integration (#17751)",
+      "prs": [
+        "17751"
+      ]
+    },
+    {
+      "heading": "Local attention optimization for NIXL (#18170)",
+      "summary": "Local attention optimization for NIXL (#18170)",
+      "prs": [
+        "18170"
+      ]
+    },
+    {
+      "heading": "Support multiple kv connectors (#17564)",
+      "summary": "Support multiple kv connectors (#17564)",
+      "prs": [
+        "17564"
+      ]
+    },
+    {
+      "heading": "Migrate docs from Sphinx to MkDocs (#18145, #18610, #18614, #18616. #18622, #186",
+      "summary": "Migrate docs from Sphinx to MkDocs (#18145, #18610, #18614, #18616. #18622, #18626, #18627, #18635, #18637, #18657, #18663, #18666, #18713)",
+      "prs": [
+        "18145",
+        "18610",
+        "18614",
+        "18616",
+        "18622",
+        "18626",
+        "18627",
+        "18635",
+        "18637",
+        "18657",
+        "18663",
+        "18666",
+        "18713"
+      ]
+    },
+    {
+      "heading": "Notable Changes",
+      "summary": "* Removal of CUDA 12.4 support due to PyTorch upgrade to 2.7. * Change `top_k` to be disabled with `0` (still accept `-1` for now) (#17773) * The seed is now set to `0` by default for V1 Engine, meaning that different vLLM runs now yield the same outputs even if `temperature > 0`. This does not modify the random state in user code since workers are run in separate processes unless `VLLM_USE_V1_MULTIPROCESSING=0`. (#17929, #18741)",
+      "prs": [
+        "17773",
+        "17929",
+        "18741"
+      ]
+    },
+    {
+      "heading": "Model Enhancements",
+      "summary": "* Support MiMo-7B (#17433), MiniMax-VL-01 (#16328), Ovis 1.6 (#17861), Ovis 2 (#15826), GraniteMoeHybrid 4.0 (#17497), FalconH1\\* (#18406), LlamaGuard4 (#17315) * Please install the development version of `transformers` (from source) to use Falcon-H1. * Embedding models: nomic-embed-text-v2-moe (#17785), new class of gte models (#17986) * Progress in Hybrid Memory Allocator (#17394, #17479, #17474, #17483, #17193, #17946, #17945, #17999, #18001, #18593) * DeepSeek: perf enhancement by moving more calls into cuda-graph region(#17484, #17668), Function Call (#17784), MTP in V1 (#18435) * Qwen2.5",
+      "prs": [
+        "17433",
+        "16328",
+        "17861",
+        "15826",
+        "17497",
+        "18406",
+        "17315",
+        "17785",
+        "17986",
+        "17394",
+        "17479",
+        "17474",
+        "17483",
+        "17193",
+        "17946",
+        "17945",
+        "17999",
+        "18001",
+        "18593",
+        "17484",
+        "17668",
+        "17784",
+        "18435",
+        "11844",
+        "17973",
+        "18499"
+      ]
+    },
+    {
+      "heading": "Performance, Production and Scaling",
+      "summary": "* Support full cuda graph in v1 (#16072) * Pipeline Parallelism: MultiprocExecutor support (#14219), `torchrun` (#17827) * Support sequence parallelism combined with pipeline parallelism (#18243) * Async tensor parallelism using compilation pass (#17882) * Perf: Use small max_num_batched_tokens for A100 (#17885) * Fast Model Loading: Tensorizer support for V1 and LoRA (#17926) * Multi-modality: Automatically cast multi-modal input dtype before transferring device (#18756)",
+      "prs": [
+        "16072",
+        "14219",
+        "17827",
+        "18243",
+        "17882",
+        "17885",
+        "17926",
+        "18756"
+      ]
+    },
+    {
+      "heading": "Features",
+      "summary": "* CLI: `deprecated=True` (#17426) * Frontend: progress bar for adding requests (#17525), `chat_template_kwargs` in `LLM.chat` (#17356), `/classify` endpoint (#17032), truncation control for embedding models (#14776), `cached_tokens` in response usage (#18149) * LoRA: default local directory LoRA resolver plugin. (#16855) * Metrics: kv event publishing (#16750), API for accessing in-memory Prometheus metrics (#17010) * Quantization: `nvidia/DeepSeek-R1-FP4` (#16362), Quark MXFP4 format (#16943), AutoRound (#17850), torchao models with `AOPerModuleConfig` (#17826), CUDA Graph support for V1 GGUF",
+      "prs": [
+        "17426",
+        "17525",
+        "17356",
+        "17032",
+        "14776",
+        "18149",
+        "16855",
+        "16750",
+        "17010",
+        "16362",
+        "16943",
+        "17850",
+        "17826",
+        "18646",
+        "17452",
+        "17326",
+        "17211",
+        "17504",
+        "17913",
+        "17956",
+        "16577",
+        "14702",
+        "17466",
+        "17845",
+        "17333",
+        "16868",
+        "18494"
+      ]
+    },
+    {
+      "heading": "Documentation",
+      "summary": "* Update quickstart and install for cu128 using `--torch-backend=auto` (#18505) * NVIDIA TensorRT Model Optimizer (#17561) * Usage of Qwen3 thinking (#18291)",
+      "prs": [
+        "18505",
+        "17561",
+        "18291"
+      ]
+    },
+    {
+      "heading": "Developer Facing",
+      "summary": "* Benchmark: Add single turn MTBench to Serving Bench (#17202) * Usability: Decrease import time of `vllm.multimodal` (#18031) * Code Format: Code formatting using `ruff format` (#17656, #18068, #18400) * Readability: * Configuration and arguments unification is now complete! (#17130, #17453, #17562) * Update deprecated type hinting from Python 3.7 (#18056, #18130, #18132, #18129, #18073, #18072, #18126, #18128, #18057, #18058) * Process: * Propose a deprecation policy for the project (#17063) * Testing: expanding torch nightly tests (#18004)",
+      "prs": [
+        "17202",
+        "18031",
+        "17656",
+        "18068",
+        "18400",
+        "17130",
+        "17453",
+        "17562",
+        "18056",
+        "18130",
+        "18132",
+        "18129",
+        "18073",
+        "18072",
+        "18126",
+        "18128",
+        "18057",
+        "18058",
+        "17063",
+        "18004"
+      ]
+    }
+  ],
+  "upgrade_rows": [],
+  "ground_truth_prs": [
+    "16859",
+    "15777",
+    "14568",
+    "15956",
+    "18200",
+    "18077",
+    "15977",
+    "17751",
+    "18170",
+    "17564",
+    "18145",
+    "18610",
+    "18614",
+    "18616",
+    "18622",
+    "18626",
+    "18627",
+    "18635",
+    "18637",
+    "18657",
+    "18663",
+    "18666",
+    "18713",
+    "17773",
+    "17929",
+    "18741",
+    "17433",
+    "16328",
+    "17861",
+    "15826",
+    "17497",
+    "18406",
+    "17315",
+    "17785",
+    "17986",
+    "17394",
+    "17479",
+    "17474",
+    "17483",
+    "17193",
+    "17946",
+    "17945",
+    "17999",
+    "18001",
+    "18593",
+    "17484",
+    "17668",
+    "17784",
+    "18435",
+    "11844",
+    "17973",
+    "18499",
+    "16072",
+    "14219",
+    "17827",
+    "18243",
+    "17882",
+    "17885",
+    "17926",
+    "18756",
+    "17426",
+    "17525",
+    "17356",
+    "17032",
+    "14776",
+    "18149",
+    "16855",
+    "16750",
+    "17010",
+    "16362",
+    "16943",
+    "17850",
+    "17826",
+    "18646",
+    "17452",
+    "17326",
+    "17211",
+    "17504",
+    "17913",
+    "17956",
+    "16577",
+    "14702",
+    "17466",
+    "17845",
+    "17333",
+    "16868",
+    "18494",
+    "18505",
+    "17561",
+    "18291",
+    "17202",
+    "18031",
+    "17656",
+    "18068",
+    "18400",
+    "17130",
+    "17453",
+    "17562",
+    "18056",
+    "18130",
+    "18132",
+    "18129",
+    "18073",
+    "18072",
+    "18126",
+    "18128",
+    "18057",
+    "18058",
+    "17063",
+    "18004"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardwares",
+      "claim": "AMD: Enable FP8 KV cache on V1 (#17870), Tuned fused moe config for Qwen3 MoE on MI300X (#17535, #17530), AITER biased group topk (#17955), Block-Scaled GEMM (#14968), MLA (#17523), Radeon GPU use Custom Paged Attention (#17004), reduce the number of environment variables in command line (#17229)",
+      "prs": [
+        "17870",
+        "17535",
+        "17530",
+        "17955",
+        "14968",
+        "17523",
+        "17004",
+        "17229"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Remove Falcon3 2x7B from CI by @hmellor (#17404)",
+      "prs": [
+        "17404"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[FEAT] [ROCm]: Add Qwen/Qwen3-30B-A3B-FP8 fused moe config for MI300X by @tjtanaa (#17530)",
+      "prs": [
+        "17530"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Initialize the delta tool call fields explicitly by @maxdebayser (#17340)",
+      "prs": [
+        "17340"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Model] GritLM supports other attention backends by @DarkLight1337 (#18109)",
+      "prs": [
+        "18109"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Add files via uploadAdd fused MoE kernel tuning configs (fp8_w8a8) for DeepSeek V3/R1 on a single-node 8x NVIDIA H20 96GB setup by @sunyicode0012 (#18337)",
+      "prs": [
+        "18337"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Bugfix] config.head_dim is now explicitly set to None by @gshtras (#18432)",
+      "prs": [
+        "18432"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Misc] Fixed the abnormally high TTFT issue in the PD disaggregation example by @zhaohaidao (#18644)",
+      "prs": [
+        "18644"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Misc] improve web section group title display by @reidliu41 (#18684)",
+      "prs": [
+        "18684"
+      ]
+    }
+  ]
+}

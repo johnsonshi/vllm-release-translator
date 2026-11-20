@@ -1,0 +1,65 @@
+{
+  "project": "vllm",
+  "version": "v0.6.0",
+  "published_date": "2024-09-04",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Performance Update",
+      "summary": "* We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recommend also try out turning on multi step scheduling. You can do so by setting `--num-scheduler-steps 8` in the engine arguments. Please note that it still have some limitations and being actively hardened, see #7528 for known issues. * Multi-step scheduler now supports LLMEngine and log_probs (#7789, #7652) * Asynchronous output processor overlaps the output data structures construction with GPU works, delivering 12% throughput increase. ",
+      "prs": [
+        "7528",
+        "7789",
+        "7652",
+        "7049",
+        "7911",
+        "7921",
+        "8050",
+        "7798",
+        "7985",
+        "7244"
+      ]
+    },
+    {
+      "heading": "Misc",
+      "summary": "* Support benchmarking async engine in benchmark_throughput.py (#7964) * Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#7898), skip compile for profiling (#7796)",
+      "prs": [
+        "7964",
+        "7898",
+        "7796"
+      ]
+    }
+  ],
+  "upgrade_rows": [],
+  "ground_truth_prs": [
+    "7528",
+    "7789",
+    "7652",
+    "7049",
+    "7911",
+    "7921",
+    "8050",
+    "7798",
+    "7985",
+    "7244",
+    "7964",
+    "7898",
+    "7796"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Performance Update",
+      "claim": "We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recommend also try out turning on multi step scheduling. You can do so by setting `--num-scheduler-steps 8` in the engine arguments. Please note that it still have some limitations and being actively hardened, see #7528 for known issues.",
+      "prs": [
+        "7528"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[CI/Build] fix: Add the +empty tag to the version only when the VLLM_TARGET_DEVICE envvar was explicitly set to \"empty\" by @tomeras91 (#8118)",
+      "prs": [
+        "8118"
+      ]
+    }
+  ]
+}

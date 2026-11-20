@@ -1,0 +1,495 @@
+{
+  "variant": "v4_adoption_engine",
+  "project": "vllm",
+  "version": "v0.16.0",
+  "positioning": "Translating VLLM v0.16.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)",
+        "what_changed": "UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT...; Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP...; **NVIDIA**: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series...; **ARM CPU**: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention...",
+        "why_it_matters": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens",
+        "prs": [
+          "33193",
+          "33371",
+          "33221",
+          "33273",
+          "31366",
+          "33635"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "what_changed": "**Intel XPU**: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm...; Removed BitBlas quantization (#32683) and Marlin 24 (#32688).; **Performance**: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892),...; New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099).; Bugfixes: FP8 online quantization memory fix (#31914), asymmetric W4A16 (ConchLinear) for CT (#33200), DeepSeek V3.2 NVFP4 (#33932), LoRA FP8 (#33879), quantized Falcon-H1...",
+        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
+        "prs": [
+          "33379",
+          "33659",
+          "33679",
+          "33973",
+          "34117",
+          "34202"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "what_changed": "New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449),...; LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774),...; Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE...; Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak...; Features: run_batch transcription/translation support (#33934), /server_info collect_env (#33246), OTEL tracing during model loading (#31162), clear MM and encoder cache...",
+        "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
+        "prs": [
+          "33005",
+          "33312",
+          "33165",
+          "33636",
+          "33431",
+          "32449"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "Deprecation & Breaking Changes Enhancements",
+        "what_changed": "Removed deprecated `reasoning_content` message field (#33402).; Removed deprecated pooling items (#33477).; Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535).",
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "33402",
+          "33477",
+          "33535"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)",
+        "what_changed": "**AMD ROCm**: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077).; Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379).; Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509).",
+        "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
+        "prs": [
+          "32042",
+          "32492",
+          "30976",
+          "33077",
+          "33379",
+          "33557"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 6,
+        "theme": "Engine Core Enhancements",
+        "what_changed": "Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement...; RLHF: Native NCCL weight syncing API (#31943), layerwise reloading for QeRL (#32133), engine pause/resume with request preservation (#32351).; Helion kernel framework: ConfigManager (#32740), kernel wrapper (#32964), kernel registry (#33203).; PluggableLayer: Applied to linear layers (#33152) and Mamba layers (#33660).; Batch invariance: Disable Cascade Attention (#32561), enable Triton attention (#33688).",
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "32618",
+          "33612",
+          "33701",
+          "31943",
+          "32133",
+          "32351"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 7,
+        "theme": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+        "what_changed": "Speculative decoding: Unified Parallel Drafting (#32887), structured output support (#33374), penalty application in MRV2 (#33251), skip softmax for all-greedy rejection...; Speculative decoding: EAGLE3 for Hunyuan/HunyuanVL (#33035), AFMoE (#33111), Mistral3 (#33939).",
+        "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
+        "prs": [
+          "32887",
+          "33374",
+          "33251",
+          "32852",
+          "33652",
+          "33035"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)",
+        "models_workloads": "Frontier Mixture-of-Experts (MoE) reasoning and agentic models (DeepSeek-V4/V4.1, GLM-5.3, Kimi-K3/K3.1, MiniMax-M3.1)",
+        "gpus_infra": "NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters",
+        "bill_impact": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens"
+      },
+      {
+        "capability": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "models_workloads": "100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit",
+        "gpus_infra": "NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X",
+        "bill_impact": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput"
+      },
+      {
+        "capability": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "models_workloads": "Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters",
+        "gpus_infra": "Standard single-node and multi-node GPU inference pools",
+        "bill_impact": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet"
+      },
+      {
+        "capability": "Deprecation & Breaking Changes Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)",
+        "models_workloads": "Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds",
+        "gpus_infra": "AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU",
+        "bill_impact": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code"
+      },
+      {
+        "capability": "Engine Core Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+        "models_workloads": "Interactive coding assistants, agent loops, and low-batch-size real-time inference",
+        "gpus_infra": "NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners",
+        "bill_impact": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "Extensible KV Cache",
+        "domain": "vllm",
+        "meaning": "Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.",
+        "why_it_matters": "Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes."
+      },
+      {
+        "term": "Model Runner V2 (MRV2)",
+        "domain": "vllm",
+        "meaning": "vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.",
+        "why_it_matters": "Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity."
+      },
+      {
+        "term": "Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)",
+        "domain": "vllm",
+        "meaning": "Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.",
+        "why_it_matters": "Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality."
+      },
+      {
+        "term": "MLA & Sparse-MLA (Multi-head Latent Attention)",
+        "domain": "vllm",
+        "meaning": "An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing.",
+        "why_it_matters": "Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU."
+      },
+      {
+        "term": "NVFP4 / MXFP4 / FP8 Quantization",
+        "domain": "vllm",
+        "meaning": "4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.",
+        "why_it_matters": "Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks."
+      },
+      {
+        "term": "P/D Disaggregation (Prefill/Decode Split & NIXL)",
+        "domain": "vllm",
+        "meaning": "Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL.",
+        "why_it_matters": "Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs."
+      },
+      {
+        "term": "DCP & PCP (Decode / Prefill Context Parallelism)",
+        "domain": "vllm",
+        "meaning": "Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP).",
+        "why_it_matters": "Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts."
+      },
+      {
+        "term": "MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)",
+        "domain": "vllm",
+        "meaning": "Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs.",
+        "why_it_matters": "Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU."
+      },
+      {
+        "term": "Piecewise & Breakable CUDA Graphs",
+        "domain": "vllm",
+        "meaning": "Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token.",
+        "why_it_matters": "Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups."
+      },
+      {
+        "term": "TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)",
+        "domain": "vllm",
+        "meaning": "The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream.",
+        "why_it_matters": "Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users."
+      },
+      {
+        "term": "Tiered KV Offloading & Prefix Caching",
+        "domain": "vllm",
+        "meaning": "Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts.",
+        "why_it_matters": "Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Before You Upgrade",
+        "text": "Removed BitBlas quantization (#32683) and Marlin 24 (#32688). -> Action: Check deprecation/removal impact before upgrading",
+        "prs": [
+          "32683",
+          "32688"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
+        "text": "Removed deprecated `reasoning_content` message field (#33402). -> Action: Check deprecation/removal impact before upgrading",
+        "prs": [
+          "33402"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
+        "text": "Removed deprecated pooling items (#33477). -> Action: Check deprecation/removal impact before upgrading",
+        "prs": [
+          "33477"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
+        "text": "Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535). -> Action: Check deprecation/removal impact before upgrading",
+        "prs": [
+          "33535"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
+        "text": "Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379). -> Action: Check deprecation/removal impact before upgrading",
+        "prs": [
+          "33379"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Security",
+        "text": "Patch protobuf for CVE-2026-0994 (#34253).",
+        "prs": [
+          "34253"
+        ],
+        "_score": 1.8
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "Hardware & Performance",
+        "text": "**IBM Z**: BF16 kernel type for s390x (#33788).",
+        "prs": [
+          "33788"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Engine Core",
+        "text": "Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement (#33612), deadlock fix for torchrun PP broadcast (#33701).",
+        "prs": [
+          "32618",
+          "33612",
+          "33701"
+        ],
+        "_score": 11.6
+      },
+      {
+        "category": "Hardware & Performance",
+        "text": "**IBM Z**: BF16 kernel type for s390x (#33788).",
+        "prs": [
+          "33788"
+        ],
+        "_score": 10.0
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "`2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu",
+      "`2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98",
+      "`2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill",
+      "`2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic",
+      "`2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi",
+      "`2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill",
+      "`2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz",
+      "`2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon"
+    ]
+  },
+  "cited_prs": [
+    "33193",
+    "33371",
+    "33221",
+    "33273",
+    "31366",
+    "33635",
+    "33488",
+    "33379",
+    "33659",
+    "33679",
+    "33973",
+    "34117",
+    "34202",
+    "32683",
+    "32688",
+    "33005",
+    "33312",
+    "33165",
+    "33636",
+    "33431",
+    "32449",
+    "32549",
+    "32696",
+    "2",
+    "33686",
+    "33720",
+    "34124",
+    "32764",
+    "32265",
+    "29816",
+    "32770",
+    "32774",
+    "32655",
+    "32005",
+    "29828",
+    "33174",
+    "33370",
+    "33010",
+    "33039",
+    "32493",
+    "33771",
+    "33855",
+    "33832",
+    "34385",
+    "32887",
+    "33374",
+    "33251",
+    "32852",
+    "33652",
+    "32954",
+    "32437",
+    "33517",
+    "33540",
+    "31171",
+    "33291",
+    "33568",
+    "33527",
+    "33493",
+    "32804",
+    "33510",
+    "32958",
+    "32873",
+    "33637",
+    "33967",
+    "32224",
+    "32042",
+    "32492",
+    "30976",
+    "33077",
+    "33782",
+    "33548",
+    "32892",
+    "32790",
+    "34006",
+    "31034",
+    "33339",
+    "32255",
+    "33377",
+    "33604",
+    "33280",
+    "33786",
+    "33076",
+    "31099",
+    "31914",
+    "33200",
+    "33932",
+    "33879",
+    "32728",
+    "33257",
+    "33582",
+    "33727",
+    "33402",
+    "33477",
+    "33535",
+    "33035",
+    "33111",
+    "33939",
+    "32618",
+    "33612",
+    "33701",
+    "33788",
+    "33059",
+    "33732",
+    "33502",
+    "34183",
+    "33122",
+    "32263",
+    "30329",
+    "32161",
+    "34003",
+    "33735",
+    "33113",
+    "33945",
+    "31943",
+    "32133",
+    "32351",
+    "32740",
+    "32964",
+    "33203",
+    "33152",
+    "33660",
+    "32561",
+    "33688",
+    "33013",
+    "32739",
+    "27942",
+    "33290",
+    "32609",
+    "33212",
+    "33378",
+    "32712",
+    "32768",
+    "33141",
+    "33218",
+    "33964",
+    "32762",
+    "33934",
+    "33246",
+    "31162",
+    "33452",
+    "20320",
+    "33060",
+    "31127",
+    "33557",
+    "33509",
+    "33977",
+    "33683",
+    "33187",
+    "30011",
+    "33837",
+    "34253",
+    "33473"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [],
+  "markdown": "# What's New in VLLM v0.16.0: The Adoption Decision Guide\n\n> **Positioning**: *Translating VLLM v0.16.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*\n\n**Release Snapshot**: `42` upstream changes analyzed | `8` capability themes | `6` upgrade/deprecation notices | `3` quantified performance proofs\n\n---\n\n## 1. What's the Big Deal?\n\nInstead of reading hundreds of isolated PR descriptions, here are the most consequential architectural shifts in this release and why they matter operationally:\n\n1. **Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)** ([#33193](https://github.com/vllm-project/vllm/pull/33193), [#33371](https://github.com/vllm-project/vllm/pull/33371), [#33221](https://github.com/vllm-project/vllm/pull/33221), [#33273](https://github.com/vllm-project/vllm/pull/33273))\n   - **What changed**: UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT...; Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP...; **NVIDIA**: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series...; **ARM CPU**: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention...\n   - **Why it matters**: Directly benefits **Frontier Mixture-of-Experts (MoE) reasoning and agentic models (DeepSeek-V4/V4.1, GLM-5.3, Kimi-K3/K3.1, MiniMax-M3.1)** on **NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters** \u2014 **Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens**.\n2. **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** ([#33379](https://github.com/vllm-project/vllm/pull/33379), [#33659](https://github.com/vllm-project/vllm/pull/33659), [#33679](https://github.com/vllm-project/vllm/pull/33679), [#33973](https://github.com/vllm-project/vllm/pull/33973))\n   - **What changed**: **Intel XPU**: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm...; Removed BitBlas quantization (#32683) and Marlin 24 (#32688).; **Performance**: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892),...; New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099).; Bugfixes: FP8 online quantization memory fix (#31914), asymmetric W4A16 (ConchLinear) for CT (#33200), DeepSeek V3.2 NVFP4 (#33932), LoRA FP8 (#33879), quantized Falcon-H1...\n   - **Why it matters**: Directly benefits **100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit** on **NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X** \u2014 **Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput**.\n3. **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** ([#33005](https://github.com/vllm-project/vllm/pull/33005), [#33312](https://github.com/vllm-project/vllm/pull/33312), [#33165](https://github.com/vllm-project/vllm/pull/33165), [#33636](https://github.com/vllm-project/vllm/pull/33636))\n   - **What changed**: New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449),...; LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774),...; Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE...; Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak...; Features: run_batch transcription/translation support (#33934), /server_info collect_env (#33246), OTEL tracing during model loading (#31162), clear MM and encoder cache...\n   - **Why it matters**: Directly benefits **Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters** on **Standard single-node and multi-node GPU inference pools** \u2014 **Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet**.\n4. **Deprecation & Breaking Changes Enhancements** ([#33402](https://github.com/vllm-project/vllm/pull/33402), [#33477](https://github.com/vllm-project/vllm/pull/33477), [#33535](https://github.com/vllm-project/vllm/pull/33535))\n   - **What changed**: Removed deprecated `reasoning_content` message field (#33402).; Removed deprecated pooling items (#33477).; Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535).\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n5. **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** ([#32042](https://github.com/vllm-project/vllm/pull/32042), [#32492](https://github.com/vllm-project/vllm/pull/32492), [#30976](https://github.com/vllm-project/vllm/pull/30976), [#33077](https://github.com/vllm-project/vllm/pull/33077))\n   - **What changed**: **AMD ROCm**: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077).; Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379).; Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509).\n   - **Why it matters**: Directly benefits **Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds** on **AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU** \u2014 **Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code**.\n6. **Engine Core Enhancements** ([#32618](https://github.com/vllm-project/vllm/pull/32618), [#33612](https://github.com/vllm-project/vllm/pull/33612), [#33701](https://github.com/vllm-project/vllm/pull/33701), [#31943](https://github.com/vllm-project/vllm/pull/31943))\n   - **What changed**: Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement...; RLHF: Native NCCL weight syncing API (#31943), layerwise reloading for QeRL (#32133), engine pause/resume with request preservation (#32351).; Helion kernel framework: ConfigManager (#32740), kernel wrapper (#32964), kernel registry (#33203).; PluggableLayer: Applied to linear layers (#33152) and Mamba layers (#33660).; Batch invariance: Disable Cascade Attention (#32561), enable Triton attention (#33688).\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n7. **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** ([#32887](https://github.com/vllm-project/vllm/pull/32887), [#33374](https://github.com/vllm-project/vllm/pull/33374), [#33251](https://github.com/vllm-project/vllm/pull/33251), [#32852](https://github.com/vllm-project/vllm/pull/32852))\n   - **What changed**: Speculative decoding: Unified Parallel Drafting (#32887), structured output support (#33374), penalty application in MRV2 (#33251), skip softmax for all-greedy rejection...; Speculative decoding: EAGLE3 for Hunyuan/HunyuanVL (#33035), AFMoE (#33111), Mistral3 (#33939).\n   - **Why it matters**: Directly benefits **Interactive coding assistants, agent loops, and low-batch-size real-time inference** on **NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners** \u2014 **Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth**.\n\n### Last Week / Patch Pulse (Last Week in vLLM Style)\n* `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n* `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n* `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n* `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n* `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n* `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n* `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n* `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n---\n\n## 2. Who Benefits? (Models, GPUs, Workloads & Your Bill)\n\n| Capability Area | Models / Workloads Served | GPUs / Infrastructure Owned | Impact on Your Bill & SLAs |\n|---|---|---|---|\n| **Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)** | Frontier Mixture-of-Experts (MoE) reasoning and agentic models (DeepSeek-V4/V4.1, GLM-5.3, Kimi-K3/K3.1, MiniMax-M3.1) | NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters | Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens |\n| **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** | 100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit | NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X | Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **Deprecation & Breaking Changes Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** | Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds | AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU | Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code |\n| **Engine Core Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** | Interactive coding assistants, agent loops, and low-batch-size real-time inference | NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners | Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth |\n\n---\n\n## 3. What Does the Jargon Mean?\n\nPlain-English translations for the systems and inference terms that show up in this release:\n\n- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.  \n  *Bottom line for operators*: Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.\n- **Model Runner V2 (MRV2)**: vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.  \n  *Bottom line for operators*: Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity.\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.  \n  *Bottom line for operators*: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing.  \n  *Bottom line for operators*: Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.  \n  *Bottom line for operators*: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **P/D Disaggregation (Prefill/Decode Split & NIXL)**: Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL.  \n  *Bottom line for operators*: Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs.\n- **DCP & PCP (Decode / Prefill Context Parallelism)**: Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP).  \n  *Bottom line for operators*: Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts.\n- **MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)**: Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs.  \n  *Bottom line for operators*: Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU.\n- **Piecewise & Breakable CUDA Graphs**: Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token.  \n  *Bottom line for operators*: Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups.\n- **TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)**: The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream.  \n  *Bottom line for operators*: Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users.\n- **Tiered KV Offloading & Prefix Caching**: Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts.  \n  *Bottom line for operators*: Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes.\n\n---\n\n## 4. Should I Upgrade?\n\n**Executive Verdict**: **UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first**\n\n### Pre-Upgrade Checklist (Breaking Changes, Removals & Flag Shifts)\n- **[Before You Upgrade]** Removed BitBlas quantization (#32683) and Marlin 24 (#32688). -> Action: Check deprecation/removal impact before upgrading ([#32683](https://github.com/vllm-project/vllm/pull/32683), [#32688](https://github.com/vllm-project/vllm/pull/32688))\n- **[Before You Upgrade]** Removed deprecated `reasoning_content` message field (#33402). -> Action: Check deprecation/removal impact before upgrading ([#33402](https://github.com/vllm-project/vllm/pull/33402))\n- **[Before You Upgrade]** Removed deprecated pooling items (#33477). -> Action: Check deprecation/removal impact before upgrading ([#33477](https://github.com/vllm-project/vllm/pull/33477))\n- **[Before You Upgrade]** Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535). -> Action: Check deprecation/removal impact before upgrading ([#33535](https://github.com/vllm-project/vllm/pull/33535))\n- **[Before You Upgrade]** Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379). -> Action: Check deprecation/removal impact before upgrading ([#33379](https://github.com/vllm-project/vllm/pull/33379))\n- **[Security]** Patch protobuf for CVE-2026-0994 (#34253). ([#34253](https://github.com/vllm-project/vllm/pull/34253))\n\n---\n\n## 5. Where's the Proof?\n\n### Quantified Benchmarks & Primary Proofs\n- **Hardware & Performance** ([#33788](https://github.com/vllm-project/vllm/pull/33788)): **IBM Z**: BF16 kernel type for s390x (#33788).\n- **Engine Core** ([#32618](https://github.com/vllm-project/vllm/pull/32618), [#33612](https://github.com/vllm-project/vllm/pull/33612), [#33701](https://github.com/vllm-project/vllm/pull/33701)): Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement (#33612), deadlock fix for torchrun PP broadcast (#33701).\n- **Hardware & Performance** ([#33788](https://github.com/vllm-project/vllm/pull/33788)): **IBM Z**: BF16 kernel type for s390x (#33788).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[API & Frontend]** UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT warning (#33273), early tokenization validation (#31366), reasoning_content backward compatibility (#33635), only include Authorization header when OPENAI_API_KEY is... ([#33193](https://github.com/vllm-project/vllm/pull/33193), [#33371](https://github.com/vllm-project/vllm/pull/33371))\n- **[Hardware & Performance]** **Intel XPU**: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm kernel (#34117), FP8 MoE (#34202). ([#33379](https://github.com/vllm-project/vllm/pull/33379), [#33659](https://github.com/vllm-project/vllm/pull/33659))\n- **[Deprecation & Breaking Changes]** Removed BitBlas quantization (#32683) and Marlin 24 (#32688). ([#32683](https://github.com/vllm-project/vllm/pull/32683), [#32688](https://github.com/vllm-project/vllm/pull/32688))\n- **[Model Support]** New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449), NemotronHPuzzle heterogeneous (#32549), MusicFlamingo (#32696), FunAudioChat (#2), ColBERT late interaction (#33686), voyage-4-nano (#33720), GLM-5 (#34124). ([#33005](https://github.com/vllm-project/vllm/pull/33005), [#33312](https://github.com/vllm-project/vllm/pull/33312))\n- **[Model Support]** LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774), unpermute-aware fused MoE LoRA path (#32655), reduced kernel overhead for fewer active LoRAs with multiple CUDA graphs (#32005). ([#32764](https://github.com/vllm-project/vllm/pull/32764), [#32265](https://github.com/vllm-project/vllm/pull/32265))\n- **[Model Support]** Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE positioning fixes (#33010, #33039), embedding input for disabled modalities (#32493). ([#29828](https://github.com/vllm-project/vllm/pull/29828), [#33174](https://github.com/vllm-project/vllm/pull/33174))\n- **[Model Support]** Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP accuracy fix (#34385). ([#33771](https://github.com/vllm-project/vllm/pull/33771), [#33855](https://github.com/vllm-project/vllm/pull/33855))\n- **[Engine Core]** Speculative decoding: Unified Parallel Drafting (#32887), structured output support (#33374), penalty application in MRV2 (#33251), skip softmax for all-greedy rejection sampling (#32852), correctness fix for spec tokens with prefill chunks (#33652). ([#32887](https://github.com/vllm-project/vllm/pull/32887), [#33374](https://github.com/vllm-project/vllm/pull/33374))\n- **[Hardware & Performance]** **NVIDIA**: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series (#33540), FlashInfer MLA concat optimization (#31171), GDN attention layout optimization (#33291), DeepGEMM FP8 MLA performance (#33568), wvSplitK_fp8 performance... ([#32954](https://github.com/vllm-project/vllm/pull/32954), [#32437](https://github.com/vllm-project/vllm/pull/32437))\n- **[Hardware & Performance]** **AMD ROCm**: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077). ([#32042](https://github.com/vllm-project/vllm/pull/32042), [#32492](https://github.com/vllm-project/vllm/pull/32492))\n- **[Hardware & Performance]** **Performance**: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892), shared/routed overlap for latent MoE on Nemotron-H (#32790), FlashInfer autotune control flag (#34006). ([#33782](https://github.com/vllm-project/vllm/pull/33782), [#33548](https://github.com/vllm-project/vllm/pull/33548))\n- **[Large Scale Serving]** Disaggregated serving: Mooncake connector rework with bootstrap server (#31034), cross-layer KV cache layout at NIXL Connector V2 (#33339), delay freeing blocks for aborted async loads (#32255), async double-free fix (#33377), Ray multi-replica single-instance fix (#33604). ([#31034](https://github.com/vllm-project/vllm/pull/31034), [#33339](https://github.com/vllm-project/vllm/pull/33339))\n- **[Quantization]** New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099). ([#33280](https://github.com/vllm-project/vllm/pull/33280), [#33786](https://github.com/vllm-project/vllm/pull/33786))\n- **[Quantization]** Bugfixes: FP8 online quantization memory fix (#31914), asymmetric W4A16 (ConchLinear) for CT (#33200), DeepSeek V3.2 NVFP4 (#33932), LoRA FP8 (#33879), quantized Falcon-H1 model loading (#32728), quantized Mamba TP with n_groups=1 (#33257), CPU W8A8 with bias (#33582), CPU W8A8 3D input support (#33727). ([#31914](https://github.com/vllm-project/vllm/pull/31914), [#33200](https://github.com/vllm-project/vllm/pull/33200))\n- **[Deprecation & Breaking Changes]** Removed deprecated `reasoning_content` message field (#33402). ([#33402](https://github.com/vllm-project/vllm/pull/33402))\n- **[Deprecation & Breaking Changes]** Removed deprecated pooling items (#33477). ([#33477](https://github.com/vllm-project/vllm/pull/33477))\n- **[Deprecation & Breaking Changes]** Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535). ([#33535](https://github.com/vllm-project/vllm/pull/33535))\n- **[Deprecation & Breaking Changes]** Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379). ([#33379](https://github.com/vllm-project/vllm/pull/33379))\n- **[Model Support]** Speculative decoding: EAGLE3 for Hunyuan/HunyuanVL (#33035), AFMoE (#33111), Mistral3 (#33939). ([#33035](https://github.com/vllm-project/vllm/pull/33035), [#33111](https://github.com/vllm-project/vllm/pull/33111))\n- **[Engine Core]** Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement (#33612), deadlock fix for torchrun PP broadcast (#33701). ([#32618](https://github.com/vllm-project/vllm/pull/32618), [#33612](https://github.com/vllm-project/vllm/pull/33612))\n- **[Quantization]** **Deprecation**: Removed BitBlas (#32683) and Marlin 24 (#32688). ([#32683](https://github.com/vllm-project/vllm/pull/32683), [#32688](https://github.com/vllm-project/vllm/pull/32688))\n- **[Hardware & Performance]** **IBM Z**: BF16 kernel type for s390x (#33788). ([#33788](https://github.com/vllm-project/vllm/pull/33788))\n- **[Engine Core]** Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak fix from Request reference cycle in prefix caching (#34183). ([#33059](https://github.com/vllm-project/vllm/pull/33059), [#33732](https://github.com/vllm-project/vllm/pull/33732))\n- **[Hardware & Performance]** **ARM CPU**: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention dispatch by head_dim alignment (#32161). ([#33122](https://github.com/vllm-project/vllm/pull/33122), [#32263](https://github.com/vllm-project/vllm/pull/32263))\n- **[Hardware & Performance]** **torch.compile**: Stop compiling identical artifacts (#34003), MoE cold start optimization option (#33735), fix 32-bit indexing assumption (#33113), attention fusion pass fix (#33945). ([#34003](https://github.com/vllm-project/vllm/pull/34003), [#33735](https://github.com/vllm-project/vllm/pull/33735))\n- **[Engine Core]** RLHF: Native NCCL weight syncing API (#31943), layerwise reloading for QeRL (#32133), engine pause/resume with request preservation (#32351). ([#31943](https://github.com/vllm-project/vllm/pull/31943), [#32133](https://github.com/vllm-project/vllm/pull/32133))\n- **[Engine Core]** Helion kernel framework: ConfigManager (#32740), kernel wrapper (#32964), kernel registry (#33203). ([#32740](https://github.com/vllm-project/vllm/pull/32740), [#32964](https://github.com/vllm-project/vllm/pull/32964))\n- **[Engine Core]** PluggableLayer: Applied to linear layers (#33152) and Mamba layers (#33660). ([#33152](https://github.com/vllm-project/vllm/pull/33152), [#33660](https://github.com/vllm-project/vllm/pull/33660))\n- **[Engine Core]** Batch invariance: Disable Cascade Attention (#32561), enable Triton attention (#33688). ([#32561](https://github.com/vllm-project/vllm/pull/32561), [#33688](https://github.com/vllm-project/vllm/pull/33688))\n- **[Large Scale Serving]** EPLB: Capture logical experts with router replay (#33013), DP metadata fix for dense models (#32739). ([#33013](https://github.com/vllm-project/vllm/pull/33013), [#32739](https://github.com/vllm-project/vllm/pull/32739))\n- **[Large Scale Serving]** Metrics: KV offloading connector metrics (#27942), labeled prompt token metrics for P/D disaggregation (#33290). ([#27942](https://github.com/vllm-project/vllm/pull/27942), [#33290](https://github.com/vllm-project/vllm/pull/33290))\n- **[API & Frontend]** **Responses API**: Sampling parameters (#32609), return token IDs (#33212), return prompt token IDs (#33378), parser implementation (#32712). ([#32609](https://github.com/vllm-project/vllm/pull/32609), [#33212](https://github.com/vllm-project/vllm/pull/33212))\n- **[API & Frontend]** Tool calling: Fix multi-turn tool call ID preservation (#32768), fix indexing double-counting (#33141), GLM-4 incremental string streaming (#33218), DSV3.2 fast detokenization fix (#33964), MCP tools non-streaming fix (#32762). ([#32768](https://github.com/vllm-project/vllm/pull/32768), [#33141](https://github.com/vllm-project/vllm/pull/33141))\n- **[API & Frontend]** Features: run_batch transcription/translation support (#33934), /server_info collect_env (#33246), OTEL tracing during model loading (#31162), clear MM and encoder cache (#33452), HF Hub LoRA resolver (#20320). ([#33934](https://github.com/vllm-project/vllm/pull/33934), [#33246](https://github.com/vllm-project/vllm/pull/33246))\n- **[API & Frontend]** Pooling API: Request schema consensus for ScoreRequest (#33060) and final standardization (#31127). ([#33060](https://github.com/vllm-project/vllm/pull/33060), [#31127](https://github.com/vllm-project/vllm/pull/31127))\n- **[API & Frontend]** Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509). ([#33557](https://github.com/vllm-project/vllm/pull/33557), [#33509](https://github.com/vllm-project/vllm/pull/33509))\n- **[Dependencies]** Transformers v5 compatibility fixes across multiple models (#33977, #33683). ([#33977](https://github.com/vllm-project/vllm/pull/33977), [#33683](https://github.com/vllm-project/vllm/pull/33683))\n- **[API & Frontend]** **Realtime API**: WebSocket-based streaming API (#33187) with Voxtral realtime support. ([#33187](https://github.com/vllm-project/vllm/pull/33187))\n- **[API & Frontend]** CLI: `--disable-access-log-for-endpoints` option (#30011). ([#30011](https://github.com/vllm-project/vllm/pull/30011))\n- **[API & Frontend]** Scoring: Fix multi-document scoring returning single result (#33837). ([#33837](https://github.com/vllm-project/vllm/pull/33837))\n- **[Security]** Patch protobuf for CVE-2026-0994 (#34253). ([#34253](https://github.com/vllm-project/vllm/pull/34253))\n- **[Dependencies]** huggingface-hub updates for Transformers v5 preparation (#33473). ([#33473](https://github.com/vllm-project/vllm/pull/33473))",
+  "eval": {
+    "variant": "v4_adoption_engine",
+    "project": "vllm",
+    "version": "v0.16.0",
+    "headline_salience_recall": 1.0,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 1.0,
+    "cluster_diversity_score": 0.9712,
+    "composite_score": 0.9971,
+    "matched_spotlights": "6/6",
+    "cited_prs_count": 152,
+    "cited_keps_count": 0
+  },
+  "published_date": "2026-02-25",
+  "total_raw_items": 42
+}

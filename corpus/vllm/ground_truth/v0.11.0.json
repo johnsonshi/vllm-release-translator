@@ -1,0 +1,226 @@
+{
+  "project": "vllm",
+  "version": "v0.11.0",
+  "published_date": "2025-10-02",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "This release completes the removal of V0 engine. V0 engine code including AsyncL",
+      "summary": "This release completes the removal of V0 engine. V0 engine code including AsyncLLMEngine, LLMEngine, MQLLMEngine, all attention backends, and related components have been removed. **V1 is the only engine in the codebase now.**",
+      "prs": []
+    },
+    {
+      "heading": "This releases turns on **FULL_AND_PIECEWISE as the CUDA graph mode default**. Th",
+      "summary": "This releases turns on **FULL_AND_PIECEWISE as the CUDA graph mode default**. This should provide better out of the box performance for most models, particularly fine-grained MoEs, while preserving compatibility with existing models supporting only PIECEWISE mode.",
+      "prs": []
+    },
+    {
+      "heading": "V0 Deprecation",
+      "summary": "* Engines: AsyncLLMEngine (#25025), LLMEngine (#25033), MQLLMEngine (#25019), core (#25321), model runner (#25328), MP executor (#25329). * Components: Attention backends (#25351), encoder-decoder (#24907), output processor (#25320), sampling metadata (#25345), Sequence/Sampler (#25332). * Interfaces: LoRA (#25686), async output processor (#25334), MultiModalPlaceholderMap (#25366), seq group methods (#25330), placeholder attention (#25510), input embeddings (#25242), multimodal registry (#25362), max_seq_len_to_capture (#25543), attention classes (#25541), hybrid models (#25400), backend suff",
+      "prs": [
+        "25025",
+        "25033",
+        "25019",
+        "25321",
+        "25328",
+        "25329",
+        "25351",
+        "24907",
+        "25320",
+        "25345",
+        "25332",
+        "25686",
+        "25334",
+        "25366",
+        "25330",
+        "25510",
+        "25242",
+        "25362",
+        "25543",
+        "25541",
+        "25400",
+        "25489",
+        "25675",
+        "25409"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Engines: AsyncLLMEngine (#25025), LLMEngine (#25033), MQLLMEngine (#25019), core (#25321), model runner (#25328), MP executor (#25329).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "25025",
+        "25033",
+        "25019",
+        "25321",
+        "25328",
+        "25329"
+      ]
+    },
+    {
+      "change": "Components: Attention backends (#25351), encoder-decoder (#24907), output processor (#25320), sampling metadata (#25345), Sequence/Sampler (#25332).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "25351",
+        "24907",
+        "25320",
+        "25345",
+        "25332"
+      ]
+    },
+    {
+      "change": "Interfaces: LoRA (#25686), async output processor (#25334), MultiModalPlaceholderMap (#25366), seq group methods (#25330), placeholder attention (#25510), input embeddings (#25242), multimodal registry (#25362), max_seq_len_to_capture (#25543), attention classes (#25541), hybrid models (#25400), backend suffixes (#25489), compilation fallbacks (#25675), default args (#25409).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "25686",
+        "25334",
+        "25366",
+        "25330",
+        "25510",
+        "25242",
+        "25362",
+        "25543",
+        "25541",
+        "25400",
+        "25489",
+        "25675",
+        "25409"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "25025",
+    "25033",
+    "25019",
+    "25321",
+    "25328",
+    "25329",
+    "25351",
+    "24907",
+    "25320",
+    "25345",
+    "25332",
+    "25686",
+    "25334",
+    "25366",
+    "25330",
+    "25510",
+    "25242",
+    "25362",
+    "25543",
+    "25541",
+    "25400",
+    "25489",
+    "25675",
+    "25409",
+    "25025",
+    "25033",
+    "25019",
+    "25321",
+    "25328",
+    "25329",
+    "25351",
+    "24907",
+    "25320",
+    "25345",
+    "25332",
+    "25686",
+    "25334",
+    "25366",
+    "25330",
+    "25510",
+    "25242",
+    "25362",
+    "25543",
+    "25541",
+    "25400",
+    "25489",
+    "25675",
+    "25409"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Model Support",
+      "claim": "Performance: GLM-4.1V 916ms TTFT reduction via fused RMSNorm (#24733), GLM-4 MoE SharedFusedMoE optimization (#24849), Qwen2.5-VL CUDA sync removal (#24741), Qwen3-VL Triton MRoPE kernel (#25055), FP8 checkpoints for Qwen3-Next (#25079).",
+      "prs": [
+        "24733",
+        "24849",
+        "24741",
+        "25055",
+        "25079"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "claim": "Performance: FlashInfer RoPE 2x speedup (#21126), fused Q/K RoPE 11% improvement (#24511, #25005), 8x spec decode overhead reduction (#24986), FlashInfer spec decode with 1.14x speedup (#25196), model info caching (#23558), inputs_embeds copy avoidance (#25739).",
+      "prs": [
+        "21126",
+        "24511",
+        "25005",
+        "24986",
+        "25196",
+        "23558",
+        "25739"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "AMD: ROCm 7.0 (#25178), GLM-4.5 MI300X tuning (#25703).",
+      "prs": [
+        "25178",
+        "25703"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "Metrics: V1 TPOT histogram (#24015), hidden deprecated gpu_ metrics (#24245), KV cache GiB units (#25204, #25479).",
+      "prs": [
+        "24015",
+        "24245",
+        "25204",
+        "25479"
+      ]
+    },
+    {
+      "category": "Security",
+      "claim": "https://github.com/vllm-project/vllm/security/advisories/GHSA-wr9h-g72x-mwhm",
+      "prs": []
+    },
+    {
+      "category": "What's Changed",
+      "claim": "MI-300X triton moe configs by @Sara-KS (#23445)",
+      "prs": [
+        "23445"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[V1][Metrics] Add per-request TPOT histogram by @baxingpiaochong (#24015)",
+      "prs": [
+        "24015"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[ROCm][Bugfix] Only enable +rms_norm based on aiter if not explicitly disabled by @gshtras (#25275)",
+      "prs": [
+        "25275"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Spec Decode] Add Batch Parallel Ngram. Upto 8x lower overhead. by @ekagra-ranjan (#24986)",
+      "prs": [
+        "24986"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Harware][AMD][Model] Triton MoE tuning configs for GLM-4.5 for MI300X by @xaguilar-amd (#25703)",
+      "prs": [
+        "25703"
+      ]
+    }
+  ]
+}

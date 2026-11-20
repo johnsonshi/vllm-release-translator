@@ -1,0 +1,440 @@
+{
+  "project": "vllm",
+  "version": "v0.15.0",
+  "published_date": "2026-01-29",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.15.0",
+  "commits_count": 335,
+  "contributors_count": 158,
+  "total_raw_items": 50,
+  "counts_by_category": {
+    "Model Support": 5,
+    "Engine Core": 7,
+    "Hardware & Performance": 14,
+    "Quantization": 4,
+    "API & Frontend": 7,
+    "Dependencies": 4,
+    "Breaking Changes & Deprecations": 3,
+    "Bug Fixes": 6
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "**New architectures**: Kimi-K2.5 (#33131), Molmo2 (#30997), Step3vl 10B (#32329), Step1 (#32511), GLM-Lite (#31386), Eagle2.5-8B VLM (#32456).",
+      "prs": [
+        "33131",
+        "30997",
+        "32329",
+        "32511",
+        "31386",
+        "32456"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**LoRA expansion**: Nemotron-H (#30802), InternVL2 (#32397), MiniMax M2 (#32763).",
+      "prs": [
+        "30802",
+        "32397",
+        "32763"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Speculative decoding**: EAGLE3 for Pixtral/LlavaForConditionalGeneration (#32542), Qwen3 VL MoE (#32048), draft model support (#24322).",
+      "prs": [
+        "32542",
+        "32048",
+        "24322"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Embeddings**: BGE-M3 sparse embeddings and ColBERT embeddings (#14526).",
+      "prs": [
+        "14526"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Model enhancements**: Voxtral streaming architecture (#32861), SharedFusedMoE for Qwen3MoE (#32082), dynamic resolution for Nemotron Nano VL (#32121), Molmo2 vision backbone quantization (#32385).",
+      "prs": [
+        "32861",
+        "32082",
+        "32121",
+        "32385"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Async scheduling + Pipeline Parallelism**: `--async-scheduling` now works with pipeline parallelism (#32359).",
+      "prs": [
+        "32359"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Mamba prefix caching**: Block-aligned prefix caching for Mamba/hybrid models with `--enable-prefix-caching --mamba-cache-mode align`. Achieves ~2x speedup by caching Mamba states directly (#30877).",
+      "prs": [
+        "30877"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Session-based streaming input**: New incremental input support for interactive workloads like ASR. Accepts async generators producing `StreamingInput` objects while maintaining KV cache alignment (#28973).",
+      "prs": [
+        "28973"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Model Runner V2**: VLM support (#32546), architecture improvements.",
+      "prs": [
+        "32546"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**LoRA**: Inplace loading for memory efficiency (#31326).",
+      "prs": [
+        "31326"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**AOT compilation**: torch.compile inductor artifacts support (#25205).",
+      "prs": [
+        "25205"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Performance**: KV cache offloading redundant load prevention (#29087), FlashAttn attention/cache update separation (#25954).",
+      "prs": [
+        "29087",
+        "25954"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Blackwell defaults**: FlashInfer MLA is now the default MLA backend on Blackwell, with TRTLLM as default prefill (#32615).",
+      "prs": [
+        "32615"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**MoE performance**: 1.2-2% E2E throughput improvement via grouped topk kernel fusion (#32058), NVFP4 small-batch decoding improvement (#30885), faster cold start for MoEs with torch.compile (#32805).",
+      "prs": [
+        "32058",
+        "30885",
+        "32805"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**FP4 kernel optimization**: Up to 65% faster FP4 quantization on Blackwell (SM100F) using 256-bit loads, ~4% E2E throughput improvement (#32520).",
+      "prs": [
+        "32520"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Kernel improvements**: topk_sigmoid kernel for MoE routing (#31246), atomics reduce counting for SplitK skinny GEMMs (#29843), fused cat+quant for FP8 KV cache in MLA (#32950).",
+      "prs": [
+        "31246",
+        "29843",
+        "32950"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**torch.compile**: SiluAndMul and QuantFP8 CustomOp compilation (#32806), Triton prefill attention performance (#32403).",
+      "prs": [
+        "32806",
+        "32403"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**MoRI EP**: High-performance all2all backend for Expert Parallel (#28664).",
+      "prs": [
+        "28664"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Attention improvements**: Shuffle KV cache layout and assembly paged attention kernel for AiterFlashAttentionBackend (#29887).",
+      "prs": [
+        "29887"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**FP4 support**: MLA projection GEMMs with dynamic quantization (#32238).",
+      "prs": [
+        "32238"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Consumer GPU support**: Flash Attention Triton backend on RDNA3/RDNA4 (#32944).",
+      "prs": [
+        "32944"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**TPU**: Pipeline parallelism support (#28506), backend option (#32438).",
+      "prs": [
+        "28506",
+        "32438"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: AgRsAll2AllManager for distributed communication (#32654).",
+      "prs": [
+        "32654"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU**: NUMA-aware acceleration for TP/DP inference on ARM (#32792), PyTorch 2.10 (#32869).",
+      "prs": [
+        "32792",
+        "32869"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Whisper**: torch.compile support (#30385).",
+      "prs": [
+        "30385"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**WSL**: Platform compatibility fix for Windows Subsystem for Linux (#32749).",
+      "prs": [
+        "32749"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**MXFP4**: W4A16 support for compressed-tensors MoE models (#32285).",
+      "prs": [
+        "32285"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Non-gated MoE**: Quantization support with Marlin, NVFP4 CUTLASS, FP8, INT8, and compressed-tensors (#32257).",
+      "prs": [
+        "32257"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Intel**: Quantization Toolkit integration (#31716).",
+      "prs": [
+        "31716"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**FP8 KV cache**: Per-tensor and per-attention-head quantization via llmcompressor (#30141).",
+      "prs": [
+        "30141"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Responses API**: Partial message generation (#32100), `include_stop_str_in_output` tuning (#32383), `prompt_cache_key` support (#32824).",
+      "prs": [
+        "32100",
+        "32383",
+        "32824"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**OpenAI API**: `skip_special_tokens` configuration (#32345).",
+      "prs": [
+        "32345"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Score endpoint**: Flexible input formats with `data_1`/`data_2` and `queries`/`documents` (#32577).",
+      "prs": [
+        "32577"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Render endpoints**: New endpoints for prompt preprocessing (#32473).",
+      "prs": [
+        "32473"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Whisper API**: `avg_logprob` and `compression_ratio` in verbose_json segments (#31059).",
+      "prs": [
+        "31059"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Security**: FIPS 140-3 compliant hash option for enterprise/government users (#32386), `--ssl-ciphers` CLI argument (#30937).",
+      "prs": [
+        "32386",
+        "30937"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**UX improvements**: Auto `api_server_count` based on `dp_size` (#32525), wheel variant auto-detection during install (#32948), custom profiler URI schemes (#32393).",
+      "prs": [
+        "32525",
+        "32948",
+        "32393"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "FlashInfer v0.6.1 (#30993)",
+      "prs": [
+        "30993"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers 4.57.5 (#32287)",
+      "prs": [
+        "32287"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "PyTorch 2.10 for CPU backend (#32869)",
+      "prs": [
+        "32869"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "DeepGEMM newer version (#32479)",
+      "prs": [
+        "32479"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "**Metrics**: Removed deprecated `vllm:time_per_output_token_seconds` metric - use `vllm:inter_token_latency_seconds` instead (#32661).",
+      "prs": [
+        "32661"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "**Environment variables**: Removed deprecated environment variables (#32812).",
+      "prs": [
+        "32812"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "**Quantization**: DeepSpeedFp8 removed (#32679), RTN removed (#32697), HQQ deprecated (#32681).",
+      "prs": [
+        "32679",
+        "32697",
+        "32681"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**Speculative decoding**: Eagle draft_model_config fix (#31753).",
+      "prs": [
+        "31753"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**DeepSeek**: DeepSeek-V3.1 + DeepGEMM incompatible scale shapes fix (#32361).",
+      "prs": [
+        "32361"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**Distributed**: DP+MoE inference fix via CpuCommunicator (#31867), P/D with non-MoE DP fix (#33037).",
+      "prs": [
+        "31867",
+        "33037"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**EPLB**: Possible deadlock fix (#32418).",
+      "prs": [
+        "32418"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**NIXL**: UCX memory leak fix by exporting UCX_MEM_MMAP_HOOK_MODE=none (#32181).",
+      "prs": [
+        "32181"
+      ]
+    },
+    {
+      "category": "Bug Fixes",
+      "text": "**Structured output**: Outlines byte fallback handling fix (#31391).",
+      "prs": [
+        "31391"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "**Metrics**: Removed deprecated `vllm:time_per_output_token_seconds` metric - use `vllm:inter_token_latency_seconds` instead (#32661).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32661"
+      ]
+    },
+    {
+      "change": "**Environment variables**: Removed deprecated environment variables (#32812).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32812"
+      ]
+    },
+    {
+      "change": "**Quantization**: DeepSpeedFp8 removed (#32679), RTN removed (#32697), HQQ deprecated (#32681).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32679",
+        "32697",
+        "32681"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "**Mamba prefix caching**: Block-aligned prefix caching for Mamba/hybrid models with `--enable-prefix-caching --mamba-cache-mode align`. Achieves ~2x speedup by caching Mamba states directly (#30877).",
+      "prs": [
+        "30877"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**FP4 kernel optimization**: Up to 65% faster FP4 quantization on Blackwell (SM100F) using 256-bit loads, ~4% E2E throughput improvement (#32520).",
+      "prs": [
+        "32520"
+      ]
+    }
+  ]
+}

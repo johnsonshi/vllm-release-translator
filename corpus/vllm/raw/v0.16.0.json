@@ -1,0 +1,476 @@
+{
+  "project": "vllm",
+  "version": "v0.16.0",
+  "published_date": "2026-02-25",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.16.0",
+  "commits_count": 440,
+  "contributors_count": 203,
+  "total_raw_items": 42,
+  "counts_by_category": {
+    "Model Support": 5,
+    "Engine Core": 7,
+    "Hardware & Performance": 7,
+    "Large Scale Serving": 3,
+    "Quantization": 3,
+    "API & Frontend": 9,
+    "Security": 1,
+    "Dependencies": 2,
+    "Deprecation & Breaking Changes": 5
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "New architectures: GLM-OCR with MTP (#33005), Qwen3-ASR (#33312), DeepSeek-OCR-2 (#33165), Intern-S1-Pro (#33636), MiniCPM-o 4.5 (#33431), openPangu7B-VL (#32449), NemotronHPuzzle heterogeneous (#32549), MusicFlamingo (#32696), FunAudioChat (#2), ColBERT late interaction (#33686), voyage-4-nano (#33720), GLM-5 (#34124).",
+      "prs": [
+        "33005",
+        "33312",
+        "33165",
+        "33636",
+        "33431",
+        "32449",
+        "32549",
+        "32696",
+        "2",
+        "33686",
+        "33720",
+        "34124"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Speculative decoding: EAGLE3 for Hunyuan/HunyuanVL (#33035), AFMoE (#33111), Mistral3 (#33939).",
+      "prs": [
+        "33035",
+        "33111",
+        "33939"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "LoRA expansion: Gemma3 vision components (#32764), Nemotron-H MTP models (#32265), Qwen3 output embedding (#29816). Optimized fused MoE-LoRA kernel indexing (#32770, #32774), unpermute-aware fused MoE LoRA path (#32655), reduced kernel overhead for fewer active LoRAs with multiple CUDA graphs (#32005).",
+      "prs": [
+        "32764",
+        "32265",
+        "29816",
+        "32770",
+        "32774",
+        "32655",
+        "32005"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Features: Qwen3-Omni transcription (#29828), Mistral Large 3 with FlashInfer MoE (#33174), LFM2 SigLIP2 intermediate encoder layers (#33370), Qwen3-Omni/GLM-4.xV MRoPE positioning fixes (#33010, #33039), embedding input for disabled modalities (#32493).",
+      "prs": [
+        "29828",
+        "33174",
+        "33370",
+        "33010",
+        "33039",
+        "32493"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Performance: GLM-4.7-GPTQ decode and MTP acceptance rate regression fix (#33771), DeepSeek V3.2 fast detokenization (#33855), DeepSeek V3.2 tokenizer fix (#33832), GLM-5 MTP accuracy fix (#34385).",
+      "prs": [
+        "33771",
+        "33855",
+        "33832",
+        "34385"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Async scheduling + Pipeline Parallelism: Full support with 30.8% throughput improvement (#32618), optimized spec decode + async scheduling with 1.5% throughput improvement (#33612), deadlock fix for torchrun PP broadcast (#33701).",
+      "prs": [
+        "32618",
+        "33612",
+        "33701"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Speculative decoding: Unified Parallel Drafting (#32887), structured output support (#33374), penalty application in MRV2 (#33251), skip softmax for all-greedy rejection sampling (#32852), correctness fix for spec tokens with prefill chunks (#33652).",
+      "prs": [
+        "32887",
+        "33374",
+        "33251",
+        "32852",
+        "33652"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "RLHF: Native NCCL weight syncing API (#31943), layerwise reloading for QeRL (#32133), engine pause/resume with request preservation (#32351).",
+      "prs": [
+        "31943",
+        "32133",
+        "32351"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Helion kernel framework: ConfigManager (#32740), kernel wrapper (#32964), kernel registry (#33203).",
+      "prs": [
+        "32740",
+        "32964",
+        "33203"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "PluggableLayer: Applied to linear layers (#33152) and Mamba layers (#33660).",
+      "prs": [
+        "33152",
+        "33660"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Batch invariance: Disable Cascade Attention (#32561), enable Triton attention (#33688).",
+      "prs": [
+        "32561",
+        "33688"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Performance: Grammar bitmask H2D copy on separate stream (#33059), zero-copy GQA for multimodal and CPU (#33732), early-reject oversized MM requests (#33502), CPU memory leak fix from Request reference cycle in prefix caching (#34183).",
+      "prs": [
+        "33059",
+        "33732",
+        "33502",
+        "34183"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA**: FlashInfer TRTLLM BF16 MoE integration (#32954), SM100 INT4 W4A16 kernel (#32437), SM121 (DGX Spark) CUTLASS support (#33517), MNNVL protocol for GB series (#33540), FlashInfer MLA concat optimization (#31171), GDN attention layout optimization (#33291), DeepGEMM FP8 MLA performance (#33568), wvSplitK_fp8 performance (#33527, #33493), B200 MoE configs for Nemotron Nano (#32804), Super B200 TP2 (#33510), GLM 4.6 (#32958), Mamba selective scan tuning for B200 (#32873). Fix: DeepSeek R1 CUTLASS MLA on B200 (#33637), QK Norm+RoPE fusion on B200+FP8 (#33967), CUTLASS FP8 blockwise on SM103a (#32224).",
+      "prs": [
+        "32954",
+        "32437",
+        "33517",
+        "33540",
+        "31171",
+        "33291",
+        "33568",
+        "33527",
+        "33493",
+        "32804",
+        "33510",
+        "32958",
+        "32873",
+        "33637",
+        "33967",
+        "32224"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**: QWEN3-NEXT FP8 tunings (#32042), AITER attention backend for Qwen3-Next (#32492), fused_add_rmsnorm_pad for GPT-OSS (#30976), Qwen3-Omni startup fix (#33077).",
+      "prs": [
+        "32042",
+        "32492",
+        "30976",
+        "33077"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: Platform overhaul - deprecated IPEX, switched to vllm-xpu-kernels (#33379). New: unquantized MoE (#33659), MXFP4 MoE (#33679), WNA16 kernel (#33973), scaled_mm kernel (#34117), FP8 MoE (#34202).",
+      "prs": [
+        "33379",
+        "33659",
+        "33679",
+        "33973",
+        "34117",
+        "34202"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**ARM CPU**: KleidiAI INT4 dynamic quant with BF16 activations (#33122), NEON BFMMLA BF16 paged attention (#32263), vectorization backend optimization (#30329), attention dispatch by head_dim alignment (#32161).",
+      "prs": [
+        "33122",
+        "32263",
+        "30329",
+        "32161"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**IBM Z**: BF16 kernel type for s390x (#33788).",
+      "prs": [
+        "33788"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**torch.compile**: Stop compiling identical artifacts (#34003), MoE cold start optimization option (#33735), fix 32-bit indexing assumption (#33113), attention fusion pass fix (#33945).",
+      "prs": [
+        "34003",
+        "33735",
+        "33113",
+        "33945"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Performance**: Chat completion streaming optimization (#33782), ORJSONResponse for faster API responses (#33548), MoE permute optimization for CUTLASS FP8 (#32892), shared/routed overlap for latent MoE on Nemotron-H (#32790), FlashInfer autotune control flag (#34006).",
+      "prs": [
+        "33782",
+        "33548",
+        "32892",
+        "32790",
+        "34006"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "Disaggregated serving: Mooncake connector rework with bootstrap server (#31034), cross-layer KV cache layout at NIXL Connector V2 (#33339), delay freeing blocks for aborted async loads (#32255), async double-free fix (#33377), Ray multi-replica single-instance fix (#33604).",
+      "prs": [
+        "31034",
+        "33339",
+        "32255",
+        "33377",
+        "33604"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "EPLB: Capture logical experts with router replay (#33013), DP metadata fix for dense models (#32739).",
+      "prs": [
+        "33013",
+        "32739"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "Metrics: KV offloading connector metrics (#27942), labeled prompt token metrics for P/D disaggregation (#33290).",
+      "prs": [
+        "27942",
+        "33290"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "New: FP8 block quant for CompressedTensorsW8A16Fp8 (#33280), ModelOpt MXFP8 for dense models (#33786), NVFP4/FP8 on Turing GPUs (#33076), TP > 4 for FP4 Gemm (#31099).",
+      "prs": [
+        "33280",
+        "33786",
+        "33076",
+        "31099"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Bugfixes: FP8 online quantization memory fix (#31914), asymmetric W4A16 (ConchLinear) for CT (#33200), DeepSeek V3.2 NVFP4 (#33932), LoRA FP8 (#33879), quantized Falcon-H1 model loading (#32728), quantized Mamba TP with n_groups=1 (#33257), CPU W8A8 with bias (#33582), CPU W8A8 3D input support (#33727).",
+      "prs": [
+        "31914",
+        "33200",
+        "33932",
+        "33879",
+        "32728",
+        "33257",
+        "33582",
+        "33727"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Deprecation**: Removed BitBlas (#32683) and Marlin 24 (#32688).",
+      "prs": [
+        "32683",
+        "32688"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Realtime API**: WebSocket-based streaming API (#33187) with Voxtral realtime support.",
+      "prs": [
+        "33187"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Responses API**: Sampling parameters (#32609), return token IDs (#33212), return prompt token IDs (#33378), parser implementation (#32712).",
+      "prs": [
+        "32609",
+        "33212",
+        "33378",
+        "32712"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Pooling API: Request schema consensus for ScoreRequest (#33060) and final standardization (#31127).",
+      "prs": [
+        "33060",
+        "31127"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Tool calling: Fix multi-turn tool call ID preservation (#32768), fix indexing double-counting (#33141), GLM-4 incremental string streaming (#33218), DSV3.2 fast detokenization fix (#33964), MCP tools non-streaming fix (#32762).",
+      "prs": [
+        "32768",
+        "33141",
+        "33218",
+        "33964",
+        "32762"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Structured outputs: Performance optimization with reasoning (#33557), guidance vocab size fix (#33509).",
+      "prs": [
+        "33557",
+        "33509"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "CLI: `--disable-access-log-for-endpoints` option (#30011).",
+      "prs": [
+        "30011"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "UX: Nested configs in YAML files (#33193), GGUF `repo_id:quant_type` syntax (#33371), DeepSeek ReasoningParser with thinking enabled by default (#33221), remove noisy CT warning (#33273), early tokenization validation (#31366), reasoning_content backward compatibility (#33635), only include Authorization header when OPENAI_API_KEY is set (#33488).",
+      "prs": [
+        "33193",
+        "33371",
+        "33221",
+        "33273",
+        "31366",
+        "33635",
+        "33488"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Features: run_batch transcription/translation support (#33934), /server_info collect_env (#33246), OTEL tracing during model loading (#31162), clear MM and encoder cache (#33452), HF Hub LoRA resolver (#20320).",
+      "prs": [
+        "33934",
+        "33246",
+        "31162",
+        "33452",
+        "20320"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Scoring: Fix multi-document scoring returning single result (#33837).",
+      "prs": [
+        "33837"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Patch protobuf for CVE-2026-0994 (#34253).",
+      "prs": [
+        "34253"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "huggingface-hub updates for Transformers v5 preparation (#33473).",
+      "prs": [
+        "33473"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers v5 compatibility fixes across multiple models (#33977, #33683).",
+      "prs": [
+        "33977",
+        "33683"
+      ]
+    },
+    {
+      "category": "Deprecation & Breaking Changes",
+      "text": "Removed BitBlas quantization (#32683) and Marlin 24 (#32688).",
+      "prs": [
+        "32683",
+        "32688"
+      ]
+    },
+    {
+      "category": "Deprecation & Breaking Changes",
+      "text": "Removed deprecated `reasoning_content` message field (#33402).",
+      "prs": [
+        "33402"
+      ]
+    },
+    {
+      "category": "Deprecation & Breaking Changes",
+      "text": "Removed deprecated pooling items (#33477).",
+      "prs": [
+        "33477"
+      ]
+    },
+    {
+      "category": "Deprecation & Breaking Changes",
+      "text": "Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535).",
+      "prs": [
+        "33535"
+      ]
+    },
+    {
+      "category": "Deprecation & Breaking Changes",
+      "text": "Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379).",
+      "prs": [
+        "33379"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "Removed BitBlas quantization (#32683) and Marlin 24 (#32688).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "32683",
+        "32688"
+      ]
+    },
+    {
+      "change": "Removed deprecated `reasoning_content` message field (#33402).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "33402"
+      ]
+    },
+    {
+      "change": "Removed deprecated pooling items (#33477).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "33477"
+      ]
+    },
+    {
+      "change": "Removed deprecated `VLLM_ALL2ALL_BACKEND` environment variable (#33535).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "33535"
+      ]
+    },
+    {
+      "change": "Deprecated IPEX for XPU, switched to vllm-xpu-kernels (#33379).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "33379"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**IBM Z**: BF16 kernel type for s390x (#33788).",
+      "prs": [
+        "33788"
+      ]
+    }
+  ]
+}

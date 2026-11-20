@@ -1,0 +1,998 @@
+{
+  "project": "vllm",
+  "version": "v0.6.0",
+  "published_date": "2024-09-04",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.6.0",
+  "commits_count": null,
+  "contributors_count": null,
+  "total_raw_items": 135,
+  "counts_by_category": {
+    "Performance Update": 4,
+    "Model Support": 7,
+    "Hardware Support": 5,
+    "Production Features": 4,
+    "Misc": 2,
+    "What's Changed": 113
+  },
+  "items": [
+    {
+      "category": "Performance Update",
+      "text": "We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recommend also try out turning on multi step scheduling. You can do so by setting `--num-scheduler-steps 8` in the engine arguments. Please note that it still have some limitations and being actively hardened, see #7528 for known issues.",
+      "prs": [
+        "7528"
+      ]
+    },
+    {
+      "category": "Performance Update",
+      "text": "Multi-step scheduler now supports LLMEngine and log_probs (#7789, #7652)",
+      "prs": [
+        "7789",
+        "7652"
+      ]
+    },
+    {
+      "category": "Performance Update",
+      "text": "Asynchronous output processor overlaps the output data structures construction with GPU works, delivering 12% throughput increase. (#7049, #7911, #7921, #8050)",
+      "prs": [
+        "7049",
+        "7911",
+        "7921",
+        "8050"
+      ]
+    },
+    {
+      "category": "Performance Update",
+      "text": "Using FlashInfer backend for FP8 KV Cache (#7798, #7985), rejection sampling in Speculative Decoding (#7244)",
+      "prs": [
+        "7798",
+        "7985",
+        "7244"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Support bitsandbytes 8-bit and FP4 quantized models (#7445)",
+      "prs": [
+        "7445"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "New LLMs: Exaone (#7819), Granite (#7436), Phi-3.5-MoE (#7729)",
+      "prs": [
+        "7819",
+        "7436",
+        "7729"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "A new tokenizer mode for mistral models to use the native mistral-commons package (#7739)",
+      "prs": [
+        "7739"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Multi-modality:",
+      "prs": []
+    },
+    {
+      "category": "Model Support",
+      "text": "multi-image input support for LLaVA-Next (#7230), Phi-3-vision models (#7783)",
+      "prs": [
+        "7230",
+        "7783"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Ultravox support for multiple audio chunks (#7963)",
+      "prs": [
+        "7963"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "TP support for ViTs (#7186)",
+      "prs": [
+        "7186"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "text": "NVIDIA GPU: extend cuda graph size for H200 (#7894)",
+      "prs": [
+        "7894"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "text": "AMD: Triton implementations awq_dequantize and awq_gemm to support AWQ (#7386)",
+      "prs": [
+        "7386"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "text": "Intel GPU: pipeline parallel support (#7810)",
+      "prs": [
+        "7810"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "text": "Neuron: context lengths and token generation buckets (#7885, #8062)",
+      "prs": [
+        "7885",
+        "8062"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "text": "TPU: single and multi-host TPUs on GKE (#7613), Async output processing (#8011)",
+      "prs": [
+        "7613",
+        "8011"
+      ]
+    },
+    {
+      "category": "Production Features",
+      "text": "OpenAI-Compatible Tools API + Streaming for Hermes & Mistral models! (#5649)",
+      "prs": [
+        "5649"
+      ]
+    },
+    {
+      "category": "Production Features",
+      "text": "Add json_schema support from OpenAI protocol (#7654)",
+      "prs": [
+        "7654"
+      ]
+    },
+    {
+      "category": "Production Features",
+      "text": "Enable chunked prefill and prefix caching together (#7753, #8120)",
+      "prs": [
+        "7753",
+        "8120"
+      ]
+    },
+    {
+      "category": "Production Features",
+      "text": "Multimodal support in offline chat (#8098), and multiple multi-modal items in the OpenAI frontend (#8049)",
+      "prs": [
+        "8098",
+        "8049"
+      ]
+    },
+    {
+      "category": "Misc",
+      "text": "Support benchmarking async engine in benchmark_throughput.py (#7964)",
+      "prs": [
+        "7964"
+      ]
+    },
+    {
+      "category": "Misc",
+      "text": "Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#7898), skip compile for profiling (#7796)",
+      "prs": [
+        "7898",
+        "7796"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Add multi-step support to LLMEngine by @alexm-neuralmagic (#7789)",
+      "prs": [
+        "7789"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix run_batch logger by @pooyadavoodi (#7640)",
+      "prs": [
+        "7640"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Publish  Prometheus metrics in run_batch API by @pooyadavoodi (#7641)",
+      "prs": [
+        "7641"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] add json_schema support from OpenAI protocol by @rockwotj (#7654)",
+      "prs": [
+        "7654"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[misc][core] lazy import outlines by @youkaichao (#7831)",
+      "prs": [
+        "7831"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ci][test] exclude model download time in server start time by @youkaichao (#7834)",
+      "prs": [
+        "7834"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ci][test] fix RemoteOpenAIServer by @youkaichao (#7838)",
+      "prs": [
+        "7838"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix Phi-3v crash when input images are of certain sizes by @zifeitong (#7840)",
+      "prs": [
+        "7840"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model][VLM] Support multi-images inputs for Phi-3-vision models  by @Isotr0py (#7783)",
+      "prs": [
+        "7783"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Remove snapshot_download usage in InternVL2 test by @Isotr0py (#7835)",
+      "prs": [
+        "7835"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[misc][cuda] improve pynvml warning by @youkaichao (#7852)",
+      "prs": [
+        "7852"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Spec Decoding] Streamline batch expansion tensor manipulation by @njhill (#7851)",
+      "prs": [
+        "7851"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix]: Use float32 for base64 embedding by @HollowMan6 (#7855)",
+      "prs": [
+        "7855"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] Avoid downloading all HF files in `RemoteOpenAIServer` by @DarkLight1337 (#7836)",
+      "prs": [
+        "7836"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Performance][BlockManagerV2] Mark prefix cache block as computed after schedule by @comaniac (#7822)",
+      "prs": [
+        "7822"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update `qqq` to use vLLMParameters by @dsikka (#7805)",
+      "prs": [
+        "7805"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update `gptq_marlin_24` to use vLLMParameters by @dsikka (#7762)",
+      "prs": [
+        "7762"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[misc] fix custom allreduce p2p cache file generation by @youkaichao (#7853)",
+      "prs": [
+        "7853"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] neuron: enable tensor parallelism by @omrishiv (#7562)",
+      "prs": [
+        "7562"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update compressed tensors lifecycle to remove `prefix` from `create_weights` by @dsikka (#7825)",
+      "prs": [
+        "7825"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Asynchronous Output Processor by @megha95 (#7049)",
+      "prs": [
+        "7049"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Tests] Disable retries and use context manager for openai client by @njhill (#7565)",
+      "prs": [
+        "7565"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[core][torch.compile] not compile for profiling by @youkaichao (#7796)",
+      "prs": [
+        "7796"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert #7509 by @comaniac (#7887)",
+      "prs": [
+        "7509",
+        "7887"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add Mistral Tokenization to improve robustness and chat encoding by @patrickvonplaten (#7739)",
+      "prs": [
+        "7739"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][VLM] Cleanup multiple images inputs model test by @Isotr0py (#7897)",
+      "prs": [
+        "7897"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Hardware][Intel GPU] Add intel GPU pipeline parallel support. by @jikunshang (#7810)",
+      "prs": [
+        "7810"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][ROCm] Enabling tensorizer tests for ROCm by @alexeykondrat (#7237)",
+      "prs": [
+        "7237"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix phi3v incorrect image_idx when using async engine by @Isotr0py (#7916)",
+      "prs": [
+        "7916"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[cuda][misc] error on empty CUDA_VISIBLE_DEVICES by @youkaichao (#7924)",
+      "prs": [
+        "7924"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] Expand MoE weight loading + Add Fused Marlin MoE Kernel by @dsikka (#7766)",
+      "prs": [
+        "7766"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[benchmark] Update TGI version by @philschmid (#7917)",
+      "prs": [
+        "7917"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add multi-image input support for LLaVA-Next offline inference by @zifeitong (#7230)",
+      "prs": [
+        "7230"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[mypy] Enable mypy type checking for `vllm/core` by @jberkhahn (#7229)",
+      "prs": [
+        "7229"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][VLM] Stack multimodal tensors to represent multiple images within each prompt by @petersalas (#7902)",
+      "prs": [
+        "7902"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[hardware][rocm] allow rocm to override default env var by @youkaichao (#7926)",
+      "prs": [
+        "7926"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Allow ScalarType to be compiled with pytorch 2.3 and add checks for registering FakeScalarType and dynamo support. by @bnellnm (#7886)",
+      "prs": [
+        "7886"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[mypy][CI/Build] Fix mypy errors by @DarkLight1337 (#7929)",
+      "prs": [
+        "7929"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Async_output_proc: Add virtual engine support (towards pipeline parallel) by @alexm-neuralmagic (#7911)",
+      "prs": [
+        "7911"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Performance] Enable chunked prefill and prefix caching together by @comaniac (#7753)",
+      "prs": [
+        "7753"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ci][test] fix pp test failure by @youkaichao (#7945)",
+      "prs": [
+        "7945"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] fix the autoAWQ example by @stas00 (#7937)",
+      "prs": [
+        "7937"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][VLM] Fix incompatibility between #7902 and #7230 by @DarkLight1337 (#7948)",
+      "prs": [
+        "7902",
+        "7230",
+        "7948"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Kernels] Use FlashInfer backend for FP8 KV Cache when available. by @pavanimajety (#7798)",
+      "prs": [
+        "7798"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] [Triton] [AMD] Adding Triton implementations awq_dequantize and awq_gemm to support AWQ by @rasmith (#7386)",
+      "prs": [
+        "7386"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Upgrade PyTorch XLA nightly by @WoosukKwon (#7967)",
+      "prs": [
+        "7967"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Doc] fix 404 link by @stas00 (#7966)",
+      "prs": [
+        "7966"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel/Model] Migrate mamba_ssm and causal_conv1d kernels to vLLM by @mzusman (#7651)",
+      "prs": [
+        "7651"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Make torch registration of punica ops optional by @bnellnm (#7970)",
+      "prs": [
+        "7970"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[torch.compile] avoid Dynamo guard evaluation overhead by @youkaichao (#7898)",
+      "prs": [
+        "7898"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Remove faulty Meta-Llama-3-8B-Instruct-FP8.yaml lm-eval test by @mgoin (#7961)",
+      "prs": [
+        "7961"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Minor optimizations to zmq decoupled front-end by @njhill (#7957)",
+      "prs": [
+        "7957"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[torch.compile] remove reset by @youkaichao (#7975)",
+      "prs": [
+        "7975"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[VLM][Core] Fix exceptions on ragged NestedTensors by @petersalas (#7974)",
+      "prs": [
+        "7974"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Revert \"[Core][Kernels] Use FlashInfer backend for FP8 KV Cache when available.\" by @youkaichao (#7982)",
+      "prs": [
+        "7982"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Unify rank computation across regular decoding and speculative decoding by @jmkuebler (#7899)",
+      "prs": [
+        "7899"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Combine async postprocessor and multi-step by @alexm-neuralmagic (#7921)",
+      "prs": [
+        "7921"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Kernels] Enable FP8 KV Cache with Flashinfer backend.  + BugFix for kv_cache_dtype=auto by @pavanimajety (#7985)",
+      "prs": [
+        "7985"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "extend cuda graph size for H200 by @kushanam (#7894)",
+      "prs": [
+        "7894"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix incorrect vocal embedding shards for GGUF model in tensor parallelism by @Isotr0py (#7954)",
+      "prs": [
+        "7954"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[misc] update tpu int8 to use new vLLM Parameters by @dsikka (#7973)",
+      "prs": [
+        "7973"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Neuron] Adding support for context-lenght, token-gen buckets. by @hbikki (#7885)",
+      "prs": [
+        "7885"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "support bitsandbytes 8-bit and FP4 quantized models by @chenqianfzh (#7445)",
+      "prs": [
+        "7445"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Add more percentiles and latencies by @wschin (#7759)",
+      "prs": [
+        "7759"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[VLM] Disallow overflowing `max_model_len` for multimodal models by @DarkLight1337 (#7998)",
+      "prs": [
+        "7998"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Logprobs support in Multi-step by @afeldman-nm (#7652)",
+      "prs": [
+        "7652"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Async output processing for TPU by @WoosukKwon (#8011)",
+      "prs": [
+        "8011"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Kernel] changing fused moe kernel chunk size default to 32k by @avshalomman (#7995)",
+      "prs": [
+        "7995"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MODEL] add Exaone model support by @nayohan (#7819)",
+      "prs": [
+        "7819"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Support vLLM single and multi-host TPUs on GKE by @richardsliu (#7613)",
+      "prs": [
+        "7613"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix import error in Exaone model by @DarkLight1337 (#8034)",
+      "prs": [
+        "8034"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[VLM][Model] TP support for ViTs by @ChristopherCho (#7186)",
+      "prs": [
+        "7186"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Increase default `max_num_batched_tokens` for multimodal models by @DarkLight1337 (#8028)",
+      "prs": [
+        "8028"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend]-config-cli-args by @KaunilD (#7737)",
+      "prs": [
+        "7737"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] Fix tpu type api by @WoosukKwon (#8035)",
+      "prs": [
+        "8035"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Adding support for MSFT Phi-3.5-MoE by @wenxcs (#7729)",
+      "prs": [
+        "7729"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Address #8009 and add model test for flashinfer fp8 kv cache. by @pavanimajety (#8013)",
+      "prs": [
+        "8009",
+        "8013"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix import error in Phi-3.5-MoE by @DarkLight1337 (#8052)",
+      "prs": [
+        "8052"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix ModelScope models in v0.5.5 by @NickLucche (#8037)",
+      "prs": [
+        "8037"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[BugFix][Core] Multistep Fix Crash on Request Cancellation by @robertgshaw2-neuralmagic (#8059)",
+      "prs": [
+        "8059"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend][VLM] Add support for multiple multi-modal items in the OpenAI frontend by @ywang96 (#8049)",
+      "prs": [
+        "8049"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Optional installation of audio related packages by @ywang96 (#8063)",
+      "prs": [
+        "8063"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Adding Granite model. by @shawntan (#7436)",
+      "prs": [
+        "7436"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[SpecDecode][Kernel] Use Flashinfer for Rejection Sampling in Speculative Decoding by @LiuXiaoxuanPKU (#7244)",
+      "prs": [
+        "7244"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU] Align worker index with node boundary by @WoosukKwon (#7932)",
+      "prs": [
+        "7932"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core][Bugfix] Accept GGUF model without .gguf extension by @Isotr0py (#8056)",
+      "prs": [
+        "8056"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix internlm2 tensor parallel inference by @Isotr0py (#8055)",
+      "prs": [
+        "8055"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix #7592 vllm 0.5.4 enable_chunked_prefill throughput is slightly lower than 0.5.3~0.5.0. by @noooop (#7874)",
+      "prs": [
+        "7592",
+        "7874"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] Fix single output condition in output processor by @WoosukKwon (#7881)",
+      "prs": [
+        "7881"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix][VLM] Add fallback to SDPA for ViT model running on CPU backend by @Isotr0py (#8061)",
+      "prs": [
+        "8061"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Performance] Enable chunked prefill and prefix caching together by @comaniac (#8120)",
+      "prs": [
+        "8120"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Only PR reviewers/committers can trigger CI on PR by @khluu (#8124)",
+      "prs": [
+        "8124"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Core] Optimize Async + Multi-step by @alexm-neuralmagic (#8050)",
+      "prs": [
+        "8050"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Raise a more informative exception in add/remove_logger by @Yard1 (#7750)",
+      "prs": [
+        "7750"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build] fix: Add the +empty tag to the version only when the VLLM_TARGET_DEVICE envvar was explicitly set to \"empty\" by @tomeras91 (#8118)",
+      "prs": [
+        "8118"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[ci] Fix GHA workflow  by @khluu (#8129)",
+      "prs": [
+        "8129"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] Fix next_token_ids shape by @WoosukKwon (#8128)",
+      "prs": [
+        "8128"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Change PR remainder to avoid at-mentions by @simon-mo (#8134)",
+      "prs": [
+        "8134"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update `GPTQ` to use `vLLMParameters` by @dsikka (#7976)",
+      "prs": [
+        "7976"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Benchmark] Add `--async-engine` option to benchmark_throughput.py by @njhill (#7964)",
+      "prs": [
+        "7964"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[TPU][Bugfix] Use XLA rank for persistent cache path by @WoosukKwon (#8137)",
+      "prs": [
+        "8137"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Misc] Update fbgemmfp8 to use `vLLMParameters` by @dsikka (#7972)",
+      "prs": [
+        "7972"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Model] Add Ultravox support for multiple audio chunks by @petersalas (#7963)",
+      "prs": [
+        "7963"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Frontend] Multimodal support in offline chat by @DarkLight1337 (#8098)",
+      "prs": [
+        "8098"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "chore: Update check-wheel-size.py to read VLLM_MAX_SIZE_MB from env by @haitwang-cloud (#8103)",
+      "prs": [
+        "8103"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Bugfix] remove post_layernorm in siglip by @wnma3mz (#8106)",
+      "prs": [
+        "8106"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] Consolidate FP8 kv-cache tests by @comaniac (#8131)",
+      "prs": [
+        "8131"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI/Build][ROCm] Enabling LoRA tests on ROCm by @alexeykondrat (#7369)",
+      "prs": [
+        "7369"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[CI] Change test input in Gemma LoRA test by @WoosukKwon (#8163)",
+      "prs": [
+        "8163"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Feature] OpenAI-Compatible Tools API + Streaming for Hermes & Mistral models by @K-Mistele (#5649)",
+      "prs": [
+        "5649"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[MISC] Replace input token throughput with total token throughput by @comaniac (#8164)",
+      "prs": [
+        "8164"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "[Neuron] Adding support for adding/ overriding neuron configuration a\u2026 by @hbikki (#8062)",
+      "prs": [
+        "8062"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "text": "Bump version to v0.6.0 by @simon-mo (#8166)",
+      "prs": [
+        "8166"
+      ]
+    }
+  ],
+  "upgrade_notices": [],
+  "benchmarks": [
+    {
+      "category": "Performance Update",
+      "claim": "We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recommend also try out turning on multi step scheduling. You can do so by setting `--num-scheduler-steps 8` in the engine arguments. Please note that it still have some limitations and being actively hardened, see #7528 for known issues.",
+      "prs": [
+        "7528"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[CI/Build] fix: Add the +empty tag to the version only when the VLLM_TARGET_DEVICE envvar was explicitly set to \"empty\" by @tomeras91 (#8118)",
+      "prs": [
+        "8118"
+      ]
+    }
+  ]
+}

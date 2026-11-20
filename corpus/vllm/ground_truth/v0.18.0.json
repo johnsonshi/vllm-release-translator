@@ -1,0 +1,156 @@
+{
+  "project": "vllm",
+  "version": "v0.18.0",
+  "published_date": "2026-03-20",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "gRPC Serving Support",
+      "summary": "**gRPC Serving Support**: vLLM now supports gRPC serving via the new `--grpc` flag (#36169), enabling high-performance RPC-based serving alongside the existing HTTP/REST interface.",
+      "prs": [
+        "36169"
+      ]
+    },
+    {
+      "heading": "GPU-less Render Serving",
+      "summary": "**GPU-less Render Serving**: New `vllm launch render` command (#36166, #34551) enables GPU-less preprocessing and rendering, allowing separation of multimodal preprocessing from GPU inference.",
+      "prs": [
+        "36166",
+        "34551"
+      ]
+    },
+    {
+      "heading": "NGram GPU Speculative Decoding",
+      "summary": "**NGram GPU Speculative Decoding**: NGram speculative decoding now runs on GPU and is compatible with the async scheduler (#29184), significantly reducing spec decode overhead.",
+      "prs": [
+        "29184"
+      ]
+    },
+    {
+      "heading": "KV Cache Offloading Improvements",
+      "summary": "**KV Cache Offloading Improvements**: Smart CPU offloading that stores only frequently-reused blocks (#35342), plus FlexKV as a new offloading backend (#34328) and support for multiple KV groups in offloading spec (#36610).",
+      "prs": [
+        "35342",
+        "34328",
+        "36610"
+      ]
+    },
+    {
+      "heading": "Elastic Expert Parallelism Milestone 2",
+      "summary": "**Elastic Expert Parallelism Milestone 2**: NIXL-EP integration (#35627) enables dynamic GPU scaling for MoE experts, with new `--enable-ep-weight-filter` CLI option (#37351) for faster EP model loading.",
+      "prs": [
+        "35627",
+        "37351"
+      ]
+    },
+    {
+      "heading": "FlashInfer 0.6.6",
+      "summary": "**FlashInfer 0.6.6**: Updated FlashInfer dependency (#36768) with numerous performance and correctness improvements.",
+      "prs": [
+        "36768"
+      ]
+    },
+    {
+      "heading": "Responses API Streaming Tool Calls",
+      "summary": "**Responses API Streaming Tool Calls**: The OpenAI Responses API now supports tool/function calling with streaming (#29947).",
+      "prs": [
+        "29947"
+      ]
+    },
+    {
+      "heading": "Online Beam Search for ASR",
+      "summary": "**Online Beam Search for ASR**: Beam search support for encoder/decoder models both offline (#36153) and online transcriptions (#36160).",
+      "prs": [
+        "36153",
+        "36160"
+      ]
+    },
+    {
+      "heading": "Ray No Longer a Default Dependency",
+      "summary": "**Ray No Longer a Default Dependency**: Ray has been removed as a default dependency (#36170) \u2014 install it explicitly if needed.",
+      "prs": [
+        "36170"
+      ]
+    },
+    {
+      "heading": "Kernel",
+      "summary": "* **FA4 for MLA prefill** (#34732). * **FlashInfer Sparse MLA**: FP8 KV cache support (#35891), CUDA graphs on ROCm (#35719), MTP lens > 1 on ROCm (#36681). * **TRTLLM FP8 MoE modular kernel** (#36307). * **FP8 KV cache for Triton MLA decode** (#34597). * **FlashInfer MoE A2A kernel** (#36022). * **Remove chunking from FusedMoE** for full batch processing (#34086). * **CustomOp FusedRMSNormGated** for torch.compile compatibility (#35877). * **Mamba2 SSD prefill Triton kernel** optimization (#35397). * **DeepSeek-V3.2**: Vectorized MLA query concat kernel (#34917), optimized FP8 KV cache gather",
+      "prs": [
+        "34732",
+        "35891",
+        "35719",
+        "36681",
+        "36307",
+        "34597",
+        "36022",
+        "34086",
+        "35877",
+        "35397",
+        "34917",
+        "35290",
+        "36161",
+        "36596",
+        "34991"
+      ]
+    },
+    {
+      "heading": "Breaking Changes",
+      "summary": "1. **Ray no longer a default dependency** \u2014 install explicitly if needed (#36170). 2. **Deprecated items removed** \u2014 items deprecated in v0.18 have been removed (#36470, #36006). 3. **Cascade attention disabled by default** (#36318). 4. **swap_space parameter removed** (V0 deprecation, #36216). 5. **Monolithic TRTLLM MoE disabled for renormalize routing** \u2014 late fix cherry-picked (#37591).",
+      "prs": [
+        "36170",
+        "36470",
+        "36006",
+        "36318",
+        "36216",
+        "37591"
+      ]
+    }
+  ],
+  "upgrade_rows": [],
+  "ground_truth_prs": [
+    "36169",
+    "36166",
+    "34551",
+    "29184",
+    "35342",
+    "34328",
+    "36610",
+    "35627",
+    "37351",
+    "36768",
+    "29947",
+    "36153",
+    "36160",
+    "36170",
+    "34732",
+    "35891",
+    "35719",
+    "36681",
+    "36307",
+    "34597",
+    "36022",
+    "34086",
+    "35877",
+    "35397",
+    "34917",
+    "35290",
+    "36161",
+    "36596",
+    "34991",
+    "36470",
+    "36006",
+    "36318",
+    "36216",
+    "37591"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Quantization",
+      "claim": "**ROCm**: Quark W4A8 MXFP4/FP8 for LinearLayer (#35316), compressed-tensors fix for DeepSeek-R1 on MI300x (#36247).",
+      "prs": [
+        "35316",
+        "36247"
+      ]
+    }
+  ]
+}

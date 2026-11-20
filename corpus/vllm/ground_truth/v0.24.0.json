@@ -1,0 +1,201 @@
+{
+  "project": "vllm",
+  "version": "v0.24.0",
+  "published_date": "2026-06-29",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "MiniMax-M3",
+      "summary": "**MiniMax-M3**: Added support for the new **MiniMax-M3** model (#45381), with a fast follow-on of BF16/FP8 indexer via MSA (#45892), MXFP4 support (#45896), FP8 sparse GQA (#45744), and extensive AMD/ROCm tuning \u2014 mxfp8 MoE/linear on gfx950 (#45725), fp8_per_channel for bf16 weights on MI300X (#45854), FP8 KV-cache fix (#45720), and packed-modules mapping (#45794). A MiniMax-M2 perf regression was also fixed (#45935).",
+      "prs": [
+        "45381",
+        "45892",
+        "45896",
+        "45744",
+        "45725",
+        "45854",
+        "45720",
+        "45794",
+        "45935"
+      ]
+    },
+    {
+      "heading": "DeepSeek-V4 keeps maturing",
+      "summary": "**DeepSeek-V4 keeps maturing**: Following its debut, DeepSeek-V4 received another large optimization pass \u2014 a FlashInfer sparse index cache (2\u20134% TTFT) (#45863), prefill chunk-planning optimization (4% E2E throughput) (#45061), a cluster-cooperative topK kernel for low-latency (#43008), contiguous per-block KV allocations (#44577), TEP=16 for the block-FP8 shared expert (#46001), and native DSA indexer decode for `next_n > 2` on SM100 (#45322). It is now enabled on **SM120** alongside GLM-5.1 (#43477), with XPU (#44144, #44517, #45240) and ROCm (#44899, #45103, #45681) attention/MoE paths added.",
+      "prs": [
+        "45863",
+        "45061",
+        "43008",
+        "44577",
+        "46001",
+        "45322",
+        "43477",
+        "44144",
+        "44517",
+        "45240",
+        "44899",
+        "45103",
+        "45681"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 (MRv2) continues to expand",
+      "summary": "**Model Runner V2 (MRv2) continues to expand**: MRv2 now **supports quantized models by default** (#44446), enables **GraniteMoE by default** (#45461), and gained migration of Qwen + DeepSeek-V2 MoE models (#42667), DFlash speculative decoding (#44586), and more accurate FP32 Gumbel sampling (#45996).",
+      "prs": [
+        "44446",
+        "45461",
+        "42667",
+        "44586",
+        "45996"
+      ]
+    },
+    {
+      "heading": "Streaming Parser Engine",
+      "summary": "**Streaming Parser Engine**: A new streaming parser engine unifies tool-call/reasoning parsing across models, with parsers for Qwen3 (#45413), MiniMax-M2 (#45701), GLM-4.7/5.1/5.2 (#45915), and Nemotron V3 (#45755).",
+      "prs": [
+        "45413",
+        "45701",
+        "45915",
+        "45755"
+      ]
+    },
+    {
+      "heading": "Diffusion LLMs",
+      "summary": "**Diffusion LLMs**: Added **DiffusionGemma** (#45163), including a CPU path (#45690) and structured-output guardrails for diffusion decoders (#45468).",
+      "prs": [
+        "45163",
+        "45690",
+        "45468"
+      ]
+    },
+    {
+      "heading": "WideEP / DeepEP v2",
+      "summary": "**WideEP / DeepEP v2**: Integrated **DeepEP v2** for expert parallelism (#41183), with follow-on robustness fixes (#46404, #46432).",
+      "prs": [
+        "41183",
+        "46404",
+        "46432"
+      ]
+    },
+    {
+      "heading": "Rust frontend matures further",
+      "summary": "**Rust frontend matures further**: Added API-key authentication (#44321), CORS (#45753), `/tokenize` + `/detokenize` (#44222), `/pause` `/resume` `/is_paused` (#44499), `/abort_requests` (#44382), `/get_world_size` (#44801), `thinking_token_budget` (#46137), a Python bridge for Rust tool parsers (#44624), and many new parsers and validation paths.",
+      "prs": [
+        "44321",
+        "45753",
+        "44222",
+        "44499",
+        "44382",
+        "44801",
+        "46137",
+        "44624"
+      ]
+    },
+    {
+      "heading": "Device selection change",
+      "summary": "**Device selection change**: vLLM no longer sets `CUDA_VISIBLE_DEVICES` internally; a new `device_ids` argument is provided instead (#45026). On ROCm, a deprecation window for `CUDA_VISIBLE_DEVICES` has begun (#46636).",
+      "prs": [
+        "45026",
+        "46636"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "**Removed models**: ERNIE (obsolete) (#45127), Xverse (#45638), Dots1 (#45637), Bamba (#45990), Mono-InternVL (#45129), InternLM registry alias (#45128).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "45127",
+        "45638",
+        "45637",
+        "45990",
+        "45129",
+        "45128"
+      ]
+    },
+    {
+      "change": "**Deprecated**: First-generation Qwen and QwenVL models (#45131), Transformers v4 support (#45161), `CUDA_VISIBLE_DEVICES` on ROCm (#46636); general deprecations for v0.23/v0.24 (#44992).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "45131",
+        "45161",
+        "46636",
+        "44992"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "45381",
+    "45892",
+    "45896",
+    "45744",
+    "45725",
+    "45854",
+    "45720",
+    "45794",
+    "45935",
+    "45863",
+    "45061",
+    "43008",
+    "44577",
+    "46001",
+    "45322",
+    "43477",
+    "44144",
+    "44517",
+    "45240",
+    "44899",
+    "45103",
+    "45681",
+    "44446",
+    "45461",
+    "42667",
+    "44586",
+    "45996",
+    "45413",
+    "45701",
+    "45915",
+    "45755",
+    "45163",
+    "45690",
+    "45468",
+    "41183",
+    "46404",
+    "46432",
+    "44321",
+    "45753",
+    "44222",
+    "44499",
+    "44382",
+    "44801",
+    "46137",
+    "44624",
+    "45026",
+    "46636",
+    "45127",
+    "45638",
+    "45637",
+    "45990",
+    "45129",
+    "45128",
+    "45131",
+    "45161",
+    "46636",
+    "44992"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**CPU & other architectures**: 2.5\u00d7 faster ASR CPU preprocessing via multi-threading (#44612), CPU W4A16 INT4 MoE (#43409), cgroup memory-limit-aware KV cache sizing (#45086), RISC-V oneDNN W8A8 INT8 (#44478) and RVV micro-GEMM for WNA16 (#44324), pinned memory for WSL2 (#41496), ZenCPU runtime logging (#42726).",
+      "prs": [
+        "44612",
+        "43409",
+        "45086",
+        "44478",
+        "44324",
+        "41496",
+        "42726"
+      ]
+    }
+  ]
+}

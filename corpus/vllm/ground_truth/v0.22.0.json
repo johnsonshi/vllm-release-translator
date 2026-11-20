@@ -1,0 +1,171 @@
+{
+  "project": "vllm",
+  "version": "v0.22.0",
+  "published_date": "2026-05-29",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "DeepSeek V4 maturity",
+      "summary": "**DeepSeek V4 maturity**: DeepSeek V4 received a major hardening pass this cycle \u2014 the model was reorganized into a dedicated `vllm/models/deepseek_v4/` package (#43004, #43039, #43073, #43077, #43149), gained NVFP4 fused MoE support (#42209), full + piecewise CUDA graph (#42604), and MTP speculative decoding (#43385). A large set of fused kernels (MegaMoE, `mhc`, Q-norm, indexer, sparse MLA) and ROCm parity fixes landed alongside accuracy fixes (#42810, #43710).",
+      "prs": [
+        "43004",
+        "43039",
+        "43073",
+        "43077",
+        "43149",
+        "42209",
+        "42604",
+        "43385",
+        "42810",
+        "43710"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 advances toward default",
+      "summary": "**Model Runner V2 advances toward default**: MRv2 is now default for Qwen3 dense models. vLLM will fall back to MRv1 for features that aren't yet supported in MRv2 (#39337). sleep-mode weight reload (#42673), `update_config` (#42783), and shared KV-cache layers (#35045), plus many correctness fixes.",
+      "prs": [
+        "39337",
+        "42673",
+        "42783",
+        "35045"
+      ]
+    },
+    {
+      "heading": "Experimental Rust frontend",
+      "summary": "**Experimental Rust frontend**: A new Rust front-end integration landed (#40848), with the implementation moved into the tree (#43283) and a DP Supervisor for data-parallel serving (#40841).",
+      "prs": [
+        "40848",
+        "43283",
+        "40841"
+      ]
+    },
+    {
+      "heading": "Batch invariance, faster",
+      "summary": "**Batch invariance, faster**: Batch-invariant inference gained Cutlass FP8 support for a **28.9% end-to-end latency improvement** (#40408), compile-mode support on SM80 (#42456), and an NVFP4 Cutlass linear path (#39912).",
+      "prs": [
+        "40408",
+        "42456",
+        "39912"
+      ]
+    },
+    {
+      "heading": "Multi-tier KV cache offloading",
+      "summary": "**Multi-tier KV cache offloading**: A new multi-tier KV cache offloading framework (#40020) with a Python filesystem secondary tier (#41735), DSv4 support (#43142), and Mooncake disk offloading (#42689) extends offloading beyond CPU memory.",
+      "prs": [
+        "40020",
+        "41735",
+        "43142",
+        "42689"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Removed old locations of `get_tokenizer` and `resolve_hf_chat_template` (#35024).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "35024"
+      ]
+    },
+    {
+      "change": "Marked env vars now covered by `--moe-backend` / `--linear-backend` (#43148).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43148"
+      ]
+    },
+    {
+      "change": "Removed deprecated MLA prefill arguments (#42555).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "42555"
+      ]
+    },
+    {
+      "change": "Removed dead CUDA kernels and dead code (#42767, #42889, #43144).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "42767",
+        "42889",
+        "43144"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "43004",
+    "43039",
+    "43073",
+    "43077",
+    "43149",
+    "42209",
+    "42604",
+    "43385",
+    "42810",
+    "43710",
+    "39337",
+    "42673",
+    "42783",
+    "35045",
+    "40848",
+    "43283",
+    "40841",
+    "40408",
+    "42456",
+    "39912",
+    "40020",
+    "41735",
+    "43142",
+    "42689",
+    "35024",
+    "43148",
+    "42555",
+    "42767",
+    "42889",
+    "43144"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**NVIDIA Blackwell / SM12x**: FlashInfer b12x MoE + FP4 GEMM for SM120/121 (#40082), per-tensor FP8 CUTLASS on SM12.1 (#41215), `head_dim=512` for FlashInfer TRTLLM attention (#38822), FlashInfer Blackwell GDN prefill (#40717), GDN prefill kernel for SM100 (#43273).",
+      "prs": [
+        "40082",
+        "41215",
+        "38822",
+        "40717",
+        "43273"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Performance**: batch-invariant Cutlass FP8 (+28.9% E2E) (#40408), CutlassFP8 padding pre-processing (+13.5% TTFT) (#42651), padded NVFP4 quant kernel (+2.4\u20135.7% E2E) (#42774), GPU<->CPU sync elimination 1/n (#41429) and 4/n (#42347), fused RoPE+KVCache+q_concat for MLA (#40392), MLA `compute_prefill_context` / `_v_up_proj` optimizations (#42460, #42561), penalties Triton kernel (#40657), `do_not_specialize` in fused FP8 RoPE (#42849), FULL CUDA graph capture for TRITON_MLA decode (#42885).",
+      "prs": [
+        "40408",
+        "42651",
+        "42774",
+        "41429",
+        "42347",
+        "40392",
+        "42460",
+        "42561",
+        "40657",
+        "42849",
+        "42885"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**AMD ROCm**: DSV4 functionality + accuracy fixes (#42810, #43679 Tilelang MHC), flash sparse MLA Triton kernels (#41812), gluon paged MQA logits on gfx950/MI355X (#42062), RMSNorm+Quant fusion for gfx950 (#41825), AITER FA backend cleanup (#41942), XGMI backend for MoRI connector (#41753), QuickReduce min-size override (#41675), DSV4 MTP (#43385).",
+      "prs": [
+        "42810",
+        "43679",
+        "41812",
+        "42062",
+        "41825",
+        "41942",
+        "41753",
+        "41675",
+        "43385"
+      ]
+    }
+  ]
+}

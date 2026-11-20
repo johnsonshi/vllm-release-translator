@@ -1,0 +1,154 @@
+{
+  "project": "vllm",
+  "version": "v0.23.0",
+  "published_date": "2026-06-15",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "DeepSeek-V4 matures across backends",
+      "summary": "**DeepSeek-V4 matures across backends**: Following its introduction in v0.22.0, DeepSeek-V4 received another large hardening and optimization pass. Its sparse MLA metadata is now decoupled from DeepSeek-V3.2 (#44699), it gained a TRTLLM-gen attention kernel (#43827), EPLB support for the Mega-MoE (#43339), selective prefix-cache retention for sliding-window KV cache (#43447), and an index-share feature for DSA MTP (#44420). The model was also detached from `torch.compile` (#43746, #43891), its attention and RoPE paths were refactored (#44569, #44262, #43926), and an XPU attention decode path was added (#42953).",
+      "prs": [
+        "44699",
+        "43827",
+        "43339",
+        "43447",
+        "44420",
+        "43746",
+        "43891",
+        "44569",
+        "44262",
+        "43926",
+        "42953"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 expands to more dense models",
+      "summary": "**Model Runner V2 expands to more dense models**: MRv2 is now selected by default for **Llama and Mistral dense models** (#43458) in addition to Qwen3. It gained a FlashInfer sampler (#42472), breakable CUDA graphs (#44050), pipeline-parallel bubble elimination (#42187), kernel block-size support for hybrid models (#38831), and Gemma 4 MTP (#43241).",
+      "prs": [
+        "43458",
+        "42472",
+        "44050",
+        "42187",
+        "38831",
+        "43241"
+      ]
+    },
+    {
+      "heading": "Rust frontend grows up",
+      "summary": "**Rust frontend grows up**: The experimental Rust frontend added a streaming `generate` endpoint (#43779), dynamic LoRA endpoints (#43778), `/version` (#43854) and `/server_info` (#43942) endpoints, a server-router extension hook (#43774), request-ID headers (#43883), and many new tool parsers (InternLM2 #43481, hy_v3 #43872, Phi-4-mini #44213, Gemma4 #43850).",
+      "prs": [
+        "43779",
+        "43778",
+        "43854",
+        "43942",
+        "43774",
+        "43883",
+        "43481",
+        "43872",
+        "44213",
+        "43850"
+      ]
+    },
+    {
+      "heading": "Gemma 4",
+      "summary": "**Gemma 4**: Added encoder-free **Gemma 4 Unified** support (#44429) and Gemma 4 MTP (#43241), plus numerous accuracy and startup fixes.",
+      "prs": [
+        "44429",
+        "43241"
+      ]
+    },
+    {
+      "heading": "Transformers v5 compatibility",
+      "summary": "**Transformers v5 compatibility**: vLLM now targets Transformers v5, with vendored MiniCPM-V/O processors (#44282) and compatibility fixes for Sarvam (#38804) and Voxtral (#44559).",
+      "prs": [
+        "44282",
+        "38804",
+        "44559"
+      ]
+    },
+    {
+      "heading": "Multi-tier KV cache offloading",
+      "summary": "**Multi-tier KV cache offloading**: The offloading framework gained an **object-store secondary tier** (#41968), HMA enabled by default for capable connectors (#41847), tiering support for HMA models (#44287), and a per-request offloading policy via the `on_new_request` lifecycle hook (#43205).",
+      "prs": [
+        "41968",
+        "41847",
+        "44287",
+        "43205"
+      ]
+    },
+    {
+      "heading": "Unified parser",
+      "summary": "**Unified parser**: Reasoning and tool-call parsing are now unified behind a single `Parser.parse()` interface (#44267), with the Responses parser migrated to it (#42977).",
+      "prs": [
+        "44267",
+        "42977"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Deprecate `JAISLMHeadModel` (#43784).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43784"
+      ]
+    },
+    {
+      "change": "Begin the deprecation cycle for the NixlConnector `kv_both` role (#43874).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43874"
+      ]
+    },
+    {
+      "change": "Remove functions previously scheduled for deprecation in v0.21.0 (#43358).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43358"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "44699",
+    "43827",
+    "43339",
+    "43447",
+    "44420",
+    "43746",
+    "43891",
+    "44569",
+    "44262",
+    "43926",
+    "42953",
+    "43458",
+    "42472",
+    "44050",
+    "42187",
+    "38831",
+    "43241",
+    "43779",
+    "43778",
+    "43854",
+    "43942",
+    "43774",
+    "43883",
+    "43481",
+    "43872",
+    "44213",
+    "43850",
+    "44429",
+    "44282",
+    "38804",
+    "44559",
+    "41968",
+    "41847",
+    "44287",
+    "43205",
+    "44267",
+    "42977",
+    "43784",
+    "43874",
+    "43358"
+  ],
+  "ground_truth_benchmarks": []
+}

@@ -1,0 +1,293 @@
+{
+  "project": "vllm",
+  "version": "v0.19.0",
+  "published_date": "2026-04-03",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Gemma 4 support",
+      "summary": "**Gemma 4 support**: Full Google Gemma 4 architecture support including MoE, multimodal, reasoning, and tool-use capabilities (#38826, #38847). Requires `transformers>=5.5.0`. We recommend using pre-built docker image `vllm/vllm-openai:gemma4` for out of box usage.",
+      "prs": [
+        "38826",
+        "38847"
+      ]
+    },
+    {
+      "heading": "Zero-bubble async scheduling + speculative decoding",
+      "summary": "**Zero-bubble async scheduling + speculative decoding**: Async scheduling now supports speculative decoding with zero-bubble overlap, significantly improving throughput (#32951).",
+      "prs": [
+        "32951"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 maturation",
+      "summary": "**Model Runner V2 maturation**: MRV2 gains piecewise CUDA graphs for pipeline parallelism (#35162), spec decode rejection sampler with greedy/logprobs support (#37238, #37237), multi-modal embeddings for spec decode (#36097), streaming inputs (#37028), and EPLB support (#37488).",
+      "prs": [
+        "35162",
+        "37238",
+        "37237",
+        "36097",
+        "37028",
+        "37488"
+      ]
+    },
+    {
+      "heading": "ViT Full CUDA Graphs",
+      "summary": "**ViT Full CUDA Graphs**: Vision encoders (ViT) now support full CUDA graph capture for reduced overhead (#35963).",
+      "prs": [
+        "35963"
+      ]
+    },
+    {
+      "heading": "General CPU KV cache offloading",
+      "summary": "**General CPU KV cache offloading**: A simple yet general CPU KV cache offloading mechanism for V1, with pluggable cache policy and block-level preemption handling (#37160, #37874, #34805, #36642, #37853).",
+      "prs": [
+        "37160",
+        "37874",
+        "34805",
+        "36642",
+        "37853"
+      ]
+    },
+    {
+      "heading": "DBO (Dual-Batch Overlap) generalization",
+      "summary": "**DBO (Dual-Batch Overlap) generalization**: The microbatch optimization (DBO) now works with general models, not just specific architectures (#37926).",
+      "prs": [
+        "37926"
+      ]
+    },
+    {
+      "heading": "NVIDIA B300/GB300 (SM 10.3) support",
+      "summary": "**NVIDIA B300/GB300 (SM 10.3) support**: Allreduce fusion enabled by default with tuned all-reduce communicator (#37755, #37756).",
+      "prs": [
+        "37755",
+        "37756"
+      ]
+    },
+    {
+      "heading": "Transformers v5 compatibility",
+      "summary": "**Transformers v5 compatibility**: Broad compatibility fixes across many models for HuggingFace Transformers v5 (#37681, #38127, #38090, #38247, #38410).",
+      "prs": [
+        "37681",
+        "38127",
+        "38090",
+        "38247",
+        "38410"
+      ]
+    },
+    {
+      "heading": "V0 Deprecation",
+      "summary": "* Deprecate virtual engine (#37195). * Deprecate `--disable-frontend-multiprocessing` (#37612). * Refactor KV cache from list to element (#37487).",
+      "prs": [
+        "37195",
+        "37612",
+        "37487"
+      ]
+    },
+    {
+      "heading": "New Contributors",
+      "summary": "* @aaab8b made their first contribution in #37533 * @aasgaonkar made their first contribution in #35386 * @allgather made their first contribution in #38410 * @avinashsingh77 made their first contribution in #37100 * @b-mu made their first contribution in #35963 * @bongwoobak made their first contribution in #37424 * @brandonpelfrey made their first contribution in #32104 * @ccrhx4 made their first contribution in #37634 * @cdpath made their first contribution in #37510 * @cemigo114 made their first contribution in #37064 * @cnyvfang made their first contribution in #37439 * @DanBlanaru made t",
+      "prs": [
+        "37533",
+        "35386",
+        "38410",
+        "37100",
+        "35963",
+        "37424",
+        "32104",
+        "37634",
+        "37510",
+        "37064",
+        "37439",
+        "37307",
+        "37438",
+        "37923",
+        "36038",
+        "38074",
+        "38119",
+        "36924",
+        "37301",
+        "37920",
+        "37899",
+        "37448",
+        "37348",
+        "37475",
+        "34709",
+        "34692",
+        "38108",
+        "37523",
+        "38011",
+        "37970",
+        "34733",
+        "37820",
+        "37725",
+        "34789",
+        "37519",
+        "31696",
+        "36955",
+        "36574",
+        "37231",
+        "34389",
+        "37694",
+        "38328",
+        "37998",
+        "37293",
+        "35007",
+        "37706",
+        "37371",
+        "37536",
+        "37873",
+        "37369",
+        "37840",
+        "37565",
+        "37425",
+        "37259"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Deprecate virtual engine (#37195).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37195"
+      ]
+    },
+    {
+      "change": "Deprecate `--disable-frontend-multiprocessing` (#37612).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37612"
+      ]
+    },
+    {
+      "change": "Refactor KV cache from list to element (#37487).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37487"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "38826",
+    "38847",
+    "32951",
+    "35162",
+    "37238",
+    "37237",
+    "36097",
+    "37028",
+    "37488",
+    "35963",
+    "37160",
+    "37874",
+    "34805",
+    "36642",
+    "37853",
+    "37926",
+    "37755",
+    "37756",
+    "37681",
+    "38127",
+    "38090",
+    "38247",
+    "38410",
+    "37195",
+    "37612",
+    "37487",
+    "37533",
+    "35386",
+    "37100",
+    "37424",
+    "32104",
+    "37634",
+    "37510",
+    "37064",
+    "37439",
+    "37307",
+    "37438",
+    "37923",
+    "36038",
+    "38074",
+    "38119",
+    "36924",
+    "37301",
+    "37920",
+    "37899",
+    "37448",
+    "37348",
+    "37475",
+    "34709",
+    "34692",
+    "38108",
+    "37523",
+    "38011",
+    "37970",
+    "34733",
+    "37820",
+    "37725",
+    "34789",
+    "37519",
+    "31696",
+    "36955",
+    "36574",
+    "37231",
+    "34389",
+    "37694",
+    "38328",
+    "37998",
+    "37293",
+    "35007",
+    "37706",
+    "37371",
+    "37536",
+    "37873",
+    "37369",
+    "37840",
+    "37565",
+    "37425",
+    "37259",
+    "37195",
+    "37612",
+    "37487"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "**Performance**: Optimize top-k in Triton sampler (#37225), optimize token_embed for pooling models with 1% improvement (#37347), fix slow hasattr in CUDAGraphWrapper (#37425), NFS prefetch auto-enabled with RAM guard (#37673), pybase64 replacement (#37290), optimize swap_states for hybrid models (#34733).",
+      "prs": [
+        "37225",
+        "37347",
+        "37425",
+        "37673",
+        "37290",
+        "34733"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "Persistent MLA kernel from AITER (#36574), FP8xFP8 attention in AITER (#36927).",
+      "prs": [
+        "36574",
+        "36927"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "AWQ Marlin support (#36505), wvSplitK skinny GEMM for RDNA4/gfx1x (#34709).",
+      "prs": [
+        "36505",
+        "34709"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**Responses API**: Fix crash with tool_choice=required exceeding max_output_tokens (#37258), fix TTFT recording (#37498), fix Anthropic serving template kwargs (#37899).",
+      "prs": [
+        "37258",
+        "37498",
+        "37899"
+      ]
+    }
+  ]
+}

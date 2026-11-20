@@ -1,0 +1,270 @@
+{
+  "project": "vllm",
+  "version": "v0.8.0",
+  "published_date": "2025-03-18",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "V1",
+      "summary": "We have now enabled V1 engine by default (#13726) for supported use cases. Please refer to [V1 user guide](https://docs.vllm.ai/en/latest/getting_started/v1_user_guide.html) for more detail. We expect better performance for supported scenarios. If you'd like to disable V1 mode, please specify the environment variable `VLLM_USE_V1=0`, and send us a GitHub issue sharing the reason! * Support variety of sampling parameters (#13376, #10980, #13210, #13774) * Compatability prompt logprobs + prefix caching (#13949), sliding window + prefix caching (#13069) * Stability fixes (#14380, #14379, #13298) ",
+      "prs": [
+        "13726",
+        "13376",
+        "10980",
+        "13210",
+        "13774",
+        "13949",
+        "13069",
+        "14380",
+        "14379",
+        "13298",
+        "14466",
+        "13959",
+        "13299",
+        "13504",
+        "14695",
+        "14082",
+        "13991",
+        "12745",
+        "12388",
+        "14590",
+        "14625",
+        "14630",
+        "14851",
+        "13705",
+        "13096",
+        "14626",
+        "14585",
+        "14643",
+        "13729",
+        "13933"
+      ]
+    },
+    {
+      "heading": "DeepSeek Improvements",
+      "summary": "We observe state of the art performance with vLLM running DeepSeek model on latest version of vLLM: * MLA Enhancements: * FlashMLA integration (#13747, #13867, #14451) * MLA support for V1 (#13789, #14253, #14384, #14540, #14921) * MLA with chunked prefill (#12639) * Holistic memory and performance optimization (#14769, #14770,#14842) * Support MLA for CompressedTensorsWNA16 (#13725) * Distributed Expert Parallelism (EP) and Data Parallelism (DP) * EP Support for DeepSeek Models (#12583) * Add enable_expert_parallel arg (#14305) * EP/TP MoE + DP Attention (#13931) * Set up data parallel commun",
+      "prs": [
+        "13747",
+        "13867",
+        "14451",
+        "13789",
+        "14253",
+        "14384",
+        "14540",
+        "14921",
+        "12639",
+        "14769",
+        "14770",
+        "14842",
+        "13725",
+        "12583",
+        "14305",
+        "13931",
+        "13591",
+        "13626",
+        "13833",
+        "13839",
+        "12978",
+        "13917",
+        "14877"
+      ]
+    },
+    {
+      "heading": "NVIDIA Blackwell",
+      "summary": "* Support nvfp4 cutlass gemm (#13571) * Add cutlass support for blackwell fp8 gemm (#13798) * Update the flash attn tag to support Blackwell (#14244) * Add ModelOpt FP4 Checkpoint Support (#12520)",
+      "prs": [
+        "13571",
+        "13798",
+        "14244",
+        "12520"
+      ]
+    },
+    {
+      "heading": "Breaking Changes",
+      "summary": "* The default value of `seed` is now `None` to align with PyTorch and Hugging Face. Please explicitly set seed for reproduciblity. (#14274) * The `kv_cache` and `attn_metadata` arguments for model's forward method has been removed; as the attention backend has access to these value via `forward_context`. (#13887) * vLLM will now default `generation_config` from model for chat template, sampling parameters such as temperature, etc. (#12622) * Several request time metrics (`vllm:time_in_queue_requests`, `vllm:model_forward_time_milliseconds`, `vllm:model_execute_time_milliseconds`) has been depr",
+      "prs": [
+        "14274",
+        "13887",
+        "12622",
+        "14135"
+      ]
+    },
+    {
+      "heading": "Updates",
+      "summary": "* Update to PyTorch 2.6.0 (#12721, #13860) * Update to Python 3.9 typing (#14492, #13971) * Update to CUDA 12.4 as default for release and nightly wheels (#12098) * Update to Ray 2.43 (#13994) * Upgrade aiohttp to incldue CVE fix (#14840) * Upgrade jinja2 to get 3 moderate CVE fixes (#14839)",
+      "prs": [
+        "12721",
+        "13860",
+        "14492",
+        "13971",
+        "12098",
+        "13994",
+        "14840",
+        "14839"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "The default value of `seed` is now `None` to align with PyTorch and Hugging Face. Please explicitly set seed for reproduciblity. (#14274)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "14274"
+      ]
+    },
+    {
+      "change": "The `kv_cache` and `attn_metadata` arguments for model's forward method has been removed; as the attention backend has access to these value via `forward_context`. (#13887)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "13887"
+      ]
+    },
+    {
+      "change": "vLLM will now default `generation_config` from model for chat template, sampling parameters such as temperature, etc. (#12622)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "12622"
+      ]
+    },
+    {
+      "change": "Several request time metrics (`vllm:time_in_queue_requests`, `vllm:model_forward_time_milliseconds`, `vllm:model_execute_time_milliseconds`) has been deprecated and subject to removal (#14135)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "14135"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "13726",
+    "13376",
+    "10980",
+    "13210",
+    "13774",
+    "13949",
+    "13069",
+    "14380",
+    "14379",
+    "13298",
+    "14466",
+    "13959",
+    "13299",
+    "13504",
+    "14695",
+    "14082",
+    "13991",
+    "12745",
+    "12388",
+    "14590",
+    "14625",
+    "14630",
+    "14851",
+    "13705",
+    "13096",
+    "14626",
+    "14585",
+    "14643",
+    "13729",
+    "13933",
+    "13747",
+    "13867",
+    "14451",
+    "13789",
+    "14253",
+    "14384",
+    "14540",
+    "14921",
+    "12639",
+    "14769",
+    "14770",
+    "14842",
+    "13725",
+    "12583",
+    "14305",
+    "13931",
+    "13591",
+    "13626",
+    "13833",
+    "13839",
+    "12978",
+    "13917",
+    "14877",
+    "13571",
+    "13798",
+    "14244",
+    "12520",
+    "14274",
+    "13887",
+    "12622",
+    "14135",
+    "12721",
+    "13860",
+    "14492",
+    "13971",
+    "12098",
+    "13994",
+    "14840",
+    "14839",
+    "14274",
+    "13887",
+    "12622",
+    "14135"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Breaking Changes",
+      "claim": "The default value of `seed` is now `None` to align with PyTorch and Hugging Face. Please explicitly set seed for reproduciblity. (#14274)",
+      "prs": [
+        "14274"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "claim": "Adding cpu inference with VXE ISA for s390x architecture (#12613)",
+      "prs": [
+        "12613"
+      ]
+    },
+    {
+      "category": "Hardware Support",
+      "claim": "Add documentation for s390x cpu implementation (#14198)",
+      "prs": [
+        "14198"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Misc]: Add support for goodput on guided benchmarking + TPOT calculation refactor by @b8zhong (#13736)",
+      "prs": [
+        "13736"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Bugfix] Explicitly include \"omp.h\" for MacOS to avoid installation failure by @realShengYao (#14051)",
+      "prs": [
+        "14051"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "Adding cpu inference with VXE ISA for s390x architecture by @dilipgb (#12613)",
+      "prs": [
+        "12613"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "docs: Add documentation for s390x cpu implementation by @dilipgb (#14198)",
+      "prs": [
+        "14198"
+      ]
+    },
+    {
+      "category": "What's Changed",
+      "claim": "[Bugfix] Explicitly disable Phi-4-multimodal in V1 by @DarkLight1337 (#14889)",
+      "prs": [
+        "14889"
+      ]
+    }
+  ]
+}

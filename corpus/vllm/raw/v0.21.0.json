@@ -1,0 +1,483 @@
+{
+  "project": "vllm",
+  "version": "v0.21.0",
+  "published_date": "2026-05-15",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.21.0",
+  "commits_count": 367,
+  "contributors_count": 202,
+  "total_raw_items": 49,
+  "counts_by_category": {
+    "Model Support": 8,
+    "Engine Core": 7,
+    "Hardware & Performance": 8,
+    "Large Scale Serving": 4,
+    "Quantization": 6,
+    "API & Frontend": 7,
+    "Build & Dependencies": 9
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "New architectures: MiMo-V2.5 (#40967), Laguna XS.2 (#41129, #41880), Moondream3 (#32325), Qianfan-OCR (#40136), Cohere MoE (#40817), Cohere Eagle (#42078).",
+      "prs": [
+        "40967",
+        "41129",
+        "41880",
+        "32325",
+        "40136",
+        "40817",
+        "42078"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Speculative decoding: EAGLE for Mistral (#41024), Gemma4 MTP (#41745), MTP for MiMo-V2.5 (#41905), Cohere Eagle (#42078).",
+      "prs": [
+        "41024",
+        "41745",
+        "41905",
+        "42078"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "DeepSeek V4: AMD/ROCm support (#40871), pipeline parallelism (#41694), `max` reasoning effort (#40982), disaggregated serving fixes (#41957).",
+      "prs": [
+        "40871",
+        "41694",
+        "40982",
+        "41957"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Tool calling: Cohere reasoning and tool parsers (#40422), LFM2/2.5 tool parser (#39243).",
+      "prs": [
+        "40422",
+        "39243"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Gemma3/Gemma4: `hidden_act` variant support (#40588), pipeline parallelism fix (#40786), MoE fixes (#41206, #41574, #41401), tool parser crash fix (#41991, #42188).",
+      "prs": [
+        "40588",
+        "40786",
+        "41206",
+        "41574",
+        "41401",
+        "41991",
+        "42188"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Model Runner V2: Qwen3.5/Mamba hybrid model support (#35520), `logprob_token_ids` support (#40559).",
+      "prs": [
+        "35520",
+        "40559"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "CUDA graph: ViT CUDA graph support for Qwen2.5-VL (#40830).",
+      "prs": [
+        "40830"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Compatibility: Vendor HCXVisionConfig for Transformers v5 (#38447), legacy `rope_type` checkpoint support (#41734).",
+      "prs": [
+        "38447",
+        "41734"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "KV offloading + HMA: Scheduler-side sliding window groups (#41228), full HMA enablement (#41445), multi-connector HMA (#39571), per-job store completion (#39186), DCP/PCP support in OffloadingConnector (#41549), MooncakeStoreConnector for distributed KV offloading (#40900).",
+      "prs": [
+        "41228",
+        "41445",
+        "39571",
+        "39186",
+        "41549",
+        "40900"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Speculative decoding: Thinking budget support (#34668), independent drafter attention backend selection (#39930), multimodal model support with warning (#41752), per-step allocation elimination (#41043).",
+      "prs": [
+        "34668",
+        "39930",
+        "41752",
+        "41043"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Model Runner V2: Rejection sampling acceptance rate fix (#40651), skip metadata rebuild before draft prefill (#40410), rebuild metadata between draft decode steps (#41162), Qwen3.5/Mamba hybrid support (#35520).",
+      "prs": [
+        "40651",
+        "40410",
+        "41162",
+        "35520"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Routing: Replace routing replay with device cache and async D2H pipeline (#39917).",
+      "prs": [
+        "39917"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Ray: RayExecutorV2 enabled by default (#41421), actor name collision fix for DP > 1 (#40398).",
+      "prs": [
+        "41421",
+        "40398"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Stability: Two-phase pause to prevent scheduler deadlock (#39366), thread-safe HF tokenizer wrappers (#41181), OOM prevention via `max_split_size_mb` during model loading (#41268).",
+      "prs": [
+        "39366",
+        "41181",
+        "41268"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "IndexCache support for DSA models (#37735).",
+      "prs": [
+        "37735"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA Blackwell**: TOKENSPEED_MLA backend for DSR1/Kimi-K25 (#41778), faster per-token FP8 group quant packed kernel (#41326), FP8 on NVIDIA Thor/SM110 (#39712), CUTLASS scaled mm for non-compatible sizes (#41868).",
+      "prs": [
+        "41778",
+        "41326",
+        "39712",
+        "41868"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Performance**: FlashInfer top-k/top-p sampler enabled by default (#40376), FP8 FlashInfer attention for ViT (#38065), TurboQuant shared dequant buffers (#40941), `AllPool.forward` 51% faster (#41163), GPU<->CPU sync elimination in pooling (#41433) and attention (#41434), numpy zero-copy embedding serialization (#41681), multimodal processor skip for text-only (#41246), FlashInfer FP8 async TP fusion (#39505), NVFP4 all-gather GEMM fusion for AsyncTP (#41882), re-enable allreduce+RMS fusion for DP/PP (#41458), DeepSeek bf16\u2192fp32 via `torch.mm` (#41300), persistent MLA for sparse backend (#41990), configurable safetensors checkpoint prefetch (#41499), fused mhc_post_pre kernel (#41536), 2D-grid W8W8 group quant kernel (#42153), relaxed memory ordering for KV cache swaps (#39306).",
+      "prs": [
+        "40376",
+        "38065",
+        "40941",
+        "41163",
+        "41433",
+        "41434",
+        "41681",
+        "41246",
+        "39505",
+        "41882",
+        "41458",
+        "41300",
+        "41990",
+        "41499",
+        "41536",
+        "42153",
+        "39306"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**: ROCm 7.2.2 (#41386), DBO (Dynamic Batch Optimization) (#34726), AITER Fused Allreduce+RMSNorm (#37646), Fused Shared Expert (FSE) for Qwen3-Next (#39280), DeepSeek V3.2 TP4 AITER MLA (#41835), GDN linear attention fusion (#40711), eliminate redundant MoE buffer copies in AITER (#41713), CPU offloading support (#40549), DeepEP API update (#39721), cap Triton paged attention block size to fix shared memory OOM (#38502).",
+      "prs": [
+        "41386",
+        "34726",
+        "37646",
+        "39280",
+        "41835",
+        "40711",
+        "41713",
+        "40549",
+        "39721",
+        "38502"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU**: FP8 attention for AMX/AVX-512 (#39445), FP8 W8A16 linear (#41186), FP8 W8A16 MoE (#41314), DNNL AVX2 W8A8 Int8 (#41318), Gated DeltaNet Attention for Qwen 3.5/3.6 (#41025), RISC-V OMP thread auto-binding (#40569).",
+      "prs": [
+        "39445",
+        "41186",
+        "41314",
+        "41318",
+        "41025",
+        "40569"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: Top-k/top-p sample kernel (#39285), out-of-place all-reduce (#41808), LoRA support (#38206).",
+      "prs": [
+        "39285",
+        "41808",
+        "38206"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**IBM Power**: VSX attention backend (#40451).",
+      "prs": [
+        "40451"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**FlexAttention**: Re-enabled for batch invariant mode (#40842).",
+      "prs": [
+        "40842"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**MLA**: Abstracted MLA prefill backends, eliminated cuDNN dependency (#32623).",
+      "prs": [
+        "32623"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "Disaggregated serving: Bi-directional KV cache transfers between P and D (#32553), NIXL transfer redesign (#40731), EPLB memory overhead optimization (#40013), NIXL connector bumped to 1.x (#42364), Mooncake KVConnectorStats for transfer observability (#40414), NIXL P-node pre-admission rejection notification (#41269), KV block release for skipped P-ranks (#40449).",
+      "prs": [
+        "32553",
+        "40731",
+        "40013",
+        "42364",
+        "40414",
+        "41269",
+        "40449"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "DCP: Pack output and LSE in DCP A2A (#41160).",
+      "prs": [
+        "41160"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "MoE: PluggableLayer interface for out-of-tree MoE runners (#35178).",
+      "prs": [
+        "35178"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "LoRA: Initial expert parallel (EP) support (#40867), Qwen3.5 LoRA fusion fix (#37912).",
+      "prs": [
+        "40867",
+        "37912"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**NVFP4**: KV cache support (#40177), Triton dequant/QDQ emulation kernels for Hopper and AMD (#40033), GELU on TRT-LLM NvFP4 fused MoE for Gemma4 (#41050), ModelOpt NVFP4 W4A16 (#41769), NVFP4 all-gather GEMM fusion for AsyncTP (#41882), GLM4-MoE NVFP4 loading fix (#41755).",
+      "prs": [
+        "40177",
+        "40033",
+        "41050",
+        "41769",
+        "41882",
+        "41755"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**MXFP4**: Humming MXFP4 MoE backend (#41083), FlashInfer CUTLASS MXFP4-MXFP8 MoE fix (#42089).",
+      "prs": [
+        "41083",
+        "42089"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**TurboQuant**: Hybrid model and uniform quantization support (#39931).",
+      "prs": [
+        "39931"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Compressed tensors**: Allow configs with non-explicit ignores (#41965).",
+      "prs": [
+        "41965"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**FP8**: Bias loading fix (#41424), FlashInfer autotune temporarily disabled for correctness (#41524).",
+      "prs": [
+        "41424",
+        "41524"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**DSV4**: Improved fused Indexer Q quant kernel (#41428).",
+      "prs": [
+        "41428"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Responses API**: Streaming tool/function calling with `required` (#40700) and named tool/function choice (#41110), resubmitting output items with missing fields (#41355).",
+      "prs": [
+        "40700",
+        "41110",
+        "41355"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**OpenAI compatibility**: `system_fingerprint` field in responses (#40537), `prompt_embeds` content part support (#40720), `defer_loading` and `tool_reference` support (#40190), rendered prompt text in chat completion response (#42052), tolerate empty content in forced tool choice (#40148).",
+      "prs": [
+        "40537",
+        "40720",
+        "40190",
+        "42052",
+        "40148"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Tool calling**: XGrammar 0.2.0 with structural tags for strict tool calling + reasoning (#40894), Cohere reasoning/tool parsers (#40422), LFM2/2.5 tool parser (#39243).",
+      "prs": [
+        "40894",
+        "40422",
+        "39243"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Tokenizer**: Fastokens support (#41741).",
+      "prs": [
+        "41741"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**RLHF**: Explicit `/start_weight_update` and `/finish_weight_update` APIs (#39212).",
+      "prs": [
+        "39212"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**ASR**: Engine request abort on cancellation (#41266).",
+      "prs": [
+        "41266"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Configuration**: `VLLM_SKIP_MODEL_NAME_VALIDATION` env var (#34676), configurable model weights loading tracking (#41086), Triton JIT compilation monitor (#40137).",
+      "prs": [
+        "34676",
+        "41086",
+        "40137"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "**Breaking**: C++20 required for PyTorch compatibility (#40380).",
+      "prs": [
+        "40380"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "**Breaking**: Transformers v4 deprecated (#40389).",
+      "prs": [
+        "40389"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "Docker image size reduced by ~2.5 GB via deferred FlashInfer cubin download (#41134).",
+      "prs": [
+        "41134"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "CUDA 13.0 wheels switched to PyTorch manylinux_2_28 base (#41416).",
+      "prs": [
+        "41416"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "DeepGEMM bundled wheel built per-Python for CPython compatibility (#41516).",
+      "prs": [
+        "41516"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "Container image provenance metadata embedded (#40653).",
+      "prs": [
+        "40653"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "tpu-inference upgraded to v0.19.0 (#41844).",
+      "prs": [
+        "41844"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "NIXL connector bumped to 1.x (#42364).",
+      "prs": [
+        "42364"
+      ]
+    },
+    {
+      "category": "Build & Dependencies",
+      "text": "ROCm 7.2.2 (#41386).",
+      "prs": [
+        "41386"
+      ]
+    }
+  ],
+  "upgrade_notices": [],
+  "benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Performance**: FlashInfer top-k/top-p sampler enabled by default (#40376), FP8 FlashInfer attention for ViT (#38065), TurboQuant shared dequant buffers (#40941), `AllPool.forward` 51% faster (#41163), GPU<->CPU sync elimination in pooling (#41433) and attention (#41434), numpy zero-copy embedding serialization (#41681), multimodal processor skip for text-only (#41246), FlashInfer FP8 async TP fusion (#39505), NVFP4 all-gather GEMM fusion for AsyncTP (#41882), re-enable allreduce+RMS fusion for DP/PP (#41458), DeepSeek bf16\u2192fp32 via `torch.mm` (#41300), persistent MLA for sparse backend (#41990), configurable safetensors checkpoint prefetch (#41499), fused mhc_post_pre kernel (#41536), 2D-grid W8W8 group quant kernel (#42153), relaxed memory ordering for KV cache swaps (#39306).",
+      "prs": [
+        "40376",
+        "38065",
+        "40941",
+        "41163",
+        "41433",
+        "41434",
+        "41681",
+        "41246",
+        "39505",
+        "41882",
+        "41458",
+        "41300",
+        "41990",
+        "41499",
+        "41536",
+        "42153",
+        "39306"
+      ]
+    }
+  ]
+}

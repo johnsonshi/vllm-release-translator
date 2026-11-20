@@ -1,0 +1,80 @@
+{
+  "project": "vllm",
+  "version": "v0.21.0",
+  "published_date": "2026-05-15",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Transformers v4 deprecated",
+      "summary": "**Transformers v4 deprecated**: This release formally deprecates `transformers` v4 support (#40389). Users should migrate to `transformers` v5.",
+      "prs": [
+        "40389"
+      ]
+    },
+    {
+      "heading": "C++20 build requirement",
+      "summary": "**C++20 build requirement**: vLLM now requires a C++20-compatible compiler for compatibility with PyTorch (#40380). This is a **breaking build change**.",
+      "prs": [
+        "40380"
+      ]
+    },
+    {
+      "heading": "KV Offload + Hybrid Memory Allocator (HMA)",
+      "summary": "**KV Offload + Hybrid Memory Allocator (HMA)**: The KV offloading subsystem now integrates with the Hybrid Memory Allocator, including scheduler-side sliding window group support and full HMA enablement (#41228, #41445, #39571).",
+      "prs": [
+        "41228",
+        "41445",
+        "39571"
+      ]
+    },
+    {
+      "heading": "Speculative decoding with thinking budget",
+      "summary": "**Speculative decoding with thinking budget**: Speculative decoding now respects reasoning/thinking budgets, enabling correct spec decode for reasoning models (#34668).",
+      "prs": [
+        "34668"
+      ]
+    },
+    {
+      "heading": "TOKENSPEED_MLA backend on Blackwell",
+      "summary": "**TOKENSPEED_MLA backend on Blackwell**: A new TOKENSPEED_MLA attention backend is available for DeepSeek-R1/Kimi-K25 prefill + decode on Blackwell GPUs (#41778).",
+      "prs": [
+        "41778"
+      ]
+    }
+  ],
+  "upgrade_rows": [],
+  "ground_truth_prs": [
+    "40389",
+    "40380",
+    "41228",
+    "41445",
+    "39571",
+    "34668",
+    "41778"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Performance**: FlashInfer top-k/top-p sampler enabled by default (#40376), FP8 FlashInfer attention for ViT (#38065), TurboQuant shared dequant buffers (#40941), `AllPool.forward` 51% faster (#41163), GPU<->CPU sync elimination in pooling (#41433) and attention (#41434), numpy zero-copy embedding serialization (#41681), multimodal processor skip for text-only (#41246), FlashInfer FP8 async TP fusion (#39505), NVFP4 all-gather GEMM fusion for AsyncTP (#41882), re-enable allreduce+RMS fusion for DP/PP (#41458), DeepSeek bf16\u2192fp32 via `torch.mm` (#41300), persistent MLA for sparse backend (#41990), configurable safetensors checkpoint prefetch (#41499), fused mhc_post_pre kernel (#41536), 2D-grid W8W8 group quant kernel (#42153), relaxed memory ordering for KV cache swaps (#39306).",
+      "prs": [
+        "40376",
+        "38065",
+        "40941",
+        "41163",
+        "41433",
+        "41434",
+        "41681",
+        "41246",
+        "39505",
+        "41882",
+        "41458",
+        "41300",
+        "41990",
+        "41499",
+        "41536",
+        "42153",
+        "39306"
+      ]
+    }
+  ]
+}

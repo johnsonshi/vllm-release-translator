@@ -1,0 +1,1103 @@
+{
+  "project": "vllm",
+  "version": "v0.19.0",
+  "published_date": "2026-04-03",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.19.0",
+  "commits_count": 448,
+  "contributors_count": 197,
+  "total_raw_items": 127,
+  "counts_by_category": {
+    "Model Support": 6,
+    "Engine Core": 13,
+    "Hardware & Performance": 19,
+    "Large Scale Serving": 7,
+    "Quantization": 9,
+    "API & Frontend": 8,
+    "Security": 2,
+    "Dependencies": 6,
+    "V0 Deprecation": 3,
+    "New Contributors": 54
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "New architectures: Gemma 4 (#38826), Cohere ASR (#35809), Cohere Transcribe (#38120), ColQwen3.5 4.5B (#36887), LFM2-ColBERT-350M (#37528), Granite 4.0 1B Speech (#38019), Qwen3-ForcedAligner (#35367).",
+      "prs": [
+        "38826",
+        "35809",
+        "38120",
+        "36887",
+        "37528",
+        "38019",
+        "35367"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Speculative decoding: Eagle3 for Pixtral (#37182), EagleMistralLarge3 fix (#37232).",
+      "prs": [
+        "37182",
+        "37232"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "LoRA expansion: H2OVL tower/connector LoRA (#31696), `--lora-target-modules` to restrict LoRA to specific modules (#34984), `language_model_only` respected (#37375), Mistral3 fix (#36928), Qwen3.5 fix (#36976), out-of-tree ops replacement (#37181).",
+      "prs": [
+        "31696",
+        "34984",
+        "37375",
+        "36928",
+        "36976",
+        "37181"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Model fixes: NemotronH MTP + Chunked Prefill (#35447), Qwen3-VL video timestamps (#37439), Qwen3.5 GDN quantized models (#37448), Qwen3Next A_log FP32 (#37810), JAIS ALiBi (#37820), RoBERTa CUDA graph position IDs (#37873), AudioFlamingo3/MusicFlamingo (#37643), Music Flamingo loading (#35535), bge-m3 task selection (#37632), Nemotron Parse loading (#37407), GLM OCR patch merger (#37962), PaddleOCR checkpoint compat (#38232), DeepSeek v3.2 params (#33703), MiniMax NVFP4 weight loading (#37214), gated model HF token (#37920), Parakeet OOM on long audio (#36671).",
+      "prs": [
+        "35447",
+        "37439",
+        "37448",
+        "37810",
+        "37820",
+        "37873",
+        "37643",
+        "35535",
+        "37632",
+        "37407",
+        "37962",
+        "38232",
+        "33703",
+        "37214",
+        "37920",
+        "36671"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Features: Temporal compression for Nemotron-3-VL videos (#36808), NemotronH Puzzle + MTP (#37803), torch.compile for InternVL vision encoder (#38049), multiple embedding types in single call (#35829).",
+      "prs": [
+        "36808",
+        "37803",
+        "38049",
+        "35829"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Performance: GLM-4.xv ViT optimization (#37779).",
+      "prs": [
+        "37779"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Zero-bubble async scheduling + speculative decoding** (#32951).",
+      "prs": [
+        "32951"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Model Runner V2**: PP CUDA graphs (#35162), spec decode rejection sampler greedy (#37238) + logprobs (#37237), multimodal embeddings for spec decode (#36097), streaming inputs (#37028), configurable acceptance rate (#38045), FP32 draft logits (#37526), FP64 Gumbel noise (#37798), warmup with spec decode (#37812).",
+      "prs": [
+        "35162",
+        "37238",
+        "37237",
+        "36097",
+        "37028",
+        "38045",
+        "37526",
+        "37798",
+        "37812"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**ViT Full CUDA Graph** capture (#35963).",
+      "prs": [
+        "35963"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**General CPU KV cache offloading** with pluggable CachePolicy (#37160, #37874), block-level preemption (#34805), multiple KV groups (#36642), hybrid model support (#37853).",
+      "prs": [
+        "37160",
+        "37874",
+        "34805",
+        "36642",
+        "37853"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**DBO for general models**: Microbatch optimization generalized beyond specific architectures (#37926).",
+      "prs": [
+        "37926"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Compilation**: Mega AOT artifact for torch 2.12+ (#37198), lazy graph module to defer recompile (#37609), remove model tag requirement for compile cache (#37345), Triton autotuning disk cache enabled by default (#37188), inductor runtime asserts disabled by default (#37485).",
+      "prs": [
+        "37198",
+        "37609",
+        "37345",
+        "37188",
+        "37485"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**FlexAttention**: Custom mask modification support (#37692).",
+      "prs": [
+        "37692"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Attention**: Distinguish short extends vs decodes (#37303), allow qk_nope_head_dim=192 in FlashInfer MLA (#37475), skip sliding window attention layers with FP8 KV cache (#33695).",
+      "prs": [
+        "37303",
+        "37475",
+        "33695"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Scheduling**: Schedule requests based on full input sequence length (#37307).",
+      "prs": [
+        "37307"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Spec decode**: Per-draft-model MoE backend via `--speculative-config` (#37880), Eagle3 drafter quant_config propagation (#37280), Eagle3 norm_before_fc propagation (#38111).",
+      "prs": [
+        "37880",
+        "37280",
+        "38111"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Extensibility**: PluggableLayer for CustomQwen2Decoder (#37293), tensor IPC transfer for multimodal data (#32104).",
+      "prs": [
+        "37293",
+        "32104"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Performance**: Optimize top-k in Triton sampler (#37225), optimize token_embed for pooling models with 1% improvement (#37347), fix slow hasattr in CUDAGraphWrapper (#37425), NFS prefetch auto-enabled with RAM guard (#37673), pybase64 replacement (#37290), optimize swap_states for hybrid models (#34733).",
+      "prs": [
+        "37225",
+        "37347",
+        "37425",
+        "37673",
+        "37290",
+        "34733"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Bugfixes**: Fix gibberish from FP8 MLA KV scale inconsistency (#37054), Mamba state corruption (#37728), deadlock with pause/resume (#37024), FlashInfer MNNVL socket collisions (#36674), multimodal prefix cache key collisions (#36708), DP coordinator ZMQ TOCTOU (#37452), CUDA graph memory double-counting (#37426), pooling non-determinism (#37775), AllReduce Fusion shutdown crash (#36955), FlashInfer allreduce workspace (#37461), async spec decoding with hybrid models (#38556), MLA sparse indexer prefill chunking (#36178), KV offloading + MLA (#37536), async scheduling extra CUDA context (#37449), DP MTP dummy run (#35243), offloading+prefetch for GLM-4.7-FP8 (#37178), max memory for multiple KV-cache groups (#36030).",
+      "prs": [
+        "37054",
+        "37728",
+        "37024",
+        "36674",
+        "36708",
+        "37452",
+        "37426",
+        "37775",
+        "36955",
+        "37461",
+        "38556",
+        "36178",
+        "37536",
+        "37449",
+        "35243",
+        "37178",
+        "36030"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA**:",
+      "prs": []
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "B300/GB300 (SM 10.3): Allreduce fusion enabled by default (#37755), tuned all-reduce communicator (#37756).",
+      "prs": [
+        "37755",
+        "37756"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Blackwell: Optimized SM120 CUTLASS blockwise FP8 GEMM (#37970), fix NVFP4 NaN on desktop Blackwell (#37725), fix DeepGEMM E8M0 accuracy for Qwen3.5 FP8 (#38083), restore FP8 FlashMLA CUDA graph persistent buffers (#35175), DGX Spark fix (#38126).",
+      "prs": [
+        "37970",
+        "37725",
+        "38083",
+        "35175",
+        "38126"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "FlashInfer sparse MLA as default for FP8 KV cache (#37252).",
+      "prs": [
+        "37252"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Tuned prefill configs for FP8 FA3 (#36265), tuned Triton MoE config for Qwen3.5 on H200 with 9.9% E2E improvement (#37340), H800 MoE configs (#31201).",
+      "prs": [
+        "36265",
+        "37340",
+        "31201"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "GPT-OSS: Router GEMM kernel (#37205), eliminate padding with FlashInfer MXFP4/MXFP8 MoE (#30647), reduce redundant SparseMatrix creation (#37683).",
+      "prs": [
+        "37205",
+        "30647",
+        "37683"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "NVFP4 CUTLASS MoE non-gated support (#37320), fuse pack topk in TRTLLM MoE via torch.compile (#37695).",
+      "prs": [
+        "37320",
+        "37695"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Non-contiguous KV cache in TRTLLM FP8 dequant kernel (#36867), Qwen3 dual stream input projection (#36795).",
+      "prs": [
+        "36867",
+        "36795"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**:",
+      "prs": []
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "ROCm 7.2.1, torch 2.10, triton 3.6 (#38252).",
+      "prs": [
+        "38252"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepEP as all2all backend (#34692).",
+      "prs": [
+        "34692"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Persistent MLA kernel from AITER (#36574), FP8xFP8 attention in AITER (#36927).",
+      "prs": [
+        "36574",
+        "36927"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "AWQ Marlin support (#36505), wvSplitK skinny GEMM for RDNA4/gfx1x (#34709).",
+      "prs": [
+        "36505",
+        "34709"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Nightly Docker image and wheel releases (#37283).",
+      "prs": [
+        "37283"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Bugfixes: Sleep mode memory leak (#37533), hybrid model stride (#37228), qwen3_next crash (#36795).",
+      "prs": [
+        "37533",
+        "37228",
+        "36795"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: MLA model support (#37143), CompressedTensor W4A8 (#37207), auto-detect XPU build platform (#37634).",
+      "prs": [
+        "37143",
+        "37207",
+        "37634"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**TPU**: Async scheduling interface (#36924), Qwen3.5 FP8 weight loading fix (#37348).",
+      "prs": [
+        "36924",
+        "37348"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU**: Enable tcmalloc by default (#37607), graceful degradation without tcmalloc/libiomp (#37561), 48.9% throughput improvement for pooling models (#38139), OpenMP thread fix for torch.compile (#37538), structured output crash fix (#37706), KV cache block zeroing crash fix (#37550), slot mapping kernel (#37987), W4A16 compressed tensors (#38219).",
+      "prs": [
+        "37607",
+        "37561",
+        "38139",
+        "37538",
+        "37706",
+        "37550",
+        "37987",
+        "38219"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Performance fixes**: FP8 DeepGEMM batch invariance (#37718), Triton autotuning for Qwen3.5 (#37338), TRTLLM NVFP4 routing precision (#36725).",
+      "prs": [
+        "37718",
+        "37338",
+        "36725"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Disaggregated serving**: PD kv_transfer_params for Anthropic Messages (#37535) and Responses API (#37424), Mooncake heterogeneous TP (#36869), Mamba N-1 prefill for P/D (#37310).",
+      "prs": [
+        "37535",
+        "37424",
+        "36869",
+        "37310"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**EPLB**: MRV2 support (#37488), improved responsiveness (#36271), EP weight filter fix (#37322).",
+      "prs": [
+        "37488",
+        "36271",
+        "37322"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Elastic EP**: Fix repeated scale up/down cycles (#37131), fix stateless group port races (#36330).",
+      "prs": [
+        "37131",
+        "36330"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**DBO**: Generalized to work with all models (#37926).",
+      "prs": [
+        "37926"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Multi-node**: Fix allreduce fusion (#38136).",
+      "prs": [
+        "38136"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**KV connector**: Plugin-overridable metadata build (#37336).",
+      "prs": [
+        "37336"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Constraints**: Cap API servers to 1 with Elastic EP (#37466).",
+      "prs": [
+        "37466"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Online MXFP8** quantization for MoE and dense models (#35448).",
+      "prs": [
+        "35448"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**FP8**: WoQ kernel abstraction (#32929), Marlin FP8 for compressed tensors fix (#38092).",
+      "prs": [
+        "32929",
+        "38092"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**NVFP4**: Rescale weight scales to fix BF16 dequant underflow (#34577), fix Marlin NaN/Inf with float16 (#33972).",
+      "prs": [
+        "34577",
+        "33972"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**QeRL**: Online quantization composed with quantized reloading for RLHF (#38032).",
+      "prs": [
+        "38032"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**CPU**: W4A16 compressed tensors (#38219).",
+      "prs": [
+        "38219"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**XPU**: CompressedTensor W4A8 (#37207).",
+      "prs": [
+        "37207"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**ROCm**: AWQ Marlin support (#36505).",
+      "prs": [
+        "36505"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**MXFP8 + DeepGEMM**: Fix crash when both are active (#37358).",
+      "prs": [
+        "37358"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Removals**: Per-tensor-per-channel FP8 removed (#32700), Sparse24 integration and kernels removed (#36799).",
+      "prs": [
+        "32700",
+        "36799"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**New endpoints**: `/v1/chat/completions/batch` for batched chat completions (#38011).",
+      "prs": [
+        "38011"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Features**: Limit thinking tokens (hard limit) (#20859), multiple embedding types in single call (#35829), numpy array embeddings for multimodal (#38119), `--lora-target-modules` (#34984), `-sc` shorthand for `--speculative-config` (#38380).",
+      "prs": [
+        "20859",
+        "35829",
+        "38119",
+        "34984",
+        "38380"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Tool parsing**: GigaChat 3.1 parser (#36664), Kimi-K2.5 reasoning/tool parser (#37438), Gemma 4 tool parser (#38847), tools passed to parser constructor (#38029), fix Mistral parser (#37209), fix DeepSeek v3.2 streaming (#36056), fix GLM-4.7 parsing (#37386), fix Hermes streaming (#38168), fix OpenAI tool parser IndexError (#37958), fix Anthropic streaming (#37510).",
+      "prs": [
+        "36664",
+        "37438",
+        "38847",
+        "38029",
+        "37209",
+        "36056",
+        "37386",
+        "38168",
+        "37958",
+        "37510"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Responses API**: Fix crash with tool_choice=required exceeding max_output_tokens (#37258), fix TTFT recording (#37498), fix Anthropic serving template kwargs (#37899).",
+      "prs": [
+        "37258",
+        "37498",
+        "37899"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Performance**: Offload blocking tokenizer ops to thread pool (#34789).",
+      "prs": [
+        "34789"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Deprecations**: `--calculate-kv-scales` (#37201), `score` task (#37537), pooling multi-task support (#37956), `reasoning_content` message field removed (#37480).",
+      "prs": [
+        "37201",
+        "37537",
+        "37956",
+        "37480"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Bugfixes**: Embed/classify task routing (#37573), Cohere embed task instruction (#38362), renderer workers restricted to 1 with MM cache (#38418).",
+      "prs": [
+        "37573",
+        "38362",
+        "38418"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**UX**: Log once per node by default (#37568), torch profiler with stack enabled (#37571).",
+      "prs": [
+        "37568",
+        "37571"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Add `VLLM_MAX_N_SEQUENCES` environment variable to enforce sequence limits (#37952).",
+      "prs": [
+        "37952"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Enforce frame limit in VideoMediaIO to prevent resource exhaustion (#38636).",
+      "prs": [
+        "38636"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers v5 compatibility across many models (#37681, #38127, #38247, #38410, #38090).",
+      "prs": [
+        "37681",
+        "38127",
+        "38247",
+        "38410",
+        "38090"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "ROCm 7.2.1, torch 2.10, triton 3.6 for ROCm builds (#38252).",
+      "prs": [
+        "38252"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "compressed-tensors bumped to 0.14.0.1 (#36988).",
+      "prs": [
+        "36988"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Python OpenAI package bumped (#32316).",
+      "prs": [
+        "32316"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "flashinfer-cubin added as default CUDA dependency (#37233).",
+      "prs": [
+        "37233"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "librosa removed from audio dependencies (#37058).",
+      "prs": [
+        "37058"
+      ]
+    },
+    {
+      "category": "V0 Deprecation",
+      "text": "Deprecate virtual engine (#37195).",
+      "prs": [
+        "37195"
+      ]
+    },
+    {
+      "category": "V0 Deprecation",
+      "text": "Deprecate `--disable-frontend-multiprocessing` (#37612).",
+      "prs": [
+        "37612"
+      ]
+    },
+    {
+      "category": "V0 Deprecation",
+      "text": "Refactor KV cache from list to element (#37487).",
+      "prs": [
+        "37487"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@aaab8b made their first contribution in #37533",
+      "prs": [
+        "37533"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@aasgaonkar made their first contribution in #35386",
+      "prs": [
+        "35386"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@allgather made their first contribution in #38410",
+      "prs": [
+        "38410"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@avinashsingh77 made their first contribution in #37100",
+      "prs": [
+        "37100"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@b-mu made their first contribution in #35963",
+      "prs": [
+        "35963"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@bongwoobak made their first contribution in #37424",
+      "prs": [
+        "37424"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@brandonpelfrey made their first contribution in #32104",
+      "prs": [
+        "32104"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@ccrhx4 made their first contribution in #37634",
+      "prs": [
+        "37634"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@cdpath made their first contribution in #37510",
+      "prs": [
+        "37510"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@cemigo114 made their first contribution in #37064",
+      "prs": [
+        "37064"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@cnyvfang made their first contribution in #37439",
+      "prs": [
+        "37439"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@DanBlanaru made their first contribution in #37307",
+      "prs": [
+        "37307"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@DorBernsohn made their first contribution in #37438",
+      "prs": [
+        "37438"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@dsingal0 made their first contribution in #37923",
+      "prs": [
+        "37923"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@fxdawnn made their first contribution in #36038",
+      "prs": [
+        "36038"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@grYe99 made their first contribution in #38074",
+      "prs": [
+        "38074"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@guillaumeguy made their first contribution in #38119",
+      "prs": [
+        "38119"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@gxd3 made their first contribution in #36924",
+      "prs": [
+        "36924"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@he-yufeng made their first contribution in #37301",
+      "prs": [
+        "37301"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@javierdejesusda made their first contribution in #37920",
+      "prs": [
+        "37920"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@jetxa made their first contribution in #37899",
+      "prs": [
+        "37899"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@jhsmith409 made their first contribution in #37448",
+      "prs": [
+        "37448"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@jrplatin made their first contribution in #37348",
+      "prs": [
+        "37348"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@kjiang249 made their first contribution in #37475",
+      "prs": [
+        "37475"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@laudney made their first contribution in #34709",
+      "prs": [
+        "34709"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@lcskrishna made their first contribution in #34692",
+      "prs": [
+        "34692"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@li-liwen made their first contribution in #38108",
+      "prs": [
+        "38108"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@Liangyx2 made their first contribution in #37523",
+      "prs": [
+        "37523"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@MatejRojec made their first contribution in #38011",
+      "prs": [
+        "38011"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@Nekofish-L made their first contribution in #37970",
+      "prs": [
+        "37970"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@pjo256 made their first contribution in #34733",
+      "prs": [
+        "34733"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@r266-tech made their first contribution in #37820",
+      "prs": [
+        "37820"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@RobTand made their first contribution in #37725",
+      "prs": [
+        "37725"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@scyyh11 made their first contribution in #34789",
+      "prs": [
+        "34789"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@SherryC41 made their first contribution in #37519",
+      "prs": [
+        "37519"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@shwetha-s-poojary made their first contribution in #31696",
+      "prs": [
+        "31696"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@siewcapital made their first contribution in #36955",
+      "prs": [
+        "36955"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@SKPsanjeevi made their first contribution in #36574",
+      "prs": [
+        "36574"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@thillai-c made their first contribution in #37231",
+      "prs": [
+        "37231"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@tianrengao made their first contribution in #34389",
+      "prs": [
+        "34389"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@tmm77 made their first contribution in #37694",
+      "prs": [
+        "37694"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@utsumi-fj made their first contribution in #38328",
+      "prs": [
+        "38328"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@vineetatiwari27 made their first contribution in #37998",
+      "prs": [
+        "37998"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@Wangbei25 made their first contribution in #37293",
+      "prs": [
+        "37293"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@WindChimeRan made their first contribution in #35007",
+      "prs": [
+        "35007"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@wjhrdy made their first contribution in #37706",
+      "prs": [
+        "37706"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@XLiu-2000 made their first contribution in #37371",
+      "prs": [
+        "37371"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@xueliangyang-oeuler made their first contribution in #37536",
+      "prs": [
+        "37536"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@yanghui1-arch made their first contribution in #37873",
+      "prs": [
+        "37873"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@yassha made their first contribution in #37369",
+      "prs": [
+        "37369"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@yeahdongcn made their first contribution in #37840",
+      "prs": [
+        "37840"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@Young-Leo made their first contribution in #37565",
+      "prs": [
+        "37565"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@ZeldaHuang made their first contribution in #37425",
+      "prs": [
+        "37425"
+      ]
+    },
+    {
+      "category": "New Contributors",
+      "text": "@zhejiangxiaomai made their first contribution in #37259",
+      "prs": [
+        "37259"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "Deprecate virtual engine (#37195).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37195"
+      ]
+    },
+    {
+      "change": "Deprecate `--disable-frontend-multiprocessing` (#37612).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37612"
+      ]
+    },
+    {
+      "change": "Refactor KV cache from list to element (#37487).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "37487"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "**Performance**: Optimize top-k in Triton sampler (#37225), optimize token_embed for pooling models with 1% improvement (#37347), fix slow hasattr in CUDAGraphWrapper (#37425), NFS prefetch auto-enabled with RAM guard (#37673), pybase64 replacement (#37290), optimize swap_states for hybrid models (#34733).",
+      "prs": [
+        "37225",
+        "37347",
+        "37425",
+        "37673",
+        "37290",
+        "34733"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "Persistent MLA kernel from AITER (#36574), FP8xFP8 attention in AITER (#36927).",
+      "prs": [
+        "36574",
+        "36927"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "AWQ Marlin support (#36505), wvSplitK skinny GEMM for RDNA4/gfx1x (#34709).",
+      "prs": [
+        "36505",
+        "34709"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**Responses API**: Fix crash with tool_choice=required exceeding max_output_tokens (#37258), fix TTFT recording (#37498), fix Anthropic serving template kwargs (#37899).",
+      "prs": [
+        "37258",
+        "37498",
+        "37899"
+      ]
+    }
+  ]
+}

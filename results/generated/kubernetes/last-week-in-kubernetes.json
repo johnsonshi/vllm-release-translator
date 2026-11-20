@@ -6,7 +6,26 @@
   "verdict": "RECOMMENDED DROP-IN UPGRADE \u2014 Broad performance and stability wins with minimal migration friction",
   "sections": {
     "whats_the_big_deal": [],
-    "who_benefits": [],
+    "who_benefits": [
+      {
+        "capability": "Dynamic Resource Allocation (DRA) & GPU/Accelerator Management",
+        "models_workloads": "AI/ML training, LLM inference pods, fractional/multi-GPU workloads, and NIC/FPGA consumers",
+        "gpus_infra": "NVIDIA/AMD GPU nodes, multi-NIC RDMA clusters, and topology-aware hardware pools",
+        "bill_impact": "Higher GPU utilization and fewer stranded accelerators via standardized device sharing and health reporting"
+      },
+      {
+        "capability": "In-Place Pod Vertical Scaling (Zero-Restart Resource Resize)",
+        "models_workloads": "Stateful microservices, warm inference engines, JVMs, and suspended Batch Jobs needing CPU/RAM adjustments",
+        "gpus_infra": "Linux worker nodes and kubelet resource allocation loops",
+        "bill_impact": "Eliminates over-provisioning buffer and avoids expensive pod restart cold-starts during traffic spikes"
+      },
+      {
+        "capability": "Workload-Aware & Gang Scheduling (`PodGroup` / `Job` / Queueing)",
+        "models_workloads": "Distributed AI training, multi-node batch jobs, Ray/Spark clusters, and MPI workloads",
+        "gpus_infra": "High-density GPU/CPU batch pools and `kube-scheduler` queues",
+        "bill_impact": "Prevents partial-allocation deadlocks where expensive GPU nodes sit idle waiting for peer workers"
+      }
+    ],
     "jargon_glossary": [
       {
         "term": "DRA (Dynamic Resource Allocation)",

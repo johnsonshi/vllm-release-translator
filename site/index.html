@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#ffffff" id="meta-theme-color" />
-  <title>What’s New in vLLM &amp; Kubernetes</title>
+  <title>What’s New in vLLM — Release Notes for Operators (v0.1.0 – v0.34.0)</title>
   <style>
     :root,
     html[data-theme="light"] {
@@ -555,6 +555,33 @@
       font-size: 0.94rem;
       color: var(--bs-secondary-color);
     }
+    .pager-bar {
+      margin-top: 2rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--bs-border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-pager {
+      appearance: none;
+      background-color: var(--bs-body-bg);
+      color: var(--bs-primary);
+      border: 1px solid var(--bs-border-strong);
+      border-radius: 0.375rem;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-variant-numeric: tabular-nums;
+    }
+    .btn-pager:hover {
+      background-color: var(--bs-tertiary-bg);
+      color: var(--bs-primary-hover);
+    }
   </style>
 </head>
 <body>
@@ -564,37 +591,20 @@
   <header class="navbar">
     <div class="navbar-container">
       <div class="navbar-left">
-        <span class="navbar-brand" id="navbar-brand">What’s New in vLLM</span>
+        <span class="navbar-brand">What’s New in vLLM</span>
 
-        <nav class="nav-menus" aria-label="Releases and weekly digests">
+        <nav class="nav-menus" aria-label="vLLM release selector">
           <div class="dropdown" id="dd-releases">
             <button type="button" class="dropdown-toggle active" id="btn-dd-releases" onclick="toggleDropdown('dd-releases')">
-              <span id="lbl-dd-releases">Releases: v0.34.0</span>
+              <span id="lbl-dd-releases">Releases (v0.34.0)</span>
               <span aria-hidden="true">▾</span>
             </button>
             <ul class="dropdown-menu" id="menu-releases"></ul>
-          </div>
-
-          <div class="dropdown" id="dd-weekly">
-            <button type="button" class="dropdown-toggle" id="btn-dd-weekly" onclick="toggleDropdown('dd-weekly')">
-              <span id="lbl-dd-weekly">Weekly</span>
-              <span aria-hidden="true">▾</span>
-            </button>
-            <ul class="dropdown-menu" id="menu-weekly"></ul>
           </div>
         </nav>
       </div>
 
       <div class="navbar-right">
-        <div class="btn-group" role="group" aria-label="Select project">
-          <button type="button" class="btn-seg" id="btn-proj-vllm" onclick="switchProject('vllm')" aria-pressed="true">
-            vLLM
-          </button>
-          <button type="button" class="btn-seg" id="btn-proj-k8s" onclick="switchProject('kubernetes')" aria-pressed="false">
-            Kubernetes
-          </button>
-        </div>
-
         <button type="button" class="btn-theme" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle light or dark theme">
           <span id="theme-toggle-label">Dark mode</span>
         </button>
@@ -610,10 +620,7 @@
     const PUB = window.__PUBLICATION_DATA__ || {};
 
     let state = {
-      project: 'vllm',
-      mode: 'releases', // 'releases' | 'weekly'
       version: 'v0.34.0',
-      weeklyDate: '2026-11-19',
       theme: localStorage.getItem('release_theme') || 'light'
     };
 
@@ -658,25 +665,13 @@
 
     function readUrl() {
       const p = new URLSearchParams(window.location.search);
-      const proj = p.get('project');
-      if (proj === 'vllm' || proj === 'kubernetes') state.project = proj;
-      const mode = p.get('mode');
-      if (mode === 'releases' || mode === 'weekly') state.mode = mode;
       const ver = p.get('ver');
       if (ver) state.version = ver;
-      const wk = p.get('week');
-      if (wk) state.weeklyDate = wk;
     }
 
     function syncUrl() {
       const p = new URLSearchParams();
-      p.set('project', state.project);
-      p.set('mode', state.mode);
-      if (state.mode === 'releases') {
-        p.set('ver', state.version);
-      } else {
-        p.set('week', state.weeklyDate);
-      }
+      p.set('ver', state.version);
       window.history.replaceState(null, '', `${window.location.pathname}?${p.toString()}`);
     }
 
@@ -689,135 +684,73 @@
         .replace(/"/g, '&quot;');
     }
 
-    function formatProse(str, project) {
+    function formatProse(str) {
       if (!str) return '';
-      const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
       let out = escapeHtml(str);
       out = out.replace(/`([^`]+)`/g, '<code translate="no">$1</code>');
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
       out = out.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
-      out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{4,6})\b/g, `<a class="num" href="https://github.com/${repo}/pull/$1" target="_blank" rel="noopener">#$1</a>`);
-      out = out.replace(/\bKEP-(\d{3,5})\b/gi, '<a class="num" href="https://github.com/kubernetes/enhancements/issues/$1" target="_blank" rel="noopener">KEP-$1</a>');
+      out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{1,6})\b/g, '<a class="num" href="https://github.com/vllm-project/vllm/pull/$1" target="_blank" rel="noopener">#$1</a>');
       return out;
     }
 
-    function formatRefLink(ref, project) {
-      const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
-      if (String(ref).toUpperCase().startsWith('KEP-')) {
-        const num = ref.replace(/[^0-9]/g, '');
-        return `<a class="num" href="https://github.com/kubernetes/enhancements/issues/${num}" target="_blank" rel="noopener">${escapeHtml(ref)}</a>`;
-      }
+    function formatRefLink(ref) {
       const num = String(ref).replace('#', '');
       if (/^\d+$/.test(num)) {
-        return `<a class="num" href="https://github.com/${repo}/pull/${num}" target="_blank" rel="noopener">#${escapeHtml(num)}</a>`;
+        return `<a class="num" href="https://github.com/vllm-project/vllm/pull/${num}" target="_blank" rel="noopener">#${escapeHtml(num)}</a>`;
       }
       return `<span class="num">${escapeHtml(ref)}</span>`;
     }
 
-    function switchProject(proj) {
-      state.project = proj;
-      const projObj = PUB[proj];
-      if (projObj && projObj.releases && projObj.releases.length > 0) {
-        state.version = projObj.releases[0].version;
-      }
-      if (projObj && projObj.weekly_editions && projObj.weekly_editions.length > 0) {
-        state.weeklyDate = projObj.weekly_editions[0].date_iso;
-      }
-      closeDropdowns();
-      syncUrl();
-      render();
-    }
-
     function selectVersion(ver) {
-      state.mode = 'releases';
       state.version = ver;
       closeDropdowns();
       syncUrl();
       render();
+      window.scrollTo(0, 0);
     }
 
-    function selectWeekly(dateIso) {
-      state.mode = 'weekly';
-      if (dateIso) state.weeklyDate = dateIso;
-      closeDropdowns();
-      syncUrl();
-      render();
-    }
-
-    function renderNavigation(projObj) {
-      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
-      const releases = projObj.releases || [];
-      const weeklyList = projObj.weekly_editions || [projObj.weekly];
-
-      const btnRel = document.getElementById('btn-dd-releases');
-      const btnWk = document.getElementById('btn-dd-weekly');
+    function renderNavigation(releases) {
       const lblRel = document.getElementById('lbl-dd-releases');
-      const lblWk = document.getElementById('lbl-dd-weekly');
-
-      if (state.mode === 'releases') {
-        btnRel.classList.add('active');
-        btnWk.classList.remove('active');
-        lblRel.textContent = `Releases (${state.version})`;
-        lblWk.textContent = `Weekly`;
-      } else {
-        btnWk.classList.add('active');
-        btnRel.classList.remove('active');
-        lblRel.textContent = `Releases`;
-        lblWk.textContent = `Weekly (${state.weeklyDate})`;
-      }
+      lblRel.textContent = `Releases (${state.version})`;
 
       document.getElementById('menu-releases').innerHTML = `
-        <li class="dropdown-header">${projName} Releases</li>
+        <li class="dropdown-header">All 34 vLLM Releases (v0.1.0 – v0.34.0)</li>
         ${releases.map((r, i) => `
           <li>
             <button
               type="button"
               class="dropdown-item"
-              aria-current="${state.mode === 'releases' && state.version === r.version ? 'true' : 'false'}"
+              aria-current="${state.version === r.version ? 'true' : 'false'}"
               onclick="selectVersion('${escapeHtml(r.version)}')"
             >
-              <span translate="no">${escapeHtml(r.version)}${i === 0 ? ' (Latest)' : ''}</span>
+              <span translate="no">${escapeHtml(r.version)}${i === 0 ? ' (Latest)' : (r.version === 'v0.1.0' ? ' (Initial)' : '')}</span>
               <span class="dropdown-date">${escapeHtml(r.date)}</span>
-            </button>
-          </li>
-        `).join('')}
-      `;
-
-      document.getElementById('menu-weekly').innerHTML = `
-        <li class="dropdown-header">This Week in ${projName}</li>
-        ${weeklyList.map((w, i) => `
-          <li>
-            <button
-              type="button"
-              class="dropdown-item"
-              aria-current="${state.mode === 'weekly' && state.weeklyDate === w.date_iso ? 'true' : 'false'}"
-              onclick="selectWeekly('${escapeHtml(w.date_iso)}')"
-            >
-              <span>${escapeHtml(w.date_iso)}${i === 0 ? ' (Latest)' : ''}</span>
-              <span class="dropdown-date">Thu</span>
             </button>
           </li>
         `).join('')}
       `;
     }
 
-    function renderReleaseView(projObj, rel) {
+    function renderReleaseView(releases, rel) {
       const fp = rel.five_parts;
-      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
+      const idx = releases.findIndex(r => r.version === rel.version);
+      const newerRel = idx > 0 ? releases[idx - 1] : null;
+      const olderRel = idx >= 0 && idx < releases.length - 1 ? releases[idx + 1] : null;
 
       return `
         <article>
           <header class="page-header">
             <div class="page-meta">
-              Released ${escapeHtml(rel.date)} &middot; ${escapeHtml(rel.stats)}
+              Released ${escapeHtml(rel.date)} &middot; ${escapeHtml(rel.stats)} &middot; <a href="https://github.com/vllm-project/vllm/releases/tag/${escapeHtml(rel.version === 'v0.33.0' ? 'v0.33.0rc3' : rel.version)}" target="_blank" rel="noopener">GitHub Release</a>
             </div>
-            <h1 class="page-title">What’s New in ${projName} ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
-            <p class="lead">${formatProse(rel.executive_summary, state.project)}</p>
+            <h1 class="page-title">What’s New in vLLM ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
+            <p class="lead">${formatProse(rel.executive_summary)}</p>
           </header>
 
           <section class="section-block" id="whats-the-big-deal">
             <h2>1. What’s the big deal?</h2>
-            <p class="section-subtitle">The headline changes in ${projName} ${escapeHtml(rel.version)} and what they replace.</p>
+            <p class="section-subtitle">The headline changes in vLLM ${escapeHtml(rel.version)} and what they replace.</p>
 
             <div>
               ${fp.big_deal.map(item => {
@@ -830,11 +763,11 @@
                       <h3 class="feature-title">${escapeHtml(item.title)}</h3>
                       <div class="feature-meta">
                         <span class="badge ${badgeClass}">${escapeHtml(item.status)}</span>
-                        ${(item.prs || []).map(p => formatRefLink(p, state.project)).join(' ')}
+                        ${(item.prs || []).map(p => formatRefLink(p)).join(' ')}
                       </div>
                     </div>
-                    <p class="feature-p"><strong>Previously:</strong> ${formatProse(item.before, state.project)}</p>
-                    <p class="feature-p"><strong>Now in ${escapeHtml(rel.version)}:</strong> ${formatProse(item.now, state.project)}</p>
+                    <p class="feature-p"><strong>Previously:</strong> ${formatProse(item.before)}</p>
+                    <p class="feature-p"><strong>Now in ${escapeHtml(rel.version)}:</strong> ${formatProse(item.now)}</p>
                     ${item.config_snippet ? `<pre class="code-box"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
                   </div>
                 `;
@@ -852,7 +785,7 @@
                   <tr>
                     <th scope="col" style="width:23%;">Workload / Team</th>
                     <th scope="col" style="width:26%;">Models / Services</th>
-                    <th scope="col" style="width:23%;">GPUs / Nodes</th>
+                    <th scope="col" style="width:23%;">GPUs / Hardware</th>
                     <th scope="col" style="width:28%;">Impact on Bill &amp; Latency</th>
                   </tr>
                 </thead>
@@ -860,9 +793,9 @@
                   ${fp.who_benefits.map(w => `
                     <tr>
                       <td><strong>${escapeHtml(w.persona)}</strong></td>
-                      <td>${formatProse(w.models, state.project)}</td>
-                      <td>${formatProse(w.gpus, state.project)}</td>
-                      <td>${formatProse(w.impact, state.project)}</td>
+                      <td>${formatProse(w.models)}</td>
+                      <td>${formatProse(w.gpus)}</td>
+                      <td>${formatProse(w.impact)}</td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -879,8 +812,8 @@
                 <div class="jargon-row">
                   <dt translate="no">${escapeHtml(j.term)}</dt>
                   <dd>
-                    <div>${formatProse(j.plain_english, state.project)}</div>
-                    <div style="margin-top:0.3rem;"><strong>Why it matters:</strong> ${formatProse(j.bottom_line, state.project)}</div>
+                    <div>${formatProse(j.plain_english)}</div>
+                    <div style="margin-top:0.3rem;"><strong>Why it matters:</strong> ${formatProse(j.bottom_line)}</div>
                   </dd>
                 </div>
               `).join('')}
@@ -902,16 +835,16 @@
                     <th scope="col" style="width:26%;">Change</th>
                     <th scope="col" style="width:34%;">What Breaks or Changes</th>
                     <th scope="col" style="width:30%;">Required Action</th>
-                    <th scope="col" style="width:10%;">PR / KEP</th>
+                    <th scope="col" style="width:10%;">PR</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${fp.upgrade_guide.rows.map(r => `
                     <tr>
-                      <td><strong>${formatProse(r.change, state.project)}</strong></td>
-                      <td>${formatProse(r.impact, state.project)}</td>
-                      <td>${formatProse(r.action, state.project)}</td>
-                      <td class="num">${formatRefLink(r.pr, state.project)}</td>
+                      <td><strong>${formatProse(r.change)}</strong></td>
+                      <td>${formatProse(r.impact)}</td>
+                      <td>${formatProse(r.action)}</td>
+                      <td class="num">${formatRefLink(r.pr)}</td>
                     </tr>
                   `).join('')}
                 </tbody>
@@ -939,106 +872,38 @@
                       <td><strong>${escapeHtml(b.label)}</strong></td>
                       <td>${escapeHtml(b.hardware)}</td>
                       <td class="num"><strong>${escapeHtml(b.metric)}</strong></td>
-                      <td class="num">${formatRefLink(b.pr, state.project)}</td>
+                      <td class="num">${formatRefLink(b.pr)}</td>
                     </tr>
                   `).join('')}
                 </tbody>
               </table>
             </div>
           </section>
-        </article>
-      `;
-    }
 
-    function renderWeeklyView(projObj, w) {
-      return `
-        <article>
-          <header class="page-header">
-            <div class="page-meta">
-              Published ${escapeHtml(w.date_range)} &middot; ${escapeHtml(w.reading_time)}
-            </div>
-            <h1 class="page-title">${escapeHtml(w.headline)}</h1>
-            <p class="lead">${escapeHtml(w.intro)}</p>
-          </header>
-
-          <section class="section-block">
-            <h2>Key takeaways (${escapeHtml(w.date_iso || '2026-11-19')})</h2>
-            <p class="section-subtitle">The three most consequential changes merged into main this week.</p>
-
+          <nav class="pager-bar" aria-label="Previous and next release">
             <div>
-              ${w.tldr_cards.map(c => `
-                <div class="feature-item">
-                  <div class="feature-header">
-                    <h3 class="feature-title">${escapeHtml(c.title)}</h3>
-                    <div class="feature-meta">
-                      <span class="badge badge-primary">${escapeHtml(c.tag)}</span>
-                      ${(c.prs || []).map(p => formatRefLink(p, state.project)).join(' ')}
-                    </div>
-                  </div>
-                  <p class="feature-p">${formatProse(c.summary, state.project)}</p>
-                  <p class="feature-p"><strong>Why it matters:</strong> ${formatProse(c.impact, state.project)}</p>
-                </div>
-              `).join('')}
+              ${olderRel ? `<button type="button" class="btn-pager" onclick="selectVersion('${escapeHtml(olderRel.version)}')">&larr; Older: ${escapeHtml(olderRel.version)} (${escapeHtml(olderRel.date)})</button>` : ''}
             </div>
-          </section>
-
-          <section class="section-block">
-            <h2>Featured pull requests</h2>
-            <p class="section-subtitle">Plain-English breakdown of notable engineering merges.</p>
-
             <div>
-              ${w.sections[0].items.map(it => `
-                <div class="feature-item">
-                  <div class="feature-header">
-                    <h3 class="feature-title">${escapeHtml(it.title)}</h3>
-                    <div class="feature-meta">${formatRefLink(it.pr, state.project)}</div>
-                  </div>
-                  <p class="feature-p"><strong>What changed:</strong> ${formatProse(it.what_it_is, state.project)}</p>
-                  <p class="feature-p"><strong>Why operators care:</strong> ${formatProse(it.why_you_care, state.project)}</p>
-                </div>
-              `).join('')}
+              ${newerRel ? `<button type="button" class="btn-pager" onclick="selectVersion('${escapeHtml(newerRel.version)}')">Newer: ${escapeHtml(newerRel.version)} (${escapeHtml(newerRel.date)}) &rarr;</button>` : ''}
             </div>
-          </section>
-
-          <section class="section-block">
-            <h2>${escapeHtml(w.sections[1].category)}</h2>
-            <p class="section-subtitle">Other notable merges from this week.</p>
-            <ul class="merge-list">
-              ${w.sections[1].bullets.map(b => `<li>${formatProse(b, state.project)}</li>`).join('')}
-            </ul>
-          </section>
+          </nav>
         </article>
       `;
     }
 
     function render() {
-      const projObj = PUB[state.project] || PUB.vllm;
-      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
-
-      document.getElementById('navbar-brand').textContent = `What’s New in ${projName}`;
-      document.getElementById('btn-proj-vllm').setAttribute('aria-pressed', state.project === 'vllm' ? 'true' : 'false');
-      document.getElementById('btn-proj-k8s').setAttribute('aria-pressed', state.project === 'kubernetes' ? 'true' : 'false');
-
+      const projObj = PUB.vllm || {};
       const releases = projObj.releases || [];
       if (!releases.some(r => r.version === state.version) && releases.length > 0) {
         state.version = releases[0].version;
       }
 
-      const weeklyList = projObj.weekly_editions || [projObj.weekly];
-      if (!weeklyList.some(w => w.date_iso === state.weeklyDate) && weeklyList.length > 0) {
-        state.weeklyDate = weeklyList[0].date_iso;
-      }
-
-      renderNavigation(projObj);
+      renderNavigation(releases);
 
       const mainEl = document.getElementById('main-content');
-      if (state.mode === 'releases') {
-        const activeRel = releases.find(r => r.version === state.version) || releases[0];
-        mainEl.innerHTML = renderReleaseView(projObj, activeRel);
-      } else {
-        const activeWk = weeklyList.find(w => w.date_iso === state.weeklyDate) || weeklyList[0];
-        mainEl.innerHTML = renderWeeklyView(projObj, activeWk);
-      }
+      const activeRel = releases.find(r => r.version === state.version) || releases[0];
+      mainEl.innerHTML = renderReleaseView(releases, activeRel);
     }
 
     readUrl();

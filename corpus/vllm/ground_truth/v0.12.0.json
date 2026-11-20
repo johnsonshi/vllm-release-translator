@@ -1,0 +1,183 @@
+{
+  "project": "vllm",
+  "version": "v0.12.0",
+  "published_date": "2025-12-03",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "EAGLE Speculative Decoding Improvements",
+      "summary": "**EAGLE Speculative Decoding Improvements**: Multi-step CUDA graph support (#29559), DP>1 support (#26086), and multimodal support with Qwen3VL (#29594).",
+      "prs": [
+        "29559",
+        "26086",
+        "29594"
+      ]
+    },
+    {
+      "heading": "Significant Performance Optimizations",
+      "summary": "**Significant Performance Optimizations**: 18.1% throughput improvement from batch invariant BMM (#29345), 2.2% throughput improvement from shared experts overlap (#28879).",
+      "prs": [
+        "29345",
+        "28879"
+      ]
+    },
+    {
+      "heading": "AMD ROCm Expansion",
+      "summary": "**AMD ROCm Expansion**: DeepSeek v3.2 + SparseMLA support (#26670), FP8 MLA decode (#28032), AITER attention backend (#28701).",
+      "prs": [
+        "26670",
+        "28032",
+        "28701"
+      ]
+    },
+    {
+      "heading": "V0 Deprecation & Breaking Changes",
+      "summary": "**Removed Parameters**: * `num_lookahead_slots` (#29000) * `best_of` (#29090) * LoRA extra vocab (#28545) **Deprecated**: * `xformers` backend (#29262) * `seed=None` (#29185) **Scheduled Removals** (will be removed in future release): * `ParallelConfig`'s direct child EPLB fields (#29324) * `guided_*` config fields (#29326) * `override_pooler_config` and `disable_log_requests` (#29402) * `CompilationConfig.use_inductor` (#29323) * Deprecated metrics (#29330) **Other Breaking Changes**: * PyTorch 2.9.0 upgrade requires CUDA 12.9 environment * Mistral format auto-detection for model loading (#28",
+      "prs": [
+        "29000",
+        "29090",
+        "28545",
+        "29262",
+        "29185",
+        "29324",
+        "29326",
+        "29402",
+        "29323",
+        "29330",
+        "28659"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "`num_lookahead_slots` (#29000)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29000"
+      ]
+    },
+    {
+      "change": "`best_of` (#29090)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29090"
+      ]
+    },
+    {
+      "change": "LoRA extra vocab (#28545)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "28545"
+      ]
+    },
+    {
+      "change": "`xformers` backend (#29262)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29262"
+      ]
+    },
+    {
+      "change": "`seed=None` (#29185)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29185"
+      ]
+    },
+    {
+      "change": "`ParallelConfig`'s direct child EPLB fields (#29324)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29324"
+      ]
+    },
+    {
+      "change": "`guided_*` config fields (#29326)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29326"
+      ]
+    },
+    {
+      "change": "`override_pooler_config` and `disable_log_requests` (#29402)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29402"
+      ]
+    },
+    {
+      "change": "`CompilationConfig.use_inductor` (#29323)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29323"
+      ]
+    },
+    {
+      "change": "Deprecated metrics (#29330)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29330"
+      ]
+    },
+    {
+      "change": "PyTorch 2.9.0 upgrade requires CUDA 12.9 environment",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": []
+    },
+    {
+      "change": "Mistral format auto-detection for model loading (#28659)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "28659"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "29559",
+    "26086",
+    "29594",
+    "29345",
+    "28879",
+    "26670",
+    "28032",
+    "28701",
+    "29000",
+    "29090",
+    "28545",
+    "29262",
+    "29185",
+    "29324",
+    "29326",
+    "29402",
+    "29323",
+    "29330",
+    "28659",
+    "29000",
+    "29090",
+    "28545",
+    "29262",
+    "29185",
+    "29324",
+    "29326",
+    "29402",
+    "29323",
+    "29330",
+    "28659"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Batch invariant BMM optimization**: 18.1% throughput improvement, 10.7% TTFT improvement on DeepSeek-V3.1 (#29345)",
+      "prs": [
+        "29345"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Shared Experts Overlap with FlashInfer DeepGEMM**: 2.2% throughput improvement, 3.6% TTFT improvement at batch size 32 (#28879)",
+      "prs": [
+        "28879"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,522 @@
+{
+  "project": "vllm",
+  "version": "v0.23.0",
+  "published_date": "2026-06-15",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.23.0",
+  "commits_count": 408,
+  "contributors_count": 200,
+  "total_raw_items": 40,
+  "counts_by_category": {
+    "Model Support": 7,
+    "Engine Core": 5,
+    "Large Scale Serving & Distributed": 4,
+    "Hardware & Performance": 6,
+    "Quantization": 4,
+    "API & Frontend": 6,
+    "Security": 3,
+    "Dependencies": 2,
+    "Deprecations": 3
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "**New models**: Step-3.7-Flash (#43859), Cosmos3 Reasoner (#43356), Gemma 4 Unified encoder-free (#44429), JetBrains Mellum v2 (#43992), Granite Speech Plus (#43519), Cohere Mini Code (#44707).",
+      "prs": [
+        "43859",
+        "43356",
+        "44429",
+        "43992",
+        "43519",
+        "44707"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Gemma 4**: Encoder-free Unified support (#44429), MTP (#43241), native ViT linear layers (#43798), vision-embedder excluded from quantization (#44571), and fixes for MTP under TP>1 (#43909), block-table mismatch under concurrency (#43982), transformers-processor startup crash (#44232), and CPU init (#44615).",
+      "prs": [
+        "44429",
+        "43241",
+        "43798",
+        "44571",
+        "43909",
+        "43982",
+        "44232",
+        "44615"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Transformers v5**: Vendor MiniCPM-V/O processors (#44282), Sarvam compat (#38804), Voxtral `fetch_audio` for transformers\u22655.10 (#44559).",
+      "prs": [
+        "44282",
+        "38804",
+        "44559"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Model fixes & enhancements**: Qwen3-VL/Qwen3-omni-thinker deepstack accuracy under `torch.compile` (#43617), EVS for Qwen3-VL (#44205), GLM-5.1 PP loading (#42944), GLM-4.1V processor logits (#43575), GLM-4.6V video loader (#44417), OlmoHybrid init (#43846), HyperCLOVAX remote-code removal (#43860), Bailing-MoE rotary factor (#43770), Step3 PP residual KeyError (#37622), MiniCPM-V-4.6 video (#44509), MiniCPM-O audio unpadding (#38053), MiniCPM-V batched preprocessing (#44609), FunASR-Nano init (#44215), Cohere routing method (#44021), Kimi-K2.5 FlashInfer ViT metadata (#44493).",
+      "prs": [
+        "43617",
+        "44205",
+        "42944",
+        "43575",
+        "44417",
+        "43846",
+        "43860",
+        "43770",
+        "37622",
+        "44509",
+        "38053",
+        "44609",
+        "44215",
+        "44021",
+        "44493"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Multimodal**: Auto-select registered video loader for VLMs (#44126), O(log n) multimodal item handling per step (#44212), local image encoding in benchmarks (#43843), interleaved custom image benchmark datasets (#43636).",
+      "prs": [
+        "44126",
+        "44212",
+        "43843",
+        "43636"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Pooling/Classification**: Proper exceptions for pooling UX (#44593), `extra_repr()` for pooler classes (#44805), LoRA-adapter-name pooling fix (#44410), resettled generative scoring entrypoint (#44153), expanded pooler unit tests (#43818, #44471).",
+      "prs": [
+        "44593",
+        "44805",
+        "44410",
+        "44153",
+        "43818",
+        "44471"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Refactor**: AutoWeightsLoader for InternLM2 (#38278).",
+      "prs": [
+        "38278"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Model Runner V2**: Default for Llama and Mistral dense models (#43458), FlashInfer sampler (#42472), breakable CUDA graphs (#44050), removed Eagle's dedicated CUDA graph pool (#44078), pipeline-parallel bubble elimination (#42187), kernel block size for hybrid models (#38831), zeroing of freshly allocated KV blocks for hybrid + FP8 KV cache (#43990), actual batch `max_seq_len` for attention metadata (#43991), rejection-sampling acceptance-rate fix (#40651), KVConnector + PP cleanup (#43732), speculator-prefill warmup/capture (#44253).",
+      "prs": [
+        "43458",
+        "42472",
+        "44050",
+        "44078",
+        "42187",
+        "38831",
+        "43990",
+        "43991",
+        "40651",
+        "43732",
+        "44253"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Speculative decoding (DFlash)**: Causal DFlash (#43445), proper lookahead-slot allocation (#43733), prefix-cache corruption fix (#42971); independent drafter attention-backend selection (#39930), attention-group split by `num_heads_q` for drafts (#43543), EAGLE/MTP lookahead caching in the SWA prefix-cache mask (#44082).",
+      "prs": [
+        "43445",
+        "43733",
+        "42971",
+        "39930",
+        "43543",
+        "44082"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Attention & hybrid/Mamba**: FlexAttention/FlashAttention num-blocks-first layouts (#42095), OOT MLA prefill backend registration (#43325), FlashAttention upstream sync (#44065), Mamba LINEAR attention-module refactor (#43556), corrupted MLA + linear attention fix (#43961), KDA conv-state unification (#44539) and gate/cumsum fusion (#43667), Mamba SSD `do_not_specialize` (#43803), Qwen3.5 mixed prefill+decode split routing (#44700), MiniMax-M2 gate kernel (#38445).",
+      "prs": [
+        "42095",
+        "43325",
+        "44065",
+        "43556",
+        "43961",
+        "44539",
+        "43667",
+        "43803",
+        "44700",
+        "38445"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**KV cache & scheduler**: Pluggable `KVCacheSpec` (#37505), `scheduler_block_size` threaded into KVCacheManager/Coordinator (#44165), `max_concurrent_batches` moved to `VllmConfig` (#44274), config validation rejecting 0/negative knobs (#43794, #44057, #44207), KV-cache scale boilerplate removed from weight loading (#43167).",
+      "prs": [
+        "37505",
+        "44165",
+        "44274",
+        "43794",
+        "44057",
+        "44207",
+        "43167"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Core**: Freeze the garbage collector in workers after model init (#44363), sparse NCCL weight transfer for in-place updates (#40096), graceful spinloop ext-load failure handling (#43659), scheduled-function deprecations (#43358).",
+      "prs": [
+        "44363",
+        "40096",
+        "43659",
+        "43358"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "**KV cache offloading**: Object-store secondary tier (#41968), HMA on by default for capable connectors (#41847) and tiering (#44287), per-request offloading policy (`on_new_request`) (#43205) and `on_schedule_end()` hook (#44206), token-offset selective offload (#39983), skip decode-phase blocks in CPU offload (#43797), page-size block alignment (#43689), Triton fast-path for small CPU\u2192GPU `swap_blocks_batch` (#42212), stale sliding-window block fix (#42959).",
+      "prs": [
+        "41968",
+        "41847",
+        "44287",
+        "43205",
+        "44206",
+        "39983",
+        "43797",
+        "43689",
+        "42212",
+        "42959"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "**KV connectors / disaggregated serving**: PP-aware handshake aggregation and intermediate-PP output plumbing (#43720), multiple-async-KV-load deadlock fix (#44560), Nixl Mamba prefix-caching mode (#42554), NixlConnector `kv_both` role deprecation cycle (#43874), Mooncake fixes (#43742, #44103, #42694), LMCache `LMCacheMPConnector` (#42865), EC connector shutdown API (#42423) and non-blocking lookup (#41627), KV-transfer tokens excluded from `iteration_tokens_total` (#43346).",
+      "prs": [
+        "43720",
+        "44560",
+        "42554",
+        "43874",
+        "43742",
+        "44103",
+        "42694",
+        "42865",
+        "42423",
+        "41627",
+        "43346"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "**EPLB**: Async EPLB by default (#43219), EPLB for DeepSeek-V4 Mega-MoE (#43339), Nixl zero-copy EPLB transfers (#41633).",
+      "prs": [
+        "43219",
+        "43339",
+        "41633"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "**Data parallel**: DP Ray placement groups on specific nodes (#44669) and grouped-node allocation fix (#43998), SSL for the DP supervisor (#43688), DP-coordinator startup timeout raised to 120s (#42343), per-GPU-worker RDMA NIC selection (#42083).",
+      "prs": [
+        "44669",
+        "43998",
+        "43688",
+        "42343",
+        "42083"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA / kernels**: FP8 FlashInfer attention for ViT (#38065), Triton MoE backend on Hopper by default (#44220), CUTLASS FP8 scaled-mm padding bypass (+20%) (#43706), MoE-permute buffer pre-allocation (+9\u201314%) (#43014), `Fp8BlockScaledMM` `new_empty()` optimization (#43677), TurboQuant shared dequant buffers (#40941), tuned `selective_state_update` for H200/RTX PRO (#44251), Inductor fast-path fallback for vLLM/AITER custom ops (#42129), Gemma RMS all-reduce fusion (#42646), NUMA auto-binding on DGX B300 (#43270).",
+      "prs": [
+        "38065",
+        "44220",
+        "43706",
+        "43014",
+        "43677",
+        "40941",
+        "44251",
+        "42129",
+        "42646",
+        "43270"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**: ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), native W4A16 (#41394) and fused-MoE W4A16 HIP (#44075) kernels for RDNA3 (gfx1100), AITER top-k/top-p sampler by default (#43331), attention-sink support in AITER FA (#43817), AITER hipBLASLt GEMM online tuning (#40426), `permute_cols` for ROCm (#44674), blocks-first KV layout for AMD (#43660), N=5 wvSplitK for spec decode (#40687), MoRI connector improvements (#43303, #41751, #40344).",
+      "prs": [
+        "43136",
+        "44265",
+        "41394",
+        "44075",
+        "43331",
+        "43817",
+        "40426",
+        "44674",
+        "43660",
+        "40687",
+        "43303",
+        "41751",
+        "40344"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: vllm-xpu-kernel v0.1.7 (#41019), `block_fp8_moe` (#42139), block-scaled W8A8 FP8 path (#39968), WNA16 oracle for GPTQ sym-int4 (#41426), rms_norm/act quant fusions (#43963), GDN-attention MTP (#43565), Triton selective-scan op (#43421), transparent sleep mode (#37149), CPU/tiering offloading on XPU (#36423), DeepSeek-V4 attention decode path (#42953).",
+      "prs": [
+        "41019",
+        "42139",
+        "39968",
+        "41426",
+        "43963",
+        "43565",
+        "43421",
+        "37149",
+        "36423",
+        "42953"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU & other architectures**: zentorch-accelerated W8A8/W4A16 on AMD Zen CPUs (#41813), CPU top-k/top-p Triton sampling (#43633), non-divisible GQA decode in mixed batches (#43032), `cpu_awq` folded into `awq_marlin` (#43841), RISC-V RVV WNA16 helpers (#42730), fused GDN gated-delta-rule kernels (#43534), PowerPC SHM communicator (#43754), arm64 CI image (#41303).",
+      "prs": [
+        "41813",
+        "43633",
+        "43032",
+        "43841",
+        "42730",
+        "43534",
+        "43754",
+        "41303"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**TPU**: tpu-inference upgraded to v0.20.0 (#43394) then v0.21.0 (#44621).",
+      "prs": [
+        "43394",
+        "44621"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**torch stable ABI**: Continued migration of kernels to the libtorch stable ABI \u2014 merge_attn_states/mamba/sampler [8/n] (#43361), attention/cache kernels [9/n] (#43717), header files (#44013), cuda_view/silu_and_mul [10/n] (#44334), custom all-reduce/DeepSeek-V4 fused MLA/MXFP8 MoE [10b/n] (#44365); ROCm fallback to regular ABI (#44648), `_has_module` trial-import verification (#44035).",
+      "prs": [
+        "43361",
+        "43717",
+        "44013",
+        "44334",
+        "44365",
+        "44648",
+        "44035"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**ModelOpt**: LM-head quantization (#42124), MXFP8 non-gated MoE (#42958).",
+      "prs": [
+        "42124",
+        "42958"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**compressed-tensors**: WNA8O8Int linears and WNInt embeddings (#44340), asymmetric MoE WNA16 Marlin (#44025), single-class NVFP4 linear refactor (#42443).",
+      "prs": [
+        "44340",
+        "44025",
+        "42443"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Kernels & backends**: Triton W4A16 as CUDA fallback for non-Marlin-aligned shapes (#43731), Marlin MoE on SM 12.x (#40923), Machete W4A16 tests (#35450), fail-fast for unsupported NVFP4 KV-cache-dtype arch (#43669), CuteDSL compressor 128-split kernel optimization (#44230).",
+      "prs": [
+        "43731",
+        "40923",
+        "35450",
+        "43669",
+        "44230"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**MoE refactor (oracle)**: Migrated ModelOpt MXFP8 (#42768), W4A8-int8 (#42789), and WNA16 backend selection (#42553) into the modular-kernel oracle; removed `supports_expert_map` (#43108) and the inplace fused-experts mechanism (#43727).",
+      "prs": [
+        "42768",
+        "42789",
+        "42553",
+        "43108",
+        "43727"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Anthropic Messages API**: Structured output and effort support (#42396), system-role messages inside the messages array (#44283).",
+      "prs": [
+        "42396",
+        "44283"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**OpenAI / Responses API**: `system_fingerprint` field (#40537), streaming tool/function calling with `required` (#40700), `chat_template_kwargs` in Responses (#43761), developer-to-system conversion in the HF renderer (#43590), unstreamed tool-call-args streaming fix (#44348).",
+      "prs": [
+        "40537",
+        "40700",
+        "43761",
+        "43590",
+        "44348"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Parsers**: Unified reasoning + tool-call parsing behind `Parser.parse()` (#44267), Responses parser migrated to the unified interface (#42977), unstreamed tool-arg flush moved into the parser (#44017); new/fixed tool parsers \u2014 MiniCPM5 XML (#43175), Qwen3 XML JSON-args-first (#43243), DeepSeek DSML incremental streaming (#42879), first-args-chunk serializer fix (#42683), `tool_choice=\"none\"` honored in streaming (#42752), null-tool-args crash fix (#43862).",
+      "prs": [
+        "44267",
+        "42977",
+        "44017",
+        "43175",
+        "43243",
+        "42879",
+        "42683",
+        "42752",
+        "43862"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Frontend**: `thinking_token_budget` validation (#43402), GPT-OSS instruction rendering (#44330), Harmony `stop_token_ids` cleanup (#44009), consistent `VLLMValidationError` in chat/completion validators (#36254), consolidation of dev entrypoints (#44170) and online-serving utils (#44479).",
+      "prs": [
+        "43402",
+        "44330",
+        "44009",
+        "36254",
+        "44170",
+        "44479"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Rust frontend**: Streaming `generate` endpoint (#43779), dynamic LoRA endpoints (#43778), `/version` (#43854) and `/server_info` (#43942), server-router extension hook (#43774), `--enable-request-id-headers` (#43883), recursive tool-parameter conversion (#44299), `include_reasoning=false` (#44391), `--language-model-only` skips the multimodal processor (#44500), per-engine batch auto-abort (#44591), UTF-8 char-boundary detokenizer fix (#44620), HF chat-template fixes (#44311), cross-DP aggregation of `is_sleeping`/`reset_prefix_cache` (#43429); new tool parsers \u2014 InternLM2 (#43481), hy_v3 (#43872), Phi-4-mini JSON (#44213), Gemma4 (#43850).",
+      "prs": [
+        "43779",
+        "43778",
+        "43854",
+        "43942",
+        "43774",
+        "43883",
+        "44299",
+        "44391",
+        "44500",
+        "44591",
+        "44620",
+        "44311",
+        "43429",
+        "43481",
+        "43872",
+        "44213",
+        "43850"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Benchmarks**: Timed trace replay for Moonshot/Alibaba workloads in `vllm bench serve` (#39795), reasoning-model (thinking) benchmarking via `--chat-template-kwargs` (#44244).",
+      "prs": [
+        "39795",
+        "44244"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "**Transport encryption**: SSL/TLS support for the data-parallel supervisor (#43688).",
+      "prs": [
+        "43688"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "**Untrusted-input hardening**: Reject out-of-vocabulary token IDs before they reach the GPU logprob path (#44042) and fix a UTF-8 char-boundary panic in the Rust incremental detokenizer on malformed input (#44620), both of which prevent request-triggered crashes.",
+      "prs": [
+        "44042",
+        "44620"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "**Parameter validation**: Reject invalid `thinking_token_budget` values (#43402), non-positive `ParallelConfig` integer knobs (#44057), zero-valued config fields (#43794), and out-of-range `max_num_scheduled_tokens` (#44207).",
+      "prs": [
+        "43402",
+        "44057",
+        "43794",
+        "44207"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "FlashInfer v0.6.12 (#44036), ROCm 7.2.3 (#43136), AITER v0.1.13.post1 (#44265), tpu-inference v0.21.0 (#44621), mistral-common bump (#44649), fastsafetensors v0.3.2 (#43625).",
+      "prs": [
+        "44036",
+        "43136",
+        "44265",
+        "44621",
+        "44649",
+        "43625"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Removed the stale cuDNN frontend upper bound (#42599); Docker fixes for flashinfer-jit-cache (#44366), FlashInfer CuTe DSL JIT `libcublas-dev` (#39855), and CUTLASS DSL cu13 install order (#45204).",
+      "prs": [
+        "42599",
+        "44366",
+        "39855",
+        "45204"
+      ]
+    },
+    {
+      "category": "Deprecations",
+      "text": "Deprecate `JAISLMHeadModel` (#43784).",
+      "prs": [
+        "43784"
+      ]
+    },
+    {
+      "category": "Deprecations",
+      "text": "Begin the deprecation cycle for the NixlConnector `kv_both` role (#43874).",
+      "prs": [
+        "43874"
+      ]
+    },
+    {
+      "category": "Deprecations",
+      "text": "Remove functions previously scheduled for deprecation in v0.21.0 (#43358).",
+      "prs": [
+        "43358"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "Deprecate `JAISLMHeadModel` (#43784).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43784"
+      ]
+    },
+    {
+      "change": "Begin the deprecation cycle for the NixlConnector `kv_both` role (#43874).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43874"
+      ]
+    },
+    {
+      "change": "Remove functions previously scheduled for deprecation in v0.21.0 (#43358).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "43358"
+      ]
+    }
+  ],
+  "benchmarks": []
+}

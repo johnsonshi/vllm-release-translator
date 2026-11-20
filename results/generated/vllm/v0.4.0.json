@@ -1,0 +1,492 @@
+{
+  "variant": "v4_adoption_engine",
+  "project": "vllm",
+  "version": "v0.4.0",
+  "positioning": "Translating VLLM v0.4.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+  "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
+  "sections": {
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+        "what_changed": "Progress in chunked prefill scheduler (#3236, #3538), and speculative decoding (#3103).; [Speculative decoding 3/9] Worker which speculates, scores, and applies rejection sampling by @cadedaniel",
+        "why_it_matters": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth",
+        "prs": [
+          "3236",
+          "3538",
+          "3103"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Production features Enhancements",
+        "what_changed": "Automatic prefix caching (#2762, #3703) supporting long system prompt to be automatically cached across requests. Use the flag `--enable-prefix-caching` to turn it on.; Support `json_object` in OpenAI server for arbitrary JSON, `--use-delay` flag to improve time to first token across many requests, and `min_tokens` to EOS suppression.; Custom all reduce kernel has been re-enabled after more robustness fixes.; Replaced cupy dependency due to its bugs.",
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "2762",
+          "3703"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "what_changed": "New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183).; Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804) by @jacobthebanana; Add GPTQ support for Gemma by @TechxGenus; Feature add lora support for Qwen2 by @whyiug; Enhance lora tests with more layer and rank variations by @tterrysun",
+        "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
+        "prs": [
+          "3433",
+          "3346",
+          "3660",
+          "3610",
+          "3183",
+          "2762"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "What's Changed Enhancements",
+        "what_changed": "enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou; [Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048; Dynamic scheduler delay to improve ITL performance  by @tdoublep; [Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan; [Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111",
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "3175",
+          "3256",
+          "3279",
+          "3621",
+          "3171",
+          "3440"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)",
+        "what_changed": "[ROCM] Fix blockReduceSum to use correct warp counts for ROCm and CUDA by @dllehr-amd; [ROCm] Fix warp and lane calculation in blockReduceSum by @kliuae; CI: Add ROCm Docker Build by @simon-mo; [Bugfix] Fix ROCm support in CMakeLists.txt by @jamestwhedbee; [ROCm][Bugfix] Fixed several bugs related to rccl path and attention selector logic by @hongxiayang",
+        "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
+        "prs": [
+          "3262",
+          "3321",
+          "2886",
+          "3534",
+          "3699",
+          "3162"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 6,
+        "theme": "Model Runner V2 (MRV2) Consolidation & Breakable CUDA Graphs",
+        "what_changed": "[ROCm] enable cupy in order to enable  cudagraph mode for AMD GPUs by @hongxiayang; [Core] Support multi-node inference(eager and cuda graph) by @esmeetu",
+        "why_it_matters": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance",
+        "prs": [
+          "3123",
+          "3686"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 7,
+        "theme": "Hardware Enhancements",
+        "what_changed": "Improved Neuron support for AWS Inferentia.; CMake based build system for extensibility.",
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "who_benefits": [
+      {
+        "capability": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+        "models_workloads": "Interactive coding assistants, agent loops, and low-batch-size real-time inference",
+        "gpus_infra": "NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners",
+        "bill_impact": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth"
+      },
+      {
+        "capability": "Production features Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "models_workloads": "Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters",
+        "gpus_infra": "Standard single-node and multi-node GPU inference pools",
+        "bill_impact": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet"
+      },
+      {
+        "capability": "What's Changed Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      },
+      {
+        "capability": "Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)",
+        "models_workloads": "Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds",
+        "gpus_infra": "AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU",
+        "bill_impact": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code"
+      },
+      {
+        "capability": "Model Runner V2 (MRV2) Consolidation & Breakable CUDA Graphs",
+        "models_workloads": "All production GPU deployments, latency-sensitive streaming apps, and custom logits processors",
+        "gpus_infra": "All CUDA and ROCm GPU fleets running vLLM's V2 execution engine",
+        "bill_impact": "Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance"
+      },
+      {
+        "capability": "Hardware Enhancements",
+        "models_workloads": "General platform workloads and API consumers",
+        "gpus_infra": "Standard cluster nodes and runtime components",
+        "bill_impact": "Operational reliability and lower maintenance toil"
+      }
+    ],
+    "jargon_glossary": [
+      {
+        "term": "Model Runner V2 (MRV2)",
+        "domain": "vllm",
+        "meaning": "vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.",
+        "why_it_matters": "Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity."
+      },
+      {
+        "term": "Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)",
+        "domain": "vllm",
+        "meaning": "Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.",
+        "why_it_matters": "Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality."
+      },
+      {
+        "term": "NVFP4 / MXFP4 / FP8 Quantization",
+        "domain": "vllm",
+        "meaning": "4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.",
+        "why_it_matters": "Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks."
+      },
+      {
+        "term": "MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)",
+        "domain": "vllm",
+        "meaning": "Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs.",
+        "why_it_matters": "Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU."
+      },
+      {
+        "term": "Piecewise & Breakable CUDA Graphs",
+        "domain": "vllm",
+        "meaning": "Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token.",
+        "why_it_matters": "Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups."
+      },
+      {
+        "term": "TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)",
+        "domain": "vllm",
+        "meaning": "The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream.",
+        "why_it_matters": "Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users."
+      },
+      {
+        "term": "Tiered KV Offloading & Prefix Caching",
+        "domain": "vllm",
+        "meaning": "Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts.",
+        "why_it_matters": "Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes."
+      }
+    ],
+    "should_i_upgrade": [
+      {
+        "category": "Production features",
+        "text": "Replaced cupy dependency due to its bugs.",
+        "prs": [],
+        "_score": 9.0
+      },
+      {
+        "category": "What's Changed",
+        "text": "[Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111 (#3171)",
+        "prs": [
+          "3171"
+        ],
+        "_score": 5.3
+      },
+      {
+        "category": "What's Changed",
+        "text": "Removed Extraneous Print Message From OAI Server by @robertgshaw2-neuralmagic (#3440)",
+        "prs": [
+          "3440"
+        ],
+        "_score": 5.3
+      },
+      {
+        "category": "What's Changed",
+        "text": "Replace `lstrip()` with `removeprefix()` to fix Ruff linter warning by @ronensc (#2958)",
+        "prs": [
+          "2958"
+        ],
+        "_score": 5.3
+      }
+    ],
+    "wheres_the_proof": [
+      {
+        "category": "What's Changed",
+        "text": "[Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048 (#3256)",
+        "prs": [
+          "3256"
+        ],
+        "keps": []
+      },
+      {
+        "category": "What's Changed",
+        "text": "Dynamic scheduler delay to improve ITL performance  by @tdoublep (#3279)",
+        "prs": [
+          "3279"
+        ],
+        "keps": []
+      },
+      {
+        "category": "What's Changed",
+        "text": "enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou (#3175)",
+        "prs": [
+          "3175"
+        ],
+        "_score": 5.8
+      },
+      {
+        "category": "What's Changed",
+        "text": "[Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048 (#3256)",
+        "prs": [
+          "3256"
+        ],
+        "_score": 5.8
+      },
+      {
+        "category": "What's Changed",
+        "text": "[Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan (#3621)",
+        "prs": [
+          "3621"
+        ],
+        "_score": 5.8
+      }
+    ],
+    "lwkd_patch_pulse": [
+      "`2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu",
+      "`2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98",
+      "`2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill",
+      "`2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic",
+      "`2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi",
+      "`2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill",
+      "`2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz",
+      "`2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon"
+    ]
+  },
+  "cited_prs": [
+    "3236",
+    "3538",
+    "3103",
+    "2762",
+    "3703",
+    "3433",
+    "3346",
+    "3660",
+    "3610",
+    "3183",
+    "3123",
+    "3262",
+    "3321",
+    "2886",
+    "3534",
+    "3699",
+    "3042",
+    "3175",
+    "3256",
+    "3279",
+    "3621",
+    "3171",
+    "3440",
+    "2958",
+    "3461",
+    "3551",
+    "3625",
+    "3631",
+    "1804",
+    "3263",
+    "1556",
+    "3347",
+    "3578",
+    "3599",
+    "3277",
+    "2852",
+    "3109",
+    "3104",
+    "3161",
+    "3158",
+    "3162",
+    "2777",
+    "2978",
+    "3176",
+    "3065",
+    "3015",
+    "2992",
+    "3166",
+    "3207",
+    "3108",
+    "3224",
+    "3242",
+    "3200",
+    "3181",
+    "3005",
+    "3120",
+    "3239",
+    "3260",
+    "3177",
+    "3252",
+    "3275",
+    "3269",
+    "3241",
+    "3286",
+    "3243",
+    "3301",
+    "3298",
+    "3305",
+    "3299",
+    "3191",
+    "3153",
+    "3336",
+    "3337",
+    "3319",
+    "3031",
+    "3259",
+    "3350",
+    "3095",
+    "3388",
+    "3371",
+    "3383",
+    "3393",
+    "3389",
+    "3396",
+    "3410",
+    "3412",
+    "3373",
+    "3414",
+    "3376",
+    "3419",
+    "3420",
+    "3418",
+    "3408",
+    "3344",
+    "3430",
+    "3220",
+    "3438",
+    "3436",
+    "3421",
+    "2879",
+    "3413",
+    "3246",
+    "3340",
+    "3444",
+    "3211",
+    "2671",
+    "3452",
+    "3445",
+    "3470",
+    "3437",
+    "3473",
+    "3478",
+    "2830",
+    "3475",
+    "3479",
+    "3474",
+    "3459",
+    "3288",
+    "3487",
+    "3429",
+    "3505",
+    "3507",
+    "3506",
+    "3508",
+    "3357",
+    "3511",
+    "3527",
+    "3481",
+    "3186",
+    "3233",
+    "3537",
+    "3431",
+    "3539",
+    "3500",
+    "3553",
+    "3554",
+    "3471",
+    "2760",
+    "3469",
+    "3591",
+    "3592",
+    "3590",
+    "3597",
+    "3595",
+    "3600",
+    "3602",
+    "3604",
+    "3569",
+    "3462",
+    "3608",
+    "3495",
+    "3516",
+    "3124",
+    "3450",
+    "3622",
+    "3623",
+    "2976",
+    "3382",
+    "3641",
+    "3645",
+    "3636",
+    "3649",
+    "3652",
+    "3653",
+    "3661",
+    "3669",
+    "3671",
+    "3675",
+    "3679",
+    "3492",
+    "3692",
+    "3695",
+    "3693",
+    "3638",
+    "3686",
+    "3700",
+    "3701",
+    "3702",
+    "3628",
+    "3705",
+    "3708",
+    "3716",
+    "3711",
+    "3704",
+    "3685",
+    "3731",
+    "3727",
+    "3712",
+    "3735",
+    "3738",
+    "3741",
+    "3698",
+    "3739"
+  ],
+  "cited_keps": [],
+  "cited_identifiers": [],
+  "markdown": "# What's New in VLLM v0.4.0: The Adoption Decision Guide\n\n> **Positioning**: *Translating VLLM v0.4.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*\n\n**Release Snapshot**: `202` upstream changes analyzed | `8` capability themes | `4` upgrade/deprecation notices | `5` quantified performance proofs\n\n---\n\n## 1. What's the Big Deal?\n\nInstead of reading hundreds of isolated PR descriptions, here are the most consequential architectural shifts in this release and why they matter operationally:\n\n1. **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** ([#3236](https://github.com/vllm-project/vllm/pull/3236), [#3538](https://github.com/vllm-project/vllm/pull/3538), [#3103](https://github.com/vllm-project/vllm/pull/3103))\n   - **What changed**: Progress in chunked prefill scheduler (#3236, #3538), and speculative decoding (#3103).; [Speculative decoding 3/9] Worker which speculates, scores, and applies rejection sampling by @cadedaniel\n   - **Why it matters**: Directly benefits **Interactive coding assistants, agent loops, and low-batch-size real-time inference** on **NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners** \u2014 **Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth**.\n2. **Production features Enhancements** ([#2762](https://github.com/vllm-project/vllm/pull/2762), [#3703](https://github.com/vllm-project/vllm/pull/3703))\n   - **What changed**: Automatic prefix caching (#2762, #3703) supporting long system prompt to be automatically cached across requests. Use the flag `--enable-prefix-caching` to turn it on.; Support `json_object` in OpenAI server for arbitrary JSON, `--use-delay` flag to improve time to first token across many requests, and `min_tokens` to EOS suppression.; Custom all reduce kernel has been re-enabled after more robustness fixes.; Replaced cupy dependency due to its bugs.\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n3. **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** ([#3433](https://github.com/vllm-project/vllm/pull/3433), [#3346](https://github.com/vllm-project/vllm/pull/3346), [#3660](https://github.com/vllm-project/vllm/pull/3660), [#3610](https://github.com/vllm-project/vllm/pull/3610))\n   - **What changed**: New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183).; Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804) by @jacobthebanana; Add GPTQ support for Gemma by @TechxGenus; Feature add lora support for Qwen2 by @whyiug; Enhance lora tests with more layer and rank variations by @tterrysun\n   - **Why it matters**: Directly benefits **Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters** on **Standard single-node and multi-node GPU inference pools** \u2014 **Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet**.\n4. **What's Changed Enhancements** ([#3175](https://github.com/vllm-project/vllm/pull/3175), [#3256](https://github.com/vllm-project/vllm/pull/3256), [#3279](https://github.com/vllm-project/vllm/pull/3279), [#3621](https://github.com/vllm-project/vllm/pull/3621))\n   - **What changed**: enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou; [Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048; Dynamic scheduler delay to improve ITL performance  by @tdoublep; [Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan; [Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n5. **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** ([#3262](https://github.com/vllm-project/vllm/pull/3262), [#3321](https://github.com/vllm-project/vllm/pull/3321), [#2886](https://github.com/vllm-project/vllm/pull/2886), [#3534](https://github.com/vllm-project/vllm/pull/3534))\n   - **What changed**: [ROCM] Fix blockReduceSum to use correct warp counts for ROCm and CUDA by @dllehr-amd; [ROCm] Fix warp and lane calculation in blockReduceSum by @kliuae; CI: Add ROCm Docker Build by @simon-mo; [Bugfix] Fix ROCm support in CMakeLists.txt by @jamestwhedbee; [ROCm][Bugfix] Fixed several bugs related to rccl path and attention selector logic by @hongxiayang\n   - **Why it matters**: Directly benefits **Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds** on **AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU** \u2014 **Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code**.\n6. **Model Runner V2 (MRV2) Consolidation & Breakable CUDA Graphs** ([#3123](https://github.com/vllm-project/vllm/pull/3123), [#3686](https://github.com/vllm-project/vllm/pull/3686))\n   - **What changed**: [ROCm] enable cupy in order to enable  cudagraph mode for AMD GPUs by @hongxiayang; [Core] Support multi-node inference(eager and cuda graph) by @esmeetu\n   - **Why it matters**: Directly benefits **All production GPU deployments, latency-sensitive streaming apps, and custom logits processors** on **All CUDA and ROCm GPU fleets running vLLM's V2 execution engine** \u2014 **Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance**.\n7. **Hardware Enhancements** (Upstream release notes)\n   - **What changed**: Improved Neuron support for AWS Inferentia.; CMake based build system for extensibility.\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n\n### Last Week / Patch Pulse (Last Week in vLLM Style)\n* `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n* `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n* `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n* `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n* `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n* `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n* `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n* `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n---\n\n## 2. Who Benefits? (Models, GPUs, Workloads & Your Bill)\n\n| Capability Area | Models / Workloads Served | GPUs / Infrastructure Owned | Impact on Your Bill & SLAs |\n|---|---|---|---|\n| **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** | Interactive coding assistants, agent loops, and low-batch-size real-time inference | NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners | Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth |\n| **Production features Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **What's Changed Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** | Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds | AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU | Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code |\n| **Model Runner V2 (MRV2) Consolidation & Breakable CUDA Graphs** | All production GPU deployments, latency-sensitive streaming apps, and custom logits processors | All CUDA and ROCm GPU fleets running vLLM's V2 execution engine | Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance |\n| **Hardware Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n\n---\n\n## 3. What Does the Jargon Mean?\n\nPlain-English translations for the systems and inference terms that show up in this release:\n\n- **Model Runner V2 (MRV2)**: vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.  \n  *Bottom line for operators*: Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity.\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.  \n  *Bottom line for operators*: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.  \n  *Bottom line for operators*: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)**: Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs.  \n  *Bottom line for operators*: Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU.\n- **Piecewise & Breakable CUDA Graphs**: Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token.  \n  *Bottom line for operators*: Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups.\n- **TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)**: The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream.  \n  *Bottom line for operators*: Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users.\n- **Tiered KV Offloading & Prefix Caching**: Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts.  \n  *Bottom line for operators*: Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes.\n\n---\n\n## 4. Should I Upgrade?\n\n**Executive Verdict**: **UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first**\n\n### Pre-Upgrade Checklist (Breaking Changes, Removals & Flag Shifts)\n- **[Production features]** Replaced cupy dependency due to its bugs. (Upstream release notes)\n- **[What's Changed]** [Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111 ([#3171](https://github.com/vllm-project/vllm/pull/3171))\n- **[What's Changed]** Removed Extraneous Print Message From OAI Server by @robertgshaw2-neuralmagic ([#3440](https://github.com/vllm-project/vllm/pull/3440))\n- **[What's Changed]** Replace `lstrip()` with `removeprefix()` to fix Ruff linter warning by @ronensc ([#2958](https://github.com/vllm-project/vllm/pull/2958))\n\n---\n\n## 5. Where's the Proof?\n\n### Quantified Benchmarks & Primary Proofs\n- **What's Changed** ([#3256](https://github.com/vllm-project/vllm/pull/3256)): [Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048\n- **What's Changed** ([#3279](https://github.com/vllm-project/vllm/pull/3279)): Dynamic scheduler delay to improve ITL performance  by @tdoublep\n- **What's Changed** ([#3175](https://github.com/vllm-project/vllm/pull/3175)): enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou\n- **What's Changed** ([#3256](https://github.com/vllm-project/vllm/pull/3256)): [Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048\n- **What's Changed** ([#3621](https://github.com/vllm-project/vllm/pull/3621)): [Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Production features]** Progress in chunked prefill scheduler (#3236, #3538), and speculative decoding (#3103). ([#3236](https://github.com/vllm-project/vllm/pull/3236), [#3538](https://github.com/vllm-project/vllm/pull/3538))\n- **[Production features]** Automatic prefix caching (#2762, #3703) supporting long system prompt to be automatically cached across requests. Use the flag `--enable-prefix-caching` to turn it on. ([#2762](https://github.com/vllm-project/vllm/pull/2762), [#3703](https://github.com/vllm-project/vllm/pull/3703))\n- **[Production features]** Support `json_object` in OpenAI server for arbitrary JSON, `--use-delay` flag to improve time to first token across many requests, and `min_tokens` to EOS suppression. (Upstream release notes)\n- **[Production features]** Custom all reduce kernel has been re-enabled after more robustness fixes. (Upstream release notes)\n- **[Production features]** Replaced cupy dependency due to its bugs. (Upstream release notes)\n- **[Models]** New models: Command+R(#3433), Qwen2 MoE(#3346), DBRX(#3660), XVerse (#3610), Jais (#3183). ([#3433](https://github.com/vllm-project/vllm/pull/3433), [#3346](https://github.com/vllm-project/vllm/pull/3346))\n- **[What's Changed]** [ROCm] enable cupy in order to enable  cudagraph mode for AMD GPUs by @hongxiayang ([#3123](https://github.com/vllm-project/vllm/pull/3123))\n- **[What's Changed]** [Speculative decoding 3/9] Worker which speculates, scores, and applies rejection sampling by @cadedaniel ([#3103](https://github.com/vllm-project/vllm/pull/3103))\n- **[What's Changed]** [ROCM] Fix blockReduceSum to use correct warp counts for ROCm and CUDA by @dllehr-amd ([#3262](https://github.com/vllm-project/vllm/pull/3262))\n- **[What's Changed]** [ROCm] Fix warp and lane calculation in blockReduceSum by @kliuae ([#3321](https://github.com/vllm-project/vllm/pull/3321))\n- **[What's Changed]** CI: Add ROCm Docker Build by @simon-mo ([#2886](https://github.com/vllm-project/vllm/pull/2886))\n- **[What's Changed]** [Bugfix] Fix ROCm support in CMakeLists.txt by @jamestwhedbee ([#3534](https://github.com/vllm-project/vllm/pull/3534))\n- **[What's Changed]** [ROCm][Bugfix] Fixed several bugs related to rccl path and attention selector logic by @hongxiayang ([#3699](https://github.com/vllm-project/vllm/pull/3699))\n- **[Models]** New vision language model: LLaVA ([#3042](https://github.com/vllm-project/vllm/pull/3042))\n- **[What's Changed]** enable --gpu-memory-utilization in benchmark_throughput.py by @AllenDou ([#3175](https://github.com/vllm-project/vllm/pull/3175))\n- **[What's Changed]** [Minor Fix] Use cupy-cuda11x in CUDA 11.8 build by @chenxu2048 ([#3256](https://github.com/vllm-project/vllm/pull/3256))\n- **[What's Changed]** Dynamic scheduler delay to improve ITL performance  by @tdoublep ([#3279](https://github.com/vllm-project/vllm/pull/3279))\n- **[What's Changed]** [Misc] add the \"download-dir\" option to the latency/throughput benchmarks by @AmadeusChan ([#3621](https://github.com/vllm-project/vllm/pull/3621))\n- **[What's Changed]** [Minor Fix] Remove unused code in benchmark_prefix_caching.py by @gty111 ([#3171](https://github.com/vllm-project/vllm/pull/3171))\n- **[What's Changed]** Removed Extraneous Print Message From OAI Server by @robertgshaw2-neuralmagic ([#3440](https://github.com/vllm-project/vllm/pull/3440))\n- **[What's Changed]** Replace `lstrip()` with `removeprefix()` to fix Ruff linter warning by @ronensc ([#2958](https://github.com/vllm-project/vllm/pull/2958))\n- **[What's Changed]** [Misc] Remove cache stream and cache events by @WoosukKwon ([#3461](https://github.com/vllm-project/vllm/pull/3461))\n- **[What's Changed]** [Misc] Bump up transformers to v4.39.0 & Remove StarCoder2Config by @WoosukKwon ([#3551](https://github.com/vllm-project/vllm/pull/3551))\n- **[What's Changed]** [Core] remove cupy dependency by @youkaichao ([#3625](https://github.com/vllm-project/vllm/pull/3625))\n- **[What's Changed]** [Test] Make model tests run again and remove --forked from pytest by @rkooo567 ([#3631](https://github.com/vllm-project/vllm/pull/3631))\n- **[Hardware]** Improved Neuron support for AWS Inferentia. (Upstream release notes)\n- **[Hardware]** CMake based build system for extensibility. (Upstream release notes)\n- **[What's Changed]** Possible fix for conflict between Automated Prefix Caching (#2762) and multi-LoRA support (#1804) by @jacobthebanana ([#2762](https://github.com/vllm-project/vllm/pull/2762), [#1804](https://github.com/vllm-project/vllm/pull/1804))\n- **[What's Changed]** Fixes #1556 double free by @br3no ([#1556](https://github.com/vllm-project/vllm/pull/1556), [#3347](https://github.com/vllm-project/vllm/pull/3347))\n- **[What's Changed]** [Bugfix] Revert \"[Bugfix] use SoftLockFile instead of LockFile (#3578)\" by @WoosukKwon ([#3578](https://github.com/vllm-project/vllm/pull/3578), [#3599](https://github.com/vllm-project/vllm/pull/3599))\n- **[Ecosystem]** Extensive serving benchmark refactoring ([#3277](https://github.com/vllm-project/vllm/pull/3277))\n- **[Ecosystem]** Usage statistics collection ([#2852](https://github.com/vllm-project/vllm/pull/2852))\n- **[What's Changed]** allow user chose log level by --log-level instead of fixed 'info'. by @AllenDou ([#3109](https://github.com/vllm-project/vllm/pull/3109))\n- **[What's Changed]** Reorder kv dtype check to avoid nvcc not found error on AMD platform by @cloudhan ([#3104](https://github.com/vllm-project/vllm/pull/3104))\n- **[What's Changed]** Add Automatic Prefix Caching by @SageMoore ([#2762](https://github.com/vllm-project/vllm/pull/2762))\n- **[What's Changed]** Add vLLM version info to logs and openai API server by @jasonacox ([#3161](https://github.com/vllm-project/vllm/pull/3161))\n- **[What's Changed]** [FIX] Fix styles in automatic prefix caching & add a automatic prefix caching benchmark by @zhuohan123 ([#3158](https://github.com/vllm-project/vllm/pull/3158))\n- **[What's Changed]** Make it easy to profile workers with nsight by @pcmoritz ([#3162](https://github.com/vllm-project/vllm/pull/3162))\n- **[What's Changed]** [DOC] add setup document to support neuron backend by @liangfu ([#2777](https://github.com/vllm-project/vllm/pull/2777))\n- **[What's Changed]** Add document for vllm paged attention kernel. by @pian13131 ([#2978](https://github.com/vllm-project/vllm/pull/2978))\n- **[What's Changed]** [Minor fix] The domain dns.google may cause a socket.gaierror exception by @ttbachyinsda ([#3176](https://github.com/vllm-project/vllm/pull/3176))\n- **[What's Changed]** Push logprob generation to LLMEngine by @Yard1 ([#3065](https://github.com/vllm-project/vllm/pull/3065))\n- **[What's Changed]** Add health check, make async Engine more robust by @Yard1 ([#3015](https://github.com/vllm-project/vllm/pull/3015))\n- **[What's Changed]** Fix the openai benchmarking requests to work with latest OpenAI apis by @wangchen615 ([#2992](https://github.com/vllm-project/vllm/pull/2992))\n- **[What's Changed]** Store `eos_token_id` in `Sequence` for easy access by @njhill ([#3166](https://github.com/vllm-project/vllm/pull/3166))\n- **[What's Changed]** [Fix] Avoid pickling entire LLMEngine for Ray workers by @njhill ([#3207](https://github.com/vllm-project/vllm/pull/3207))\n- **[What's Changed]** [Tests] Add block manager and scheduler tests by @rkooo567 ([#3108](https://github.com/vllm-project/vllm/pull/3108))\n- **[What's Changed]** [Testing] Fix core tests by @cadedaniel ([#3224](https://github.com/vllm-project/vllm/pull/3224))\n- **[What's Changed]** A simple addition of `dynamic_ncols=True` by @chujiezheng ([#3242](https://github.com/vllm-project/vllm/pull/3242))\n- **[What's Changed]** Add GPTQ support for Gemma by @TechxGenus ([#3200](https://github.com/vllm-project/vllm/pull/3200))\n- **[What's Changed]** Update requirements-dev.txt to include package for benchmarking scripts. by @wangchen615 ([#3181](https://github.com/vllm-project/vllm/pull/3181))\n- **[What's Changed]** Separate attention backends by @WoosukKwon ([#3005](https://github.com/vllm-project/vllm/pull/3005))\n- **[What's Changed]** Measure model memory usage by @mgoin ([#3120](https://github.com/vllm-project/vllm/pull/3120))\n- **[What's Changed]** Fix auto prefix bug by @ElizaWszola ([#3239](https://github.com/vllm-project/vllm/pull/3239))\n- **[What's Changed]** Connect engine healthcheck to openai server by @njhill ([#3260](https://github.com/vllm-project/vllm/pull/3260))\n- **[What's Changed]** Feature add lora support for Qwen2 by @whyiug ([#3177](https://github.com/vllm-project/vllm/pull/3177))\n- **[What's Changed]** [Minor Fix] Fix comments in benchmark_serving by @gty111 ([#3252](https://github.com/vllm-project/vllm/pull/3252))\n- **[What's Changed]** [Docs] Fix Unmocked Imports by @ywang96 ([#3275](https://github.com/vllm-project/vllm/pull/3275))\n- **[What's Changed]** [FIX] Make `flash_attn` optional by @WoosukKwon ([#3269](https://github.com/vllm-project/vllm/pull/3269))\n- **[What's Changed]** Move model filelocks from `/tmp/` to `~/.cache/vllm/locks/` dir by @mgoin ([#3241](https://github.com/vllm-project/vllm/pull/3241))\n- **[What's Changed]** [FIX] Fix prefix test error on main by @zhuohan123 ([#3286](https://github.com/vllm-project/vllm/pull/3286))\n- **[What's Changed]** Enhance lora tests with more layer and rank variations by @tterrysun ([#3243](https://github.com/vllm-project/vllm/pull/3243))\n- **[What's Changed]** [BugFix] Fix get tokenizer when using ray  by @esmeetu ([#3301](https://github.com/vllm-project/vllm/pull/3301))\n- **[What's Changed]** [Fix] Fix best_of behavior when n=1 by @njhill ([#3298](https://github.com/vllm-project/vllm/pull/3298))\n- **[What's Changed]** Re-enable the 80 char line width limit by @zhuohan123 ([#3305](https://github.com/vllm-project/vllm/pull/3305))\n- **[What's Changed]** [docs] Add LoRA support information for models by @pcmoritz ([#3299](https://github.com/vllm-project/vllm/pull/3299))\n- **[What's Changed]** Add distributed model executor abstraction by @zhuohan123 ([#3191](https://github.com/vllm-project/vllm/pull/3191))\n- **[What's Changed]** Support Mistral Model Inference with transformers-neuronx by @DAIZHENWEI ([#3153](https://github.com/vllm-project/vllm/pull/3153))\n- **[What's Changed]** docs: Add BentoML deployment doc by @Sherlock113 ([#3336](https://github.com/vllm-project/vllm/pull/3336))\n- **[What's Changed]** Add kernel for GeGLU with approximate GELU by @WoosukKwon ([#3337](https://github.com/vllm-project/vllm/pull/3337))\n- **[What's Changed]** [Fix] fix quantization arg when using marlin by @DreamTeamWangbowen ([#3319](https://github.com/vllm-project/vllm/pull/3319))\n- **[What's Changed]** add hf_transfer to requirements.txt by @RonanKMcGovern ([#3031](https://github.com/vllm-project/vllm/pull/3031))\n- **[What's Changed]** fix bias in if, ambiguous by @hliuca ([#3259](https://github.com/vllm-project/vllm/pull/3259))\n- **[What's Changed]** Add missing kernel for CodeLlama-34B on A/H100 (no tensor parallelism) when using Multi-LoRA. by @orsharir ([#3350](https://github.com/vllm-project/vllm/pull/3350))\n- **[What's Changed]** Add batched RoPE kernel by @tterrysun ([#3095](https://github.com/vllm-project/vllm/pull/3095))\n- **[What's Changed]** Fix lint by @Yard1 ([#3388](https://github.com/vllm-project/vllm/pull/3388))\n- **[What's Changed]** [FIX] Simpler fix for async engine running on ray by @zhuohan123 ([#3371](https://github.com/vllm-project/vllm/pull/3371))\n- **[What's Changed]** [Hotfix] [Debug] test_openai_server.py::test_guided_regex_completion by @simon-mo ([#3383](https://github.com/vllm-project/vllm/pull/3383))\n- **[What's Changed]** allow user to chose which vllm's merics to display in grafana by @AllenDou ([#3393](https://github.com/vllm-project/vllm/pull/3393))\n- **[What's Changed]** [Kernel] change benchmark script so that result can be directly used; tune moe kernel in A100/H100 with tp=2,4,8 by @youkaichao ([#3389](https://github.com/vllm-project/vllm/pull/3389))\n- **[What's Changed]** Install `flash_attn` in Docker image by @tdoublep ([#3396](https://github.com/vllm-project/vllm/pull/3396))\n- **[What's Changed]** Add args for mTLS support by @declark1 ([#3410](https://github.com/vllm-project/vllm/pull/3410))\n- **[What's Changed]** [issue templates] add some issue templates by @youkaichao ([#3412](https://github.com/vllm-project/vllm/pull/3412))\n- **[What's Changed]** Fix assertion failure in Qwen 1.5 with prefix caching enabled by @chenxu2048 ([#3373](https://github.com/vllm-project/vllm/pull/3373))\n- **[What's Changed]** fix marlin config repr by @qeternity ([#3414](https://github.com/vllm-project/vllm/pull/3414))\n- **[What's Changed]** Feature: dynamic shared mem moe_align_block_size_kernel by @akhoroshev ([#3376](https://github.com/vllm-project/vllm/pull/3376))\n- **[What's Changed]** [Misc] add HOST_IP env var by @youkaichao ([#3419](https://github.com/vllm-project/vllm/pull/3419))\n- **[What's Changed]** Add chat templates for Falcon by @Dinghow ([#3420](https://github.com/vllm-project/vllm/pull/3420))\n- **[What's Changed]** Add chat templates for ChatGLM by @Dinghow ([#3418](https://github.com/vllm-project/vllm/pull/3418))\n- **[What's Changed]** Fix `dist.broadcast` stall without group argument by @GindaChen ([#3408](https://github.com/vllm-project/vllm/pull/3408))\n- **[What's Changed]** Fix tie_word_embeddings for Qwen2. by @fyabc ([#3344](https://github.com/vllm-project/vllm/pull/3344))\n- **[What's Changed]** [Fix] Add args for mTLS support by @declark1 ([#3430](https://github.com/vllm-project/vllm/pull/3430))\n- **[What's Changed]** Fixes the misuse/mixuse of time.time()/time.monotonic() by @sighingnow ([#3220](https://github.com/vllm-project/vllm/pull/3220))\n- **[What's Changed]** [Misc] add error message in non linux platform by @youkaichao ([#3438](https://github.com/vllm-project/vllm/pull/3438))\n- **[What's Changed]** Fix issue templates by @hmellor ([#3436](https://github.com/vllm-project/vllm/pull/3436))\n- **[What's Changed]** fix document error for value and v_vec illustration by @laneeeee ([#3421](https://github.com/vllm-project/vllm/pull/3421))\n- **[What's Changed]** Asynchronous tokenization by @Yard1 ([#2879](https://github.com/vllm-project/vllm/pull/2879))\n- **[What's Changed]** [Misc] PR templates by @youkaichao ([#3413](https://github.com/vllm-project/vllm/pull/3413))\n- **[What's Changed]** Fixes the incorrect argument in the prefix-prefill test cases by @sighingnow ([#3246](https://github.com/vllm-project/vllm/pull/3246))\n- **[What's Changed]** Fix Baichuan chat template by @Dinghow ([#3340](https://github.com/vllm-project/vllm/pull/3340))\n- **[What's Changed]** [Misc] fix line length for entire codebase by @simon-mo ([#3444](https://github.com/vllm-project/vllm/pull/3444))\n- **[What's Changed]** Support arbitrary json_object in OpenAI and Context Free Grammar by @simon-mo ([#3211](https://github.com/vllm-project/vllm/pull/3211))\n- **[What's Changed]** Fix setup.py neuron-ls issue by @simon-mo ([#2671](https://github.com/vllm-project/vllm/pull/2671))\n- **[What's Changed]** [Misc] Define from_dict and to_dict in InputMetadata by @WoosukKwon ([#3452](https://github.com/vllm-project/vllm/pull/3452))\n- **[What's Changed]** [CI] Shard tests for LoRA and Kernels to speed up by @simon-mo ([#3445](https://github.com/vllm-project/vllm/pull/3445))\n- **[What's Changed]** [Bugfix] Make moe_align_block_size AMD-compatible by @WoosukKwon ([#3470](https://github.com/vllm-project/vllm/pull/3470))\n- **[What's Changed]** [Testing] Add test_config.py to CI by @cadedaniel ([#3437](https://github.com/vllm-project/vllm/pull/3437))\n- **[What's Changed]** [CI/Build] Fix Bad Import In Test by @robertgshaw2-neuralmagic ([#3473](https://github.com/vllm-project/vllm/pull/3473))\n- **[What's Changed]** [Misc] Fix PR Template by @zhuohan123 ([#3478](https://github.com/vllm-project/vllm/pull/3478))\n- **[What's Changed]** Cmake based build system by @bnellnm ([#2830](https://github.com/vllm-project/vllm/pull/2830))\n- **[What's Changed]** [Core] Zero-copy asdict for InputMetadata by @Yard1 ([#3475](https://github.com/vllm-project/vllm/pull/3475))\n- **[What's Changed]** [Misc] Update README for the Third vLLM Meetup by @zhuohan123 ([#3479](https://github.com/vllm-project/vllm/pull/3479))\n- **[What's Changed]** [Core] Cache some utils by @Yard1 ([#3474](https://github.com/vllm-project/vllm/pull/3474))\n- **[What's Changed]** [Core] print error before deadlock by @youkaichao ([#3459](https://github.com/vllm-project/vllm/pull/3459))\n- **[What's Changed]** [Doc] Add docs about OpenAI compatible server by @simon-mo ([#3288](https://github.com/vllm-project/vllm/pull/3288))\n- **[What's Changed]** [BugFix] Avoid initializing CUDA too early by @njhill ([#3487](https://github.com/vllm-project/vllm/pull/3487))\n- **[What's Changed]** Update dockerfile with ModelScope support by @ifsheldon ([#3429](https://github.com/vllm-project/vllm/pull/3429))\n- **[What's Changed]** [Doc] minor fix to neuron-installation.rst by @jimburtoft ([#3505](https://github.com/vllm-project/vllm/pull/3505))\n- **[What's Changed]** Revert \"[Core] Cache some utils\" by @simon-mo ([#3507](https://github.com/vllm-project/vllm/pull/3507))\n- **[What's Changed]** [Doc] minor fix of spelling in amd-installation.rst by @jimburtoft ([#3506](https://github.com/vllm-project/vllm/pull/3506))\n- **[What's Changed]** Use lru_cache for some environment detection utils by @simon-mo ([#3508](https://github.com/vllm-project/vllm/pull/3508))\n- **[What's Changed]** [PREFIX CACHING FOLLOW UP] A bunch of fixes to block allocator performance when automatic prefix caching is disabled by @ElizaWszola ([#3357](https://github.com/vllm-project/vllm/pull/3357))\n- **[What's Changed]** [Core] Add generic typing to `LRUCache` by @njhill ([#3511](https://github.com/vllm-project/vllm/pull/3511))\n- **[What's Changed]** Abort when nvcc command is not found in the PATH by @AllenDou ([#3527](https://github.com/vllm-project/vllm/pull/3527))\n- **[What's Changed]** Check for _is_cuda() in compute_num_jobs by @bnellnm ([#3481](https://github.com/vllm-project/vllm/pull/3481))\n- **[What's Changed]** [1/n] Triton sampling kernel by @Yard1 ([#3186](https://github.com/vllm-project/vllm/pull/3186))\n- **[What's Changed]** [1/n][Chunked Prefill] Refactor input query shapes by @rkooo567 ([#3236](https://github.com/vllm-project/vllm/pull/3236))\n- **[What's Changed]** Migrate `logits` computation and gather to `model_runner` by @esmeetu ([#3233](https://github.com/vllm-project/vllm/pull/3233))\n- **[What's Changed]** [BugFix] Hot fix in setup.py for neuron build by @zhuohan123 ([#3537](https://github.com/vllm-project/vllm/pull/3537))\n- **[What's Changed]** [PREFIX CACHING FOLLOW UP] OrderedDict-based evictor by @ElizaWszola ([#3431](https://github.com/vllm-project/vllm/pull/3431))\n- **[What's Changed]** Fix 1D query issue from `_prune_hidden_states` by @rkooo567 ([#3539](https://github.com/vllm-project/vllm/pull/3539))\n- **[What's Changed]** [\ud83d\ude80 Ready to be merged] Added support for Jais models by @grandiose-pizza ([#3183](https://github.com/vllm-project/vllm/pull/3183))\n- **[What's Changed]** [Misc][Log] Add log for tokenizer length not equal to vocabulary size by @esmeetu ([#3500](https://github.com/vllm-project/vllm/pull/3500))\n- **[What's Changed]** [BugFix] gemma loading after quantization or LoRA. by @taeminlee ([#3553](https://github.com/vllm-project/vllm/pull/3553))\n- **[What's Changed]** [Bugfix][Model] Fix Qwen2 by @esmeetu ([#3554](https://github.com/vllm-project/vllm/pull/3554))\n- **[What's Changed]** [Hardware][Neuron] Refactor neuron support by @zhuohan123 ([#3471](https://github.com/vllm-project/vllm/pull/3471))\n- **[What's Changed]** Some fixes for custom allreduce kernels by @hanzhi713 ([#2760](https://github.com/vllm-project/vllm/pull/2760))\n- **[What's Changed]** [Core] Improve detokenization performance for prefill by @Yard1 ([#3469](https://github.com/vllm-project/vllm/pull/3469))\n- **[What's Changed]** [Bugfix] use SoftLockFile instead of LockFile by @kota-iizuka ([#3578](https://github.com/vllm-project/vllm/pull/3578))\n- **[What's Changed]** [Misc] Fix BLOOM copyright notice by @WoosukKwon ([#3591](https://github.com/vllm-project/vllm/pull/3591))\n- **[What's Changed]** [Misc] Bump transformers version by @ywang96 ([#3592](https://github.com/vllm-project/vllm/pull/3592))\n- **[What's Changed]** [BugFix] Fix Falcon tied embeddings by @WoosukKwon ([#3590](https://github.com/vllm-project/vllm/pull/3590))\n- **[What's Changed]** [BugFix] 1D query fix for MoE models by @njhill ([#3597](https://github.com/vllm-project/vllm/pull/3597))\n- **[What's Changed]** [CI] typo fix: is_hip --> is_hip() by @youkaichao ([#3595](https://github.com/vllm-project/vllm/pull/3595))\n- **[What's Changed]** [CI/Build] respect the common environment variable MAX_JOBS by @youkaichao ([#3600](https://github.com/vllm-project/vllm/pull/3600))\n- **[What's Changed]** [CI/Build] fix flaky test by @youkaichao ([#3602](https://github.com/vllm-project/vllm/pull/3602))\n- **[What's Changed]** [BugFix] minor fix: method typo in `rotary_embedding.py` file, get_device() -> device by @jikunshang ([#3604](https://github.com/vllm-project/vllm/pull/3604))\n- **[What's Changed]** [Model] Add starcoder2 awq support by @shaonianyr ([#3569](https://github.com/vllm-project/vllm/pull/3569))\n- **[What's Changed]** [Core] Refactor Attention Take 2 by @WoosukKwon ([#3462](https://github.com/vllm-project/vllm/pull/3462))\n- **[What's Changed]** [Bugfix] fix automatic prefix args and add log info by @gty111 ([#3608](https://github.com/vllm-project/vllm/pull/3608))\n- **[What's Changed]** [CI] Try introducing isort.  by @rkooo567 ([#3495](https://github.com/vllm-project/vllm/pull/3495))\n- **[What's Changed]** [Core] Adding token ranks along with logprobs by @SwapnilDreams100 ([#3516](https://github.com/vllm-project/vllm/pull/3516))\n- **[What's Changed]** feat: implement the min_tokens sampling parameter by @tjohnson31415 ([#3124](https://github.com/vllm-project/vllm/pull/3124))\n- **[What's Changed]** [Bugfix] API stream returning two stops by @dylanwhawk ([#3450](https://github.com/vllm-project/vllm/pull/3450))\n- **[What's Changed]** hotfix isort on logprobs ranks pr by @simon-mo ([#3622](https://github.com/vllm-project/vllm/pull/3622))\n- **[What's Changed]** [Feature] Add vision language model support. by @xwjiang2010 ([#3042](https://github.com/vllm-project/vllm/pull/3042))\n- **[What's Changed]** Optimize `_get_ranks` in Sampler by @Yard1 ([#3623](https://github.com/vllm-project/vllm/pull/3623))\n- **[What's Changed]** [Misc] Include matched stop string/token in responses by @njhill ([#2976](https://github.com/vllm-project/vllm/pull/2976))\n- **[What's Changed]** Enable more models to  inference based on LoRA by @jeejeelee ([#3382](https://github.com/vllm-project/vllm/pull/3382))\n- **[What's Changed]** [Bugfix] Fix ipv6 address parsing bug by @liiliiliil ([#3641](https://github.com/vllm-project/vllm/pull/3641))\n- **[What's Changed]** [BugFix] Fix ipv4 address parsing regression by @njhill ([#3645](https://github.com/vllm-project/vllm/pull/3645))\n- **[What's Changed]** [Kernel] support non-zero cuda devices  in punica kernels by @jeejeelee ([#3636](https://github.com/vllm-project/vllm/pull/3636))\n- **[What's Changed]** [Doc]add lora support by @jeejeelee ([#3649](https://github.com/vllm-project/vllm/pull/3649))\n- **[What's Changed]** [Misc] Minor fix in KVCache type by @WoosukKwon ([#3652](https://github.com/vllm-project/vllm/pull/3652))\n- **[What's Changed]** [Bugfix] More faithful implementation of Gemma by @WoosukKwon ([#3653](https://github.com/vllm-project/vllm/pull/3653))\n- **[What's Changed]** [Bugfix] [Hotfix] fix nccl library name by @youkaichao ([#3661](https://github.com/vllm-project/vllm/pull/3661))\n- **[What's Changed]** [Model] Add support for DBRX by @megha95 ([#3660](https://github.com/vllm-project/vllm/pull/3660))\n- **[What's Changed]** feat(benchmarks): Add Prefix Caching Benchmark to Serving Benchmark by @ywang96 ([#3277](https://github.com/vllm-project/vllm/pull/3277))\n- **[What's Changed]** Add support for Cohere's Command-R model by @zeppombal ([#3433](https://github.com/vllm-project/vllm/pull/3433))\n- **[What's Changed]** [Docs] Add Command-R to supported models by @WoosukKwon ([#3669](https://github.com/vllm-project/vllm/pull/3669))\n- **[What's Changed]** [Model] Fix and clean commandr by @esmeetu ([#3671](https://github.com/vllm-project/vllm/pull/3671))\n- **[What's Changed]** [Model] Add support for xverse  by @hxer7963 ([#3610](https://github.com/vllm-project/vllm/pull/3610))\n- **[What's Changed]** [CI/Build] update default number of jobs and nvcc threads to avoid overloading the system by @youkaichao ([#3675](https://github.com/vllm-project/vllm/pull/3675))\n- **[What's Changed]** [Kernel] Add Triton MoE kernel configs for DBRX + A100 by @WoosukKwon ([#3679](https://github.com/vllm-project/vllm/pull/3679))\n- **[What's Changed]** [Core] [Bugfix] Refactor block manager subsystem for better testability by @cadedaniel ([#3492](https://github.com/vllm-project/vllm/pull/3492))\n- **[What's Changed]** [Model] Add support for Qwen2MoeModel by @wenyujin333 ([#3346](https://github.com/vllm-project/vllm/pull/3346))\n- **[What's Changed]** [Kernel] DBRX Triton MoE kernel H100 by @ywang96 ([#3692](https://github.com/vllm-project/vllm/pull/3692))\n- **[What's Changed]** [2/N] Chunked prefill data update by @rkooo567 ([#3538](https://github.com/vllm-project/vllm/pull/3538))\n- **[What's Changed]** [Bugfix] Update neuron_executor.py to add optional vision_language_config. by @adamrb ([#3695](https://github.com/vllm-project/vllm/pull/3695))\n- **[What's Changed]** fix benchmark format reporting in buildkite by @simon-mo ([#3693](https://github.com/vllm-project/vllm/pull/3693))\n- **[What's Changed]** [CI] Add test case to run examples scripts by @simon-mo ([#3638](https://github.com/vllm-project/vllm/pull/3638))\n- **[What's Changed]** [Core] Support multi-node inference(eager and cuda graph) by @esmeetu ([#3686](https://github.com/vllm-project/vllm/pull/3686))\n- **[What's Changed]** [Kernel] Add MoE Triton kernel configs for A100 40GB by @WoosukKwon ([#3700](https://github.com/vllm-project/vllm/pull/3700))\n- **[What's Changed]** [Bugfix] Set enable_prefix_caching=True in prefix caching example by @WoosukKwon ([#3703](https://github.com/vllm-project/vllm/pull/3703))\n- **[What's Changed]** fix logging msg for block manager by @simon-mo ([#3701](https://github.com/vllm-project/vllm/pull/3701))\n- **[What's Changed]** [Core] fix del of communicator by @youkaichao ([#3702](https://github.com/vllm-project/vllm/pull/3702))\n- **[What's Changed]** [Benchmark] Change mii to use persistent deployment and support tensor parallel by @IKACE ([#3628](https://github.com/vllm-project/vllm/pull/3628))\n- **[What's Changed]** bump version to v0.4.0 by @simon-mo ([#3705](https://github.com/vllm-project/vllm/pull/3705))\n- **[What's Changed]** Revert \"bump version to v0.4.0\" by @youkaichao ([#3708](https://github.com/vllm-project/vllm/pull/3708))\n- **[What's Changed]** [Misc] Minor type annotation fix by @WoosukKwon ([#3716](https://github.com/vllm-project/vllm/pull/3716))\n- **[What's Changed]** [Core][Test] move local_rank to the last arg with default value to keep api compatible by @youkaichao ([#3711](https://github.com/vllm-project/vllm/pull/3711))\n- **[What's Changed]** add ccache to docker build image by @simon-mo ([#3704](https://github.com/vllm-project/vllm/pull/3704))\n- **[What's Changed]** Usage Stats Collection by @yhu422 ([#2852](https://github.com/vllm-project/vllm/pull/2852))\n- **[What's Changed]** [BugFix] Fix tokenizer out of vocab size by @esmeetu ([#3685](https://github.com/vllm-project/vllm/pull/3685))\n- **[What's Changed]** [BugFix][Frontend] Fix completion logprobs=0 error by @esmeetu ([#3731](https://github.com/vllm-project/vllm/pull/3731))",
+  "eval": {
+    "variant": "v4_adoption_engine",
+    "project": "vllm",
+    "version": "v0.4.0",
+    "headline_salience_recall": 1.0,
+    "upgrade_risk_recall": 1.0,
+    "factual_citation_precision": 1.0,
+    "five_part_completeness": 1.0,
+    "jargon_translation_score": 0.9187,
+    "cluster_diversity_score": 0.9817,
+    "composite_score": 0.99,
+    "matched_spotlights": "0/0",
+    "cited_prs_count": 193,
+    "cited_keps_count": 0
+  },
+  "published_date": "2024-03-30",
+  "total_raw_items": 202
+}

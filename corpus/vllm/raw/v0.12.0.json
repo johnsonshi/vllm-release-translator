@@ -1,0 +1,683 @@
+{
+  "project": "vllm",
+  "version": "v0.12.0",
+  "published_date": "2025-12-03",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.12.0",
+  "commits_count": 474,
+  "contributors_count": 213,
+  "total_raw_items": 83,
+  "counts_by_category": {
+    "Model Support": 4,
+    "Engine Core": 17,
+    "Hardware & Performance": 24,
+    "Quantization": 9,
+    "API & Frontend": 13,
+    "Dependencies": 4,
+    "V0 Deprecation & Breaking Changes": 12
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "**New model families**: PLaMo-3 (#28834), OpenCUA-7B (#29068), HunyuanOCR (#29327), Mistral Large 3 and Ministral 3 (#29757).",
+      "prs": [
+        "28834",
+        "29068",
+        "29327",
+        "29757"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Format support**: Gemma3 GGUF multimodal support (#27772).",
+      "prs": [
+        "27772"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Multimodal enhancements**: Qwen3 Omni audio-in-video support (#27721), Eagle3 multimodal support for Qwen3VL (#29594).",
+      "prs": [
+        "27721",
+        "29594"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Performance**: QwenVL cos/sin cache optimization (#28798).",
+      "prs": [
+        "28798"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**GPU Model Runner V2 (Experimental)** (#25266): Complete refactoring of model execution pipeline:",
+      "prs": [
+        "25266"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "No \"reordering\" or complex bookkeeping with persistent batch removal",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "GPU-persistent block tables for better scalability with `max_model_len` and `num_kv_groups`",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "Triton-native sampler: no -1 temperature hack, efficient per-request seeds, memory-efficient prompt logprobs",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "Simplified DP and CUDA graph implementations",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "Efficient structured outputs support",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Prefill Context Parallel (PCP) (Preparatory)** (#28718): Partitions the sequence dimension during prefill for improved long-sequence inference. Complements existing Decode Context Parallel (DCP). See RFC #25749 for details.",
+      "prs": [
+        "28718",
+        "25749"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**RLHF Support**: Pause and Resume Generation for Asynchronous RL Training (#28037).",
+      "prs": [
+        "28037"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**KV Cache Enhancements**: Cross-layer KV blocks support (#27743), KV cache residency metrics (#27793).",
+      "prs": [
+        "27743",
+        "27793"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Audio support**: Audio embeddings support in chat completions (#29059).",
+      "prs": [
+        "29059"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Speculative Decoding**:",
+      "prs": []
+    },
+    {
+      "category": "Engine Core",
+      "text": "Multi-step Eagle with CUDA graph (#29559)",
+      "prs": [
+        "29559"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "EAGLE DP>1 support (#26086)",
+      "prs": [
+        "26086"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "EAGLE3 heads without `use_aux_hidden_states` (#27688)",
+      "prs": [
+        "27688"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Eagle multimodal CUDA graphs with MRoPE (#28896)",
+      "prs": [
+        "28896"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Logprobs support with spec decode + async scheduling (#29223)",
+      "prs": [
+        "29223"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Configuration**: Flexible `inputs_embeds_size` separate from `hidden_size` (#29741), `--fully-sharded-loras` for fused_moe (#28761).",
+      "prs": [
+        "29741",
+        "28761"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA Performance**:",
+      "prs": []
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Batch invariant BMM optimization**: 18.1% throughput improvement, 10.7% TTFT improvement on DeepSeek-V3.1 (#29345)",
+      "prs": [
+        "29345"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Shared Experts Overlap with FlashInfer DeepGEMM**: 2.2% throughput improvement, 3.6% TTFT improvement at batch size 32 (#28879)",
+      "prs": [
+        "28879"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepGEMM N dim restriction reduced from 128 to 64 multiplier (#28687)",
+      "prs": [
+        "28687"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepEP low-latency with round-robin expert placement (#28449)",
+      "prs": [
+        "28449"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "NVFP4 MoE CUTLASS support for SM120 (#29242)",
+      "prs": [
+        "29242"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "H200 Fused MoE Config improvements (#28992)",
+      "prs": [
+        "28992"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**:",
+      "prs": []
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepSeek v3.2 and SparseMLA support (#26670)",
+      "prs": [
+        "26670"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "FP8 MLA decode support (#28032)",
+      "prs": [
+        "28032"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "AITER sampling ops integration (#26084)",
+      "prs": [
+        "26084"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "AITER triton attention backend (#28701)",
+      "prs": [
+        "28701"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Bitsandbytes quantization on AMD GPUs with warp size 32 (#27307)",
+      "prs": [
+        "27307"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Fastsafetensors support (#28225)",
+      "prs": [
+        "28225"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Sliding window support for AiterFlashAttentionBackend (#29234)",
+      "prs": [
+        "29234"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Whisper v1 with Aiter Unified/Flash Attention (#28376)",
+      "prs": [
+        "28376"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU**:",
+      "prs": []
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Paged attention GEMM acceleration on ARM CPUs with NEON (#29193)",
+      "prs": [
+        "29193"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Parallelize over tokens in int4 MoE (#29600)",
+      "prs": [
+        "29600"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "CPU all reduce optimization for async_scheduling + DP>1 (#29311)",
+      "prs": [
+        "29311"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Attention**: FlashAttention ViT support, now default backend (#28763).",
+      "prs": [
+        "28763"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Long Context**: Optimized `gather_and_maybe_dequant_cache` kernel for extremely long sequences (#28029).",
+      "prs": [
+        "28029"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Multi-NUMA**: Enhanced NUMA functionality for systems with multiple NUMA nodes per socket (#25559).",
+      "prs": [
+        "25559"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Docker**: Image size reduced by ~200MB (#29060).",
+      "prs": [
+        "29060"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**W4A8**: Marlin kernel support (#24722).",
+      "prs": [
+        "24722"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**NVFP4**:",
+      "prs": []
+    },
+    {
+      "category": "Quantization",
+      "text": "MoE CUTLASS support for SM120 (#29242)",
+      "prs": [
+        "29242"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "TRTLLM MoE NVFP4 kernel (#28892)",
+      "prs": [
+        "28892"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "CuteDSL MoE with NVFP4 DeepEP dispatch (#27141)",
+      "prs": [
+        "27141"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Non-gated activations support in modelopt path (#29004)",
+      "prs": [
+        "29004"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**AWQ**: Compressed-tensors AWQ support for Turing GPUs (#29732).",
+      "prs": [
+        "29732"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**LoRA**: FusedMoE LoRA Triton kernel for MXFP4 (#29708).",
+      "prs": [
+        "29708"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Online quantization**: Moved to `model.load_weights` (#26327).",
+      "prs": [
+        "26327"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Responses API**:",
+      "prs": []
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Multi-turn support for non-harmony requests (#29175)",
+      "prs": [
+        "29175"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Reasoning item input parsing (#28248)",
+      "prs": [
+        "28248"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Tool Calling**:",
+      "prs": []
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Parsed tool arguments support (#28820)",
+      "prs": [
+        "28820"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "`parallel_tool_calls` param compliance (#26233)",
+      "prs": [
+        "26233"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Tool filtering support in ToolServer (#29224)",
+      "prs": [
+        "29224"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Whisper**: `verbose_json` and `timestamp` features for transcription/translation (#24209).",
+      "prs": [
+        "24209"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Sampling**: Flat logprob control moved from env var to `SamplingParams` (#28914).",
+      "prs": [
+        "28914"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**GGUF**: Improved HuggingFace loading UX with `repo_id:quant_type` syntax (#29137).",
+      "prs": [
+        "29137"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Profiling**: Iteration-level profiling for Torch and CUDA profiler (#28987).",
+      "prs": [
+        "28987"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Logs**: Colorized log output (#29017).",
+      "prs": [
+        "29017"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Optimization Levels**: `-O0`, `-O1`, `-O2`, `-O3` allow trading startup time for performance, more compilation flags will be added in future releases (#26847)",
+      "prs": [
+        "26847"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "**PyTorch 2.9.0** with CUDA 12.9 (#24994) - **Breaking change** requiring environment updates.",
+      "prs": [
+        "24994"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "**xgrammar**: Updated to 0.1.27 (#28221).",
+      "prs": [
+        "28221"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "**Transformers**: Updated to 4.57.3 (#29418), preparation for v5 with `rope_parameters` (#28542).",
+      "prs": [
+        "29418",
+        "28542"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "**XPU**: torch & IPEX 2.9 upgrade (#29307).",
+      "prs": [
+        "29307"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`num_lookahead_slots` (#29000)",
+      "prs": [
+        "29000"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`best_of` (#29090)",
+      "prs": [
+        "29090"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "LoRA extra vocab (#28545)",
+      "prs": [
+        "28545"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`xformers` backend (#29262)",
+      "prs": [
+        "29262"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`seed=None` (#29185)",
+      "prs": [
+        "29185"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`ParallelConfig`'s direct child EPLB fields (#29324)",
+      "prs": [
+        "29324"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`guided_*` config fields (#29326)",
+      "prs": [
+        "29326"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`override_pooler_config` and `disable_log_requests` (#29402)",
+      "prs": [
+        "29402"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "`CompilationConfig.use_inductor` (#29323)",
+      "prs": [
+        "29323"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "Deprecated metrics (#29330)",
+      "prs": [
+        "29330"
+      ]
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "PyTorch 2.9.0 upgrade requires CUDA 12.9 environment",
+      "prs": []
+    },
+    {
+      "category": "V0 Deprecation & Breaking Changes",
+      "text": "Mistral format auto-detection for model loading (#28659)",
+      "prs": [
+        "28659"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "`num_lookahead_slots` (#29000)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29000"
+      ]
+    },
+    {
+      "change": "`best_of` (#29090)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29090"
+      ]
+    },
+    {
+      "change": "LoRA extra vocab (#28545)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "28545"
+      ]
+    },
+    {
+      "change": "`xformers` backend (#29262)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29262"
+      ]
+    },
+    {
+      "change": "`seed=None` (#29185)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29185"
+      ]
+    },
+    {
+      "change": "`ParallelConfig`'s direct child EPLB fields (#29324)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29324"
+      ]
+    },
+    {
+      "change": "`guided_*` config fields (#29326)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29326"
+      ]
+    },
+    {
+      "change": "`override_pooler_config` and `disable_log_requests` (#29402)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29402"
+      ]
+    },
+    {
+      "change": "`CompilationConfig.use_inductor` (#29323)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29323"
+      ]
+    },
+    {
+      "change": "Deprecated metrics (#29330)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "29330"
+      ]
+    },
+    {
+      "change": "PyTorch 2.9.0 upgrade requires CUDA 12.9 environment",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": []
+    },
+    {
+      "change": "Mistral format auto-detection for model loading (#28659)",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "28659"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Batch invariant BMM optimization**: 18.1% throughput improvement, 10.7% TTFT improvement on DeepSeek-V3.1 (#29345)",
+      "prs": [
+        "29345"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**Shared Experts Overlap with FlashInfer DeepGEMM**: 2.2% throughput improvement, 3.6% TTFT improvement at batch size 32 (#28879)",
+      "prs": [
+        "28879"
+      ]
+    }
+  ]
+}
