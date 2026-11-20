@@ -446,7 +446,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-10-05",
         "stats": "56 upstream changes and 510 PRs",
         "headline": "DeepSeek-V4.1-Flash performance, Fast restart",
-        "executive_summary": "vLLM v0.31.0 ships 56 upstream changes. Key highlights include: DeepSeek-V4.1-Flash performance: FlashMLA mega attention with the V4.1 NVFP4 compressed KV cache is now the SM100 default (#56935); DeepGEMM sparse MQA logits f; Fast restart: the new `vllm preload` CLI launches the weight-cache daemon that keeps post-quantized weights resident in GPU memory across engine restarts (#5668; Model Runner V2 and speculative decoding: draft-model speculative decoding (#43091) and custom logits processors (#56497) on Model Runner V2; the new LiLiCorr d.",
+        "executive_summary": "vLLM v0.31.0 ships 56 upstream changes. Key highlights include: DeepSeek-V4.1-Flash performance: FlashMLA mega attention with the V4.1 NVFP4 compressed KV cache is now the SM100 default (#56935); DeepGEMM sparse MQA logits for the indexer (#56254) and Mega-Gate fusing the gate GEMM with expert selection (#56266); decoder boundaries fuse the TP all-reduce, mHC input preparation (#57643) and the MoE finalize (#58586); a fused small-batch WO-A with inverse RoPE and MXFP8 quant on SM100/SM103 (#58634); the MXFP8 `wo_b` GEMM fused with the sequence-parallel reduce-scatter (#57428); Engram `wkv` sharded across TP ranks (#58678) and Engram host tables shared across co-located DP replicas by default (#57651); encoder CUDA graphs for the vision tower (#56625); and SWA bounded replay that keeps the sliding-window KV out of prefix caching (#56227); Fast restart: the new `vllm preload` CLI launches the weight-cache daemon that keeps post-quantized weights resident in GPU memory across engine restarts (#56680), now with data parallelism (#57386), MTP draft models (#57312), a `/health` endpoint (#58552) and a readiness wait (#58370). Experimental initialized-engine snapshots (`vllm snapshot create/restore`) use CRIU to restore a fully initialized TP1 engine (#51360); Model Runner V2 and speculative decoding: draft-model speculative decoding (#43091) and custom logits processors (#56497) on Model Runner V2; the new LiLiCorr drafter (#57934); async scheduling for DFlash (#58065) with the context K/V precompute captured in the draft CUDA graph (#57632); DSpark adaptive verification for Gemma4 (#57263) and variable-length decode for Kimi-K3 (#52988); a DCP target with a non-DCP DSpark draft (#56723); and MoE memory now counted during MRV2 profiling, avoiding OOMs on WideEP deployments (#57270, #58411).",
         "five_parts": {
           "big_deal": [
             {
@@ -630,7 +630,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-09-22",
         "stats": "58 upstream changes and 561 PRs",
         "headline": "New models, Fast Start",
-        "executive_summary": "vLLM v0.30.0 ships 58 upstream changes. Key highlights include: New models: DeepSeek-V4.1-Flash (#56214, #56228, #56208) with the whole KV stored in MXFP8 through the FlashMLA V4.1 record on SM100 (#56893), DeepGEMM Mega-mHC; Fast Start: a persistent per-GPU weight-cache daemon holds post-quantized, TP-sharded weights in GPU memory so restarting engines map them over CUDA IPC with `-; Watermarking: Gumbel-max watermarked generation and detection with a keyed PRF, per-request opt-out and an example detection endpoint (#54053); dual-key Gumbel-.",
+        "executive_summary": "vLLM v0.30.0 ships 58 upstream changes. Key highlights include: New models: DeepSeek-V4.1-Flash (#56214, #56228, #56208) with the whole KV stored in MXFP8 through the FlashMLA V4.1 record on SM100 (#56893), DeepGEMM Mega-mHC (#56962), and async Engram prefetch with Engram DP sharding (#56512); DeepSeek-V4-Flash-Vision-Exp (#54566), also on ROCm (#55107) and with LoRA (#55897); GLM-5.3-Flash (#53906) with EPLB (#55119); K2-Horizon (#55063); Cohere Compass (#54774); Bailing V3 VL (#55921); Nanbeige4.2 via the Transformers backend (#56071); and a DeepSeek-V4 CPU backend with AVX512/AMX sparse MLA, indexer, mHC and compressor kernels (#55355); Fast Start: a persistent per-GPU weight-cache daemon holds post-quantized, TP-sharded weights in GPU memory so restarting engines map them over CUDA IPC with `--load-format ipc_cache` instead of reloading from disk (#54921), now covering FP4 checkpoints (#55465) and multi-node TP (#55468); Watermarking: Gumbel-max watermarked generation and detection with a keyed PRF, per-request opt-out and an example detection endpoint (#54053); dual-key Gumbel-max makes it compatible with speculative decoding (#56122); the Rust frontend forwards the per-request controls (#56338).",
         "five_parts": {
           "big_deal": [
             {
@@ -814,7 +814,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-09-09",
         "stats": "50 upstream changes and 337 PRs",
         "headline": "Model Runner V2 is now the default for all models, New models",
-        "executive_summary": "vLLM v0.29.0 ships 50 upstream changes. Key highlights include: Model Runner V2 is now the default for all models (#53183), completing the rollout that began with pooling models (#48290). MRV2 also gained CUDA graph memory p; New models: Hy4-preview, Tencent's 770B/49B-active MoE with Gated DeepSeek Sparse Attention and native MTP (#54160); Qwen3.8-Flash-Next with BF16/FP8/NVFP4 and ; Kimi-K3 and DeepSeek V4 performance: fused MXFP4 top-k finalization in the K3 latent tail (about 5% E2E latency, #53152), K3 Mamba metadata preparation in one T.",
+        "executive_summary": "vLLM v0.29.0 ships 50 upstream changes. Key highlights include: Model Runner V2 is now the default for all models (#53183), completing the rollout that began with pooling models (#48290). MRV2 also gained CUDA graph memory profiling for KV cache auto-sizing (#53306), batch-sharded sampling that cuts per-step logits memory by 1/TP (#50465), prompt embeds (#42963), `extract_hidden_states` speculation (#49811), padded FULL cudagraph dispatch for uniform decode under spec decode (#53407), and DP-sync skipping before EAGLE/MTP draft prefill (#53694). MRV1 remains in use for a few ROCm models and features MRV2 does not yet support; New models: Hy4-preview, Tencent's 770B/49B-active MoE with Gated DeepSeek Sparse Attention and native MTP (#54160); Qwen3.8-Flash-Next with BF16/FP8/NVFP4 and MTP (#53896); GraniteSWA and GraniteMoeSWA (#52706); NemotronH_Omni_Reasoning_V3 with MTP (#52929, #53121); Kimi K3 NVFP4 checkpoints (#53132); Kimi-K3 and DeepSeek V4 performance: fused MXFP4 top-k finalization in the K3 latent tail (about 5% E2E latency, #53152), K3 Mamba metadata preparation in one Triton launch (6.6-7.6x kernel speedup, #52388), tuned Hopper low-latency GEMM (#54088) now also dispatched on SM100 (#53534) and used for `eh_proj` (12.9-25.2% kernel speedup, #53942), GEMM-RS extended to GEMM-AR (#53053), MLA gate merged into the QKV-A projection (#54015), K3 DCP with DSpark (#52188) and DCP partial prefix cache hits (#50493); DeepSeek V4 shared experts fused into MegaMoE (#53040), adaptive top-k width re-landed (#52823), a native SwiGLU clamp kernel for Humming MoE (#53685), and an opt-in FlashInfer `moe_ep` expert backend (#49636).",
         "five_parts": {
           "big_deal": [
             {
@@ -998,7 +998,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-08-26",
         "stats": "48 upstream changes and 190 PRs",
         "headline": "Kimi-K3 performance push, DeepSeek V4",
-        "executive_summary": "vLLM v0.28.0 ships 48 upstream changes. Key highlights include: Kimi-K3 performance push: a major optimization effort for Kimi-K3 across the stack \u2014 Decode Context Parallel (DCP) support (#50484), fused FlashKDA decode and p; DeepSeek V4: sparse MLA now works end-to-end for plain decode, MTP, and DSpark speculative decoding (#51538), joined by AMD Quark NVFP4 support (#47972), reason; Speculative decoding advances: DFlash2 with local convolution and a candidate selector (#52816), DSpark confidence-scheduled verification (#47808), and async sc.",
+        "executive_summary": "vLLM v0.28.0 ships 48 upstream changes. Key highlights include: Kimi-K3 performance push: a major optimization effort for Kimi-K3 across the stack \u2014 Decode Context Parallel (DCP) support (#50484), fused FlashKDA decode and prefill kernels (#50654, #51311, #52458), SiTU activation support for MegaMoE (#50510), GEMM-RS for sequence parallelism (#52079), combined all-gathers with 1.5~3x kernel-level speedup (#51070), an adaptive speculative token budget delivering ~60% better DSpark TTFT (#51725), and optional shared-expert sharding saving ~17 GiB of memory per GPU (#50912). Kimi-K3 also now runs on ROCm with the V2 model runner (#51653); DeepSeek V4: sparse MLA now works end-to-end for plain decode, MTP, and DSpark speculative decoding (#51538), joined by AMD Quark NVFP4 support (#47972), reasoning-effort prompts and mappings (#50580), sparse top-k metadata kernel optimizations (#52084, #51967), narrowed eager CUDA graph regions (#51430, #52401), and ROCm enablement on gfx11 and gfx950 (#47017, #52212); Speculative decoding advances: DFlash2 with local convolution and a candidate selector (#52816), DSpark confidence-scheduled verification (#47808), and async scheduling auto-enabled for draft models (#48341).",
         "five_parts": {
           "big_deal": [
             {
@@ -1182,7 +1182,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-08-10",
         "stats": "42 upstream changes and 223 PRs",
         "headline": "Kimi K3 support, More new models",
-        "executive_summary": "vLLM v0.27.0 ships 42 upstream changes. Key highlights include: Kimi K3 support with a full stack landing in one release: core model files and kernels (#50089, #50000), Python (#50093) and Rust (#50104) frontends, AttnRes ke; More new models: Qwen3.5 text-only dense and MoE models (#50210) with EVS video token pruning (#48912), K-EXAONE-2.0-750B-A37B (#50524), VaultGemma via the Tran; PyTorch 2.13.0 upgrade along with torchvision 0.28.0 and Triton 3.7.1 (#48155) \u2014 this is a breaking environment change; XPU (#48677) and CPU (#50412) followed t.",
+        "executive_summary": "vLLM v0.27.0 ships 42 upstream changes. Key highlights include: Kimi K3 support with a full stack landing in one release: core model files and kernels (#50089, #50000), Python (#50093) and Rust (#50104) frontends, AttnRes kernels (#50090), DeepGEMM support (#50458), compressed-tensors quantized checkpoints (#50500), DSpark AR fusion (#50242), and an option to shard the shared expert instead of replicating it (#50656); More new models: Qwen3.5 text-only dense and MoE models (#50210) with EVS video token pruning (#48912), K-EXAONE-2.0-750B-A37B (#50524), VaultGemma via the Transformers modeling backend (#49803), and jina-embeddings-v5-text-nano (#50688); PyTorch 2.13.0 upgrade along with torchvision 0.28.0 and Triton 3.7.1 (#48155) \u2014 this is a breaking environment change; XPU (#48677) and CPU (#50412) followed to torch 2.13 as well.",
         "five_parts": {
           "big_deal": [
             {
@@ -1426,7 +1426,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-07-11",
         "stats": "49 upstream changes and 204 PRs",
         "headline": "Model Runner V2 is now the default for all dense models, PagedAttention has been removed",
-        "executive_summary": "vLLM v0.25.0 ships 49 upstream changes. Key highlights include: Model Runner V2 is now the default for all dense models (#44443). Building on quantized-model support from the previous release, MRv2 is now the standard execut; PagedAttention has been removed (#47361). The legacy attention implementation is deleted now that V1/MRv2 backends are the standard path.; The Transformers modeling backend is now as fast as native vLLM (#47187), and gained FP8 MoE support (#46820), CUDA graph + embed scaling fixes (#48010), and mi.",
+        "executive_summary": "vLLM v0.25.0 ships 49 upstream changes. Key highlights include: Model Runner V2 is now the default for all dense models (#44443). Building on quantized-model support from the previous release, MRv2 is now the standard execution path, with new support for EVS (#46535), realtime embeddings (#46762), prefix caching for Mamba hybrid models (#42406), multimodal-prefix bidirectional attention (#46942), and dynamic speculative decoding compatible with full CUDA graphs (#45953); PagedAttention has been removed (#47361). The legacy attention implementation is deleted now that V1/MRv2 backends are the standard path; The Transformers modeling backend is now as fast as native vLLM (#47187), and gained FP8 MoE support (#46820), CUDA graph + embed scaling fixes (#48010), and migration of GPTBigCode/Starcoder2 (#30966) and RoBERTa (#47452).",
         "five_parts": {
           "big_deal": [
             {
@@ -1610,7 +1610,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-06-29",
         "stats": "42 upstream changes and 242 PRs",
         "headline": "MiniMax-M3, DeepSeek-V4 keeps maturing",
-        "executive_summary": "vLLM v0.24.0 ships 42 upstream changes. Key highlights include: MiniMax-M3: Added support for the new MiniMax-M3 model (#45381), with a fast follow-on of BF16/FP8 indexer via MSA (#45892), MXFP4 support (#45896), FP8 sparse ; DeepSeek-V4 keeps maturing: Following its debut, DeepSeek-V4 received another large optimization pass \u2014 a FlashInfer sparse index cache (2\u20134% TTFT) (#45863), pr; Model Runner V2 (MRv2) continues to expand: MRv2 now supports quantized models by default (#44446), enables GraniteMoE by default (#45461), and gained migration.",
+        "executive_summary": "vLLM v0.24.0 ships 42 upstream changes. Key highlights include: MiniMax-M3: Added support for the new MiniMax-M3 model (#45381), with a fast follow-on of BF16/FP8 indexer via MSA (#45892), MXFP4 support (#45896), FP8 sparse GQA (#45744), and extensive AMD/ROCm tuning \u2014 mxfp8 MoE/linear on gfx950 (#45725), fp8_per_channel for bf16 weights on MI300X (#45854), FP8 KV-cache fix (#45720), and packed-modules mapping (#45794). A MiniMax-M2 perf regression was also fixed (#45935); DeepSeek-V4 keeps maturing: Following its debut, DeepSeek-V4 received another large optimization pass \u2014 a FlashInfer sparse index cache (2\u20134% TTFT) (#45863), prefill chunk-planning optimization (4% E2E throughput) (#45061), a cluster-cooperative topK kernel for low-latency (#43008), contiguous per-block KV allocations (#44577), TEP=16 for the block-FP8 shared expert (#46001), and native DSA indexer decode for `next_n > 2` on SM100 (#45322). It is now enabled on SM120 alongside GLM-5.1 (#43477), with XPU (#44144, #44517, #45240) and ROCm (#44899, #45103, #45681) attention/MoE paths added; Model Runner V2 (MRv2) continues to expand: MRv2 now supports quantized models by default (#44446), enables GraniteMoE by default (#45461), and gained migration of Qwen + DeepSeek-V2 MoE models (#42667), DFlash speculative decoding (#44586), and more accurate FP32 Gumbel sampling (#45996).",
         "five_parts": {
           "big_deal": [
             {
@@ -1787,7 +1787,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-06-15",
         "stats": "40 upstream changes and 224 PRs",
         "headline": "DeepSeek-V4 matures across backends, Model Runner V2 expands to more dense models",
-        "executive_summary": "vLLM v0.23.0 ships 40 upstream changes. Key highlights include: DeepSeek-V4 matures across backends: Following its introduction in v0.22.0, DeepSeek-V4 received another large hardening and optimization pass. Its sparse MLA m; Model Runner V2 expands to more dense models: MRv2 is now selected by default for Llama and Mistral dense models (#43458) in addition to Qwen3. It gained a Flas; Rust frontend grows up: The experimental Rust frontend added a streaming `generate` endpoint (#43779), dynamic LoRA endpoints (#43778), `/version` (#43854) and .",
+        "executive_summary": "vLLM v0.23.0 ships 40 upstream changes. Key highlights include: DeepSeek-V4 matures across backends: Following its introduction in v0.22.0, DeepSeek-V4 received another large hardening and optimization pass. Its sparse MLA metadata is now decoupled from DeepSeek-V3.2 (#44699), it gained a TRTLLM-gen attention kernel (#43827), EPLB support for the Mega-MoE (#43339), selective prefix-cache retention for sliding-window KV cache (#43447), and an index-share feature for DSA MTP (#44420). The model was also detached from `torch.compile` (#43746, #43891), its attention and RoPE paths were refactored (#44569, #44262, #43926), and an XPU attention decode path was added (#42953); Model Runner V2 expands to more dense models: MRv2 is now selected by default for Llama and Mistral dense models (#43458) in addition to Qwen3. It gained a FlashInfer sampler (#42472), breakable CUDA graphs (#44050), pipeline-parallel bubble elimination (#42187), kernel block-size support for hybrid models (#38831), and Gemma 4 MTP (#43241); Rust frontend grows up: The experimental Rust frontend added a streaming `generate` endpoint (#43779), dynamic LoRA endpoints (#43778), `/version` (#43854) and `/server_info` (#43942) endpoints, a server-router extension hook (#43774), request-ID headers (#43883), and many new tool parsers (InternLM2 #43481, hy_v3 #43872, Phi-4-mini #44213, Gemma4 #43850).",
         "five_parts": {
           "big_deal": [
             {
@@ -1950,7 +1950,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-05-29",
         "stats": "50 upstream changes and 197 PRs",
         "headline": "DeepSeek V4 maturity, Model Runner V2 advances toward default",
-        "executive_summary": "vLLM v0.22.0 ships 50 upstream changes. Key highlights include: DeepSeek V4 maturity: DeepSeek V4 received a major hardening pass this cycle \u2014 the model was reorganized into a dedicated `vllm/models/deepseek_v4/` package (#4; Model Runner V2 advances toward default: MRv2 is now default for Qwen3 dense models. vLLM will fall back to MRv1 for features that aren't yet supported in MRv2 ; Experimental Rust frontend: A new Rust front-end integration landed (#40848), with the implementation moved into the tree (#43283) and a DP Supervisor for data-.",
+        "executive_summary": "vLLM v0.22.0 ships 50 upstream changes. Key highlights include: DeepSeek V4 maturity: DeepSeek V4 received a major hardening pass this cycle \u2014 the model was reorganized into a dedicated `vllm/models/deepseek_v4/` package (#43004, #43039, #43073, #43077, #43149), gained NVFP4 fused MoE support (#42209), full + piecewise CUDA graph (#42604), and MTP speculative decoding (#43385). A large set of fused kernels (MegaMoE, `mhc`, Q-norm, indexer, sparse MLA) and ROCm parity fixes landed alongside accuracy fixes (#42810, #43710); Model Runner V2 advances toward default: MRv2 is now default for Qwen3 dense models. vLLM will fall back to MRv1 for features that aren't yet supported in MRv2 (#39337). sleep-mode weight reload (#42673), `update_config` (#42783), and shared KV-cache layers (#35045), plus many correctness fixes; Experimental Rust frontend: A new Rust front-end integration landed (#40848), with the implementation moved into the tree (#43283) and a DP Supervisor for data-parallel serving (#40841).",
         "five_parts": {
           "big_deal": [
             {
@@ -2128,7 +2128,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-05-15",
         "stats": "49 upstream changes and 136 PRs",
         "headline": "Transformers v4 deprecated, C++20 build requirement",
-        "executive_summary": "vLLM v0.21.0 ships 49 upstream changes. Key highlights include: Transformers v4 deprecated: This release formally deprecates `transformers` v4 support (#40389). Users should migrate to `transformers` v5.; C++20 build requirement: vLLM now requires a C++20-compatible compiler for compatibility with PyTorch (#40380). This is a breaking build change.; KV Offload + Hybrid Memory Allocator (HMA): The KV offloading subsystem now integrates with the Hybrid Memory Allocator, including scheduler-side sliding window.",
+        "executive_summary": "vLLM v0.21.0 ships 49 upstream changes. Key highlights include: Transformers v4 deprecated: This release formally deprecates `transformers` v4 support (#40389). Users should migrate to `transformers` v5; C++20 build requirement: vLLM now requires a C++20-compatible compiler for compatibility with PyTorch (#40380). This is a breaking build change; KV Offload + Hybrid Memory Allocator (HMA): The KV offloading subsystem now integrates with the Hybrid Memory Allocator, including scheduler-side sliding window group support and full HMA enablement (#41228, #41445, #39571).",
         "five_parts": {
           "big_deal": [
             {
@@ -2279,7 +2279,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-04-27",
         "stats": "57 upstream changes and 315 PRs",
         "headline": "DeepSeek V4, CUDA 13.0 default",
-        "executive_summary": "vLLM v0.20.0 ships 57 upstream changes. Key highlights include: DeepSeek V4: Initial DeepSeek V4 support landed (#40860), with DSML token-leakage fix in DSV4/3.2 (#40806), DSA + MTP IMA fix (#40772), and a silu clamp limit o; CUDA 13.0 default: Default CUDA wheel on PyPI and `vllm/vllm-openai:v0.20.0` image switched to CUDA 13.0; architecture lists and build-args cleaned up (#39878),; PyTorch 2.11 upgrade (#34644): vLLM ships on torch 2.11 for CUDA, and XPU is now also on torch 2.11 (#37947) \u2014 XPU is no longer pinned to 2.10. This is a breaki.",
+        "executive_summary": "vLLM v0.20.0 ships 57 upstream changes. Key highlights include: DeepSeek V4: Initial DeepSeek V4 support landed (#40860), with DSML token-leakage fix in DSV4/3.2 (#40806), DSA + MTP IMA fix (#40772), and a silu clamp limit on the shared expert (#40950); CUDA 13.0 default: Default CUDA wheel on PyPI and `vllm/vllm-openai:v0.20.0` image switched to CUDA 13.0; architecture lists and build-args cleaned up (#39878), and CUDA bumped to 13.0.2 to match PyTorch 2.11.0 (#40669). As a general rule of thumb, our CUDA version policy follows PyTorch's. We highly recommend to install vLLM with `uv` and use `--torch-backend=cu129` if you are on CUDA 12.9; PyTorch 2.11 upgrade (#34644): vLLM ships on torch 2.11 for CUDA, and XPU is now also on torch 2.11 (#37947) \u2014 XPU is no longer pinned to 2.10. This is a breaking change for environment dependency.",
         "five_parts": {
           "big_deal": [
             {
@@ -2445,7 +2445,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-04-03",
         "stats": "127 upstream changes and 217 PRs",
         "headline": "Gemma 4 support, Zero-bubble async scheduling + speculative decoding",
-        "executive_summary": "vLLM v0.19.0 ships 127 upstream changes. Key highlights include: Gemma 4 support: Full Google Gemma 4 architecture support including MoE, multimodal, reasoning, and tool-use capabilities (#38826, #38847). Requires `transforme; Zero-bubble async scheduling + speculative decoding: Async scheduling now supports speculative decoding with zero-bubble overlap, significantly improving throug; Model Runner V2 maturation: MRV2 gains piecewise CUDA graphs for pipeline parallelism (#35162), spec decode rejection sampler with greedy/logprobs support (#372.",
+        "executive_summary": "vLLM v0.19.0 ships 127 upstream changes. Key highlights include: Gemma 4 support: Full Google Gemma 4 architecture support including MoE, multimodal, reasoning, and tool-use capabilities (#38826, #38847). Requires `transformers>=5.5.0`. We recommend using pre-built docker image `vllm/vllm-openai:gemma4` for out of box usage; Zero-bubble async scheduling + speculative decoding: Async scheduling now supports speculative decoding with zero-bubble overlap, significantly improving throughput (#32951); Model Runner V2 maturation: MRV2 gains piecewise CUDA graphs for pipeline parallelism (#35162), spec decode rejection sampler with greedy/logprobs support (#37238, #37237), multi-modal embeddings for spec decode (#36097), streaming inputs (#37028), and EPLB support (#37488).",
         "five_parts": {
           "big_deal": [
             {
@@ -2629,7 +2629,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-03-20",
         "stats": "65 upstream changes and 154 PRs",
         "headline": "gRPC Serving Support, GPU-less Render Serving",
-        "executive_summary": "vLLM v0.18.0 ships 65 upstream changes. Key highlights include: gRPC Serving Support: vLLM now supports gRPC serving via the new `--grpc` flag (#36169), enabling high-performance RPC-based serving alongside the existing HTTP; GPU-less Render Serving: New `vllm launch render` command (#36166, #34551) enables GPU-less preprocessing and rendering, allowing separation of multimodal prepr; NGram GPU Speculative Decoding: NGram speculative decoding now runs on GPU and is compatible with the async scheduler (#29184), significantly reducing spec deco.",
+        "executive_summary": "vLLM v0.18.0 ships 65 upstream changes. Key highlights include: gRPC Serving Support: vLLM now supports gRPC serving via the new `--grpc` flag (#36169), enabling high-performance RPC-based serving alongside the existing HTTP/REST interface; GPU-less Render Serving: New `vllm launch render` command (#36166, #34551) enables GPU-less preprocessing and rendering, allowing separation of multimodal preprocessing from GPU inference; NGram GPU Speculative Decoding: NGram speculative decoding now runs on GPU and is compatible with the async scheduler (#29184), significantly reducing spec decode overhead.",
         "five_parts": {
           "big_deal": [
             {
@@ -2801,7 +2801,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-03-07",
         "stats": "107 upstream changes and 199 PRs",
         "headline": "PyTorch 2.10 Upgrade, FlashAttention 4 Integration",
-        "executive_summary": "vLLM v0.17.0 ships 107 upstream changes. Key highlights include: PyTorch 2.10 Upgrade: This release upgrades to PyTorch 2.10.0, which is a breaking change for environment dependencies.; FlashAttention 4 Integration: vLLM now supports the FlashAttention 4 backend (#32974), bringing next-generation attention performance.; Model Runner V2 Maturation: Model Runner V2 has reached a major milestone with Pipeline Parallel (#33960), Decode Context Parallel (#34179), Eagle3 speculative .",
+        "executive_summary": "vLLM v0.17.0 ships 107 upstream changes. Key highlights include: PyTorch 2.10 Upgrade: This release upgrades to PyTorch 2.10.0, which is a breaking change for environment dependencies; FlashAttention 4 Integration: vLLM now supports the FlashAttention 4 backend (#32974), bringing next-generation attention performance; Model Runner V2 Maturation: Model Runner V2 has reached a major milestone with Pipeline Parallel (#33960), Decode Context Parallel (#34179), Eagle3 speculative decoding with CUDA graphs (#35029, #35040), pooling model support (#35120), piecewise & mixed CUDA graph capture (#32771), DP+EP for spec decoding (#35294), and a new ModelState architecture. Design docs are now available (#35819).",
         "five_parts": {
           "big_deal": [
             {
@@ -2985,7 +2985,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-02-25",
         "stats": "42 upstream changes and 152 PRs",
         "headline": "Async scheduling + Pipeline Parallelism, Realtime API",
-        "executive_summary": "vLLM v0.16.0 ships 42 upstream changes. Key highlights include: Async scheduling + Pipeline Parallelism is now fully supported, delivering 30.8% E2E throughput improvement and 31.8% TPOT improvement (#32618).; Realtime API: A new WebSocket-based Realtime API enables streaming audio interactions (#33187), building on the Voxtral realtime infrastructure.; RLHF workflow improvements: Native NCCL-based weight syncing API (#31943), layerwise weight reloading for QeRL (#32133), and engine pause/resume with request pr.",
+        "executive_summary": "vLLM v0.16.0 ships 42 upstream changes. Key highlights include: Async scheduling + Pipeline Parallelism is now fully supported, delivering 30.8% E2E throughput improvement and 31.8% TPOT improvement (#32618); Realtime API: A new WebSocket-based Realtime API enables streaming audio interactions (#33187), building on the Voxtral realtime infrastructure; RLHF workflow improvements: Native NCCL-based weight syncing API (#31943), layerwise weight reloading for QeRL (#32133), and engine pause/resume with request preservation (#32351).",
         "five_parts": {
           "big_deal": [
             {
@@ -3155,7 +3155,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-01-29",
         "stats": "50 upstream changes and 77 PRs",
         "headline": "Bug Fixes",
-        "executive_summary": "vLLM v0.15.0 ships 50 upstream changes. Key highlights include: * Speculative decoding: Eagle draft_model_config fix (#31753). * DeepSeek: DeepSeek-V3.1 + DeepGEMM incompatible scale shapes fix (#32361). * Distributed: DP+Mo.",
+        "executive_summary": "vLLM v0.15.0 ships 50 upstream changes. Key highlights include: * Speculative decoding: Eagle draft_model_config fix (#31753). * DeepSeek: DeepSeek-V3.1 + DeepGEMM incompatible scale shapes fix (#32361). * Distributed: DP+MoE inference fix via CpuCommunicator (#31867), P/D with non-MoE DP fix (#33037). * EPLB: Possible deadlock fix (#32418). * NIXL: UCX memory leak fix by exporting UCX_MEM_MMAP_HOOK_MODE=none (#32181). * Structured output: Outlines byte fallback handling fix (#31391). ---.",
         "five_parts": {
           "big_deal": [
             {
@@ -3327,7 +3327,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2026-01-20",
         "stats": "120 upstream changes and 143 PRs",
         "headline": "Async scheduling is now enabled by default, Excludes some not-yet-supported configurations: pipeline parallel, CPU backend,",
-        "executive_summary": "vLLM v0.14.0 ships 120 upstream changes. Key highlights include: Async scheduling is now enabled by default - Users who experience issues can disable with `--no-async-scheduling`.; Excludes some not-yet-supported configurations: pipeline parallel, CPU backend, non-MTP/Eagle spec decoding.; PyTorch 2.9.1 is now required and the default wheel is compiled against cu129..",
+        "executive_summary": "vLLM v0.14.0 ships 120 upstream changes. Key highlights include: Async scheduling is now enabled by default - Users who experience issues can disable with `--no-async-scheduling`; Excludes some not-yet-supported configurations: pipeline parallel, CPU backend, non-MTP/Eagle spec decoding; PyTorch 2.9.1 is now required and the default wheel is compiled against cu129.",
         "five_parts": {
           "big_deal": [
             {
@@ -3665,7 +3665,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2025-12-03",
         "stats": "83 upstream changes and 77 PRs",
         "headline": "EAGLE Speculative Decoding Improvements, Significant Performance Optimizations",
-        "executive_summary": "vLLM v0.12.0 ships 83 upstream changes. Key highlights include: EAGLE Speculative Decoding Improvements: Multi-step CUDA graph support (#29559), DP>1 support (#26086), and multimodal support with Qwen3VL (#29594).; Significant Performance Optimizations: 18.1% throughput improvement from batch invariant BMM (#29345), 2.2% throughput improvement from shared experts overlap (; AMD ROCm Expansion: DeepSeek v3.2 + SparseMLA support (#26670), FP8 MLA decode (#28032), AITER attention backend (#28701)..",
+        "executive_summary": "vLLM v0.12.0 ships 83 upstream changes. Key highlights include: EAGLE Speculative Decoding Improvements: Multi-step CUDA graph support (#29559), DP>1 support (#26086), and multimodal support with Qwen3VL (#29594); Significant Performance Optimizations: 18.1% throughput improvement from batch invariant BMM (#29345), 2.2% throughput improvement from shared experts overlap (#28879); AMD ROCm Expansion: DeepSeek v3.2 + SparseMLA support (#26670), FP8 MLA decode (#28032), AITER attention backend (#28701).",
         "five_parts": {
           "big_deal": [
             {
@@ -3849,7 +3849,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2025-10-02",
         "stats": "585 upstream changes and 549 PRs",
         "headline": "This release completes the removal of V0 engine. V0 engine code including AsyncL, This releases turns on **FULL_AND_PIECEWISE as the CUDA gr",
-        "executive_summary": "vLLM v0.11.0 ships 585 upstream changes. Key highlights include: This release completes the removal of V0 engine. V0 engine code including AsyncLLMEngine, LLMEngine, MQLLMEngine, all attention backends, and related components; This releases turns on FULL_AND_PIECEWISE as the CUDA graph mode default. This should provide better out of the box performance for most models, particularly fi; * Engines: AsyncLLMEngine (#25025), LLMEngine (#25033), MQLLMEngine (#25019), core (#25321), model runner (#25328), MP executor (#25329). * Components: Attentio.",
+        "executive_summary": "vLLM v0.11.0 ships 585 upstream changes. Key highlights include: This release completes the removal of V0 engine. V0 engine code including AsyncLLMEngine, LLMEngine, MQLLMEngine, all attention backends, and related components have been removed. V1 is the only engine in the codebase now; This releases turns on FULL_AND_PIECEWISE as the CUDA graph mode default. This should provide better out of the box performance for most models, particularly fine-grained MoEs, while preserving compatibility with existing models supporting only PIECEWISE mode; * Engines: AsyncLLMEngine (#25025), LLMEngine (#25033), MQLLMEngine (#25019), core (#25321), model runner (#25328), MP executor (#25329). * Components: Attention backends (#25351), encoder-decoder (#24907), output processor (#25320), sampling metadata (#25345), Sequence/Sampler (#25332). * Interfaces: LoRA (#25686), async output processor (#25334), MultiModalPlaceholderMap (#25366), seq group methods (#25330), placeholder attention (#25510), input embeddings (#25242), multimodal registry (#25362), max_seq_len_to_capture (#25543), attention classes (#25541), hybrid models (#25400), backend suff.",
         "five_parts": {
           "big_deal": [
             {
@@ -4205,7 +4205,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2025-05-15",
         "stats": "697 upstream changes and 654 PRs",
         "headline": "vLLM has upgraded to PyTorch 2.7! This is a breaking change for enviro, The default wheel has been upgraded from CUDA 12.4 to CUDA 12.8. We ",
-        "executive_summary": "vLLM v0.9.0 ships 697 upstream changes. Key highlights include: vLLM has upgraded to PyTorch 2.7!  (#16859) This is a breaking change for environment dependency.; The default wheel has been upgraded from CUDA 12.4 to CUDA 12.8. We will distribute CUDA 12.6 wheel on GitHub artifact.; As a general rule of thumb, our CUDA version policy follow PyTorch's CUDA version policy..",
+        "executive_summary": "vLLM v0.9.0 ships 697 upstream changes. Key highlights include: vLLM has upgraded to PyTorch 2.7!  (#16859) This is a breaking change for environment dependency; The default wheel has been upgraded from CUDA 12.4 to CUDA 12.8. We will distribute CUDA 12.6 wheel on GitHub artifact; As a general rule of thumb, our CUDA version policy follow PyTorch's CUDA version policy.",
         "five_parts": {
           "big_deal": [
             {
@@ -4383,7 +4383,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2025-03-18",
         "stats": "636 upstream changes and 518 PRs",
         "headline": "V1, DeepSeek Improvements",
-        "executive_summary": "vLLM v0.8.0 ships 636 upstream changes. Key highlights include: We have now enabled V1 engine by default (#13726) for supported use cases. Please refer to [V1 user guide](https://docs.vllm.ai/en/latest/getting_started/v1_use; We observe state of the art performance with vLLM running DeepSeek model on latest version of vLLM: * MLA Enhancements: * FlashMLA integration (#13747, #13867, ; * Support nvfp4 cutlass gemm (#13571) * Add cutlass support for blackwell fp8 gemm (#13798) * Update the flash attn tag to support Blackwell (#14244) * Add Mode.",
+        "executive_summary": "vLLM v0.8.0 ships 636 upstream changes. Key highlights include: We have now enabled V1 engine by default (#13726) for supported use cases. Please refer to [V1 user guide](https://docs.vllm.ai/en/latest/getting_started/v1_user_guide.html) for more detail. We expect better performance for supported scenarios. If you'd like to disable V1 mode, please specify the environment variable `vLLM_USE_V1=0`, and send us a GitHub issue sharing the reason! * Support variety of sampling parameters (#13376, #10980, #13210, #13774) * Compatability prompt logprobs + prefix caching (#13949), sliding window + prefix caching (#13069) * Stability fixes (#14380, #14379, #13298); We observe state of the art performance with vLLM running DeepSeek model on latest version of vLLM: * MLA Enhancements: * FlashMLA integration (#13747, #13867, #14451) * MLA support for V1 (#13789, #14253, #14384, #14540, #14921) * MLA with chunked prefill (#12639) * Holistic memory and performance optimization (#14769, #14770,#14842) * Support MLA for CompressedTensorsWNA16 (#13725) * Distributed Expert Parallelism (EP) and Data Parallelism (DP) * EP Support for DeepSeek Models (#12583) * Add enable_expert_parallel arg (#14305) * EP/TP MoE + DP Attention (#13931) * Set up data parallel commun; * Support nvfp4 cutlass gemm (#13571) * Add cutlass support for blackwell fp8 gemm (#13798) * Update the flash attn tag to support Blackwell (#14244) * Add ModelOpt FP4 Checkpoint Support (#12520).",
         "five_parts": {
           "big_deal": [
             {
@@ -4561,7 +4561,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2025-01-27",
         "stats": "419 upstream changes and 402 PRs",
         "headline": "vLLM's V1 engine is ready for testing! This is a rewritten engine designed for p, New methods (`LLM.sleep`, `LLM.wake_up`, `LLM.collective_r",
-        "executive_summary": "vLLM v0.7.0 ships 419 upstream changes. Key highlights include: vLLM's V1 engine is ready for testing! This is a rewritten engine designed for performance and architectural simplicity. You can turn it on by setting environme; New methods (`LLM.sleep`, `LLM.wake_up`, `LLM.collective_rpc`, `LLM.reset_prefix_cache`) in vLLM for the post training frameworks! (#12361, #12084, #12284).; `torch.compile` is now fully integrated in vLLM, and enabled by default in V1. You can turn it on via `-O3` engine parameter. (#11614, #12243, #12043, #12191, #.",
+        "executive_summary": "vLLM v0.7.0 ships 419 upstream changes. Key highlights include: vLLM's V1 engine is ready for testing! This is a rewritten engine designed for performance and architectural simplicity. You can turn it on by setting environment variable `vLLM_USE_V1=1`. See [our blog](https://blog.vllm.ai/2025/01/27/v1-alpha-release.html) for more details. (44 commits); New methods (`LLM.sleep`, `LLM.wake_up`, `LLM.collective_rpc`, `LLM.reset_prefix_cache`) in vLLM for the post training frameworks! (#12361, #12084, #12284); `torch.compile` is now fully integrated in vLLM, and enabled by default in V1. You can turn it on via `-O3` engine parameter. (#11614, #12243, #12043, #12191, #11677, #12182, #12246).",
         "five_parts": {
           "big_deal": [
             {
@@ -4739,7 +4739,7 @@ window.__PUBLICATION_DATA__ = {
         "date": "2024-09-04",
         "stats": "135 upstream changes and 117 PRs",
         "headline": "Performance Update, Misc",
-        "executive_summary": "vLLM v0.6.0 ships 135 upstream changes. Key highlights include: * We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recomm; * Support benchmarking async engine in benchmark_throughput.py (#7964) * Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#.",
+        "executive_summary": "vLLM v0.6.0 ships 135 upstream changes. Key highlights include: * We are excited to announce a faster vLLM delivering 2x more throughput compared to v0.5.3. The default parameters should achieve great speed up, but we recommend also try out turning on multi step scheduling. You can do so by setting `--num-scheduler-steps 8` in the engine arguments. Please note that it still have some limitations and being actively hardened, see #7528 for known issues. * Multi-step scheduler now supports LLMEngine and log_probs (#7789, #7652) * Asynchronous output processor overlaps the output data structures construction with GPU works, delivering 12% throughput increase; * Support benchmarking async engine in benchmark_throughput.py (#7964) * Progress in integration with `torch.compile`: avoid Dynamo guard evaluation overhead (#7898), skip compile for profiling (#7796).",
         "five_parts": {
           "big_deal": [
             {

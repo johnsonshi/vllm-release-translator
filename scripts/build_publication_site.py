@@ -1181,7 +1181,7 @@ def _backfill_remaining_releases() -> None:
                 ]
                 headline = ", ".join(lead_titles[:2]) if lead_titles else ""
                 exec_points = "; ".join(
-                    _clean_bullet_for_reader(sp.get("summary", ""))[:160]
+                    _clean_bullet_for_reader(sp.get("summary", "")).rstrip(".")
                     for sp in spotlights[:3]
                     if sp.get("summary")
                 )
