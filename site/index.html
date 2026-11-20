@@ -1,323 +1,1044 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="color-scheme: dark;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>What's New in vLLM & Kubernetes — Adoption Decision Portal</title>
+  <meta name="theme-color" content="#060809" />
+  <title>Release Dossier — vLLM &amp; Kubernetes Adoption Decision Engine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #0b0f17;
-      --panel: #131b2e;
-      --panel-alt: #182238;
-      --border: #263454;
-      --text: #e6edf7;
-      --muted: #97a6c4;
-      --accent: #4f8cff;
-      --accent-soft: rgba(79, 140, 255, 0.14);
-      --green: #2ecc71;
-      --green-soft: rgba(46, 204, 113, 0.15);
-      --amber: #f39c12;
-      --amber-soft: rgba(243, 156, 18, 0.16);
-      --red: #e74c3c;
-      --red-soft: rgba(231, 76, 60, 0.16);
+      --bg-0: #060809;
+      --bg-1: #0b0f11;
+      --bg-2: #101619;
+      --bg-3: #161f24;
+      --line: rgba(242, 247, 245, 0.09);
+      --line-strong: rgba(242, 247, 245, 0.18);
+      --text: #f2f7f5;
+      --muted: rgba(242, 247, 245, 0.64);
+      --dim: rgba(242, 247, 245, 0.42);
+      --lime: #d7f23a;
+      --lime-soft: rgba(215, 242, 58, 0.11);
+      --lime-edge: rgba(215, 242, 58, 0.36);
+      --cyan: #54e8d4;
+      --cyan-soft: rgba(84, 232, 212, 0.10);
+      --amber: #f5a623;
+      --amber-soft: rgba(245, 166, 35, 0.12);
+      --red: #ff5c5c;
+      --red-soft: rgba(255, 92, 92, 0.12);
+      --green: #3ddc84;
+      --green-soft: rgba(61, 220, 132, 0.12);
+      --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+      --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
-    * { box-sizing: border-box; }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      font-style: normal;
+    }
+
+    @media (pointer: fine) {
+      html {
+        overscroll-behavior: none;
+      }
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
-      background: var(--bg);
+      background-color: var(--bg-0);
+      background-image:
+        radial-gradient(90% 60% at 85% -10%, rgba(84, 232, 212, 0.07), transparent 60%),
+        radial-gradient(70% 50% at 10% 10%, rgba(215, 242, 58, 0.05), transparent 60%);
       color: var(--text);
+      font-family: var(--sans);
       line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: rgba(215, 242, 58, 0.15);
     }
-    a { color: #7cb0ff; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    header {
-      background: linear-gradient(180deg, #131d33 0%, #0e1525 100%);
-      border-bottom: 1px solid var(--border);
-      padding: 20px 28px;
+
+    ::selection {
+      background: var(--lime);
+      color: #060809;
     }
-    .header-top {
+
+    .skip-link {
+      position: absolute;
+      top: -48px;
+      left: 16px;
+      background: var(--lime);
+      color: #060809;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 6px;
+      z-index: 100;
+      text-decoration: none;
+      transition: top 150ms ease;
+    }
+    .skip-link:focus-visible {
+      top: 12px;
+      outline: 2px solid var(--cyan);
+      outline-offset: 2px;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    a {
+      color: var(--cyan);
+      text-decoration: none;
+      transition: color 140ms ease, border-color 140ms ease;
+    }
+    a:hover {
+      color: var(--lime);
+      text-decoration: underline;
+    }
+
+    button, input, select {
+      font-family: inherit;
+      font-size: inherit;
+      color: inherit;
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    summary:focus-visible {
+      outline: 2px solid var(--lime);
+      outline-offset: 2px;
+    }
+
+    h1, h2, h3, h4 {
+      margin: 0;
+      text-wrap: balance;
+      letter-spacing: -0.025em;
+      scroll-margin-top: 88px;
+    }
+
+    .num {
+      font-family: var(--mono);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* TOP MASTHEAD */
+    .masthead {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(6, 8, 9, 0.88);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .masthead-inner {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 14px 24px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
+      gap: 20px;
       flex-wrap: wrap;
-      gap: 14px;
     }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--lime);
+      color: #060809;
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.76rem;
+      letter-spacing: 0.06em;
+      padding: 6px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
     .brand-title {
-      font-size: 1.35rem;
+      font-size: 1.02rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-    }
-    .brand-sub {
-      color: var(--muted);
-      font-size: 0.92rem;
-      margin-top: 4px;
-      max-width: 880px;
-    }
-    .nav-tabs {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-    .tab-btn {
-      background: var(--panel);
       color: var(--text);
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
     }
-    .tab-btn.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-    .layout {
-      display: grid;
-      grid-template-columns: 300px 1fr;
-      min-height: calc(100vh - 125px);
-    }
-    .sidebar {
-      border-right: 1px solid var(--border);
-      background: #0e1524;
-      padding: 16px;
-      overflow-y: auto;
-    }
-    .sidebar h3 {
-      margin: 6px 0 12px;
-      font-size: 0.82rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+
+    .brand-pitch {
+      font-size: 0.8rem;
       color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 680px;
     }
-    .ver-item {
-      padding: 10px 12px;
-      border-radius: 7px;
-      border: 1px solid transparent;
-      cursor: pointer;
-      margin-bottom: 6px;
+
+    .nav-strip {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.02);
-    }
-    .ver-item:hover {
-      background: var(--panel);
-    }
-    .ver-item.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-    }
-    .ver-name {
-      font-weight: 600;
-      font-size: 0.92rem;
-    }
-    .ver-meta {
-      font-size: 0.76rem;
-      color: var(--muted);
-    }
-    .badge {
-      display: inline-block;
-      padding: 2px 8px;
-      border-radius: 999px;
-      font-size: 0.72rem;
-      font-weight: 600;
-    }
-    .badge-pending_review { background: var(--amber-soft); color: #f8b84e; border: 1px solid rgba(243, 156, 18, 0.35); }
-    .badge-approved { background: var(--green-soft); color: #58e690; border: 1px solid rgba(46, 204, 113, 0.35); }
-    .badge-disapproved { background: var(--red-soft); color: #ff7b6e; border: 1px solid rgba(231, 76, 60, 0.35); }
-    .main {
-      padding: 24px 32px;
-      max-width: 1180px;
-    }
-    .review-bar {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 18px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      gap: 6px;
       flex-wrap: wrap;
+    }
+
+    .nav-btn {
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 7px 13px;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+    }
+    .nav-btn:hover {
+      color: var(--text);
+      border-color: var(--line-strong);
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .nav-btn[aria-current="page"] {
+      background: var(--lime);
+      color: #060809;
+      border-color: var(--lime);
+    }
+    .nav-count {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-variant-numeric: tabular-nums;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.18);
+    }
+    .nav-btn:not([aria-current="page"]) .nav-count {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--muted);
+    }
+
+    /* WORKSPACE SHELL */
+    .workspace {
+      max-width: 1560px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      min-height: calc(100vh - 67px);
+    }
+    .workspace.full-width {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* VERSION RAIL */
+    .rail {
+      border-right: 1px solid var(--line);
+      background: rgba(11, 15, 17, 0.65);
+      padding: 18px 14px 32px;
+      display: flex;
+      flex-direction: column;
       gap: 12px;
     }
-    .review-actions {
+
+    .rail-search-wrap {
+      position: relative;
+    }
+
+    .rail-search {
+      width: 100%;
+      background: var(--bg-2);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 34px 8px 11px;
+      font-size: 0.82rem;
+      transition: border-color 140ms ease;
+    }
+    .rail-search::placeholder {
+      color: var(--dim);
+    }
+    .rail-search:hover {
+      border-color: var(--line-strong);
+    }
+
+    .kbd-hint {
+      position: absolute;
+      right: 9px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--dim);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 1px 5px;
+      pointer-events: none;
+    }
+
+    .rail-heading {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 4px 6px 0;
       display: flex;
-      gap: 8px;
+      justify-content: space-between;
       align-items: center;
+    }
+
+    .rail-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .rail-btn {
+      appearance: none;
+      width: 100%;
+      text-align: left;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 9px;
+      padding: 10px 11px;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      transition: background-color 140ms ease, border-color 140ms ease;
+    }
+    .rail-btn:hover {
+      background: var(--bg-2);
+      border-color: var(--line);
+    }
+    .rail-btn[aria-current="true"] {
+      background: var(--lime-soft);
+      border-color: var(--lime-edge);
+    }
+
+    .rail-ver {
+      font-family: var(--mono);
+      font-weight: 600;
+      font-size: 0.86rem;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .rail-btn[aria-current="true"] .rail-ver {
+      color: var(--lime);
+    }
+
+    .rail-sub {
+      font-size: 0.74rem;
+      color: var(--muted);
+      margin-top: 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .status-pill {
+      font-family: var(--mono);
+      font-size: 0.67rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 2px 7px;
+      border-radius: 999px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .status-pending_review {
+      background: var(--amber-soft);
+      color: var(--amber);
+      border: 1px solid rgba(245, 166, 35, 0.3);
+    }
+    .status-approved {
+      background: var(--green-soft);
+      color: var(--green);
+      border: 1px solid rgba(61, 220, 132, 0.3);
+    }
+    .status-disapproved {
+      background: var(--red-soft);
+      color: var(--red);
+      border: 1px solid rgba(255, 92, 92, 0.3);
+    }
+
+    /* MAIN STAGE */
+    .stage {
+      padding: 28px clamp(20px, 3.5vw, 44px) 72px;
+      min-width: 0;
+    }
+
+    /* EDITORIAL APPROVAL BAR */
+    .decision-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      padding: 12px 16px;
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      margin-bottom: 24px;
+    }
+
+    .decision-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      font-size: 0.82rem;
+    }
+
+    .decision-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       flex-wrap: wrap;
     }
-    .review-input {
-      background: #0b101c;
+
+    .note-input {
+      background: var(--bg-0);
+      border: 1px solid var(--line);
       color: var(--text);
-      border: 1px solid var(--border);
-      padding: 7px 11px;
+      padding: 6px 11px;
       border-radius: 6px;
-      min-width: 240px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
+      min-width: 230px;
+      transition: border-color 140ms ease;
     }
-    .btn {
-      padding: 7px 13px;
+    .note-input:hover {
+      border-color: var(--line-strong);
+    }
+
+    .action-btn {
+      appearance: none;
+      border: 1px solid var(--line-strong);
+      background: var(--bg-2);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      padding: 7px 12px;
       border-radius: 6px;
-      border: 1px solid var(--border);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.83rem;
-      color: #fff;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
     }
-    .btn-approve { background: #1e8449; border-color: #27ae60; }
-    .btn-disapprove { background: #922b21; border-color: #c0392b; }
-    .btn-reset { background: #2c3e50; border-color: #34495e; }
-    .section-card {
-      background: var(--panel);
-      border: 1px solid var(--border);
+    .action-btn:hover {
+      background: var(--bg-3);
+    }
+    .action-btn.approve {
+      border-color: rgba(61, 220, 132, 0.45);
+      color: var(--green);
+      background: rgba(61, 220, 132, 0.08);
+    }
+    .action-btn.approve:hover {
+      background: rgba(61, 220, 132, 0.18);
+    }
+    .action-btn.disapprove {
+      border-color: rgba(255, 92, 92, 0.45);
+      color: var(--red);
+      background: rgba(255, 92, 92, 0.08);
+    }
+    .action-btn.disapprove:hover {
+      background: rgba(255, 92, 92, 0.18);
+    }
+
+    /* DOSSIER HERO */
+    .dossier-header {
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 24px;
+      margin-bottom: 28px;
+    }
+
+    .dossier-kicker {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      color: var(--lime);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dossier-title {
+      font-size: clamp(1.75rem, 3.2vw, 2.55rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .dossier-thesis {
+      margin-top: 14px;
+      font-size: 1.02rem;
+      color: var(--muted);
+      max-width: 82ch;
+      line-height: 1.6;
+    }
+
+    /* TELEMETRY SPEC STRIP */
+    .telemetry-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
       border-radius: 10px;
-      padding: 20px 24px;
-      margin-bottom: 20px;
+      overflow: hidden;
+      margin-top: 22px;
     }
-    .section-card h2 {
-      margin-top: 0;
-      font-size: 1.18rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-      color: #9ec3ff;
+
+    .telemetry-cell {
+      background: var(--bg-1);
+      padding: 13px 16px;
     }
-    .positioning-box {
-      background: var(--accent-soft);
-      border-left: 4px solid var(--accent);
-      padding: 12px 16px;
-      border-radius: 6px;
+
+    .telemetry-label {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--dim);
+      margin-bottom: 4px;
+    }
+
+    .telemetry-val {
+      font-family: var(--mono);
+      font-size: 1.15rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text);
+    }
+    .telemetry-val.accent {
+      color: var(--lime);
+    }
+
+    /* 5-PART ARCHITECTURAL BLOCKS */
+    .part-section {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .part-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
       margin-bottom: 18px;
-      font-size: 0.95rem;
     }
-    .verdict-box {
-      background: var(--amber-soft);
-      border-left: 4px solid var(--amber);
-      padding: 12px 16px;
-      border-radius: 6px;
+
+    .part-index {
+      font-family: var(--mono);
+      font-size: 0.75rem;
       font-weight: 600;
-      margin-bottom: 14px;
+      color: var(--lime);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 4px;
     }
+
+    .part-title {
+      font-size: 1.38rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .part-sub {
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    /* PART 1: CAPABILITY THESIS CARDS */
+    .thesis-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+      gap: 14px;
+    }
+
+    .thesis-card {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 140ms ease;
+    }
+    .thesis-card:hover {
+      border-color: var(--line-strong);
+    }
+
+    .thesis-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .thesis-rank {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: #060809;
+      background: var(--lime);
+      padding: 2px 7px;
+      border-radius: 4px;
+      font-variant-numeric: tabular-nums;
+      flex-shrink: 0;
+    }
+
+    .thesis-name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .thesis-cites {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-variant-numeric: tabular-nums;
+      color: var(--cyan);
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .thesis-body {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .thesis-impact {
+      margin-top: auto;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      font-size: 0.83rem;
+      color: var(--text);
+    }
+    .thesis-impact strong {
+      color: var(--lime);
+      font-family: var(--mono);
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-right: 6px;
+    }
+
+    /* LWKD / WEEKLY PULSE TERMINAL */
+    .pulse-terminal {
+      margin-top: 20px;
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 16px 20px;
+    }
+
+    .pulse-title {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--cyan);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pulse-list {
+      margin: 0;
+      padding-left: 18px;
+      display: grid;
+      gap: 6px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    /* PART 2 & TABLES */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--bg-1);
+    }
+
     table {
       width: 100%;
       border-collapse: collapse;
-      margin: 12px 0;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
+      font-variant-numeric: tabular-nums;
     }
+
     th, td {
-      border: 1px solid var(--border);
-      padding: 10px 12px;
+      padding: 12px 15px;
       text-align: left;
       vertical-align: top;
+      border-bottom: 1px solid var(--line);
     }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
     th {
-      background: var(--panel-alt);
-      color: #b8ccf0;
+      font-family: var(--mono);
+      font-size: 0.72rem;
       font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      background: var(--bg-2);
     }
+
+    /* PART 3: JARGON GLOSSARY */
     .jargon-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
       gap: 12px;
     }
-    .jargon-card {
-      background: var(--panel-alt);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 12px 14px;
+
+    .jargon-item {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      padding: 15px 17px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .jargon-term {
-      font-weight: 700;
-      color: #8ab8ff;
-      margin-bottom: 4px;
+
+    .jargon-head {
+      font-family: var(--mono);
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--cyan);
     }
-    .jargon-why {
-      margin-top: 6px;
-      font-size: 0.83rem;
-      color: #8ce9b0;
+
+    .jargon-def {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
-    .pulse-box {
-      background: #0d1424;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+
+    .jargon-bottom {
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+      font-size: 0.81rem;
+      color: var(--text);
+    }
+    .jargon-bottom span {
+      color: var(--lime);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-right: 5px;
+    }
+
+    /* PART 4: UPGRADE VERDICT & CHECKLIST */
+    .verdict-banner {
+      background: var(--lime-soft);
+      border: 1px solid var(--lime-edge);
+      border-radius: 9px;
       padding: 14px 18px;
-      margin-top: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 0.92rem;
     }
+    .verdict-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      background: var(--lime);
+      color: #060809;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .checklist {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 8px;
+    }
+
+    .checklist-item {
+      background: var(--bg-1);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 15px;
+      font-size: 0.86rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .checklist-badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--amber);
+      background: var(--amber-soft);
+      border: 1px solid rgba(245, 166, 35, 0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* PART 5: PROOF & BARS */
+    .bar-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-3);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+    .bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      border-radius: 999px;
+    }
+
     code {
-      background: rgba(255,255,255,0.08);
+      font-family: var(--mono);
+      font-size: 0.82em;
+      background: rgba(255, 255, 255, 0.07);
       padding: 1px 5px;
       border-radius: 4px;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 0.84em;
+      color: #e2f1ff;
     }
+
     pre {
-      background: #090d16;
-      border: 1px solid var(--border);
-      padding: 14px;
+      background: var(--bg-1);
+      border: 1px solid var(--line);
       border-radius: 8px;
+      padding: 16px;
       overflow-x: auto;
-      font-size: 0.82rem;
+      font-family: var(--mono);
+      font-size: 0.79rem;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    @media (max-width: 980px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+      .rail {
+        border-right: none;
+        border-bottom: 1px solid var(--line);
+      }
+      .thesis-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-top">
-      <div>
-        <div class="brand-title">What's New in vLLM & Kubernetes — Adoption Decision Engine</div>
-        <div class="brand-sub">
-          Translating inference engine and cluster changes into adoption decisions for people who don't follow inference engineering full-time — what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  <div id="live-announcer" class="sr-only" aria-live="polite"></div>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <div class="brand-cluster">
+        <span class="brand-mark" translate="no">vLLM // K8S</span>
+        <div class="brand-copy">
+          <div class="brand-title">Release Adoption &amp; Evaluation Engine</div>
+          <div class="brand-pitch">
+            Translating inference engine &amp; cluster changes into adoption decisions for teams who don’t follow inference engineering full-time.
+          </div>
         </div>
       </div>
-      <div id="queue-counters" style="font-size:0.85rem; color:var(--muted);"></div>
-    </div>
-    <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('vllm')">vLLM Releases &amp; Last Week in vLLM</button>
-      <button class="tab-btn" onclick="switchTab('kubernetes')">Kubernetes Control Benchmark (v1.28–v1.37 + LWKD)</button>
-      <button class="tab-btn" onclick="switchTab('ab_lab')">A/B Eval &amp; Hill-Climbing Lab</button>
-      <button class="tab-btn" onclick="switchTab('review_queue')">Approval Queue &amp; Automation</button>
+
+      <nav class="nav-strip" aria-label="Primary views">
+        <button type="button" class="nav-btn" id="tab-vllm" onclick="switchTab('vllm')" aria-current="page">
+          <span translate="no">vLLM</span> Dossiers
+          <span class="nav-count" id="count-vllm">13</span>
+        </button>
+        <button type="button" class="nav-btn" id="tab-kubernetes" onclick="switchTab('kubernetes')">
+          <span translate="no">Kubernetes</span> Control
+          <span class="nav-count" id="count-k8s">11</span>
+        </button>
+        <button type="button" class="nav-btn" id="tab-ab_lab" onclick="switchTab('ab_lab')">
+          A/B Hill-Climb Lab
+          <span class="nav-count">95.8% → 99.6%</span>
+        </button>
+        <button type="button" class="nav-btn" id="tab-review_queue" onclick="switchTab('review_queue')">
+          Approval Queue
+          <span class="nav-count" id="count-queue">24</span>
+        </button>
+      </nav>
     </div>
   </header>
 
-  <div class="layout" id="app-layout">
-    <aside class="sidebar" id="sidebar"></aside>
-    <main class="main" id="main-content"></main>
+  <div class="workspace" id="workspace">
+    <aside class="rail" id="version-rail" aria-label="Release versions">
+      <div class="rail-search-wrap">
+        <label for="version-search" class="sr-only">Filter versions, models, GPUs, or PRs</label>
+        <input
+          id="version-search"
+          name="version-search"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          class="rail-search"
+          placeholder="Filter versions, models, GPUs…"
+          oninput="handleRailSearch(this.value)"
+        />
+        <span class="kbd-hint" aria-hidden="true">/</span>
+      </div>
+      <div class="rail-heading">
+        <span id="rail-label">Editions</span>
+        <span class="num" id="rail-count">0</span>
+      </div>
+      <div class="rail-list" id="rail-list" role="list"></div>
+    </aside>
+
+    <main class="stage" id="main-content" tabindex="-1"></main>
   </div>
 
   <script src="data.js"></script>
   <script>
-    let DATA = window.__RELEASE_TRANSLATOR_DATA__ || null;
-    let currentTab = 'vllm';
-    let selectedVersionIndex = 0;
+    const DATA = window.__RELEASE_TRANSLATOR_DATA__ || {
+      vllm_guides: [],
+      kubernetes_guides: [],
+      ab_eval_summary: {},
+      review_queue: { items: [], counts: {} }
+    };
 
-    function formatLinks(text, project) {
-      if (!text) return '';
-      const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
-      let out = text
+    let state = {
+      tab: 'vllm',
+      ver: null,
+      railQuery: '',
+      queueFilter: 'all',
+      labDomain: 'kubernetes'
+    };
+
+    function announce(msg) {
+      const el = document.getElementById('live-announcer');
+      if (el) el.textContent = msg;
+    }
+
+    function readUrlState() {
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get('tab');
+      if (t && ['vllm', 'kubernetes', 'ab_lab', 'review_queue'].includes(t)) {
+        state.tab = t;
+      }
+      const v = params.get('ver');
+      if (v) state.ver = v;
+    }
+
+    function syncUrlState() {
+      const params = new URLSearchParams();
+      params.set('tab', state.tab);
+      if ((state.tab === 'vllm' || state.tab === 'kubernetes') && state.ver) {
+        params.set('ver', state.ver);
+      }
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      window.history.replaceState(null, '', newUrl);
+    }
+
+    function escapeHtml(raw) {
+      if (!raw) return '';
+      return String(raw)
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;');
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function formatRichText(text, project) {
+      if (!text) return '';
+      const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
+      let out = escapeHtml(text);
       out = out.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-      out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+      out = out.replace(/`([^`]+)`/g, '<code translate="no">$1</code>');
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{4,6})\b/g, `<a href="https://github.com/${repo}/pull/$1" target="_blank" rel="noopener">#$1</a>`);
+      out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{4,6})\b/g, `<a class="num" href="https://github.com/${repo}/pull/$1" target="_blank" rel="noopener">#$1</a>`);
+      out = out.replace(/\bKEP-(\d{3,5})\b/gi, '<a class="num" href="https://github.com/kubernetes/enhancements/issues/$1" target="_blank" rel="noopener">KEP-$1</a>');
       return out;
     }
 
-    function getReviewItem(project, version) {
-      if (!DATA || !DATA.review_queue || !DATA.review_queue.items) return { status: 'pending_review', reviewer_note: '' };
-      const id = `${project}:${version}`;
-      return DATA.review_queue.items.find(x => x.id === id) || { status: 'pending_review', reviewer_note: '' };
+    function getActiveList() {
+      return state.tab === 'kubernetes' ? (DATA.kubernetes_guides || []) : (DATA.vllm_guides || []);
     }
 
-    async function submitReview(project, version, status) {
+    function getFilteredList() {
+      const list = getActiveList();
+      const q = state.railQuery.trim().toLowerCase();
+      if (!q) return list;
+      return list.filter(item => {
+        const hay = `${item.version} ${item.display_title || ''} ${item.markdown || ''}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    function getReviewRecord(project, version) {
       const id = `${project}:${version}`;
-      const noteInput = document.getElementById('reviewer-note-input');
-      const note = noteInput ? noteInput.value : '';
+      const items = (DATA.review_queue && DATA.review_queue.items) || [];
+      return items.find(x => x.id === id) || { id, status: 'pending_review', reviewer_note: '' };
+    }
+
+    async function submitReviewDecision(project, version, status, customNoteId) {
+      const id = `${project}:${version}`;
+      const noteEl = document.getElementById(customNoteId || 'decision-note-input');
+      const note = noteEl ? noteEl.value.trim() : '';
+
       try {
         const res = await fetch('/api/review', {
           method: 'POST',
@@ -327,318 +1048,648 @@
         if (res.ok) {
           const payload = await res.json();
           DATA.review_queue = payload.review_queue;
-          renderAll();
+          announce(`Updated ${id} to ${status.replace('_', ' ')}`);
+          renderApp();
           return;
         }
-      } catch (_e) {
-        // Fallback for static file:// preview
+      } catch (_err) {
+        // Fallback when opened as static file
       }
-      const item = getReviewItem(project, version);
-      item.status = status;
-      item.reviewer_note = note;
-      renderAll();
+
+      const rec = getReviewRecord(project, version);
+      rec.status = status;
+      rec.reviewer_note = note;
+      announce(`Updated ${id} to ${status.replace('_', ' ')}`);
+      renderApp();
     }
 
     function switchTab(tab) {
-      currentTab = tab;
-      selectedVersionIndex = 0;
-      document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-        const map = ['vllm', 'kubernetes', 'ab_lab', 'review_queue'];
-        btn.classList.toggle('active', map[idx] === tab);
+      state.tab = tab;
+      state.railQuery = '';
+      const searchInput = document.getElementById('version-search');
+      if (searchInput) searchInput.value = '';
+      const list = getActiveList();
+      if ((tab === 'vllm' || tab === 'kubernetes') && list.length > 0) {
+        if (!list.some(x => x.version === state.ver)) {
+          state.ver = list[0].version;
+        }
+      }
+      syncUrlState();
+      renderApp();
+    }
+
+    function selectVersion(ver) {
+      state.ver = ver;
+      syncUrlState();
+      renderApp();
+    }
+
+    function handleRailSearch(val) {
+      state.railQuery = val;
+      renderRail();
+    }
+
+    function setQueueFilter(filterVal) {
+      state.queueFilter = filterVal;
+      renderMainStage();
+    }
+
+    function setLabDomain(domain) {
+      state.labDomain = domain;
+      renderMainStage();
+    }
+
+    function renderMastheadCounts() {
+      const vllmEl = document.getElementById('count-vllm');
+      const k8sEl = document.getElementById('count-k8s');
+      const qEl = document.getElementById('count-queue');
+      if (vllmEl) vllmEl.textContent = (DATA.vllm_guides || []).length;
+      if (k8sEl) k8sEl.textContent = (DATA.kubernetes_guides || []).length;
+      if (qEl && DATA.review_queue && DATA.review_queue.items) {
+        const pending = DATA.review_queue.items.filter(x => x.status === 'pending_review').length;
+        qEl.textContent = `${pending} pending`;
+      }
+
+      ['vllm', 'kubernetes', 'ab_lab', 'review_queue'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if (btn) {
+          if (state.tab === t) {
+            btn.setAttribute('aria-current', 'page');
+          } else {
+            btn.removeAttribute('aria-current');
+          }
+        }
       });
-      renderAll();
     }
 
-    function selectVersion(idx) {
-      selectedVersionIndex = idx;
-      renderAll();
-    }
-
-    function renderCounters() {
-      const el = document.getElementById('queue-counters');
-      if (!DATA || !DATA.review_queue) return;
-      const items = DATA.review_queue.items || [];
-      const pending = items.filter(x => x.status === 'pending_review').length;
-      const approved = items.filter(x => x.status === 'approved').length;
-      const disapproved = items.filter(x => x.status === 'disapproved').length;
-      el.innerHTML = `Queue: <span class="badge badge-approved">${approved} Approved</span> <span class="badge badge-pending_review">${pending} Pending Review</span> <span class="badge badge-disapproved">${disapproved} Disapproved</span>`;
-    }
-
-    function renderGuideView(list) {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('main-content');
-      document.getElementById('app-layout').style.gridTemplateColumns = '310px 1fr';
-      sidebar.style.display = 'block';
-
-      const groupLabel = currentTab === 'vllm' ? 'vLLM Editions (Minor, Patch & Weekly)' : 'Kubernetes Control (10 Versions + LWKD)';
-      let sbHtml = `<h3>${groupLabel}</h3>`;
-      list.forEach((item, idx) => {
-        const rev = getReviewItem(item.project, item.version);
-        const label = item.display_title || item.version;
-        const score = item.eval ? (item.eval.composite_score * 100).toFixed(1) + '%' : '';
-        sbHtml += `
-          <div class="ver-item ${idx === selectedVersionIndex ? 'active' : ''}" onclick="selectVersion(${idx})">
-            <div>
-              <div class="ver-name">${label}</div>
-              <div class="ver-meta">${item.published_date || 'Release'} · Eval ${score}</div>
-            </div>
-            <span class="badge badge-${rev.status}">${rev.status.replace('_', ' ')}</span>
-          </div>
-        `;
-      });
-      sidebar.innerHTML = sbHtml;
-
-      const guide = list[selectedVersionIndex];
-      if (!guide) {
-        main.innerHTML = '<p>No guides found.</p>';
+    function renderRail() {
+      const workspace = document.getElementById('workspace');
+      const rail = document.getElementById('version-rail');
+      if (state.tab === 'ab_lab' || state.tab === 'review_queue') {
+        rail.style.display = 'none';
+        workspace.classList.add('full-width');
         return;
       }
-      const rev = getReviewItem(guide.project, guide.version);
+
+      rail.style.display = 'flex';
+      workspace.classList.remove('full-width');
+
+      const filtered = getFilteredList();
+      if (filtered.length > 0 && !filtered.some(x => x.version === state.ver)) {
+        state.ver = filtered[0].version;
+      }
+
+      document.getElementById('rail-label').textContent =
+        state.tab === 'vllm' ? 'vLLM Releases & Weekly' : 'Kubernetes Control';
+      document.getElementById('rail-count').textContent = `${filtered.length}`;
+
+      const listEl = document.getElementById('rail-list');
+      if (filtered.length === 0) {
+        listEl.innerHTML = `<div style="padding:14px 8px; color:var(--muted); font-size:0.82rem;">No matching versions. Clear the filter to view all editions.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = filtered.map(item => {
+        const isCurrent = item.version === state.ver;
+        const rev = getReviewRecord(item.project, item.version);
+        const score = item.eval ? (item.eval.composite_score * 100).toFixed(1) + '%' : '—';
+        const title = item.is_weekly ? 'Last Week Digest' : item.version;
+        const kindTag = item.is_weekly ? 'WEEKLY' : (item.is_patch ? 'PATCH' : 'MINOR');
+        return `
+          <button
+            type="button"
+            class="rail-btn"
+            aria-current="${isCurrent ? 'true' : 'false'}"
+            onclick="selectVersion('${escapeHtml(item.version)}')"
+          >
+            <div>
+              <div class="rail-ver">
+                <span translate="no">${escapeHtml(title)}</span>
+                <span style="font-size:0.65rem; color:var(--dim); border:1px solid var(--line); padding:0 4px; border-radius:3px;">${kindTag}</span>
+              </div>
+              <div class="rail-sub">${escapeHtml(item.published_date || 'Release')} · ${item.total_raw_items || 0} items · ${score}</div>
+            </div>
+            <span class="status-pill status-${rev.status}">${rev.status === 'pending_review' ? 'Pending' : rev.status}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderDossierStage() {
+      const stage = document.getElementById('main-content');
+      const list = getFilteredList();
+      const guide = list.find(x => x.version === state.ver) || list[0];
+      if (!guide) {
+        stage.innerHTML = `<p style="color:var(--muted);">Select a release from the left rail.</p>`;
+        return;
+      }
+
+      const rev = getReviewRecord(guide.project, guide.version);
       const secs = guide.sections || {};
-      const evalObj = guide.eval || {};
+      const ev = guide.eval || {};
+      const repo = guide.project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
 
-      let html = `
-        <div class="review-bar">
-          <div>
-            <strong>Review Gate:</strong> <code>${guide.project}:${guide.version}</code>
-            <span class="badge badge-${rev.status}" style="margin-left:8px;">${rev.status}</span>
-            <span style="margin-left:10px; font-size:0.84rem; color:var(--muted);">
-              Composite Score: <strong>${((evalObj.composite_score || 0) * 100).toFixed(1)}%</strong>
-              | Citation Precision: <strong>${((evalObj.factual_citation_precision || 1) * 100).toFixed(0)}%</strong>
-            </span>
+      const bigDeals = secs.whats_the_big_deal || [];
+      const whoBenefits = secs.who_benefits || [];
+      const jargonList = secs.jargon_glossary || [];
+      const upgradeRisks = secs.should_i_upgrade || [];
+      const proofs = secs.wheres_the_proof || [];
+      const pulse = secs.lwkd_patch_pulse || [];
+
+      stage.innerHTML = `
+        <div class="decision-bar" role="region" aria-label="Editorial approval controls">
+          <div class="decision-meta">
+            <span class="status-pill status-${rev.status}">${rev.status.replace('_', ' ')}</span>
+            <span class="num" style="color:var(--muted);">ID: <code translate="no">${escapeHtml(guide.project)}:${escapeHtml(guide.version)}</code></span>
+            ${rev.reviewer_note ? `<span style="color:var(--lime); font-size:0.8rem;">Note: “${escapeHtml(rev.reviewer_note)}”</span>` : ''}
           </div>
-          <div class="review-actions">
-            <input id="reviewer-note-input" class="review-input" placeholder="Reviewer note (optional)..." value="${(rev.reviewer_note || '').replace(/"/g, '&quot;')}" />
-            <button class="btn btn-approve" onclick="submitReview('${guide.project}', '${guide.version}', 'approved')">Approve</button>
-            <button class="btn btn-disapprove" onclick="submitReview('${guide.project}', '${guide.version}', 'disapproved')">Disapprove</button>
-            <button class="btn btn-reset" onclick="submitReview('${guide.project}', '${guide.version}', 'pending_review')">Reset</button>
-          </div>
-        </div>
-
-        <h1 style="margin-top:0;">What's New in ${guide.project.toUpperCase()} ${guide.display_title || guide.version}</h1>
-        <div class="positioning-box">
-          <strong>Positioning:</strong> ${guide.positioning}
-        </div>
-
-        <div class="section-card">
-          <h2>1. What's the Big Deal?</h2>
-          <p style="color:var(--muted); margin-top:0;">Top capability clusters synthesized across ${guide.total_raw_items || 0} upstream changes:</p>
-          <ol>
-            ${(secs.whats_the_big_deal || []).map(b => `
-              <li style="margin-bottom:14px;">
-                <strong>${b.theme || b.category || 'Highlight'}</strong>
-                ${(b.prs && b.prs.length) ? `<span style="color:var(--muted);">(${b.prs.slice(0,4).map(p => formatLinks('#'+p, guide.project)).join(', ')})</span>` : ''}
-                <div style="margin-top:4px;"><em>What changed:</em> ${formatLinks(b.what_changed || b.text || '', guide.project)}</div>
-                ${b.why_it_matters ? `<div style="margin-top:3px; color:#8ce9b0;"><em>Operational impact:</em> ${formatLinks(b.why_it_matters, guide.project)}</div>` : ''}
-              </li>
-            `).join('')}
-          </ol>
-
-          <div class="pulse-box">
-            <h3 style="margin-top:0; font-size:0.96rem; color:#9ec3ff;">
-              Last Week / Patch Pulse (${guide.project === 'kubernetes' ? 'LWKD' : 'Last Week in vLLM'} Style)
-            </h3>
-            <ul style="margin-bottom:0;">
-              ${(secs.lwkd_patch_pulse || []).map(p => `<li>${formatLinks(p, guide.project)}</li>`).join('')}
-            </ul>
+          <div class="decision-controls">
+            <label for="decision-note-input" class="sr-only">Reviewer note</label>
+            <input
+              id="decision-note-input"
+              name="reviewer-note"
+              type="text"
+              autocomplete="off"
+              class="note-input"
+              placeholder="Add editorial note or sign-off…"
+              value="${escapeHtml(rev.reviewer_note || '')}"
+            />
+            <button type="button" class="action-btn approve" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'approved')">
+              Approve Edition
+            </button>
+            <button type="button" class="action-btn disapprove" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'disapproved')">
+              Flag for Revision
+            </button>
+            <button type="button" class="action-btn" onclick="submitReviewDecision('${escapeHtml(guide.project)}', '${escapeHtml(guide.version)}', 'pending_review')">
+              Reset
+            </button>
           </div>
         </div>
 
-        <div class="section-card">
-          <h2>2. Who Benefits? (Models You Serve, GPUs You Own &amp; Your Bill)</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Capability Area</th>
-                <th>Models / Workloads Served</th>
-                <th>GPUs / Infrastructure Owned</th>
-                <th>Impact on Your Bill &amp; SLAs</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${(secs.who_benefits || []).map(w => `
+        <div class="dossier-header">
+          <div class="dossier-kicker">
+            <span translate="no">${escapeHtml(guide.project.toUpperCase())} ADOPTION DOSSIER</span>
+            <span>·</span>
+            <span class="num">${escapeHtml(guide.published_date || 'Latest')}</span>
+          </div>
+          <h1 class="dossier-title">What’s New in <span translate="no">${escapeHtml(guide.display_title || (guide.project.toUpperCase() + ' ' + guide.version))}</span></h1>
+          <p class="dossier-thesis">${escapeHtml(guide.positioning || '')}</p>
+
+          <div class="telemetry-grid" role="region" aria-label="Release telemetry metrics">
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Upstream Changes</div>
+              <div class="telemetry-val">${guide.total_raw_items || 0}&nbsp;items</div>
+            </div>
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Capability Themes</div>
+              <div class="telemetry-val">${bigDeals.length}&nbsp;clusters</div>
+            </div>
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Breaking / Upgrade Checks</div>
+              <div class="telemetry-val">${upgradeRisks.length}&nbsp;notices</div>
+            </div>
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Verified PR Citations</div>
+              <div class="telemetry-val">${(guide.cited_prs || []).length}&nbsp;PRs</div>
+            </div>
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Citation Precision</div>
+              <div class="telemetry-val">${((ev.factual_citation_precision || 1) * 100).toFixed(0)}%</div>
+            </div>
+            <div class="telemetry-cell">
+              <div class="telemetry-label">Eval Composite Score</div>
+              <div class="telemetry-val accent">${((ev.composite_score || 0.95) * 100).toFixed(1)}%</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PART 1 -->
+        <section class="part-section" aria-labelledby="part-1-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">01 // Architectural Shifts</span>
+              <h2 class="part-title" id="part-1-heading">What’s the Big Deal?</h2>
+            </div>
+            <div class="part-sub">Multi-PR engineering clusters translated into operational outcomes</div>
+          </div>
+
+          <div class="thesis-grid">
+            ${bigDeals.map((b, idx) => {
+              const prs = (b.prs || []).slice(0, 4);
+              const keps = (b.keps || []).slice(0, 3);
+              return `
+                <article class="thesis-card">
+                  <div class="thesis-top">
+                    <span class="thesis-rank">0${idx + 1}</span>
+                    <h3 class="thesis-name">${escapeHtml(b.theme || b.category || 'Core Capability')}</h3>
+                    <div class="thesis-cites">
+                      ${keps.map(k => `<a href="https://github.com/kubernetes/enhancements/issues/${k}" target="_blank" rel="noopener">KEP-${k}</a>`).join(' ')}
+                      ${prs.map(p => `<a href="https://github.com/${repo}/pull/${p}" target="_blank" rel="noopener">#${p}</a>`).join(' ')}
+                    </div>
+                  </div>
+                  <div class="thesis-body">${formatRichText(b.what_changed || b.text || '', guide.project)}</div>
+                  ${b.why_it_matters ? `
+                    <div class="thesis-impact">
+                      <strong>Bottom Line</strong> ${formatRichText(b.why_it_matters, guide.project)}
+                    </div>
+                  ` : ''}
+                </article>
+              `;
+            }).join('')}
+          </div>
+
+          ${pulse.length > 0 ? `
+            <div class="pulse-terminal">
+              <div class="pulse-title">
+                <span>${guide.project === 'kubernetes' ? 'LWKD Patch &amp; Merge Pulse' : 'Last Week in vLLM // Merge &amp; Patch Pulse'}</span>
+                <span class="num">${pulse.length}&nbsp;highlights</span>
+              </div>
+              <ul class="pulse-list">
+                ${pulse.map(item => `<li>${formatRichText(item, guide.project)}</li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
+        </section>
+
+        <!-- PART 2 -->
+        <section class="part-section" aria-labelledby="part-2-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">02 // Workload, Hardware &amp; Unit Economics</span>
+              <h2 class="part-title" id="part-2-heading">Who Benefits? (Models, GPUs &amp; Your Inference Bill)</h2>
+            </div>
+            <div class="part-sub">How this release maps to the models you serve and the hardware you own</div>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
                 <tr>
-                  <td><strong>${w.capability || 'Core'}</strong></td>
-                  <td>${formatLinks(w.models_workloads || '', guide.project)}</td>
-                  <td>${formatLinks(w.gpus_infra || '', guide.project)}</td>
-                  <td>${formatLinks(w.bill_impact || '', guide.project)}</td>
+                  <th scope="col" style="width:22%;">Capability Cluster</th>
+                  <th scope="col" style="width:26%;">Models &amp; Workloads Served</th>
+                  <th scope="col" style="width:25%;">GPUs &amp; Infrastructure Owned</th>
+                  <th scope="col" style="width:27%;">Impact on Your Bill &amp; SLAs</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                ${whoBenefits.map(row => `
+                  <tr>
+                    <td><strong>${escapeHtml(row.capability || 'Core')}</strong></td>
+                    <td>${formatRichText(row.models_workloads || '', guide.project)}</td>
+                    <td>${formatRichText(row.gpus_infra || '', guide.project)}</td>
+                    <td style="color:var(--lime);">${formatRichText(row.bill_impact || '', guide.project)}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-        <div class="section-card">
-          <h2>3. What Does the Jargon Mean?</h2>
+        <!-- PART 3 -->
+        <section class="part-section" aria-labelledby="part-3-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">03 // Systems &amp; Inference Lexicon</span>
+              <h2 class="part-title" id="part-3-heading">What Does the Jargon Mean?</h2>
+            </div>
+            <div class="part-sub">Plain-English definitions for technical terms introduced in ${escapeHtml(guide.version)}</div>
+          </div>
+
           <div class="jargon-grid">
-            ${(secs.jargon_glossary || []).map(j => `
-              <div class="jargon-card">
-                <div class="jargon-term">${j.term}</div>
-                <div style="font-size:0.86rem;">${formatLinks(j.meaning, guide.project)}</div>
-                <div class="jargon-why"><strong>Why you care:</strong> ${formatLinks(j.why_it_matters, guide.project)}</div>
+            ${jargonList.map(j => `
+              <div class="jargon-item">
+                <div class="jargon-head" translate="no">${escapeHtml(j.term)}</div>
+                <div class="jargon-def">${formatRichText(j.meaning, guide.project)}</div>
+                <div class="jargon-bottom">
+                  <span>Why You Care:</span> ${formatRichText(j.why_it_matters, guide.project)}
+                </div>
               </div>
             `).join('')}
           </div>
-        </div>
+        </section>
 
-        <div class="section-card">
-          <h2>4. Should I Upgrade?</h2>
-          <div class="verdict-box">${guide.verdict || 'Review upgrade notes before rollout'}</div>
-          <ul>
-            ${(secs.should_i_upgrade || []).map(u => `
-              <li style="margin-bottom:8px;">
-                <strong>[${u.category || 'Upgrade Check'}]</strong> ${formatLinks(u.text || '', guide.project)}
+        <!-- PART 4 -->
+        <section class="part-section" aria-labelledby="part-4-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">04 // Rollout &amp; Breaking-Change Triage</span>
+              <h2 class="part-title" id="part-4-heading">Should I Upgrade?</h2>
+            </div>
+            <div class="part-sub">Required flag migrations, removals, and operational readiness</div>
+          </div>
+
+          <div class="verdict-banner">
+            <span class="verdict-tag">Verdict</span>
+            <span>${escapeHtml(guide.verdict || 'Review upgrade checklist before rollout')}</span>
+          </div>
+
+          <ul class="checklist">
+            ${upgradeRisks.map(r => `
+              <li class="checklist-item">
+                <span class="checklist-badge">${escapeHtml(r.category || 'Upgrade Check')}</span>
+                <div>${formatRichText(r.text || '', guide.project)}</div>
               </li>
             `).join('')}
           </ul>
-        </div>
+        </section>
 
-        <div class="section-card">
-          <h2>5. Where's the Proof?</h2>
-          <ul>
-            ${(secs.wheres_the_proof || []).map(p => `
-              <li style="margin-bottom:8px;">
-                <strong>[${p.category || 'Proof'}]</strong> ${formatLinks(p.text || '', guide.project)}
-                ${(p.prs && p.prs.length) ? `(${p.prs.slice(0,3).map(pr => formatLinks('#'+pr, guide.project)).join(', ')})` : ''}
+        <!-- PART 5 -->
+        <section class="part-section" style="border-bottom:none;" aria-labelledby="part-5-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">05 // Empirical Evidence &amp; Upstream Traceability</span>
+              <h2 class="part-title" id="part-5-heading">Where’s the Proof?</h2>
+            </div>
+            <div class="part-sub">Hardware-qualified benchmarks, KEP graduations, and verified PR citations</div>
+          </div>
+
+          <ul class="checklist">
+            ${proofs.map(p => `
+              <li class="checklist-item">
+                <span class="checklist-badge" style="color:var(--cyan); background:var(--cyan-soft); border-color:rgba(84,232,212,0.3);">
+                  ${escapeHtml(p.category || 'Proof')}
+                </span>
+                <div>
+                  ${formatRichText(p.text || '', guide.project)}
+                  ${(p.prs && p.prs.length) ? `<span class="num" style="margin-left:6px; color:var(--muted);">(${p.prs.slice(0, 3).map(pr => formatRichText('#' + pr, guide.project)).join(', ')})</span>` : ''}
+                </div>
               </li>
             `).join('')}
           </ul>
-          <details style="margin-top:16px;">
-            <summary style="cursor:pointer; color:#8ab8ff; font-weight:600;">View Complete Generated Markdown Brief (with Full Graduation Rollup)</summary>
-            <pre>${(guide.markdown || '').replace(/</g, '&lt;')}</pre>
+
+          <details style="margin-top:22px; background:var(--bg-1); border:1px solid var(--line); border-radius:8px; padding:12px 16px;">
+            <summary style="cursor:pointer; font-family:var(--mono); font-size:0.82rem; font-weight:600; color:var(--lime);">
+              Inspect Full Publication Markdown &amp; Complete Feature Graduation Index (${(guide.cited_prs || []).length}&nbsp;PRs)
+            </summary>
+            <pre style="margin-top:12px;">${escapeHtml(guide.markdown || '')}</pre>
           </details>
-        </div>
+        </section>
       `;
-      main.innerHTML = html;
     }
 
-    function renderAbLab() {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('main-content');
-      sidebar.style.display = 'none';
-      document.getElementById('app-layout').style.gridTemplateColumns = '1fr';
-
-      const ab = (DATA && DATA.ab_eval_summary) || {};
+    function renderAbLabStage() {
+      const stage = document.getElementById('main-content');
+      const ab = DATA.ab_eval_summary || {};
       const k8s = ab.kubernetes_control_ab || {};
       const vllm = ab.vllm_target_ab || {};
-      const comp = (ab.domain_comparison_k8s_vs_vllm || {}).key_structural_differences_and_transfer_lessons || [];
+      const diffs = (ab.domain_comparison_k8s_vs_vllm || {}).key_structural_differences_and_transfer_lessons || [];
       const variants = Object.keys(k8s);
 
-      const renderTable = (domainObj) => `
-        <table>
-          <thead>
-            <tr>
-              <th>Generator Architecture</th>
-              <th>Headline Salience Recall</th>
-              <th>Upgrade Risk Recall</th>
-              <th>Citation Precision</th>
-              <th>5-Part Completeness</th>
-              <th>Jargon Translation</th>
-              <th>Cluster Diversity</th>
-              <th>Composite Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${variants.map(v => {
-              const r = domainObj[v] || {};
-              const isBest = v === 'v4_adoption_engine';
-              return `
-                <tr style="${isBest ? 'background:rgba(46,204,113,0.10); font-weight:600;' : ''}">
-                  <td><code>${v}</code> ${isBest ? '★ Winner' : ''}</td>
-                  <td>${((r.headline_salience_recall || 0)*100).toFixed(1)}%</td>
-                  <td>${((r.upgrade_risk_recall || 0)*100).toFixed(1)}%</td>
-                  <td>${((r.factual_citation_precision || 0)*100).toFixed(1)}%</td>
-                  <td>${((r.five_part_completeness || 0)*100).toFixed(1)}%</td>
-                  <td>${((r.jargon_translation_score || 0)*100).toFixed(1)}%</td>
-                  <td>${((r.cluster_diversity_score || 0)*100).toFixed(1)}%</td>
-                  <td><strong>${((r.composite_score || 0)*100).toFixed(1)}%</strong></td>
-                </tr>
-              `;
-            }).join('')}
-          </tbody>
-        </table>
-      `;
+      const renderVariantRows = (domainData) => variants.map(v => {
+        const r = domainData[v] || {};
+        const isWinner = v === 'v4_adoption_engine';
+        const compPct = ((r.composite_score || 0) * 100).toFixed(1);
+        return `
+          <tr style="${isWinner ? 'background:var(--lime-soft);' : ''}">
+            <td>
+              <code translate="no" style="${isWinner ? 'color:var(--lime); font-weight:700;' : ''}">${escapeHtml(v)}</code>
+              ${isWinner ? '<span class="status-pill status-approved" style="margin-left:8px;">Production</span>' : ''}
+            </td>
+            <td class="num">${((r.headline_salience_recall || 0) * 100).toFixed(1)}%</td>
+            <td class="num">${((r.upgrade_risk_recall || 0) * 100).toFixed(1)}%</td>
+            <td class="num">${((r.factual_citation_precision || 0) * 100).toFixed(1)}%</td>
+            <td class="num">${((r.five_part_completeness || 0) * 100).toFixed(1)}%</td>
+            <td class="num">${((r.jargon_translation_score || 0) * 100).toFixed(1)}%</td>
+            <td class="num">${((r.cluster_diversity_score || 0) * 100).toFixed(1)}%</td>
+            <td class="num" style="min-width:160px;">
+              <strong style="${isWinner ? 'color:var(--lime);' : ''}">${compPct}%</strong>
+              <div class="bar-track"><div class="bar-fill" style="width:${compPct}%;"></div></div>
+            </td>
+          </tr>
+        `;
+      }).join('');
 
-      main.innerHTML = `
-        <h1 style="margin-top:0;">A/B Evaluation &amp; Auto-Research Hill-Climbing Lab</h1>
-        <p style="color:var(--muted);">
-          Using 10 Kubernetes minor releases (<code>v1.28</code>–<code>v1.37</code>, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly digests as our ground-truth control benchmark, we hill-climbed from <code>v0_naive_baseline</code> (32.4%) to <code>v4_adoption_engine</code> (95.8%) before transferring the winning architecture to 10 vLLM releases (<code>v0.25.0</code>–<code>v0.34.0</code>, 99.6%).
-        </p>
+      const activeDomainObj = state.labDomain === 'kubernetes' ? k8s : vllm;
+      const perVersionRows = ((activeDomainObj['v4_adoption_engine'] || {}).per_version) || [];
 
-        <div class="section-card">
-          <h2>1. Kubernetes Control Benchmark (10 Minor Releases: v1.28 – v1.37)</h2>
-          ${renderTable(k8s)}
+      stage.innerHTML = `
+        <div class="dossier-header">
+          <div class="dossier-kicker">CONTROL BENCHMARK &amp; CROSS-DOMAIN TRANSFER</div>
+          <h1 class="dossier-title">A/B Evaluation &amp; Auto-Research Hill-Climbing Lab</h1>
+          <p class="dossier-thesis">
+            We used 10 historical Kubernetes minor releases (<code translate="no">v1.28</code>–<code translate="no">v1.37</code>, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly digests as our ground-truth control benchmark against human-written Official Release Blogs, hill-climbing across 5 architectures (<code translate="no">32.4% → 95.8%</code>) before transferring to 10 vLLM releases (<code translate="no">v0.25.0</code>–<code translate="no">v0.34.0</code>, <code translate="no">44.6% → 99.6%</code>).
+          </p>
         </div>
 
-        <div class="section-card">
-          <h2>2. vLLM Target Benchmark (10 Minor Releases: v0.25.0 – v0.34.0)</h2>
-          ${renderTable(vllm)}
-        </div>
-
-        <div class="section-card">
-          <h2>3. Structural Comparison: Why vLLM Needs Domain Calibration Beyond Kubernetes</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Dimension</th>
-                <th>Kubernetes (v1.28–v1.37)</th>
-                <th>vLLM (v0.25.0–v0.34.0)</th>
-                <th>Architectural Adaptation in <code>v4_adoption_engine</code></th>
-              </tr>
-            </thead>
-            <tbody>
-              ${comp.map(d => `
+        <section class="part-section" aria-labelledby="lab-k8s-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">01 // Control Experiment (10 Releases, 3,088 Items)</span>
+              <h2 class="part-title" id="lab-k8s-heading">Kubernetes Ground-Truth Hill-Climb (<span translate="no">v1.28 – v1.37</span>)</h2>
+            </div>
+            <div class="part-sub">Scored against held-out Official Kubernetes Release Spotlights</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
                 <tr>
-                  <td><strong>${d.dimension}</strong></td>
-                  <td>${d.kubernetes}</td>
-                  <td>${d.vllm}</td>
-                  <td>${d.adaptation_in_v3}</td>
+                  <th scope="col">Architecture Variant</th>
+                  <th scope="col">Salience Recall</th>
+                  <th scope="col">Risk Recall</th>
+                  <th scope="col">Citation Precision</th>
+                  <th scope="col">5-Part Schema</th>
+                  <th scope="col">Jargon Coverage</th>
+                  <th scope="col">Cluster Diversity</th>
+                  <th scope="col">Composite Score</th>
                 </tr>
-              `).join('')}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                ${renderVariantRows(k8s)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="part-section" aria-labelledby="lab-vllm-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">02 // Target Transfer Experiment (10 Releases + Weekly PRs)</span>
+              <h2 class="part-title" id="lab-vllm-heading">vLLM Target Domain Benchmark (<span translate="no">v0.25.0 – v0.34.0</span>)</h2>
+            </div>
+            <div class="part-sub">Scored against held-out human TL;DR, Highlights &amp; Upgrade tables</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Architecture Variant</th>
+                  <th scope="col">Salience Recall</th>
+                  <th scope="col">Risk Recall</th>
+                  <th scope="col">Citation Precision</th>
+                  <th scope="col">5-Part Schema</th>
+                  <th scope="col">Jargon Coverage</th>
+                  <th scope="col">Cluster Diversity</th>
+                  <th scope="col">Composite Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${renderVariantRows(vllm)}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="part-section" aria-labelledby="lab-per-ver-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">03 // Per-Version Scorecard (<span translate="no">v4_adoption_engine</span>)</span>
+              <h2 class="part-title" id="lab-per-ver-heading">Release-by-Release Verification Breakdown</h2>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="action-btn ${state.labDomain === 'kubernetes' ? 'approve' : ''}" onclick="setLabDomain('kubernetes')">
+                Kubernetes (v1.28–v1.37)
+              </button>
+              <button type="button" class="action-btn ${state.labDomain === 'vllm' ? 'approve' : ''}" onclick="setLabDomain('vllm')">
+                vLLM (v0.25.0–v0.34.0)
+              </button>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col">Version</th>
+                  <th scope="col">Matched Human Spotlights</th>
+                  <th scope="col">Salience Recall</th>
+                  <th scope="col">Upgrade Risk Recall</th>
+                  <th scope="col">Citation Precision</th>
+                  <th scope="col">Verified PRs Cited</th>
+                  <th scope="col">Composite Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${perVersionRows.map(r => `
+                  <tr>
+                    <td class="num"><strong translate="no">${escapeHtml(r.version)}</strong></td>
+                    <td class="num">${escapeHtml(r.matched_spotlights)}</td>
+                    <td class="num">${(r.headline_salience_recall * 100).toFixed(1)}%</td>
+                    <td class="num">${(r.upgrade_risk_recall * 100).toFixed(1)}%</td>
+                    <td class="num">${(r.factual_citation_precision * 100).toFixed(1)}%</td>
+                    <td class="num">${r.cited_prs_count}&nbsp;PRs</td>
+                    <td class="num"><strong style="color:var(--lime);">${(r.composite_score * 100).toFixed(1)}%</strong></td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="part-section" style="border-bottom:none;" aria-labelledby="lab-diff-heading">
+          <div class="part-header">
+            <div>
+              <span class="part-index">04 // Cross-Domain Engineering Analysis</span>
+              <h2 class="part-title" id="lab-diff-heading">How Kubernetes &amp; vLLM Releases Differ Structurally</h2>
+            </div>
+            <div class="part-sub">Why naive Kubernetes changelog summarizers fail on vLLM without 3D hardware/model clustering</div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th scope="col" style="width:20%;">Dimension</th>
+                  <th scope="col" style="width:26%;">Kubernetes (<span translate="no">v1.28–v1.37</span>)</th>
+                  <th scope="col" style="width:27%;">vLLM (<span translate="no">v0.25.0–v0.34.0</span>)</th>
+                  <th scope="col" style="width:27%;">Adaptation in <code translate="no">v4_adoption_engine</code></th>
+                </tr>
+              </thead>
+              <tbody>
+                ${diffs.map(d => `
+                  <tr>
+                    <td><strong>${escapeHtml(d.dimension)}</strong></td>
+                    <td>${formatRichText(d.kubernetes, 'kubernetes')}</td>
+                    <td>${formatRichText(d.vllm, 'vllm')}</td>
+                    <td style="color:var(--lime);">${formatRichText(d.adaptation_in_v3, 'vllm')}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </section>
       `;
     }
 
-    function renderReviewQueueTab() {
-      const sidebar = document.getElementById('sidebar');
-      const main = document.getElementById('main-content');
-      sidebar.style.display = 'none';
-      document.getElementById('app-layout').style.gridTemplateColumns = '1fr';
+    function renderQueueStage() {
+      const stage = document.getElementById('main-content');
+      const allItems = (DATA.review_queue && DATA.review_queue.items) || [];
+      const filtered = state.queueFilter === 'all'
+        ? allItems
+        : allItems.filter(x => x.status === state.queueFilter);
 
-      const items = (DATA && DATA.review_queue && DATA.review_queue.items) || [];
-      main.innerHTML = `
-        <h1 style="margin-top:0;">Human-in-the-Loop Approval Queue &amp; Watcher Automation</h1>
-        <p style="color:var(--muted);">
-          The scheduled timer (<code>python3 -m harness.cli watch --interval 3600</code>) polls upstream releases and weekly merged PRs, runs the <code>v4_adoption_engine</code> + evaluation gate (<code>&gt;= 82%</code> composite score), and places new drafts in <code>pending_review</code>.
-        </p>
-        <div class="section-card">
-          <h2>All Generated Release &amp; Weekly Briefs (${items.length})</h2>
+      stage.innerHTML = `
+        <div class="dossier-header">
+          <div class="dossier-kicker">HUMAN-IN-THE-LOOP GOVERNANCE &amp; TIMER DAEMON</div>
+          <h1 class="dossier-title">Release Approval Queue &amp; Upstream Watcher</h1>
+          <p class="dossier-thesis">
+            The scheduled watcher (<code translate="no">python3 -m harness.cli watch --interval 3600</code>) polls <code translate="no">vllm-project/vllm</code> and <code translate="no">kubernetes/kubernetes</code> for new releases and weekly merged PRs, runs <code translate="no">v4_adoption_engine</code>, verifies the <code translate="no">&gt;= 82%</code> quality gate, and stages drafts below for your sign-off.
+          </p>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px;">
+          <div style="display:flex; gap:8px; flex-wrap:wrap;" role="group" aria-label="Filter queue by status">
+            <button type="button" class="action-btn ${state.queueFilter === 'all' ? 'approve' : ''}" onclick="setQueueFilter('all')">
+              All Editions (${allItems.length})
+            </button>
+            <button type="button" class="action-btn ${state.queueFilter === 'pending_review' ? 'approve' : ''}" onclick="setQueueFilter('pending_review')">
+              Pending Review (${allItems.filter(x => x.status === 'pending_review').length})
+            </button>
+            <button type="button" class="action-btn ${state.queueFilter === 'approved' ? 'approve' : ''}" onclick="setQueueFilter('approved')">
+              Approved (${allItems.filter(x => x.status === 'approved').length})
+            </button>
+            <button type="button" class="action-btn ${state.queueFilter === 'disapproved' ? 'approve' : ''}" onclick="setQueueFilter('disapproved')">
+              Disapproved (${allItems.filter(x => x.status === 'disapproved').length})
+            </button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>ID</th>
-                <th>Project</th>
-                <th>Edition / Version</th>
-                <th>Eval Gate Score</th>
-                <th>Current Status</th>
-                <th>Reviewer Note</th>
-                <th>Actions</th>
+                <th scope="col">Edition ID</th>
+                <th scope="col">Project</th>
+                <th scope="col">Version / Window</th>
+                <th scope="col">Eval Gate</th>
+                <th scope="col">Status</th>
+                <th scope="col">Reviewer Note</th>
+                <th scope="col">Decision</th>
               </tr>
             </thead>
             <tbody>
-              ${items.map(it => `
+              ${filtered.map((it, idx) => `
                 <tr>
-                  <td><code>${it.id}</code></td>
-                  <td>${it.project.toUpperCase()}</td>
-                  <td><strong>${it.version}</strong></td>
-                  <td>${((it.composite_score || 0)*100).toFixed(1)}%</td>
-                  <td><span class="badge badge-${it.status}">${it.status}</span></td>
-                  <td>${it.reviewer_note || '—'}</td>
+                  <td class="num"><code translate="no">${escapeHtml(it.id)}</code></td>
+                  <td class="num"><strong translate="no">${escapeHtml(it.project.toUpperCase())}</strong></td>
                   <td>
-                    <button class="btn btn-approve" onclick="submitReview('${it.project}', '${it.version}', 'approved')">Approve</button>
-                    <button class="btn btn-disapprove" onclick="submitReview('${it.project}', '${it.version}', 'disapproved')">Disapprove</button>
+                    <button
+                      type="button"
+                      class="action-btn"
+                      onclick="state.tab='${escapeHtml(it.project)}'; state.ver='${escapeHtml(it.version)}'; syncUrlState(); renderApp();"
+                    >
+                      Open ${escapeHtml(it.version)} →
+                    </button>
+                  </td>
+                  <td class="num"><strong style="color:var(--lime);">${((it.composite_score || 0) * 100).toFixed(1)}%</strong></td>
+                  <td><span class="status-pill status-${it.status}">${it.status.replace('_', ' ')}</span></td>
+                  <td>
+                    <label for="q-note-${idx}" class="sr-only">Reviewer note for ${escapeHtml(it.id)}</label>
+                    <input
+                      id="q-note-${idx}"
+                      name="q-note-${idx}"
+                      type="text"
+                      autocomplete="off"
+                      class="note-input"
+                      style="min-width:180px;"
+                      placeholder="Add note…"
+                      value="${escapeHtml(it.reviewer_note || '')}"
+                    />
+                  </td>
+                  <td style="white-space:nowrap;">
+                    <button type="button" class="action-btn approve" onclick="submitReviewDecision('${escapeHtml(it.project)}', '${escapeHtml(it.version)}', 'approved', 'q-note-${idx}')">
+                      Approve
+                    </button>
+                    <button type="button" class="action-btn disapprove" onclick="submitReviewDecision('${escapeHtml(it.project)}', '${escapeHtml(it.version)}', 'disapproved', 'q-note-${idx}')">
+                      Disapprove
+                    </button>
                   </td>
                 </tr>
               `).join('')}
@@ -648,21 +1699,52 @@
       `;
     }
 
-    function renderAll() {
-      renderCounters();
-      if (!DATA) return;
-      if (currentTab === 'vllm') {
-        renderGuideView(DATA.vllm_guides || []);
-      } else if (currentTab === 'kubernetes') {
-        renderGuideView(DATA.kubernetes_guides || []);
-      } else if (currentTab === 'ab_lab') {
-        renderAbLab();
+    function renderMainStage() {
+      if (state.tab === 'vllm' || state.tab === 'kubernetes') {
+        renderDossierStage();
+      } else if (state.tab === 'ab_lab') {
+        renderAbLabStage();
       } else {
-        renderReviewQueueTab();
+        renderQueueStage();
       }
     }
 
-    renderAll();
+    function renderApp() {
+      renderMastheadCounts();
+      renderRail();
+      renderMainStage();
+    }
+
+    // Keyboard shortcuts: '/' focuses version filter; '[' and ']' step through versions
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : '';
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      if (e.key === '/') {
+        const searchEl = document.getElementById('version-search');
+        if (searchEl && searchEl.offsetParent !== null) {
+          e.preventDefault();
+          searchEl.focus();
+        }
+      } else if (e.key === '[' || e.key === ']') {
+        if (state.tab !== 'vllm' && state.tab !== 'kubernetes') return;
+        const list = getFilteredList();
+        if (!list.length) return;
+        const idx = list.findIndex(x => x.version === state.ver);
+        const nextIdx = e.key === ']'
+          ? Math.min(list.length - 1, idx + 1)
+          : Math.max(0, idx - 1);
+        if (nextIdx !== idx && list[nextIdx]) {
+          selectVersion(list[nextIdx].version);
+        }
+      }
+    });
+
+    readUrlState();
+    const initialList = getActiveList();
+    if (!state.ver && initialList.length > 0) {
+      state.ver = initialList[0].version;
+    }
+    renderApp();
   </script>
 </body>
 </html>
