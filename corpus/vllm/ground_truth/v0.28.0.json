@@ -1,0 +1,255 @@
+{
+  "project": "vllm",
+  "version": "v0.28.0",
+  "published_date": "2026-08-26",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Kimi-K3 performance push",
+      "summary": "**Kimi-K3 performance push**: a major optimization effort for Kimi-K3 across the stack \u2014 Decode Context Parallel (DCP) support (#50484), fused FlashKDA decode and prefill kernels (#50654, #51311, #52458), SiTU activation support for MegaMoE (#50510), GEMM-RS for sequence parallelism (#52079), combined all-gathers with 1.5~3x kernel-level speedup (#51070), an adaptive speculative token budget delivering ~60% better DSpark TTFT (#51725), and optional shared-expert sharding saving ~17 GiB of memory per GPU (#50912). Kimi-K3 also now runs on ROCm with the V2 model runner (#51653).",
+      "prs": [
+        "50484",
+        "50654",
+        "51311",
+        "52458",
+        "50510",
+        "52079",
+        "51070",
+        "51725",
+        "50912",
+        "51653"
+      ]
+    },
+    {
+      "heading": "DeepSeek V4",
+      "summary": "**DeepSeek V4**: sparse MLA now works end-to-end for plain decode, MTP, and DSpark speculative decoding (#51538), joined by AMD Quark NVFP4 support (#47972), reasoning-effort prompts and mappings (#50580), sparse top-k metadata kernel optimizations (#52084, #51967), narrowed eager CUDA graph regions (#51430, #52401), and ROCm enablement on gfx11 and gfx950 (#47017, #52212).",
+      "prs": [
+        "51538",
+        "47972",
+        "50580",
+        "52084",
+        "51967",
+        "51430",
+        "52401",
+        "47017",
+        "52212"
+      ]
+    },
+    {
+      "heading": "Speculative decoding advances",
+      "summary": "**Speculative decoding advances**: DFlash2 with local convolution and a candidate selector (#52816), DSpark confidence-scheduled verification (#47808), and async scheduling auto-enabled for draft models (#48341).",
+      "prs": [
+        "52816",
+        "47808",
+        "48341"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 maturation",
+      "summary": "**Model Runner V2 maturation**: E/P/D disaggregation (#38390), weight offloading (#51413), multi-layer MTP KV cache support (#50062), encoder CUDA graphs (#49852), decoder token-wise pooling (#50931) plus Transformers pooling models (#52425), attention-free models (#52374), and `thinking_token_budget` support (#46727).",
+      "prs": [
+        "38390",
+        "51413",
+        "50062",
+        "49852",
+        "50931",
+        "52425",
+        "52374",
+        "46727"
+      ]
+    },
+    {
+      "heading": "Tiered KV cache offloading",
+      "summary": "**Tiered KV cache offloading**: disk offloading support (#49644), out-of-tree secondary tier managers via `module_path` (#51007), partial secondary-tier load results (#50321), tiering metrics (#48798), and a canonical CPU layout for parallelism-agnostic offload (#48414).",
+      "prs": [
+        "49644",
+        "51007",
+        "50321",
+        "48798",
+        "48414"
+      ]
+    },
+    {
+      "heading": "Rust frontend & gRPC",
+      "summary": "**Rust frontend & gRPC**: a standalone renderer (#50289), multimodal image inference over gRPC (#50368), explicit data-parallel rank routing (#51178), and RL lifecycle control (#51316), with protobuf schemas now published to Buf (#51276).",
+      "prs": [
+        "50289",
+        "50368",
+        "51178",
+        "51316",
+        "51276"
+      ]
+    },
+    {
+      "heading": "New defaults",
+      "summary": "**New defaults**: `max_num_batched_tokens` raised from 8192 to 16384 (#51726), prefix caching enabled by default for Mamba models (#50991), and the Blackwell CUDA graph capture default raised to 1024 (#49390).",
+      "prs": [
+        "51726",
+        "50991",
+        "49390"
+      ]
+    },
+    {
+      "heading": "Breaking changes",
+      "summary": "**Breaking changes**: bitsandbytes support migrated to an out-of-tree plugin (#43529); Transformers bumped to 5.15.0 (#51668); the deprecated `calculate_kv_scales` runtime KV scale calculation was removed (#49389); `override_attention_dtype` was removed (#48684).",
+      "prs": [
+        "43529",
+        "51668",
+        "49389",
+        "48684"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "bitsandbytes support is now an out-of-tree plugin (#43529).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "43529"
+      ]
+    },
+    {
+      "change": "The deprecated `calculate_kv_scales` runtime KV scale calculation was removed (#49389).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "49389"
+      ]
+    },
+    {
+      "change": "`override_attention_dtype` was removed (#48684).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "48684"
+      ]
+    },
+    {
+      "change": "`reasoning_content` output removal is documented as a breaking client change (#50624).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "50624"
+      ]
+    },
+    {
+      "change": "KV offload tiering metrics renamed from `kv_offload_tiering_block_{queries,hits}` to `..._chunk_...` (#52812).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52812"
+      ]
+    },
+    {
+      "change": "MoE legacy code removed (#51078).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "51078"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "50484",
+    "50654",
+    "51311",
+    "52458",
+    "50510",
+    "52079",
+    "51070",
+    "51725",
+    "50912",
+    "51653",
+    "51538",
+    "47972",
+    "50580",
+    "52084",
+    "51967",
+    "51430",
+    "52401",
+    "47017",
+    "52212",
+    "52816",
+    "47808",
+    "48341",
+    "38390",
+    "51413",
+    "50062",
+    "49852",
+    "50931",
+    "52425",
+    "52374",
+    "46727",
+    "49644",
+    "51007",
+    "50321",
+    "48798",
+    "48414",
+    "50289",
+    "50368",
+    "51178",
+    "51316",
+    "51276",
+    "51726",
+    "50991",
+    "49390",
+    "43529",
+    "51668",
+    "49389",
+    "48684",
+    "43529",
+    "49389",
+    "48684",
+    "50624",
+    "52812",
+    "51078"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**NVIDIA**: FlashInfer XQA decode support on SM12x (#49718), a CuTeDSL fused query kernel on SM100 (#49792), programmatic dependent launch for the DSA decode kernels (#50230), the native DSA decode path for MTP=3 on SM90 (#52164), GB10 fused-MoE FP8 tuning configs (#52502), and B12X dense linear backends (#52016).",
+      "prs": [
+        "49718",
+        "49792",
+        "50230",
+        "52164",
+        "52502",
+        "52016"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**AMD ROCm**: torch 2.12 / triton 3.7 stack bump (#50607), AITER and FP8 inference enabled on GFX120x (#43615), DeepSeek-V4 on gfx11 (#47017), optimized Triton sparse-MLA decode on gfx950 (#52212), FlyDSL decode-attention kernel for 4-bit TurboQuant KV cache (#47896) and an fp8 MQA logits kernel on gfx942 (#49544), a fused Kimi-K3 KDA decode kernel (#50654), fused bf16\u2192fp32 router GEMM (#50268), pinned memory on supported WSL2 kernels (#50126), and preshuffled sparse indexing for 16-token blocks (#51216).",
+      "prs": [
+        "50607",
+        "43615",
+        "47017",
+        "52212",
+        "47896",
+        "49544",
+        "50654",
+        "50268",
+        "50126",
+        "51216"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**CPU**: an MLA backend so DeepSeek-V2/V3 can run on CPU (#49453), a triton-cpu wheel (#52092), GPTQ and AWQ enabled on s390x (#51148) along with tcmalloc (#50841), BF16 MoE routed through zentorch on AMD (#44201), an unquantized MoE backend for Power (VSX) (#51624), unquantized MoE migrated to the modular-kernel experts structure (#50133), and the MXFP4 block scale folded in 2 instructions instead of 4 (#51583).",
+      "prs": [
+        "49453",
+        "52092",
+        "51148",
+        "50841",
+        "44201",
+        "51624",
+        "50133",
+        "51583"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**Anthropic API**: 4xx returned for client-caused errors on `/v1/messages` (#52246), `disable_parallel_tool_use` preserved (#52021), and stop sequences bounded (#51997).",
+      "prs": [
+        "52246",
+        "52021",
+        "51997"
+      ]
+    }
+  ]
+}

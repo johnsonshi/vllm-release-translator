@@ -1,0 +1,93 @@
+{
+  "edition_id": "2026-11-01-update",
+  "title": "Week Ending November 01, 2026",
+  "date": "2026-11-07",
+  "featured_prs": [
+    {
+      "headline": "[143644: Update volume health APIs as per newest version of KEP](https://github.com/kubernetes/kubernetes/pull/143644)",
+      "body": "[gnufied](https://github.com/gnufied) updated Kubernetes volume health APIs to align with the latest design in [KEP-1432](https://github.com/kubernetes/enhancements/issues/1432), with related changes discussed in [KEP-6395](https://github.com/kubernetes/enhancements/issues/6395). The change moves `volumeHealth` from `PodStatus` into `PodStatus.VolumeStatus` and introduces `Healthy` and `Unknown` values for volume health conditions in the core API and `CSINode` types. It also clarifies how readers and writers should handle new condition values, helping maintain compatibility as volume health reporting evolves. These API changes establish a clearer contract for reporting storage health across Kubernetes and CSI drivers.",
+      "prs": [
+        "143644"
+      ],
+      "keps": [
+        "1432",
+        "6395"
+      ]
+    },
+    {
+      "headline": "[143701: KEP-5502: Run EmptyDirVolumeMode e2e tests in alpha/beta kind jobs](https://github.com/kubernetes/kubernetes/pull/143701)",
+      "body": "[blackjid](https://github.com/blackjid) fixed the test selection for `EmptyDirVolumeMode` end-to-end tests so they can run in the alpha/beta Kind jobs. The tests were being excluded because the additional `[Feature:EmptyDirVolumeMode]` label conflicted with the jobs' `OffByDefault` feature filter, and no other job selected them. This change removes the redundant label while retaining `framework.WithFeatureGate(...)`, allowing the tests to run in CI and build a test history ahead of the feature's beta promotion. The work supports [KEP-5502](https://github.com/kubernetes/enhancements/issues/5502).",
+      "prs": [
+        "143701"
+      ],
+      "keps": [
+        "5502",
+        "5502"
+      ]
+    }
+  ],
+  "other_merges": [
+    {
+      "bullet": "[cel-go upgraded to v0.33.0](https://github.com/kubernetes/kubernetes/pull/143439), now imported as cel.dev/cel-go; Go code passing cel-go types to k8s.io/apiserver, apiextensions-apiserver or dynamic-resource-allocation must update imports",
+      "prs": [
+        "143439"
+      ]
+    },
+    {
+      "bullet": "CRD types and clients [move to the new k8s.io/apiextensions-api module](https://github.com/kubernetes/kubernetes/pull/142746), with deprecated aliases left in apiextensions-apiserver",
+      "prs": [
+        "142746"
+      ]
+    },
+    {
+      "bullet": "kube-apiserver adds [conditional authorization support](https://github.com/kubernetes/kubernetes/pull/141959)",
+      "prs": [
+        "141959"
+      ]
+    },
+    {
+      "bullet": "client-go leader election adds [write-gating and leader recovery](https://github.com/kubernetes/kubernetes/pull/143289)",
+      "prs": [
+        "143289"
+      ]
+    },
+    {
+      "bullet": "The locked GA [SupplementalGroupsPolicy feature gate is removed](https://github.com/kubernetes/kubernetes/pull/142093); remove it from component configuration before upgrading",
+      "prs": [
+        "142093"
+      ]
+    },
+    {
+      "bullet": "StatefulSet maxUnavailable [no longer counts unavailable pods below the partition](https://github.com/kubernetes/kubernetes/pull/143114) against the update budget",
+      "prs": [
+        "143114"
+      ]
+    },
+    {
+      "bullet": "Decoding JSON lists into UnstructuredList [uses about half the memory](https://github.com/kubernetes/kubernetes/pull/142575) and a third less time",
+      "prs": [
+        "142575"
+      ]
+    },
+    {
+      "bullet": "New [WatchFromStorageWithoutPrevKV feature gate](https://github.com/kubernetes/kubernetes/pull/131862) enables etcd watches without prev-kv",
+      "prs": [
+        "131862"
+      ]
+    },
+    {
+      "bullet": "kubelet adds [kubelet_sync_result_errors_total and kubelet_pod_worker_errors_total](https://github.com/kubernetes/kubernetes/pull/143284) metrics for pod sync errors",
+      "prs": [
+        "143284"
+      ]
+    },
+    {
+      "bullet": "DRA capacity requests [now reject negative quantities, invalid names, and more than 32 entries](https://github.com/kubernetes/kubernetes/pull/143287)",
+      "prs": [
+        "143287"
+      ]
+    }
+  ],
+  "deprecations": [],
+  "raw_markdown": "---\nlayout: post\ntitle: Week Ending November 01, 2026\ndate: 2026-11-07 18:00:00 -0000\nslug: 2026-11-01-update\n---\n\n## Developer News\n\n* SIG ContribEx has [published its 2025 annual report](https://github.com/kubernetes/community/pull/8859), summarizing the year's community-infrastructure work, Slack and GitHub administration, mentoring programs, and contributor-experience investments.\n\n* WG Device Management has [published its 2025 annual report](https://github.com/kubernetes/community/pull/8834) covering the working group's progress on device plugin architecture and DRA-related work.\n\n* SIG API Machinery has [added `apiextensions-api` to its server-crd subproject](https://github.com/kubernetes/community/pull/9234), bringing CRD API types into scope for the subproject's maintainers.\n\n* The [Maintainer Summit at KubeCon NA 2026 is nearly full](https://groups.google.com/a/kubernetes.io/g/dev/c/5Q8l8ODq2RE); maintainers who plan to attend in Salt Lake City should register before capacity is reached.\n\n## Release Schedule\n\n**Next Deadline: [Feature Blog Freeze](https://github.com/kubernetes/sig-release/blob/master/releases/release_phases.md#feature-blog-freeze), [November 4 (AoE)](https://github.com/kubernetes/sig-release/tree/master/releases/release-1.38#timeline)**\n\nContributors planning v1.38 feature blogs should open placeholder PRs by November 4. [Code and test freeze begin November 16 (AoE)](https://github.com/kubernetes/sig-release/tree/master/releases/release-1.38#timeline); prepare implementation and test PRs for review ahead of the freeze.\n\nKubernetes [v1.38.0-alpha.3](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.38.md#v1380-alpha3) is available.\n\nPatch releases [1.37.2](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.37.md#v1372), [1.36.6](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.36.md#v1366), [1.35.10](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.35.md#v13510), and [1.34.13](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.34.md#v13413) are available. Versions 1.37.2 and 1.36.6 use Go 1.26.10.\n\nKubernetes 1.34 [reaches end of life on October 27](https://kubernetes.io/releases/patch-releases/#134); move to a supported version.\n\n## Featured PRs\n\n### [143644: Update volume health APIs as per newest version of KEP](https://github.com/kubernetes/kubernetes/pull/143644)\n\n[gnufied](https://github.com/gnufied) updated Kubernetes volume health APIs to align with the latest design in [KEP-1432](https://github.com/kubernetes/enhancements/issues/1432), with related changes discussed in [KEP-6395](https://github.com/kubernetes/enhancements/issues/6395). The change moves `volumeHealth` from `PodStatus` into `PodStatus.VolumeStatus` and introduces `Healthy` and `Unknown` values for volume health conditions in the core API and `CSINode` types. It also clarifies how readers and writers should handle new condition values, helping maintain compatibility as volume health reporting evolves. These API changes establish a clearer contract for reporting storage health across Kubernetes and CSI drivers.\n\n### [143701: KEP-5502: Run EmptyDirVolumeMode e2e tests in alpha/beta kind jobs](https://github.com/kubernetes/kubernetes/pull/143701)\n\n[blackjid](https://github.com/blackjid) fixed the test selection for `EmptyDirVolumeMode` end-to-end tests so they can run in the alpha/beta Kind jobs. The tests were being excluded because the additional `[Feature:EmptyDirVolumeMode]` label conflicted with the jobs' `OffByDefault` feature filter, and no other job selected them. This change removes the redundant label while retaining `framework.WithFeatureGate(...)`, allowing the tests to run in CI and build a test history ahead of the feature's beta promotion. The work supports [KEP-5502](https://github.com/kubernetes/enhancements/issues/5502).\n\n## KEP of the Week\n\n### [KEP-6011: CSI ControllerGetNodeInfo](https://github.com/kubernetes/enhancements/blob/master/keps/sig-storage/6011-controller-get-node-info/README.md)\n\nCSI drivers sometimes query cloud APIs during `NodeGetInfo` to report a node's\ntopology and volume attachment limit, requiring cloud credentials on worker\nnodes. KEP-6011 lets an opting-in driver return only the node ID there; a new\n`ControllerGetNodeInfo` call can retrieve topology, attachment limits, and\nattached volume IDs from the controller. The external-attacher can then account\nfor non-CSI disks when publishing the node's volume limit. Existing drivers\nretain the current `NodeGetInfo` flow.\n\n[\u80e1\u73ae\u6587](https://github.com/huww98) and\n[Eddie Torres](https://github.com/torredil) authored the KEP for SIG Storage with\nSIG Node. The idea began with a [CSI spec proposal in March](https://github.com/container-storage-interface/spec/pull/603),\nand the [KEP merged October 1](https://github.com/kubernetes/enhancements/pull/6016).\nThe CSI spec proposal and the\n[Kubernetes feature-gate and API PR](https://github.com/kubernetes/kubernetes/pull/142693)\nremain open. KEP-6011 is `implementable` and targets Alpha in v1.38, Beta in\nv1.39, and Stable in v1.41; the [enhancement issue](https://github.com/kubernetes/enhancements/issues/6011)\ntracks the work.\n\n\n## Other Merges\n\n* [cel-go upgraded to v0.33.0](https://github.com/kubernetes/kubernetes/pull/143439), now imported as cel.dev/cel-go; Go code passing cel-go types to k8s.io/apiserver, apiextensions-apiserver or dynamic-resource-allocation must update imports\n* CRD types and clients [move to the new k8s.io/apiextensions-api module](https://github.com/kubernetes/kubernetes/pull/142746), with deprecated aliases left in apiextensions-apiserver\n* kube-apiserver adds [conditional authorization support](https://github.com/kubernetes/kubernetes/pull/141959)\n* client-go leader election adds [write-gating and leader recovery](https://github.com/kubernetes/kubernetes/pull/143289)\n* The locked GA [SupplementalGroupsPolicy feature gate is removed](https://github.com/kubernetes/kubernetes/pull/142093); remove it from component configuration before upgrading\n* StatefulSet maxUnavailable [no longer counts unavailable pods below the partition](https://github.com/kubernetes/kubernetes/pull/143114) against the update budget\n* Decoding JSON lists into UnstructuredList [uses about half the memory](https://github.com/kubernetes/kubernetes/pull/142575) and a third less time\n* New [WatchFromStorageWithoutPrevKV feature gate](https://github.com/kubernetes/kubernetes/pull/131862) enables etcd watches without prev-kv\n* kubelet adds [kubelet_sync_result_errors_total and kubelet_pod_worker_errors_total](https://github.com/kubernetes/kubernetes/pull/143284) metrics for pod sync errors\n* DRA capacity requests [now reject negative quantities, invalid names, and more than 32 entries](https://github.com/kubernetes/kubernetes/pull/143287)\n\n## Subprojects and Dependency Updates\n\n* [nerdctl v2.4.2](https://github.com/containerd/nerdctl/releases/tag/v2.4.2): Updated containerd to v2.4.2, fixed image prune removing every unused image, added `--device-cgroup-rule`\n* [grpc v1.85.1](https://github.com/grpc/grpc/releases/tag/v1.85.1): Fixed Health Watch RPC DoS, fixed AsyncIO client-streaming memory leak, host/:authority handling in HPACK parser; also [v1.84.2](https://github.com/grpc/grpc/releases/tag/v1.84.2)\n\n## Shoutouts\n\n* No shoutouts this week. Want to thank someone for special efforts to improve Kubernetes? Tag them in the #shoutouts channel."
+}

@@ -1,0 +1,190 @@
+{
+  "project": "vllm",
+  "version": "v0.26.0",
+  "published_date": "2026-07-27",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "New Inkling model family",
+      "summary": "**New Inkling model family** with a full support stack: base modeling (#48799), piecewise CUDA graph support (#48822), Hopper FA4 relative attention (#48858), MTP=1 speculative decoding (#48869), LoRA (#48884), and standard ModelOpt NVFP4 quantization (#48990).",
+      "prs": [
+        "48799",
+        "48822",
+        "48858",
+        "48869",
+        "48884",
+        "48990"
+      ]
+    },
+    {
+      "heading": "DeepSeek-V4 performance push",
+      "summary": "**DeepSeek-V4 performance push** across vendors: a specialized routing kernel (2.94% E2E TPOT, #48660), `fused_topk_bias` (1.5\u20132x kernel, #47463), and redundant repeat/copy removal (1.8% E2E TPOT, #48137), plus ROCm two-stage compressor for HCA prefill (#47718), sparse decode/prefill optimizations (#48519, #48788, #46275), and DSpark speculative decoding on AMD (#47419) and XPU (#47677).",
+      "prs": [
+        "48660",
+        "47463",
+        "48137",
+        "47718",
+        "48519",
+        "48788",
+        "46275",
+        "47419",
+        "47677"
+      ]
+    },
+    {
+      "heading": "fp32 `lm_head` for generation models via `head_dtype`",
+      "summary": "**fp32 `lm_head` for generation models via `head_dtype`** (#48390), extended to the LoRA path (#48525) and given a ROCm `torch.mm` fast path (#48688), improving accuracy for generation heads.",
+      "prs": [
+        "48390",
+        "48525",
+        "48688"
+      ]
+    },
+    {
+      "heading": "Flexible attention backends",
+      "summary": "**Flexible attention backends**: the attention backend can now be selected per KV-cache group (#48012), and sliding-window support is now an explicit backend capability (#48011) \u2014 improving support for hybrid models.",
+      "prs": [
+        "48012",
+        "48011"
+      ]
+    },
+    {
+      "heading": "KV offloading & tiered secondary storage",
+      "summary": "**KV offloading & tiered secondary storage** matured substantially: offloading metrics (#45958, #47666, #47679), tier-owned event handling (#46544, #47923), object-store secondary tier with workload identity (#47063, #47274, #48150), DP-replica-aware tiering (#47987), and encoder-cache (EC) connectors including CPU offloading (#42433, #47423).",
+      "prs": [
+        "45958",
+        "47666",
+        "47679",
+        "46544",
+        "47923",
+        "47063",
+        "47274",
+        "48150",
+        "47987",
+        "42433",
+        "47423"
+      ]
+    },
+    {
+      "heading": "Rust frontend",
+      "summary": "**Rust frontend** gained multimodal video (#47959) and audio (#48554), a Seed-OSS tool parser (#47741), and a native `vllm-bench` port (#48107).",
+      "prs": [
+        "47959",
+        "48554",
+        "47741",
+        "48107"
+      ]
+    },
+    {
+      "heading": "Transformers 5.13.0",
+      "summary": "**Transformers 5.13.0** (#47867) with more models migrated to the Transformers modeling backend: Olmo/Olmo2 (#48100), MistralLarge3 (#48153), and HunyuanVL (#47872).",
+      "prs": [
+        "47867",
+        "48100",
+        "48153",
+        "47872"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Models removed: TeleChat (#47989), Persimmon and Fuyu (#48096).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "47989",
+        "48096"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "48799",
+    "48822",
+    "48858",
+    "48869",
+    "48884",
+    "48990",
+    "48660",
+    "47463",
+    "48137",
+    "47718",
+    "48519",
+    "48788",
+    "46275",
+    "47419",
+    "47677",
+    "48390",
+    "48525",
+    "48688",
+    "48012",
+    "48011",
+    "45958",
+    "47666",
+    "47679",
+    "46544",
+    "47923",
+    "47063",
+    "47274",
+    "48150",
+    "47987",
+    "42433",
+    "47423",
+    "47959",
+    "48554",
+    "47741",
+    "48107",
+    "47867",
+    "48100",
+    "48153",
+    "47872",
+    "47989",
+    "48096"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "Reasoning: optimize TPOT for thinking budget when used with speculative decoding (#46662).",
+      "prs": [
+        "46662"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "DeepSeek-V4: specialized routing kernel (2.94% E2E TPOT, #48660), `fused_topk_bias` 1.5\u20132x (#47463), redundant repeat/copy removal (1.8% TPOT, #48137).",
+      "prs": [
+        "48660",
+        "47463",
+        "48137"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "MoE router GEMMs: BF16x3 router GEMM (#47973), FP32 router GEMV (#48335), generic CuteDSL LL BF16 router GEMM (#42562); TRTLLM BF16 MoE modular kernel (#45182); write FlashInfer combine into final output (#47156).",
+      "prs": [
+        "47973",
+        "48335",
+        "42562",
+        "45182",
+        "47156"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "CPU: DFlash speculative decoding for GDN models on CPU (#46090), s390x NUMA topology (#40714), native macOS arm64 CPU wheel builds (#48289); POWER VSX math function optimization (#47321) and IBM Power docker builds using prebuilt wheels (#46017).",
+      "prs": [
+        "46090",
+        "40714",
+        "48289",
+        "47321",
+        "46017"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "Build/autotune: arm64 Blackwell SM10x/SM110 image builds (#48041); skip CuTeDSL fp4_gemm autotuning by default (#48268).",
+      "prs": [
+        "48041",
+        "48268"
+      ]
+    }
+  ]
+}

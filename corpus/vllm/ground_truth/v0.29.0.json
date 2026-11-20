@@ -1,0 +1,313 @@
+{
+  "project": "vllm",
+  "version": "v0.29.0",
+  "published_date": "2026-09-09",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Model Runner V2 is now the default for all models",
+      "summary": "**Model Runner V2 is now the default for all models** (#53183), completing the rollout that began with pooling models (#48290). MRV2 also gained CUDA graph memory profiling for KV cache auto-sizing (#53306), batch-sharded sampling that cuts per-step logits memory by 1/TP (#50465), prompt embeds (#42963), `extract_hidden_states` speculation (#49811), padded FULL cudagraph dispatch for uniform decode under spec decode (#53407), and DP-sync skipping before EAGLE/MTP draft prefill (#53694). MRV1 remains in use for a few ROCm models and features MRV2 does not yet support.",
+      "prs": [
+        "53183",
+        "48290",
+        "53306",
+        "50465",
+        "42963",
+        "49811",
+        "53407",
+        "53694"
+      ]
+    },
+    {
+      "heading": "New models",
+      "summary": "**New models**: Hy4-preview, Tencent's 770B/49B-active MoE with Gated DeepSeek Sparse Attention and native MTP (#54160); Qwen3.8-Flash-Next with BF16/FP8/NVFP4 and MTP (#53896); GraniteSWA and GraniteMoeSWA (#52706); NemotronH_Omni_Reasoning_V3 with MTP (#52929, #53121); Kimi K3 NVFP4 checkpoints (#53132).",
+      "prs": [
+        "54160",
+        "53896",
+        "52706",
+        "52929",
+        "53121",
+        "53132"
+      ]
+    },
+    {
+      "heading": "Kimi-K3 and DeepSeek V4 performance",
+      "summary": "**Kimi-K3 and DeepSeek V4 performance**: fused MXFP4 top-k finalization in the K3 latent tail (about 5% E2E latency, #53152), K3 Mamba metadata preparation in one Triton launch (6.6-7.6x kernel speedup, #52388), tuned Hopper low-latency GEMM (#54088) now also dispatched on SM100 (#53534) and used for `eh_proj` (12.9-25.2% kernel speedup, #53942), GEMM-RS extended to GEMM-AR (#53053), MLA gate merged into the QKV-A projection (#54015), K3 DCP with DSpark (#52188) and DCP partial prefix cache hits (#50493); DeepSeek V4 shared experts fused into MegaMoE (#53040), adaptive top-k width re-landed (#52823), a native SwiGLU clamp kernel for Humming MoE (#53685), and an opt-in FlashInfer `moe_ep` expert backend (#49636).",
+      "prs": [
+        "53152",
+        "52388",
+        "54088",
+        "53534",
+        "53942",
+        "53053",
+        "54015",
+        "52188",
+        "50493",
+        "53040",
+        "52823",
+        "53685",
+        "49636"
+      ]
+    },
+    {
+      "heading": "Speculative decoding",
+      "summary": "**Speculative decoding**: per-request acceptance stats in OpenAI API responses via `--per-request-spec-decode-metrics` (#48915), adaptive verification extended to logprobs (#52242), SM100 sparse MLA for GLM-5.2 (#52783) and DeepSeek V4 on SM90 (#52795), Qwen3-Omni DSpark drafts (#52560), PLaMo3 EAGLE-3/DFlash (#54239), and DFlash2 loading from speculators format (#53797).",
+      "prs": [
+        "48915",
+        "52242",
+        "52783",
+        "52795",
+        "52560",
+        "54239",
+        "53797"
+      ]
+    },
+    {
+      "heading": "RL weight sync",
+      "summary": "**RL weight sync**: a new `sharded_rdt` P2P backend where each worker pulls only its TP/EP slice over NIXL or Ray Direct Transport (#43375), rank-local IPC weight updates (#52497), sparse checkpoint-coordinate updates through native weight loaders (#50723, #53751), and routed expert loading for gpt-oss (#52209).",
+      "prs": [
+        "43375",
+        "52497",
+        "50723",
+        "53751",
+        "52209"
+      ]
+    },
+    {
+      "heading": "Mamba prefix caching",
+      "summary": "**Mamba prefix caching**: internal prefill checkpoints deliver a 9%-25% TTFT improvement (#52789); `prefix_cache_retention_interval` is now a CLI argument defaulting to 0 (#52216), with dense retention automatically restored for hybrid models using EAGLE/MTP (#55760, #55861).",
+      "prs": [
+        "52789",
+        "52216",
+        "55760",
+        "55861"
+      ]
+    },
+    {
+      "heading": "New defaults",
+      "summary": "**New defaults**: FlashInfer all-reduce enabled by default for TP CUDA groups, opt out with `VLLM_ALLREDUCE_USE_FLASHINFER=0` (#52998); prefix-cache `NONE_HASH` is deterministic by default so distributed KV cache users no longer need to pin `PYTHONHASHSEED` (#51875); new `--max-num-queued-reqs` / `--max-num-queued-tokens` admission-control flags (#49445).",
+      "prs": [
+        "52998",
+        "51875",
+        "49445"
+      ]
+    },
+    {
+      "heading": "Breaking changes",
+      "summary": "**Breaking changes**: ten deprecated model architectures removed (#53608); FlexOlmo, Olmo3 and Hunyuan V1/VL migrated to the Transformers modeling backend (#53615); PyAV video decoder backend removed (#54231); `python -m vllm.entrypoints.openai.api_server` deprecated in favor of `vllm serve` (#52131); `VLLM_TEST_FORCE_FP8_MARLIN` (#52182) and `VLLM_ROCM_USE_AITER_FP4_ASM_GEMM` (#53141) removed.",
+      "prs": [
+        "53608",
+        "53615",
+        "54231",
+        "52131",
+        "52182",
+        "53141"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Ten deprecated architectures removed: Arctic, Chameleon, Cheers, Fairseq2Llama, FireRedLID, GritLM, HCXVision, MPT, the `RWForCausalLM` and `StableLMEpochForCausalLM` aliases, and `PrithviGeoSpatialMAE` (superseded by `Terratorch`) (#53608).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "53608"
+      ]
+    },
+    {
+      "change": "FlexOlmo, Olmo3, Hunyuan V1 and Hunyuan VL are now served through the Transformers modeling backend (#53615).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "53615"
+      ]
+    },
+    {
+      "change": "PyAV video decoder backend removed; use OpenCV or Torchcodec (#54231).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "54231"
+      ]
+    },
+    {
+      "change": "`python -m vllm.entrypoints.openai.api_server` is deprecated; use `vllm serve` (#52131).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52131"
+      ]
+    },
+    {
+      "change": "Model Runner V2 is the default runner for all models (#53183).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "53183"
+      ]
+    },
+    {
+      "change": "`prefix_cache_retention_interval` default changed from dense to 0 for SWA/SSM models; the env var is deprecated in favor of the argument (#52216).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52216"
+      ]
+    },
+    {
+      "change": "FlashInfer all-reduce enabled by default (#52998).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52998"
+      ]
+    },
+    {
+      "change": "`VLLM_TEST_FORCE_FP8_MARLIN` removed in favor of `--linear-backend` / `--moe-backend` (#52182); `VLLM_ROCM_USE_AITER_FP4_ASM_GEMM` removed (#53141); dead `--attention-config.use_prefill_decode_attention` removed (#52557); other long-deprecated parameters cleaned up (#53559).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52182",
+        "53141",
+        "52557",
+        "53559"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "53183",
+    "48290",
+    "53306",
+    "50465",
+    "42963",
+    "49811",
+    "53407",
+    "53694",
+    "54160",
+    "53896",
+    "52706",
+    "52929",
+    "53121",
+    "53132",
+    "53152",
+    "52388",
+    "54088",
+    "53534",
+    "53942",
+    "53053",
+    "54015",
+    "52188",
+    "50493",
+    "53040",
+    "52823",
+    "53685",
+    "49636",
+    "48915",
+    "52242",
+    "52783",
+    "52795",
+    "52560",
+    "54239",
+    "53797",
+    "43375",
+    "52497",
+    "50723",
+    "53751",
+    "52209",
+    "52789",
+    "52216",
+    "55760",
+    "55861",
+    "52998",
+    "51875",
+    "49445",
+    "53608",
+    "53615",
+    "54231",
+    "52131",
+    "52182",
+    "53141",
+    "53608",
+    "53615",
+    "54231",
+    "52131",
+    "53183",
+    "52216",
+    "52998",
+    "52182",
+    "53141",
+    "52557",
+    "53559"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "**Determinism**: `trace_decode_token_ids` for deterministic decode replay (#46701), per-arch tuned batch-invariant matmul configs (about 3x decode kernels on RTX 4090D/H20, #53247), Blackwell autotuning with 33.6% E2E latency reduction (#53649), deterministic MoE combine under DP+EP (#45683), and `fuse_allreduce_rms` disabled under batch invariance (#51292).",
+      "prs": [
+        "46701",
+        "53247",
+        "53649",
+        "45683",
+        "51292"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**AMD ROCm**: dual-stream decode with hipgraphs (#52033), W4A4 preshuffled asm GEMM by default (+15% throughput on Llama-3.3-70B MXFP4, #53141), ROCr/CLR update fixing graph replay segfaults with up to about 20% TPOT improvement (#53712), fused KDA decode on MI325X (#52293), FULL cudagraphs for AITER MLA spec decode (#51171), FP8 asm MLA prefill for non-divisor head counts (#51040), DCP causal multi-token verification (#51705) and prefix cache hits for Kimi-K3 (#53598), AITER PA gluon decode for MiniMax-M3 (#52849), DeepSeek-V4 fusions for mHC/RMSNorm (#52737), C4A top-k (#52882), C4 compressor GEMMs (#53838) and SWA q/kv norm + FP8 quant (#53540), fused shared experts for block-FP8 (#53097), CPU offload on ROCm 7.13+ (#43018), TheRock 7.14 preview docker (#49925), int4/int8 quantization fixes (#52112, #48998, #51632, #53110), CUDA graphs captured on the current stream (#53818), AITER metadata preserved across graph replay (#53821), and improved ROCm detection under WSL (#38434).",
+      "prs": [
+        "52033",
+        "53141",
+        "53712",
+        "52293",
+        "51171",
+        "51040",
+        "51705",
+        "53598",
+        "52849",
+        "52737",
+        "52882",
+        "53838",
+        "53540",
+        "53097",
+        "43018",
+        "49925",
+        "52112",
+        "48998",
+        "51632",
+        "53110",
+        "53818",
+        "53821",
+        "38434"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "claim": "**New backends**: FlashInfer TRT-LLM MXFP8 linear (#52204), b12x FP4 MoE for SM120/SM121 (#52018), AutoRound block-wise FP8 (#47434), Humming MoE with MXFP4 weights + block-FP8 activations (#51332), and Humming for compressed-tensors WNA16 MoE (#48918).",
+      "prs": [
+        "52204",
+        "52018",
+        "47434",
+        "51332",
+        "48918"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**OpenAI compatibility**: `logprobs=-1` in Completions (#46175), streamed logprob offsets with echo (#47815), batched chat echo (#52529), all choices returned from `/inference/v1/generate` with n>1 (#52399), `cache_salt` forwarded for content parts (#54315), `stop_token_ids` validated against vocab (#54196), and 4xx for client errors in `/detokenize` (#52622), malformed namespace tools (#53763), malformed base64 audio (#53744), and unknown chat roles in DeepSeek encoders (#53071); tool-call arguments in replayed history are parsed defensively (#48922), empty `FlatLogprobs` slices are handled (#53704), and empty bad-word tokenizations are rejected (#53433).",
+      "prs": [
+        "46175",
+        "47815",
+        "52529",
+        "52399",
+        "54315",
+        "54196",
+        "52622",
+        "53763",
+        "53744",
+        "53071",
+        "48922",
+        "53704",
+        "53433"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "claim": "Ten deprecated architectures removed: Arctic, Chameleon, Cheers, Fairseq2Llama, FireRedLID, GritLM, HCXVision, MPT, the `RWForCausalLM` and `StableLMEpochForCausalLM` aliases, and `PrithviGeoSpatialMAE` (superseded by `Terratorch`) (#53608).",
+      "prs": [
+        "53608"
+      ]
+    }
+  ]
+}

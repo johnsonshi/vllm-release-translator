@@ -1,0 +1,327 @@
+{
+  "project": "kubernetes",
+  "version": "v1.31",
+  "blog_title": "Kubernetes v1.31: Elli",
+  "release_date": "2024-08-13",
+  "reported_enhancements_count": 45,
+  "spotlight_count": 23,
+  "spotlights": [
+    {
+      "heading": "AppArmor support is now stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes support for AppArmor is now GA. Protect your containers using AppArmor by setting the `appArmorProfile.type` field in the container's `securityContext`.  Note that before Kubernetes v1.30, AppArmor was controlled via annotations; starting in v1.30 it is controlled using fields.  It is recommended that you should migrate away from using annotations and start using the `appArmorProfile.type` field.  To learn more read the [AppArmor tutorial](/docs/tutorials/security/apparmor/).  This work was done as a part of [KEP #24](https://github.com/kubernetes/enhancements/issues/24), by [SIG No"
+    },
+    {
+      "heading": "Improved ingress connectivity reliability for kube-proxy",
+      "stage": "Unspecified",
+      "keps": [
+        "3836"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kube-proxy improved ingress connectivity reliability is stable in v1.31.  One of the common problems with load balancers in Kubernetes is the synchronization between the different components involved to avoid traffic drop.  This feature implements a mechanism in kube-proxy for load balancers to do connection draining for terminating Nodes exposed by services of `type: LoadBalancer` and `externalTrafficPolicy: Cluster` and establish some best practices for cloud providers and Kubernetes load balancers implementations.  To use this feature, kube-proxy needs to run as default service proxy on the"
+    },
+    {
+      "heading": "Persistent Volume last phase transition time",
+      "stage": "Stable",
+      "keps": [
+        "3762"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PersistentVolumeStatus",
+        "Pending",
+        "Bound",
+        "Released"
+      ],
+      "summary": "Persistent Volume last phase transition time feature moved to GA in v1.31.  This feature adds a `PersistentVolumeStatus` field which holds a timestamp of when a PersistentVolume last transitioned to a different phase. With this feature enabled, every PersistentVolume object will have a new field `.status.lastTransitionTime`, that holds a timestamp of when the volume last transitioned its phase.  This change is not immediate; the new field will be populated whenever a PersistentVolume is updated and first transitions between phases (`Pending`, `Bound`, or `Released`) after upgrading to Kubernet"
+    },
+    {
+      "heading": "nftables backend for kube-proxy",
+      "stage": "Unspecified",
+      "keps": [
+        "3866"
+      ],
+      "prs": [],
+      "identifiers": [
+        "NFTablesProxyMode"
+      ],
+      "summary": "The nftables backend moves to beta in v1.31, behind the `NFTablesProxyMode` feature gate which is now enabled by default.  The nftables API is the successor to the iptables API and is designed to provide better performance and scalability than iptables.  The `nftables` proxy mode is able to process changes to service endpoints faster and more efficiently than the `iptables` mode, and is also able to more efficiently process packets in the kernel (though this only becomes noticeable in clusters with tens of thousands of services)."
+    },
+    {
+      "heading": "Changes to reclaim policy for PersistentVolumes",
+      "stage": "Unspecified",
+      "keps": [
+        "2644"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Always Honor PersistentVolume Reclaim Policy feature has advanced to beta in Kubernetes v1.31.  This enhancement ensures that the PersistentVolume (PV) reclaim policy is respected even after the associated PersistentVolumeClaim (PVC) is deleted, thereby preventing the leakage of volumes.  Prior to this feature, the reclaim policy linked to a PV could be disregarded under specific conditions, depending on whether the PV or PVC was deleted first.  Consequently, the corresponding storage resource in the external infrastructure might not be removed, even if the reclaim policy was set to \"Delet"
+    },
+    {
+      "heading": "Bound service account token improvements",
+      "stage": "Unspecified",
+      "keps": [
+        "4193"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ServiceAccountTokenNodeBinding"
+      ],
+      "summary": "The `ServiceAccountTokenNodeBinding` feature is promoted to beta in v1.31.  This feature allows requesting a token bound only to a node, not to a pod, which includes node information in claims in the token and validates the existence of the node when the token is used.  For more information, read the [bound service account tokens documentation](/docs/reference/access-authn-authz/service-accounts-admin/#bound-service-account-tokens).   This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/mast"
+    },
+    {
+      "heading": "Multiple Service CIDRs",
+      "stage": "Unspecified",
+      "keps": [
+        "1880"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for clusters with multiple Service CIDRs moves to beta in v1.31 (disabled by default).  There are multiple components in a Kubernetes cluster that consume IP addresses: Nodes, Pods and Services.  Nodes and Pods IP ranges can be dynamically changed because depend on the infrastructure or the network plugin respectively.  However, Services IP ranges are defined during the cluster creation as a hardcoded flag in the kube-apiserver.  IP exhaustion has been a problem for long lived or large clusters, as admins needed to expand, shrink or even replace entirely the assigned Service CIDR range"
+    },
+    {
+      "heading": "Traffic distribution for Services",
+      "stage": "Unspecified",
+      "keps": [
+        "4444"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Traffic distribution for Services moves to beta in v1.31 and is enabled by default.   After several iterations on finding the best user experience and traffic engineering capabilities for Services networking, SIG Networking implemented the `trafficDistribution` field in the Service specification, which serves as a guideline for the underlying implementation to consider while making routing decisions.  For more details about this feature please read the [1.30 Release Blog](/blog/2024/04/17/kubernetes-v1-30-release/#traffic-distribution-for-services-sig-network-https-github-com-kubernetes-commun"
+    },
+    {
+      "heading": "Kubernetes VolumeAttributesClass ModifyVolume",
+      "stage": "Unspecified",
+      "keps": [
+        "3751"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[VolumeAttributesClass](/docs/concepts/storage/volume-attributes-classes/) API is moving to beta in v1.31. The VolumeAttributesClass provides a generic, Kubernetes-native API for modifying dynamically volume parameters like provisioned IO. This allows workloads to vertically scale their volumes on-line to balance cost and performance, if supported by their provider. This feature had been alpha since Kubernetes 1.29."
+    },
+    {
+      "heading": "New DRA APIs for better accelerators and other hardware management",
+      "stage": "Unspecified",
+      "keps": [
+        "3063"
+      ],
+      "prs": [],
+      "identifiers": [
+        "DRAControlPlaneController"
+      ],
+      "summary": "Kubernetes v1.31 brings an updated dynamic resource allocation (DRA) API and design.  The main focus in the update is on structured parameters because they make resource information and requests transparent to Kubernetes and clients and enable implementing features like cluster autoscaling.  DRA support in the kubelet was updated such that version skew between kubelet and the control plane is possible. With structured parameters, the scheduler allocates ResourceClaims while scheduling a pod.  Allocation by a DRA driver controller is still supported through what is now called \"classic DRA\".  Wi"
+    },
+    {
+      "heading": "Support for image volumes",
+      "stage": "Unspecified",
+      "keps": [
+        "4639"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ImageVolume"
+      ],
+      "summary": "The Kubernetes community is moving towards fulfilling more Artificial Intelligence (AI) and Machine Learning (ML) use cases in the future.   One of the requirements to fulfill these use cases is to support Open Container Initiative (OCI) compatible images and artifacts (referred as OCI objects) directly as a native volume source.  This allows users to focus on OCI standards as well as enables them to store and distribute any content using OCI registries.  Given that, v1.31 adds a new alpha feature to allow using an OCI image as a volume in a Pod."
+    },
+    {
+      "heading": "Exposing device health information through Pod status",
+      "stage": "Unspecified",
+      "keps": [
+        "4680"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Expose device health information through the Pod Status is added as a new alpha feature in v1.31, disabled by default.  Before Kubernetes v1.31, the way to know whether or not a Pod is associated with the failed device is to use the [PodResources API](/docs/concepts/extend-kubernetes/compute-storage-net/device-plugins/#monitoring-device-plugin-resources).   By enabling this feature, the field `allocatedResourcesStatus` will be added to each container status, within the `.status` for each Pod. The `allocatedResourcesStatus` field reports health information for each device assigned to the contai"
+    },
+    {
+      "heading": "Finer-grained authorization based on selectors",
+      "stage": "Unspecified",
+      "keps": [
+        "4601"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature allows webhook authorizers and future (but not currently designed) in-tree authorizers to allow **list** and **watch** requests, provided those requests use label and/or field selectors. For example, it is now possible for an authorizer to express: this user cannot list all pods, but can list all pods where `.spec.nodeName` matches some specific value. Or to allow a user to watch all Secrets in a namespace that are _not_ labelled as `confidential: true`. Combined with CRD field selectors (also moving to beta in v1.31), it is possible to write more secure per-node extensions."
+    },
+    {
+      "heading": "Restrictions on anonymous API access",
+      "stage": "Unspecified",
+      "keps": [
+        "4633"
+      ],
+      "prs": [],
+      "identifiers": [
+        "AnonymousAuthConfigurableEndpoints"
+      ],
+      "summary": "By enabling the feature gate `AnonymousAuthConfigurableEndpoints` users can now use the authentication configuration file to configure the endpoints that can be accessed by anonymous requests.  This allows users to protect themselves against RBAC misconfigurations that can give anonymous users broad access to the cluster.       This work was done as a part of [KEP #4633](https://github.com/kubernetes/enhancements/issues/4633) and by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth)."
+    },
+    {
+      "heading": "Graduations to Stable",
+      "stage": "Stable",
+      "keps": [
+        "3762",
+        "2305",
+        "3836",
+        "4009",
+        "4569",
+        "3017",
+        "3329",
+        "3715",
+        "3335",
+        "2185"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 11 enhancements promoted to Stable:  * [PersistentVolume last phase transition time](https://github.com/kubernetes/enhancements/issues/3762) * [Metric cardinality enforcement](https://github.com/kubernetes/enhancements/issues/2305)"
+    },
+    {
+      "heading": "Deprecations and Removals",
+      "stage": "Deprecation",
+      "keps": [
+        "4569",
+        "4004"
+      ],
+      "prs": [
+        "125689",
+        "122082"
+      ],
+      "identifiers": [
+        "DisableNodeKubeProxyVersion",
+        "InTreePluginAWSUnregister",
+        "InTreePluginAzureDiskUnregister",
+        "InTreePluginAzureFileUnregister",
+        "InTreePluginGCEUnregister",
+        "InTreePluginOpenStackUnregister",
+        "InTreePluginvSphereUnregister",
+        "InTreePluginPortworxUnregister"
+      ],
+      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health.  See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process.      #### Cgroup v1 enters the maintenance mode  As Kubernetes continues to evolve and adapt to the changing landscape of container orchestration, the community has decided to move cgroup v1 support into maintenance mode in v1.31."
+    },
+    {
+      "heading": "Release notes and upgrade actions required",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "122234",
+        "122082"
+      ],
+      "identifiers": [
+        "SchedulerQueueingHints",
+        "Queue"
+      ],
+      "summary": "Check out the full details of the Kubernetes v1.31 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.31.md).  #### Scheduler now uses QueueingHint when `SchedulerQueueingHints` is enabled Added support to the scheduler to start using a QueueingHint registered for Pod/Updated events, to determine whether updates to  previously unschedulable Pods have made them schedulable. The new support is active when the feature gate `SchedulerQueueingHints` is enabled."
+    },
+    {
+      "heading": "Deprecation of `status.nodeInfo.kubeProxyVersion` field for Nodes ()",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DisableNodeKubeProxyVersion"
+      ],
+      "summary": "The `.status.nodeInfo.kubeProxyVersion` field of Nodes is being deprecated in Kubernetes v1.31, and will be removed in a later release. It's being deprecated because the value of this field wasn't (and isn't) accurate. This field is set by the kubelet, which does not have reliable information about the kube-proxy version or whether kube-proxy is running.   The `DisableNodeKubeProxyVersion` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) will be set to `true` in by default in v1.31 and the kubelet will no longer attempt to set the `.status.kubeProxyVersion` field for"
+    },
+    {
+      "heading": "Removal of all in-tree integrations with cloud providers",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As highlighted in a [previous article](/blog/2024/05/20/completing-cloud-provider-migration/), the last remaining in-tree support for cloud provider integration will be removed as part of the v1.31 release. This doesn't mean you can't integrate with a cloud provider, however you now **must** use the recommended approach using an external integration. Some integrations are part of the Kubernetes project and others are third party software.  This milestone marks the completion of the externalization process for all cloud providers' integrations from the Kubernetes core ([KEP-2395](https://github"
+    },
+    {
+      "heading": "Removal of kubelet `--keep-terminated-pod-volumes` command line flag",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [
+        "122082"
+      ],
+      "identifiers": [],
+      "summary": "The kubelet flag `--keep-terminated-pod-volumes`, which was deprecated in 2017, will be removed as part of the v1.31 release.  You can find more details in the pull request [#122082](https://github.com/kubernetes/kubernetes/pull/122082)."
+    },
+    {
+      "heading": "Removal of CephFS volume plugin",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[CephFS volume plugin](/docs/concepts/storage/volumes/#cephfs) was removed in this release and the `cephfs` volume type became non-functional.   It is recommended that you use the [CephFS CSI driver](https://github.com/ceph/ceph-csi/) as a third-party storage driver instead. If you were using the CephFS volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.  CephFS volume plugin was formally marked as deprecated in v1.28."
+    },
+    {
+      "heading": "Removal of Ceph RBD volume plugin",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The v1.31 release will remove the [Ceph RBD volume plugin](/docs/concepts/storage/volumes/#rbd) and its CSI migration support, making the `rbd` volume type non-functional.  It's recommended that you use the [RBD CSI driver](https://github.com/ceph/ceph-csi/) in your clusters instead.  If you were using Ceph RBD volume plugin before upgrading the cluster version to v1.31, you must re-deploy your application to use the new driver.  The Ceph RBD volume plugin was formally marked as deprecated in v1.28."
+    },
+    {
+      "heading": "Deprecation of non-CSI volume limit plugins in kube-scheduler",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "AzureDiskLimits",
+        "CinderLimits",
+        "EBSLimits",
+        "GCEPDLimits",
+        "NodeVolumeLimits"
+      ],
+      "summary": "The v1.31 release will deprecate all non-CSI volume limit scheduler plugins, and will remove some already deprected plugins from the [default plugins](/docs/reference/scheduling/config/), including:  - `AzureDiskLimits` - `CinderLimits` - `EBSLimits`"
+    }
+  ],
+  "ground_truth_keps": [
+    "3836",
+    "3762",
+    "3866",
+    "2644",
+    "4193",
+    "1880",
+    "4444",
+    "3751",
+    "3063",
+    "4639",
+    "4680",
+    "4601",
+    "4633",
+    "2305",
+    "4009",
+    "4569",
+    "3017",
+    "3329",
+    "3715",
+    "3335",
+    "2185",
+    "4004"
+  ],
+  "ground_truth_identifiers": [
+    "PersistentVolumeStatus",
+    "Pending",
+    "Bound",
+    "Released",
+    "NFTablesProxyMode",
+    "ServiceAccountTokenNodeBinding",
+    "DRAControlPlaneController",
+    "ImageVolume",
+    "AnonymousAuthConfigurableEndpoints",
+    "DisableNodeKubeProxyVersion",
+    "InTreePluginAWSUnregister",
+    "InTreePluginAzureDiskUnregister",
+    "InTreePluginAzureFileUnregister",
+    "InTreePluginGCEUnregister",
+    "InTreePluginOpenStackUnregister",
+    "InTreePluginvSphereUnregister",
+    "InTreePluginPortworxUnregister",
+    "AzureDiskLimits",
+    "CinderLimits",
+    "EBSLimits",
+    "GCEPDLimits",
+    "NodeVolumeLimits",
+    "SchedulerQueueingHints",
+    "Queue"
+  ]
+}

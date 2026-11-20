@@ -1,0 +1,246 @@
+{
+  "project": "kubernetes",
+  "version": "v1.30",
+  "blog_title": "Kubernetes v1.30: Uwubernetes",
+  "release_date": "2024-04-17",
+  "reported_enhancements_count": 45,
+  "spotlight_count": 24,
+  "spotlights": [
+    {
+      "heading": "Robust VolumeManager reconstruction after kubelet restart ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NewVolumeManagerReconstruction"
+      ],
+      "summary": "This is a volume manager refactoring that allows the kubelet to populate additional information about how existing volumes are mounted during the kubelet startup. In general, this makes volume cleanup after kubelet restart or machine reboot more robust.  This does not bring any changes for user or cluster administrators. We used the feature process and feature gate `NewVolumeManagerReconstruction` to be able to fall back to the previous behavior in"
+    },
+    {
+      "heading": "Prevent unauthorized volume mode conversion during volume restore ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "For Kubernetes v1.30, the control plane always prevents unauthorized changes to volume modes when restoring a snapshot into a PersistentVolume. As a cluster administrator, you'll need to grant permissions to the appropriate identity principals (for example: ServiceAccounts representing a storage integration) if you need to allow that kind of change at restore time.  {{< warning >}}"
+    },
+    {
+      "heading": "Pod Scheduling Readiness ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "_Pod scheduling readiness_ graduates to stable this release, after being promoted to beta in Kubernetes v1.27.  This now-stable feature lets Kubernetes avoid trying to schedule a Pod that has been defined, when the cluster doesn't yet have the resources provisioned to allow actually binding that Pod to a node. That's not the only use case; the custom control on whether a Pod can be allowed to schedule also"
+    },
+    {
+      "heading": "Min domains in PodTopologySpread ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `minDomains` parameter for PodTopologySpread constraints graduates to stable this release, which allows you to define the minimum number of domains. This feature is designed to be used with Cluster Autoscaler.  If you previously attempted use and there weren't enough domains already present, Pods would be marked as unschedulable. The Cluster Autoscaler would then provision node(s) in new domain(s), and"
+    },
+    {
+      "heading": "Go workspaces for k/k ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Kubernetes repo now uses Go workspaces. This should not impact end users at all, but does have a impact for developers of downstream projects. Switching to workspaces caused some breaking changes in the flags to the various [k8s.io/code-generator](https://github.com/kubernetes/code-generator) tools. Downstream consumers should look at [`staging/src/k8s.io/code-generator/kube_codegen.sh`](https://github.com/kubernetes/code-generator/blob/master/kube_codegen.sh) to see the changes."
+    },
+    {
+      "heading": "Node log query ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NodeLogQuery"
+      ],
+      "summary": "To help with debugging issues on nodes, Kubernetes v1.27 introduced a feature that allows fetching logs of services running on the node. To use the feature, ensure that the `NodeLogQuery` feature gate is enabled for that node, and that the kubelet configuration options `enableSystemLogHandler` and `enableSystemLogQuery` are both set to true.  Following the v1.30 release, this is now beta (you still need to enable the feature to use it,"
+    },
+    {
+      "heading": "CRD validation ratcheting ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "CRDValidationRatcheting"
+      ],
+      "summary": "You need to enable the `CRDValidationRatcheting` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/) to use this behavior, which then applies to all CustomResourceDefinitions in your cluster.  Provided you enabled the feature gate, Kubernetes implements _validation ratcheting_ for CustomResourceDefinitions. The API server is willing to accept updates to resources that are not valid"
+    },
+    {
+      "heading": "Contextual logging ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "WithValues",
+        "WithName"
+      ],
+      "summary": "Contextual Logging advances to beta in this release, empowering developers and operators to inject customizable, correlatable contextual details like service names and transaction IDs into logs through `WithValues` and `WithName`. This enhancement simplifies the correlation and analysis of log data across distributed systems, significantly improving the efficiency of troubleshooting efforts. By offering a clearer insight into the workings of your Kubernetes environments, Contextual Logging ensures that operational challenges are more manageable, marking a notable step forward in"
+    },
+    {
+      "heading": "Make Kubernetes aware of the LoadBalancer behaviour ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "LoadBalancerIPMode",
+        "LoadBalancer"
+      ],
+      "summary": "The `LoadBalancerIPMode` feature gate is now beta and is now enabled by default. This feature allows you to set the `.status.loadBalancer.ingress.ipMode` for a Service with `type` set to `LoadBalancer`. The `.status.loadBalancer.ingress.ipMode` specifies how the load-balancer IP behaves. It may be specified only when the `.status.loadBalancer.ingress.ip` field is also specified. See more details about [specifying IPMode of load balancer status](/docs/concepts/services-networking/service/#load-balancer-ip-mode)."
+    },
+    {
+      "heading": "Structured Authentication Configuration ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "_Structured Authentication Configuration_ graduates to beta in this release.  Kubernetes has had a long-standing need for a more flexible and extensible authentication system. The current system, while powerful, has some limitations that make it difficult to use in certain scenarios. For example, it is not possible to use multiple authenticators of the same type (e.g., multiple JWT"
+    },
+    {
+      "heading": "Structured Authorization Configuration ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "_Structured Authorization Configuration_ graduates to beta in this release.  Kubernetes continues to evolve to meet the intricate requirements of system administrators and developers alike. A critical aspect of Kubernetes that ensures the security and integrity of the cluster is the API server authorization. Until recently, the configuration of the authorization chain in"
+    },
+    {
+      "heading": "Speed up recursive SELinux label change ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "SELinuxMountReadWriteOncePod",
+        "SELinuxMount"
+      ],
+      "summary": "From the v1.27 release, Kubernetes already included an optimization that sets SELinux labels on the contents of volumes, using only constant time. Kubernetes achieves that speed up using a mount option. The slower legacy behavior requires the container runtime to recursively walk through the whole volumes and apply SELinux labelling individually to each file and directory; this is especially noticable for volumes with large amount of files and directories."
+    },
+    {
+      "heading": "Recursive Read-only (RRO) mounts ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introducing Recursive Read-Only (RRO) Mounts in alpha this release, you'll find a new layer of security for your data. This feature lets you set volumes and their submounts as read-only, preventing accidental modifications. Imagine deploying a critical application where data integrity is key\u2014RRO Mounts ensure that your data stays untouched, reinforcing your cluster's security with an extra safeguard. This is especially crucial in tightly controlled environments, where even the slightest change can have significant implications."
+    },
+    {
+      "heading": "Job success/completion policy ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "From Kubernetes v1.30, indexed Jobs support `.spec.successPolicy` to define when a Job can be declared succeeded based on succeeded Pods. This allows you to define two types of criteria:  - `succeededIndexes` indicates that the Job can be declared succeeded when these indexes succeeded,   even if other indexes failed. - `succeededCount` indicates that the Job can be declared succeeded when the number of succeeded"
+    },
+    {
+      "heading": "Traffic distribution for services ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ServiceTrafficDistribution",
+        "PreferClose"
+      ],
+      "summary": "Kubernetes v1.30 introduces the `spec.trafficDistribution` field within a Kubernetes Service as alpha. This allows you to express preferences for how traffic should be routed to Service endpoints. While [traffic policies](/docs/reference/networking/virtual-ips/#traffic-policies) focus on strict semantic guarantees, traffic distribution allows you to express _preferences_ (such as routing to topologically closer endpoints). This can help optimize for performance, cost, or reliability. You can use this field by enabling the `ServiceTrafficDistribution` feature gate for your cluster and"
+    },
+    {
+      "heading": "Storage Version Migration ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.30 introduces a new built-in API for _StorageVersionMigration_. Kubernetes relies on API data being actively re-written, to support some maintenance activities related to at rest storage. Two prominent examples are the versioned schema of stored resources (that is, the preferred storage schema changing from v1 to v2 for a given resource) and encryption at rest (that is, rewriting stale data based on a change in how the data should be encrypted)."
+    },
+    {
+      "heading": "Graduated to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.30.md).  This release includes a total of 17 enhancements promoted to Stable:"
+    },
+    {
+      "heading": "Deprecations and removals",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "#### Removed the SecurityContextDeny admission plugin, deprecated since v1.27  ([SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth), [SIG Security](https://github.com/kubernetes/community/tree/master/sig-security), and [SIG Testing](https://github.com/kubernetes/community/tree/master/sig-testing)) With the removal of the SecurityContextDeny admission plugin, the Pod Security Admission plugin, available since v1.25, is recommended instead."
+    },
+    {
+      "heading": "Structured parameters for dynamic resource allocation ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Dynamic resource allocation](/docs/concepts/resource-management/dynamic-resource-allocation/) was added to Kubernetes as an alpha feature in v1.26. It defines an alternative to the traditional device-plugin API for requesting access to third-party resources. By design, dynamic resource allocation uses parameters for resources that are completely opaque to core Kubernetes. This approach poses a problem for the Cluster Autoscaler (CA) or any higher-level controller that needs to make decisions for a group of pods (e.g. a job scheduler). It cannot simulate the effect of"
+    },
+    {
+      "heading": "Node memory swap support ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NodeSwap",
+        "UnlimitedSwap",
+        "NoSwap",
+        "LimitedSwap"
+      ],
+      "summary": "In Kubernetes v1.30, memory swap support on Linux nodes gets a big change to how it works - with a strong emphasis on improving system stability. In previous Kubernetes versions, the `NodeSwap` feature gate was disabled by default, and when enabled, it used `UnlimitedSwap` behavior as the default behavior. To achieve better stability, `UnlimitedSwap` behavior (which might compromise node stability) will be removed in v1.30."
+    },
+    {
+      "heading": "Support user namespaces in pods ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[User namespaces](/docs/concepts/workloads/pods/user-namespaces) is a Linux-only feature that better isolates pods to prevent or mitigate several CVEs rated high/critical, including [CVE-2024-21626](https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv), published in January 2024. In Kubernetes 1.30, support for user namespaces is migrating to beta and now supports pods with and without volumes, custom UID/GID ranges, and more!"
+    },
+    {
+      "heading": "Structured authorization configuration ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for [structured authorization configuration](/docs/reference/access-authn-authz/authorization/#configuring-the-api-server-using-an-authorization-config-file) is moving to beta and will be enabled by default. This feature enables the creation of authorization chains with multiple webhooks with well-defined parameters that validate requests in a particular order and allows fine-grained control \u2013 such as explicit Deny on failures. The configuration file approach even allows you to specify [CEL](/docs/reference/using-api/cel/) rules"
+    },
+    {
+      "heading": "Container resource based pod autoscaling ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ContainerResource"
+      ],
+      "summary": "Horizontal pod autoscaling based on `ContainerResource` metrics will graduate to stable in v1.30. This new behavior for HorizontalPodAutoscaler allows you to configure automatic scaling based on the resource usage for individual containers, rather than the aggregate resource use over a Pod. See our [previous article](/blog/2023/05/02/hpa-container-resource-metric/) for further details, or read [container resource metrics](/docs/tasks/run-application/horizontal-pod-autoscale/#container-resource-metrics)."
+    },
+    {
+      "heading": "CEL for admission control ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Integrating Common Expression Language (CEL) for admission control in Kubernetes introduces a more dynamic and expressive way of evaluating admission requests. This feature allows complex, fine-grained policies to be defined and enforced directly through the Kubernetes API, enhancing security and governance capabilities without compromising performance or flexibility.  CEL's addition to Kubernetes admission control empowers cluster administrators to craft intricate"
+    }
+  ],
+  "ground_truth_keps": [],
+  "ground_truth_identifiers": [
+    "NewVolumeManagerReconstruction",
+    "NodeLogQuery",
+    "CRDValidationRatcheting",
+    "WithValues",
+    "WithName",
+    "LoadBalancerIPMode",
+    "LoadBalancer",
+    "SELinuxMountReadWriteOncePod",
+    "SELinuxMount",
+    "ServiceTrafficDistribution",
+    "PreferClose",
+    "NodeSwap",
+    "UnlimitedSwap",
+    "NoSwap",
+    "LimitedSwap",
+    "ContainerResource"
+  ]
+}

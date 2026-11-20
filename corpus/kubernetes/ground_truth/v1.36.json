@@ -1,0 +1,451 @@
+{
+  "project": "kubernetes",
+  "version": "v1.36",
+  "blog_title": "Kubernetes v1.36: \u30cf\u30eb (Haru)",
+  "release_date": "2026-04-22",
+  "reported_enhancements_count": 70,
+  "spotlight_count": 40,
+  "spotlights": [
+    {
+      "heading": "Stable: Fine-grained API authorization",
+      "stage": "Stable",
+      "keps": [
+        "2862"
+      ],
+      "prs": [],
+      "identifiers": [
+        "KubeletFineGrainedAuthz"
+      ],
+      "summary": "On behalf of Kubernetes SIG Auth and SIG Node, we are pleased to announce the graduation of fine-grained `kubelet` API authorization to General Availability (GA) in Kubernetes v1.36!  The `KubeletFineGrainedAuthz` feature gate was introduced as an opt-in alpha feature in Kubernetes v1.32, then graduated to beta (enabled by default) in v1.33."
+    },
+    {
+      "heading": "Beta: Resource health status",
+      "stage": "Beta",
+      "keps": [
+        "4680"
+      ],
+      "prs": [],
+      "identifiers": [
+        "Unhealthy",
+        "Unknown"
+      ],
+      "summary": "Before the v1.34 release, Kubernetes lacked a native way to report the health of allocated devices, making it difficult to diagnose Pod crashes caused by hardware failures. Building on the initial alpha release in v1.31 which focused on Device Plugins, Kubernetes v1.36 expands this feature by promoting the `allocatedResourcesStatus` field within the `.status` for each Pod (to beta). This field provides a unified health reporting mechanism for all specialized hardware."
+    },
+    {
+      "heading": "Alpha: Workload Aware Scheduling (WAS) features",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Previously, the Kubernetes scheduler and job controllers managed pods as independent units, often leading to fragmented scheduling or resource waste for complex, distributed workloads. Kubernetes v1.36 introduces a comprehensive suite of Workload Aware Scheduling (WAS) features in Alpha, natively integrating the Job controller with a revised [Workload](/docs/concepts/workloads/workload-api/) API and a new decoupled PodGroup API, to treat related pods as a single logical entity."
+    },
+    {
+      "heading": "Volume group snapshots",
+      "stage": "Stable",
+      "keps": [
+        "3476"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "After several cycles in beta, VolumeGroupSnapshot support reaches General Availability (GA) in Kubernetes v1.36. This feature allows you to take crash-consistent snapshots across multiple PersistentVolumeClaims simultaneously. The support for volume group snapshots relies on a set of [extension APIs for group snapshots](https://kubernetes-csi.github.io/docs/group-snapshot-restore-feature.html#volume-group-snapshot-apis). These APIs allow users to take crash consistent snapshots for a set of volumes. A key aim is to allow you to restore that set of snapshots to new volumes and recover your work"
+    },
+    {
+      "heading": "Mutable volume attach limits",
+      "stage": "Unspecified",
+      "keps": [
+        "4876"
+      ],
+      "prs": [],
+      "identifiers": [
+        "CSINode"
+      ],
+      "summary": "In Kubernetes v1.36, the _mutable `CSINode` allocatable_ feature graduates to stable. This enhancement allows [Container Storage Interface (CSI)](https://kubernetes-csi.github.io/docs/introduction.html) drivers to dynamically update the reported maximum number of volumes that a node can handle.  With this update, the `kubelet` can dynamically update a node's volume limits and capacity information. The `kubelet` adjusts these limits based on periodic checks or in response to"
+    },
+    {
+      "heading": "API for external signing of ServiceAccount tokens",
+      "stage": "Unspecified",
+      "keps": [
+        "740"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes v1.36, the _external ServiceAccount token signer_ feature for service accounts graduates to stable, making it possible to offload token signing to an external system while still integrating cleanly with the Kubernetes API. Clusters can now rely on an external JWT signer for issuing projected service account tokens that follow the standard service account token format, including support for extended expiration when needed. This is especially useful for clusters that already rely on external identity or key management systems, allowing Kubernetes to integrate without duplicating ke"
+    },
+    {
+      "heading": "DRA features graduating to Stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Part of the Dynamic Resource Allocation (DRA) ecosystem reaches full production maturity in Kubernetes v1.36 as key governance and selection features graduate to Stable. The transition of _DRA admin access_ to GA provides a permanent, secure framework for cluster administrators to access and manage hardware resources globally, while the stabilization of _prioritized lists_ ensures that resource selection logic remains consistent and predictable across all cluster environments."
+    },
+    {
+      "heading": "Mutating admission policies",
+      "stage": "Stable",
+      "keps": [
+        "3962"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Declarative cluster management reaches a new level of sophistication in Kubernetes v1.36 with the graduation of [MutatingAdmissionPolicies](/docs/reference/access-authn-authz/mutating-admission-policy/) to Stable. This milestone provides a native, high-performance alternative to traditional webhooks by allowing administrators to define resource mutations directly in the API server using the Common Expression Language (CEL), fully replacing the need for external infrastructure for many common use cases."
+    },
+    {
+      "heading": "Declarative validation of Kubernetes native types with `validation-gen`",
+      "stage": "Stable",
+      "keps": [
+        "5073"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The development of custom resources reaches a new level of efficiency in Kubernetes v1.36 as _declarative validation_ (with `validation-gen`) graduates to Stable. This milestone replaces the manual and often error-prone task of writing complex OpenAPI schemas by allowing developers to define sophisticated validation logic directly within Go struct tags using the Common Expression Language (CEL)."
+    },
+    {
+      "heading": "Removal of gogo protobuf dependency for Kubernetes API types",
+      "stage": "Removal",
+      "keps": [
+        "5589"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Security and long-term maintainability for the Kubernetes codebase take a major step forward in Kubernetes v1.36 with the completion of the `gogoprotobuf` removal. This initiative has eliminated a significant dependency on the unmaintained `gogoprotobuf` library, which had become a source of potential security vulnerabilities and a blocker for adopting modern Go language features."
+    },
+    {
+      "heading": "Node log query",
+      "stage": "Unspecified",
+      "keps": [
+        "2258"
+      ],
+      "prs": [],
+      "identifiers": [
+        "NodeLogQuery"
+      ],
+      "summary": "Previously, Kubernetes required cluster administrators to log into nodes via SSH or implement a client-side reader for debugging issues pertaining to control-plane or worker nodes. While certain issues still require direct node access, issues with the kube-proxy or kubelet can be diagnosed by inspecting their logs. Node logs offer cluster administrators a method to view these logs using the kubelet API and kubectl plugin to simplify troubleshooting without logging into nodes, similar to debugging issues"
+    },
+    {
+      "heading": "Support User Namespaces in pods",
+      "stage": "Stable",
+      "keps": [
+        "127"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Container isolation and node security reach a major maturity milestone in Kubernetes v1.36 as support for User Namespaces graduates to Stable. This long-awaited feature provides a critical layer of defense-in-depth by allowing the mapping of a container's root user to a non-privileged user on the host, ensuring that even if a process escapes the container, it possesses no administrative power over the underlying node."
+    },
+    {
+      "heading": "Support PSI based on cgroupv2",
+      "stage": "Stable",
+      "keps": [
+        "4205"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Node resource management and observability become more precise in Kubernetes v1.36 as the export of Pressure Stall Information (PSI) metrics graduates to Stable. This feature provides the kubelet with the ability to report \"pressure\" metrics for CPU, memory, and I/O, offering a more granular view of resource contention than traditional utilization metrics."
+    },
+    {
+      "heading": "Volume source: OCI artifact and/or image",
+      "stage": "Stable",
+      "keps": [
+        "4639"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The distribution of container data becomes more flexible in Kubernetes v1.36 as _OCI volume source_ support graduates to Stable. This feature moves beyond the traditional requirement of mounting volumes from external storage providers or config maps by allowing the kubelet to pull and mount content directly from any OCI-compliant registry, such as a container image or an artifact repository.  Now, developers and platform engineers can package application data, models, or static assets as OCI artifacts"
+    },
+    {
+      "heading": "Staleness mitigation for controllers",
+      "stage": "Stable",
+      "keps": [
+        "5647"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Staleness in Kubernetes controllers is a problem that affects many controllers and can subtly affect controller behavior. It is usually not until it is too late, when a controller in production has already taken incorrect action, that staleness is found to be an issue due to some underlying assumption made by the controller author. This could lead to conflicting updates or data corruption upon controller reconciliation during times of cache staleness.  We are excited to announce that Kubernetes v1.36 includes new features that help mitigate controller staleness and"
+    },
+    {
+      "heading": "IP/CIDR validation improvements",
+      "stage": "Unspecified",
+      "keps": [
+        "4858"
+      ],
+      "prs": [],
+      "identifiers": [
+        "StrictIPCIDRValidation"
+      ],
+      "summary": "In Kubernetes v1.36, the `StrictIPCIDRValidation` feature for API IP and CIDR fields graduates to beta, tightening validation to catch malformed addresses and prefixes that previously slipped through. This helps prevent subtle configuration bugs where Services, Pods, NetworkPolicies, or other resources reference invalid IPs, which could otherwise lead to confusing runtime behavior or security surprises."
+    },
+    {
+      "heading": "Separate kubectl user preferences from cluster configs",
+      "stage": "Unspecified",
+      "keps": [
+        "3104"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `.kuberc` feature for customizing `kubectl` user preferences continues to be beta and is enabled by default. The `~/.kube/kuberc` file allows users to store aliases, default flags, and other personal settings separately from `kubeconfig` files, which hold cluster endpoints and credentials. This separation prevents personal preferences from interfering with CI pipelines or shared `kubeconfig` files, while maintaining a consistent `kubectl` experience across different clusters and contexts."
+    },
+    {
+      "heading": "Mutable container resources when Job is suspended",
+      "stage": "Unspecified",
+      "keps": [
+        "5440"
+      ],
+      "prs": [],
+      "identifiers": [
+        "MutablePodResourcesForSuspendedJobs"
+      ],
+      "summary": "In Kubernetes v1.36, the `MutablePodResourcesForSuspendedJobs` feature graduates to beta and is enabled by default. This update relaxes Job validation to allow updates to container CPU, memory, GPU, and extended resource requests and limits while a Job is suspended.  This capability allows queue controllers and operators to adjust batch workload requirements based on real\u2011time cluster conditions. For example, a queueing system can suspend incoming Jobs,"
+    },
+    {
+      "heading": "Constrained impersonation",
+      "stage": "Unspecified",
+      "keps": [
+        "5284"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ConstrainedImpersonation"
+      ],
+      "summary": "In Kubernetes v1.36, the `ConstrainedImpersonation` feature for user impersonation graduates to beta, tightening a historically all\u2011or\u2011nothing mechanism into something that can actually follow least\u2011privilege principles. When this feature is enabled, an impersonator must have two distinct sets of permissions: one to impersonate a given identity, and another to perform specific actions on that identity\u2019s behalf. This prevents support tools, controllers, or node agents from using impersonation to gain broader access than they themselves are allowed, even if their impersonation RBAC is misconfigu"
+    },
+    {
+      "heading": "DRA features in beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [Dynamic Resource Allocation (DRA)](/docs/concepts/resource-management/dynamic-resource-allocation/) framework reaches another maturity milestone in Kubernetes v1.36 as several core features graduate to beta and are enabled by default. This transition moves DRA beyond basic allocation by graduating [partitionable devices](/docs/concepts/resource-management/dynamic-resource-allocation/dra-features/#partitionable-devices) and [consumable capacity](/docs/concepts/resource-management/dynamic-resource-allocation/dra-features/#consumable-capacity), allowing for more granular sharing of hardware "
+    },
+    {
+      "heading": "Statusz for Kubernetes components",
+      "stage": "Unspecified",
+      "keps": [
+        "4827"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ComponentStatusz"
+      ],
+      "summary": "In Kubernetes v1.36, the `ComponentStatusz` feature gate for core Kubernetes components graduates to beta, providing a `/statusz` endpoint (enabled by default) that surfaces real\u2011time build and version details for each component. This low\u2011overhead [z-page](/docs/reference/instrumentation/zpages/) exposes information like start time, uptime, Go version, binary version, emulation version, and minimum compatibility version, so operators and developers can quickly see exactly what is running without digging through logs or configs."
+    },
+    {
+      "heading": "Flagz for Kubernetes components",
+      "stage": "Unspecified",
+      "keps": [
+        "4828"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ComponentFlagz"
+      ],
+      "summary": "In Kubernetes v1.36, the `ComponentFlagz` feature gate for core Kubernetes components graduates to beta, standardizing a `/flagz` endpoint that exposes the effective command\u2011line flags each component was started with. This gives cluster operators and developers real\u2011time, in\u2011cluster visibility into component configuration, making it much easier to debug unexpected behavior or verify that a flag rollout actually took effect after a restart.  The endpoint supports both a human\u2011readable text view and a versioned structured API (initially `config.k8s.io/v1beta1`),"
+    },
+    {
+      "heading": "Mixed version proxy (aka _unknown version interoperability proxy_)",
+      "stage": "Unspecified",
+      "keps": [
+        "4020"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes v1.36, the _mixed version proxy_ feature graduates to beta, building on its alpha introduction in v1.28 to provide safer control-plane upgrades for mixed-version clusters. Each API request can now be routed to the apiserver instance that serves the requested group, version, and resource, reducing 404s and failures due to version skew.  The feature relies on peer-aggregated discovery, so apiservers share information about which resources and versions they expose, then use that data to transparently reroute requests when needed. New metrics on rerouted traffic and proxy behavior"
+    },
+    {
+      "heading": "Memory QoS with cgroups v2",
+      "stage": "Unspecified",
+      "keps": [
+        "2570"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes now enhances memory QoS on Linux cgroup v2 nodes with smarter, tiered memory protection that better aligns kernel controls with pod requests and limits, reducing interference and thrashing for workloads sharing the same node. This iteration also refines how kubelet programs memory.high and memory.min, adds metrics and safeguards to avoid livelocks, and introduces configuration options so cluster operators can tune memory protection behavior for their environments.  This work was done as part of [KEP #2570](https://kep.k8s.io/2570) led by SIG Node."
+    },
+    {
+      "heading": "HPA scale to zero for custom metrics",
+      "stage": "Unspecified",
+      "keps": [
+        "2021"
+      ],
+      "prs": [],
+      "identifiers": [
+        "HPAScaleToZero"
+      ],
+      "summary": "Until now, the HorizontalPodAutoscaler (HPA) required a minimum of at least one replica to remain active, as it could only calculate scaling needs based on metrics (like CPU or Memory) from running pods. Kubernetes v1.36 continues the development of the _HPA scale to zero_ feature (disabled by default) in Alpha, allowing workloads to scale down to zero replicas specifically when using Object or External metrics.  Now, users can experiment with significantly reducing infrastructure costs by completely idling heavy workloads when"
+    },
+    {
+      "heading": "DRA features in Alpha",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Historically, the Dynamic Resource Allocation (DRA) framework lacked seamless integration with high-level controllers and provided limited visibility into device-specific metadata or availability. Kubernetes v1.36 introduces a wave of DRA enhancements in Alpha, including native ResourceClaim support for workloads, and DRA native resources to provide the flexibility of DRA to cpu management.  Now, users can leverage the [downward API](/docs/concepts/workloads/pods/downward-api/) to expose complex resource attributes directly to containers and"
+    },
+    {
+      "heading": "Native histogram support for Kubernetes metrics",
+      "stage": "Alpha",
+      "keps": [
+        "5808"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "High-resolution monitoring reaches a new milestone in Kubernetes v1.36 with the introduction of native histogram support in Alpha. While classical Prometheus histograms relied on static, pre-defined buckets that often forced a compromise between data accuracy and memory usage, this update allows the control plane to export sparse histograms that dynamically adjust their resolution based on real-time data.  Now, cluster operators can capture precise latency distributions for the kube-apiserver and other core components without"
+    },
+    {
+      "heading": "Manifest based admission control config",
+      "stage": "Alpha",
+      "keps": [
+        "5793"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Managing admission controllers moves toward a more declarative and consistent model in Kubernetes v1.36 with the introduction of _manifest-based admission control_ configuration in Alpha. This change addresses the long-standing challenge of configuring admission plugins through disparate command-line flags or separate, complex config files by allowing administrators to define the desired state of admission control directly through a structured manifest."
+    },
+    {
+      "heading": "CRI list streaming",
+      "stage": "Alpha",
+      "keps": [
+        "5825"
+      ],
+      "prs": [],
+      "identifiers": [
+        "List"
+      ],
+      "summary": "With the introduction of _CRI list streaming_ in Alpha, Kubernetes v1.36 uses new internal streaming operations. This enhancement addresses the memory pressure and latency spikes often seen on large-scale nodes by replacing traditional, monolithic `List` requests between the kubelet and the container runtime with a more efficient server-side streaming RPC.  Now, instead of waiting for a single, massive response containing all container or image data, the kubelet can process results incrementally as they are streamed. This shift significantly reduces the peak memory footprint of the kubelet and"
+    },
+    {
+      "heading": "Ingress NGINX retirement",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "To prioritize the safety and security of the ecosystem, Kubernetes SIG Network and the Security Response Committee have  retired Ingress NGINX on March 24, 2026. Since that date, there have been no further releases, no bugfixes, and no updates to resolve any security vulnerabilities discovered. Existing deployments of Ingress NGINX will continue to function, and installation artifacts like Helm charts and container images will remain available.   For full details, see the [official retirement announcement](/blog/2025/11/11/ingress-nginx-retirement/)."
+    },
+    {
+      "heading": "Faster SELinux labelling for volumes (GA)",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ReadWriteOncePod"
+      ],
+      "summary": "Kubernetes v1.36 makes the SELinux volume mounting improvement generally available. This change replaced recursive file  relabeling with `mount -o context=XYZ` option, applying the correct SELinux label to the entire volume at mount time.  It brings more consistent performance and reduces Pod startup delays on SELinux-enforcing systems.  This feature was introduced as beta in v1.28 for `ReadWriteOncePod` volumes. In v1.32, it gained metrics and an opt-out  option (`securityContext.seLinuxChangePolicy: Recursive`) to help catch conflicts. Now in v1.36,"
+    },
+    {
+      "heading": "Graduations to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as general availability). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 18 enhancements promoted to stable:  - [Support User Namespaces in pods](https://kep.k8s.io/127)"
+    },
+    {
+      "heading": "Deprecation of Service .spec.externalIPs",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "With this release, the `externalIPs` field in Service `spec` is deprecated. This means the functionality exists, but will no longer function in a **future** version of Kubernetes. You should plan to migrate if you currently rely on that field. This field has been a known security headache for years, enabling man-in-the-middle attacks on your cluster traffic, as documented in [CVE-2020-8554](https://github.com/kubernetes/kubernetes/issues/97076). From Kubernetes v1.36 and onwards, you will see deprecation warnings when using it, with full removal planned for v1.43.  If your Services still lean "
+    },
+    {
+      "heading": "Removal of the `gitRepo` volume driver",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `gitRepo` volume type has been deprecated since v1.11. For Kubernetes v1.36, the `gitRepo` volume plugin is permanently disabled and cannot be turned back on. This change protects clusters from a critical security issue where using `gitRepo` could let an attacker run code as root on the node.  Although `gitRepo` has been deprecated for years and better alternatives have been recommended, it was still technically possible to use it in previous releases."
+    },
+    {
+      "heading": "Deprecation of `.spec.externalIPs` in Service",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `externalIPs` field in Service `spec` is being deprecated, which means you\u2019ll soon lose a quick way to route arbitrary externalIPs to your Services. This field has been a known security headache for years, enabling man-in-the-middle attacks on your cluster traffic, as documented in [CVE-2020-8554](https://github.com/kubernetes/kubernetes/issues/970760). From Kubernetes v1.36 and onwards, you will see deprecation warnings when using it, with full removal planned for v1.43.  If your Services still lean on `externalIPs`, consider using LoadBalancer services for cloud-managed ingress, NodePort"
+    },
+    {
+      "heading": "Removal of `gitRepo` volume driver",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The gitRepo volume type has been deprecated since v1.11. Starting Kubernetes v1.36, the `gitRepo` volume plugin is permanently disabled and cannot be turned back on. This change protects clusters from a critical security issue where using `gitRepo` could let an attacker run code as root on the node.   Although `gitRepo` has been deprecated for years and better alternatives have been recommended, it was still technically possible to use it in previous releases. From v1.36 onward, that path is closed for good, so any existing workloads depending on `gitRepo` will need to migrate to supported app"
+    },
+    {
+      "heading": "Faster SELinux labelling for volumes (GA)",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ReadWriteOncePod"
+      ],
+      "summary": "Kubernetes v1.36 makes the SELinux volume mounting improvement generally available. This change replaced recursive file relabeling with `mount -o context=XYZ` option, applying the correct SELinux label to the entire volume at mount time. It brings more consistent performance and reduces Pod startup delays on SELinux-enforcing systems.  This feature was introduced as beta in v1.28 for `ReadWriteOncePod` volumes. In v1.32, it gained metrics and an opt-out option (`securityContext.seLinuxChangePolicy: Recursive`) to help catch conflicts. Now in v1.36, it reaches stable and defaults to all volumes"
+    },
+    {
+      "heading": "External signing of ServiceAccount tokens",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As a beta feature, Kubernetes already supports external signing of ServiceAccount tokens. This allows clusters to integrate with external key management systems or signing services instead of relying only on internally managed keys.  With this enhancement, the `kube-apiserver` can delegate token signing to external systems such as cloud key management services or hardware security modules. This improves security and simplifies key management services for clusters that rely on centralized signing infrastructure.  We expect that this will graduate to stable (GA) in Kubernetes v1.36."
+    },
+    {
+      "heading": "DRA Driver support for Device taints and tolerations",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DeviceTaintRule"
+      ],
+      "summary": "Kubernetes v1.33 introduced support for taints and tolerations for physical devices managed through [Dynamic Resource Allocation (DRA)](/docs/concepts/resource-management/dynamic-resource-allocation/). Normally, any device can be used for scheduling. However, this enhancement allows DRA drivers to mark devices as tainted, which ensures that they will not be used for scheduling purposes. Alternatively, cluster administrators can create a `DeviceTaintRule` to mark devices that match a certain selection criteria(such as all devices of a certain driver) as tainted. This improves scheduling control"
+    },
+    {
+      "heading": "DRA support for partitionable devices",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.36 expands Dynamic Resource Allocation (DRA) by introducing support for partitionable devices, allowing a single hardware accelerator to be split into multiple logical units that can be shared across workloads.  This is especially useful for high-cost resources like GPUs, where dedicating an entire device to a single workload can lead to underutilization.  With this enhancement, platform teams can improve overall cluster efficiency by allocating only the required portion of a device to each workload, rather than reserving it entirely. This makes it easier to run multiple workload"
+    }
+  ],
+  "ground_truth_keps": [
+    "2862",
+    "4680",
+    "3476",
+    "4876",
+    "740",
+    "3962",
+    "5073",
+    "5589",
+    "2258",
+    "127",
+    "4205",
+    "4639",
+    "5647",
+    "4858",
+    "3104",
+    "5440",
+    "5284",
+    "4827",
+    "4828",
+    "4020",
+    "2570",
+    "2021",
+    "5808",
+    "5793",
+    "5825"
+  ],
+  "ground_truth_identifiers": [
+    "KubeletFineGrainedAuthz",
+    "Unhealthy",
+    "Unknown",
+    "CSINode",
+    "NodeLogQuery",
+    "StrictIPCIDRValidation",
+    "MutablePodResourcesForSuspendedJobs",
+    "ConstrainedImpersonation",
+    "ComponentStatusz",
+    "ComponentFlagz",
+    "HPAScaleToZero",
+    "ReadWriteOncePod",
+    "DeviceTaintRule"
+  ]
+}

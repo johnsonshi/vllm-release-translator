@@ -1,0 +1,3053 @@
+{
+  "project": "kubernetes",
+  "version": "v1.29",
+  "tag": "v1.29.0",
+  "total_raw_items": 302,
+  "counts_by_category": {
+    "Urgent Upgrade Notes": 2,
+    "Deprecation": 6,
+    "API Change": 34,
+    "Feature": 111,
+    "Documentation": 2,
+    "Failing Test": 5,
+    "Bug or Regression": 87,
+    "Other (Cleanup or Flake)": 55
+  },
+  "urgent_upgrade_notes": [
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "Stopped accepting component configuration for `kube-proxy` and `kubelet` during `kubeadm upgrade plan --config`. This was a legacy behavior that was not well supported for upgrades and could be used only at the plan stage to determine if the configuration for these components stored in the cluster needs manual version migration. In the future, `kubeadm` will attempt alternative component config migration approaches. ([#120788](https://github.com/kubernetes/kubernetes/pull/120788), [@chendave](https://github.com/chendave))",
+      "prs": [
+        "120788"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Urgent Upgrade Notes",
+      "text": "`kubeadm`: a separate \"super-admin.conf\" file is now deployed. The User in `admin.conf` is now bound to a new RBAC Group `kubeadm:cluster-admins` that has `cluster-admin` `ClusterRole` access. The User in `super-admin.conf` is now bound to the `system:masters` built-in super-powers / break-glass Group that can bypass RBAC. Before this change, the default `admin.conf` was bound to `system:masters` Group, which was undesired. Executing `kubeadm init phase kubeconfig all` or just `kubeadm init` will now generate the new `super-admin.conf` file. The cluster admin can then decide to keep the file present on a node host or move it to a safe location. `kubadm certs renew` will renew the certificate in `super-admin.conf` to one year if the file exists; if it does not exist a \"MISSING\" note will be printed. `kubeadm upgrade apply` for this release will migrate this particular node to the two file setup. Subsequent kubeadm releases will continue to optionally renew the certificate in `super-admin.conf` if the file exists on disk and if renew on upgrade is not disabled. `kubeadm join --control-plane` will now generate only an `admin.conf` file that has the less privileged User. ([#121305](https://github.com/kubernetes/kubernetes/pull/121305), [@neolit123](https://github.com/neolit123))",
+      "prs": [
+        "121305"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ClusterRole"
+      ]
+    }
+  ],
+  "deprecations": [
+    {
+      "category": "Deprecation",
+      "text": "#### Additional documentation e.g., KEPs (Kubernetes Enhancement Proposals), usage docs, etc.: <!-- This section can be blank if this pull request does not require a release note. When adding links which point to resources within git repositories, like KEPs or supporting documentation, please reference a specific commit and avoid linking directly to the master branch. This ensures that links reference a specific point in time, rather than a document that may change over time. See here for guidance on getting permanent links to files: https://help.github.com/en/articles/getting-permanent-links-to-files Please use the following format for linking documentation:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "[KEP]: <link>",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "[Usage]: <link>",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "[Other doc]: <link> --> ([#119495](https://github.com/kubernetes/kubernetes/pull/119495), [@bzsuni](https://github.com/bzsuni)) [SIG API Machinery]",
+      "prs": [
+        "119495"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Deprecation",
+      "text": "Creation of new `CronJob` objects containing `TZ` or `CRON_TZ` in `.spec.schedule`, accidentally enabled in `v1.22`, is now disallowed. Use the `.spec.timeZone` field instead, supported in `v1.25+` clusters in default configurations. See https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/#unsupported-timezone-specification for more information. ([#116252](https://github.com/kubernetes/kubernetes/pull/116252), [@soltysh](https://github.com/soltysh))",
+      "prs": [
+        "116252"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CronJob"
+      ]
+    },
+    {
+      "category": "Deprecation",
+      "text": "Removed the networking `alpha` API `ClusterCIDR`. ([#121229](https://github.com/kubernetes/kubernetes/pull/121229), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "121229"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ClusterCIDR"
+      ]
+    }
+  ],
+  "api_changes": [
+    {
+      "category": "API Change",
+      "text": "'`kube-apiserver`: adds `--authentication-config` flag for reading `AuthenticationConfiguration` files. `--authentication-config` flag is mutually exclusive with the existing `--oidc-*` flags.' ([#119142](https://github.com/kubernetes/kubernetes/pull/119142), [@aramase](https://github.com/aramase))",
+      "prs": [
+        "119142"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "AuthenticationConfiguration"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "'`kube-scheduler` component config (`KubeSchedulerConfiguration`) `kubescheduler.config.k8s.io/v1beta3` is removed in `v1.29`. Migrated `kube-scheduler` configuration files to `kubescheduler.config.k8s.io/v1`.' ([#119994](https://github.com/kubernetes/kubernetes/pull/119994), [@SataQiu](https://github.com/SataQiu))",
+      "prs": [
+        "119994"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "KubeSchedulerConfiguration"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "A new sleep action for the `PreStop` lifecycle hook was added, allowing containers to pause for a specified duration before termination. ([#119026](https://github.com/kubernetes/kubernetes/pull/119026), [@AxeZhan](https://github.com/AxeZhan))",
+      "prs": [
+        "119026"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PreStop"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Added CEL expressions to `v1alpha1 AuthenticationConfiguration`. ([#121078](https://github.com/kubernetes/kubernetes/pull/121078), [@aramase](https://github.com/aramase))",
+      "prs": [
+        "121078"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added Windows support for InPlace Pod Vertical Scaling feature. ([#112599](https://github.com/kubernetes/kubernetes/pull/112599), [@fabi200123](https://github.com/fabi200123)) [SIG Autoscaling, Node, Scalability, Scheduling and Windows]",
+      "prs": [
+        "112599"
+      ],
+      "keps": [],
+      "sigs": [
+        "Autoscaling, Node, Scalability, Scheduling and Windows"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added `ImageMaximumGCAge` field to Kubelet configuration, which allows a user to set the maximum age an image is unused before it's garbage collected. ([#121275](https://github.com/kubernetes/kubernetes/pull/121275), [@haircommander](https://github.com/haircommander))",
+      "prs": [
+        "121275"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ImageMaximumGCAge"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Added `UserNamespacesPodSecurityStandards` feature gate to enable user namespace support for Pod Security Standards. Enabling this feature will modify all Pod Security Standard rules to allow setting: `spec[.*].securityContext.[runAsNonRoot,runAsUser]`. This feature gate should only be enabled if all nodes in the cluster support the user namespace feature and have it enabled. The feature gate will not graduate or be enabled by default in future Kubernetes releases. ([#118760](https://github.com/kubernetes/kubernetes/pull/118760), [@saschagrunert](https://github.com/saschagrunert)) [SIG API Machinery, Auth, Node and Release]",
+      "prs": [
+        "118760"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery, Auth, Node and Release"
+      ],
+      "identifiers": [
+        "UserNamespacesPodSecurityStandards"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Added `optionalOldSelf` to `x-kubernetes-validations` to support ratcheting CRD schema constraints. ([#121034](https://github.com/kubernetes/kubernetes/pull/121034), [@alexzielenski](https://github.com/alexzielenski))",
+      "prs": [
+        "121034"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added a new `ServiceCIDR` type that allows to dynamically configure the cluster range used to allocate `Service ClusterIPs` addresses. ([#116516](https://github.com/kubernetes/kubernetes/pull/116516), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "116516"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ServiceCIDR"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Added a new `ipMode` field to the `.status` of Services where `type` is set to `LoadBalancer`. The new field is behind the `LoadBalancerIPMode` feature gate. ([#119937](https://github.com/kubernetes/kubernetes/pull/119937), [@RyanAoh](https://github.com/RyanAoh)) [SIG API Machinery, Apps, Cloud Provider, Network and Testing]",
+      "prs": [
+        "119937"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery, Apps, Cloud Provider, Network and Testing"
+      ],
+      "identifiers": [
+        "LoadBalancer",
+        "LoadBalancerIPMode"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Added options for configuring `nf_conntrack_udp_timeout`, and `nf_conntrack_udp_timeout_stream` variables of netfilter conntrack subsystem. ([#120808](https://github.com/kubernetes/kubernetes/pull/120808), [@aroradaman](https://github.com/aroradaman))",
+      "prs": [
+        "120808"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added support for CEL expressions to `v1alpha1 AuthorizationConfiguration` webhook `matchConditions`. ([#121223](https://github.com/kubernetes/kubernetes/pull/121223), [@ritazh](https://github.com/ritazh))",
+      "prs": [
+        "121223"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added support for projecting `certificates.k8s.io/v1alpha1` ClusterTrustBundle objects into pods. ([#113374](https://github.com/kubernetes/kubernetes/pull/113374), [@ahmedtd](https://github.com/ahmedtd))",
+      "prs": [
+        "113374"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Added the `DisableNodeKubeProxyVersion` feature gate. If `DisableNodeKubeProxyVersion` is enabled, the `kubeProxyVersion` field is not set. ([#120954](https://github.com/kubernetes/kubernetes/pull/120954), [@HirazawaUi](https://github.com/HirazawaUi))",
+      "prs": [
+        "120954"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "DisableNodeKubeProxyVersion"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Fixed a bug where CEL expressions in CRD validation rules would incorrectly compute a high estimated cost for functions that return strings, lists or maps. The incorrect cost was evident when the result of a function was used in subsequent operations. ([#119800](https://github.com/kubernetes/kubernetes/pull/119800), [@jpbetz](https://github.com/jpbetz)) [SIG API Machinery, Auth and Cloud Provider]",
+      "prs": [
+        "119800"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery, Auth and Cloud Provider"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Fixed the API comments for the Job `Ready` field in status. ([#121765](https://github.com/kubernetes/kubernetes/pull/121765), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "121765"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Ready"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Fixed the API comments for the `FailIndex` Job pod failure policy action. ([#121764](https://github.com/kubernetes/kubernetes/pull/121764), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "121764"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "FailIndex"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Go API: the `ResourceRequirements` struct was replaced with `VolumeResourceRequirements` for use with volumes. ([#118653](https://github.com/kubernetes/kubernetes/pull/118653), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "118653"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ResourceRequirements",
+        "VolumeResourceRequirements"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "Graduated `Job BackoffLimitPerIndex` feature to `beta`. ([#121356](https://github.com/kubernetes/kubernetes/pull/121356), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "121356"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Marked the `onPodConditions` field as optional in `Job`'s pod failure policy. ([#120204](https://github.com/kubernetes/kubernetes/pull/120204), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "120204"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "Promoted `PodReadyToStartContainers` condition to `beta`. ([#119659](https://github.com/kubernetes/kubernetes/pull/119659), [@kannon92](https://github.com/kannon92))",
+      "prs": [
+        "119659"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodReadyToStartContainers"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "The `flowcontrol.apiserver.k8s.io/v1beta3` `FlowSchema` and `PriorityLevelConfiguration` APIs has been promoted to `flowcontrol.apiserver.k8s.io/v1`, with the following changes:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "FlowSchema",
+        "PriorityLevelConfiguration"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`PriorityLevelConfiguration`: the `.spec.limited.nominalConcurrencyShares` field defaults to `30` only if the field is omitted (v1beta3 also defaulted an explicit `0` value to `30`). Specifying an explicit `0` value is not allowed in the `v1` version in v1.29 to ensure compatibility with `v1.28` API servers. In `v1.30`, explicit `0` values will be allowed in this field in the `v1` API. The `flowcontrol.apiserver.k8s.io/v1beta3` APIs are deprecated and will no longer be served in v1.32. All existing objects are available via the `v1` APIs. Transition clients and manifests to use the `v1` APIs before upgrading to `v1.32`. ([#121089](https://github.com/kubernetes/kubernetes/pull/121089), [@tkashem](https://github.com/tkashem))",
+      "prs": [
+        "121089"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PriorityLevelConfiguration"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "The `kube-proxy` command-line documentation was updated to clarify that `--bind-address` does not actually have anything to do with binding to an address, and you probably don't actually want to be using it. ([#120274](https://github.com/kubernetes/kubernetes/pull/120274), [@danwinship](https://github.com/danwinship))",
+      "prs": [
+        "120274"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "The `kube-scheduler` `selectorSpread` plugin has been removed, please use the `podTopologySpread` plugin instead. ([#117720](https://github.com/kubernetes/kubernetes/pull/117720), [@kerthcet](https://github.com/kerthcet))",
+      "prs": [
+        "117720"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "The `matchLabelKeys/mismatchLabelKeys` feature is introduced to the hard/soft `PodAffinity/PodAntiAffinity`. ([#116065](https://github.com/kubernetes/kubernetes/pull/116065), [@sanposhiho](https://github.com/sanposhiho))",
+      "prs": [
+        "116065"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "When updating a CRD, per-expression cost limit check are now skipped for `x-kubernetes-validations` rules of versions that are not mutated. ([#121460](https://github.com/kubernetes/kubernetes/pull/121460), [@jiahuif](https://github.com/jiahuif))",
+      "prs": [
+        "121460"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "`CSINodeExpandSecret` feature has been promoted to `GA` in this release and is enabled by default. The CSI drivers can make use of the `secretRef` values passed in `NodeExpansion` request optionally sent by the CSI Client from this release onwards. ([#121303](https://github.com/kubernetes/kubernetes/pull/121303), [@humblec](https://github.com/humblec))",
+      "prs": [
+        "121303"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CSINodeExpandSecret",
+        "NodeExpansion"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`NodeStageVolume` calls will now be retried if the CSI node driver is not running. ([#120330](https://github.com/kubernetes/kubernetes/pull/120330), [@rohitssingh](https://github.com/rohitssingh))",
+      "prs": [
+        "120330"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "NodeStageVolume"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`PersistentVolumeLastPhaseTransitionTime` is now beta and enabled by default. ([#120627](https://github.com/kubernetes/kubernetes/pull/120627), [@RomanBednar](https://github.com/RomanBednar))",
+      "prs": [
+        "120627"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PersistentVolumeLastPhaseTransitionTime"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`ValidatingAdmissionPolicy` type checking now supports CRDs and API extensions types. ([#119109](https://github.com/kubernetes/kubernetes/pull/119109), [@jiahuif](https://github.com/jiahuif))",
+      "prs": [
+        "119109"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ValidatingAdmissionPolicy"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`kube-apiserver`: added `--authorization-config` flag for reading a configuration file containing an `apiserver.config.k8s.io/v1alpha1 AuthorizationConfiguration` object. The `--authorization-config` flag is mutually exclusive with `--authorization-modes` and `--authorization-webhook-*` flags. The `alpha` `StructuredAuthorizationConfiguration` feature flag must be enabled for `--authorization-config` to be specified. ([#120154](https://github.com/kubernetes/kubernetes/pull/120154), [@palnabarun](https://github.com/palnabarun))",
+      "prs": [
+        "120154"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "StructuredAuthorizationConfiguration"
+      ]
+    },
+    {
+      "category": "API Change",
+      "text": "`kube-proxy` now has a new nftables-based mode, available by running `kube-proxy --feature-gates NFTablesProxyMode=true --proxy-mode nftables` This is currently an alpha-level feature and while it probably will not eat your data, it may nibble at it a bit. (It passes e2e testing but has not yet seen real-world use.) At this point it should be functionally mostly identical to the iptables mode, except that it does not (and will not) support Service NodePorts on 127.0.0.1. (Also note that there are currently no command-line arguments for the nftables-specific config; you will need to use a config file if you want to set the equivalent of any of the `--iptables-xxx` options.) As this code is still very new, it has not been heavily optimized yet; while it is expected to _eventually_ have better performance than the iptables backend, very little performance testing has been done so far. ([#121046](https://github.com/kubernetes/kubernetes/pull/121046), [@danwinship](https://github.com/danwinship))",
+      "prs": [
+        "121046"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "API Change",
+      "text": "`kube-proxy`: Added an option/flag for configuring the `nf_conntrack_tcp_be_liberal` sysctl (in the kernel's netfilter conntrack subsystem).  When enabled, `kube-proxy` will not install the `DROP` rule for invalid conntrack states, which currently breaks users of asymmetric routing. ([#120354](https://github.com/kubernetes/kubernetes/pull/120354), [@aroradaman](https://github.com/aroradaman))",
+      "prs": [
+        "120354"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "features": [
+    {
+      "category": "Feature",
+      "text": "#### Additional documentation e.g., KEPs (Kubernetes Enhancement Proposals), usage docs, etc.: <!-- This section can be blank if this pull request does not require a release note. When adding links which point to resources within git repositories, like KEPs or supporting documentation, please reference a specific commit and avoid linking directly to the master branch. This ensures that links reference a specific point in time, rather than a document that may change over time. See here for guidance on getting permanent links to files: https://help.github.com/en/articles/getting-permanent-links-to-files Please use the following format for linking documentation:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[KEP]: <link>",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[Usage]: <link>",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "[Other doc]: <link> --> ([#119517](https://github.com/kubernetes/kubernetes/pull/119517), [@sanposhiho](https://github.com/sanposhiho)) [SIG Node, Scheduling and Testing]",
+      "prs": [
+        "119517"
+      ],
+      "keps": [],
+      "sigs": [
+        "Node, Scheduling and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "'`kubeadm`: added validation to verify that the `CertificateKey` is a valid hex encoded AES key.' ([#120064](https://github.com/kubernetes/kubernetes/pull/120064), [@SataQiu](https://github.com/SataQiu))",
+      "prs": [
+        "120064"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CertificateKey"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "A customizable `OrderedScoreFuncs()` function was introduced. Out-of-tree plugins that used the scheduler's preemption interface could implement this function for custom preemption preferences or return nil to keep the current behavior. ([#121867](https://github.com/kubernetes/kubernetes/pull/121867), [@lianghao208](https://github.com/lianghao208))",
+      "prs": [
+        "121867"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added `apiextensions_apiserver_update_ratcheting_time` metric for tracking time taken during requests by feature `CRDValidationRatcheting`. ([#121462](https://github.com/kubernetes/kubernetes/pull/121462), [@alexzielenski](https://github.com/alexzielenski))",
+      "prs": [
+        "121462"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CRDValidationRatcheting"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added `apiserver_envelope_encryption_dek_cache_filled` to measure number of records in data encryption key (DEK) cache. ([#119878](https://github.com/kubernetes/kubernetes/pull/119878), [@ritazh](https://github.com/ritazh))",
+      "prs": [
+        "119878"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added `apiserver_watch_list_duration_seconds` metrics which will measure response latency distribution in seconds for watchlist requests broken by group, version, resource and scope. ([#120490](https://github.com/kubernetes/kubernetes/pull/120490), [@p0lyn0mial](https://github.com/p0lyn0mial))",
+      "prs": [
+        "120490"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added `job_pods_creation_total` metrics for tracking Pods created by the Job controller labeled by events which triggered the Pod creation. ([#121481](https://github.com/kubernetes/kubernetes/pull/121481), [@dejanzele](https://github.com/dejanzele))",
+      "prs": [
+        "121481"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added `kubectl node drain` helper callbacks `OnPodDeletionOrEvictionStarted` and `OnPodDeletionOrEvictionFailed`; people extending `kubectl` can use these new callbacks for more granularity. Deprecated the `OnPodDeletedOrEvicted` node drain helper callback. ([#117502](https://github.com/kubernetes/kubernetes/pull/117502), [@adilGhaffarDev](https://github.com/adilGhaffarDev))",
+      "prs": [
+        "117502"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "OnPodDeletionOrEvictionStarted",
+        "OnPodDeletionOrEvictionFailed",
+        "OnPodDeletedOrEvicted"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added a new `--init-only` command line flag to `kube-proxy`. Setting the flag makes `kube-proxy` perform its initial configuration that requires privileged mode, and then exit. The `--init-only` mode is intended to be executed in a privileged init container, so that the main container may run with a stricter `securityContext`. ([#120864](https://github.com/kubernetes/kubernetes/pull/120864), [@uablrek](https://github.com/uablrek)) [SIG Network and Scalability]",
+      "prs": [
+        "120864"
+      ],
+      "keps": [],
+      "sigs": [
+        "Network and Scalability"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added a new scheduler metric, `pod_scheduling_sli_duration_seconds`, and started the deprecation for `pod_scheduling_duration_seconds`. ([#119049](https://github.com/kubernetes/kubernetes/pull/119049), [@helayoty](https://github.com/helayoty))",
+      "prs": [
+        "119049"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added a return value to `QueueingHint` to indicate an error. If `QueueingHint` returns an error, the scheduler logs it and treats the event as a `QueueAfterBackoff` so that the Pod won't be stuck in the unschedulable pod pool. ([#119290](https://github.com/kubernetes/kubernetes/pull/119290), [@carlory](https://github.com/carlory))",
+      "prs": [
+        "119290"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "QueueingHint",
+        "QueueAfterBackoff"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added apiserver identity to the following metrics: `apiserver_envelope_encryption_key_id_hash_total`, `apiserver_envelope_encryption_key_id_hash_last_timestamp_seconds`, `apiserver_envelope_encryption_key_id_hash_status_last_timestamp_seconds`, `apiserver_encryption_config_controller_automatic_reload_failures_total`, `apiserver_encryption_config_controller_automatic_reload_success_total`, `apiserver_encryption_config_controller_automatic_reload_last_timestamp_seconds`. Fixed bug to surface events for the following metrics: `apiserver_encryption_config_controller_automatic_reload_failures_total`, `apiserver_encryption_config_controller_automatic_reload_last_timestamp_seconds`, `apiserver_encryption_config_controller_automatic_reload_success_total`. ([#120438](https://github.com/kubernetes/kubernetes/pull/120438), [@ritazh](https://github.com/ritazh))",
+      "prs": [
+        "120438"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Added container filesystem to the `ImageFsInfoResponse`. ([#120914](https://github.com/kubernetes/kubernetes/pull/120914), [@kannon92](https://github.com/kannon92))",
+      "prs": [
+        "120914"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ImageFsInfoResponse"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added multiplication functionality to `Quantity`. ([#117411](https://github.com/kubernetes/kubernetes/pull/117411), [@tenzen-y](https://github.com/tenzen-y))",
+      "prs": [
+        "117411"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Quantity"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added new feature gate called `RuntimeClassInImageCriApi` to address `kubelet` changes needed for KEP 4216. Noteable changes: 1. Populate new `RuntimeHandler` field in CRI's `ImageSpec` struct during image pulls from container runtimes. 2. Pass `runtimeHandler` field in `RemoveImage()` call to container runtime in `kubelet`'s image garbage collection. ([#121456](https://github.com/kubernetes/kubernetes/pull/121456), [@kiashok](https://github.com/kiashok))",
+      "prs": [
+        "121456"
+      ],
+      "keps": [
+        "4216"
+      ],
+      "sigs": [],
+      "identifiers": [
+        "RuntimeClassInImageCriApi",
+        "RuntimeHandler",
+        "ImageSpec"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Added support for split image filesystem in kubelet. ([#120616](https://github.com/kubernetes/kubernetes/pull/120616), [@kannon92](https://github.com/kannon92))",
+      "prs": [
+        "120616"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Bumped `cel-go` to `v0.17.7` and introduced set `ext` library with new options. ([#121577](https://github.com/kubernetes/kubernetes/pull/121577), [@cici37](https://github.com/cici37))",
+      "prs": [
+        "121577"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Bumped `distroless-iptables` to `0.3.2` based on Go `1.21.1`. ([#120527](https://github.com/kubernetes/kubernetes/pull/120527), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "120527"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Bumped `distroless-iptables` to `0.3.3` based on Go `1.21.2`. ([#121073](https://github.com/kubernetes/kubernetes/pull/121073), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121073"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Bumped `distroless-iptables` to `0.4.1` based on Go `1.21.3`. ([#121216](https://github.com/kubernetes/kubernetes/pull/121216), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121216"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Bumped distroless-iptables to 0.4.1 based on Go `1.21.3`. ([#121871](https://github.com/kubernetes/kubernetes/pull/121871), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121871"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CEL can now correctly handle a CRD `openAPIV3Schema` that has neither `Properties` nor `AdditionalProperties`. ([#121459](https://github.com/kubernetes/kubernetes/pull/121459), [@jiahuif](https://github.com/jiahuif))",
+      "prs": [
+        "121459"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Properties",
+        "AdditionalProperties"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "CEL cost estimator no longer treats enums as unbounded strings when determining its length. Instead, the length is set to the longest possible enum value. ([#121085](https://github.com/kubernetes/kubernetes/pull/121085), [@jiahuif](https://github.com/jiahuif)) [SIG API Machinery]",
+      "prs": [
+        "121085"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "CRI: image pull per runtime class is now supported. ([#121121](https://github.com/kubernetes/kubernetes/pull/121121), [@kiashok](https://github.com/kiashok))",
+      "prs": [
+        "121121"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Certain `requestBody` parameters in the OpenAPI `v3` are now correctly marked as required. ([#120735](https://github.com/kubernetes/kubernetes/pull/120735), [@Jefftree](https://github.com/Jefftree))",
+      "prs": [
+        "120735"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Changed `kubectl help` to display basic details for subcommands from plugins. ([#116752](https://github.com/kubernetes/kubernetes/pull/116752), [@xvzf](https://github.com/xvzf))",
+      "prs": [
+        "116752"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Changed the `KMSv2KDF` feature gate to be enabled by default. ([#120433](https://github.com/kubernetes/kubernetes/pull/120433), [@enj](https://github.com/enj)) [SIG API Machinery, Auth and Testing]",
+      "prs": [
+        "120433"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery, Auth and Testing"
+      ],
+      "identifiers": [
+        "KMSv2KDF"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Client-side apply will now use OpenAPI `v3` by default. ([#120707](https://github.com/kubernetes/kubernetes/pull/120707), [@Jefftree](https://github.com/Jefftree))",
+      "prs": [
+        "120707"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Decoding etcd's response now respects the timeout context. ([#121614](https://github.com/kubernetes/kubernetes/pull/121614), [@HirazawaUi](https://github.com/HirazawaUi))",
+      "prs": [
+        "121614"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Decoupled `TaintManager` from `NodeLifeCycleController` (KEP-3902). ([#119208](https://github.com/kubernetes/kubernetes/pull/119208), [@atosatto](https://github.com/atosatto))",
+      "prs": [
+        "119208"
+      ],
+      "keps": [
+        "3902"
+      ],
+      "sigs": [],
+      "identifiers": [
+        "TaintManager",
+        "NodeLifeCycleController"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Enabled traces for KMSv2 encrypt/decrypt operations. ([#121095](https://github.com/kubernetes/kubernetes/pull/121095), [@aramase](https://github.com/aramase))",
+      "prs": [
+        "121095"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Fixed `kube-proxy` panicking on exit when the `Node` object changed its `PodCIDR`. ([#120375](https://github.com/kubernetes/kubernetes/pull/120375), [@pegasas](https://github.com/pegasas))",
+      "prs": [
+        "120375"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodCIDR"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Fixed bugs in handling of server-side apply, create, and update API requests for objects containing duplicate items in keyed lists.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "A `create` or `update` API request with duplicate items in a keyed list no longer wipes out managedFields. Examples include env var entries with the same name, or port entries with the same containerPort in a pod spec.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "A server-side apply request that makes unrelated changes to an object which has duplicate items in a keyed list no longer fails, and leaves the existing duplicate items as-is.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "A server-side apply request that changes an object which has duplicate items in a keyed list, and modifies the duplicated item removes the duplicates and replaces them with the single item contained in the server-side apply request. ([#121575](https://github.com/kubernetes/kubernetes/pull/121575), [@apelisse](https://github.com/apelisse))",
+      "prs": [
+        "121575"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Fixed overriding default `KubeletConfig` fields in drop-in configs if not set. ([#121193](https://github.com/kubernetes/kubernetes/pull/121193), [@sohankunkerkar](https://github.com/sohankunkerkar))",
+      "prs": [
+        "121193"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "KubeletConfig"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Graduated API List chunking (aka pagination) feature to `stable`. ([#119503](https://github.com/kubernetes/kubernetes/pull/119503), [@wojtek-t](https://github.com/wojtek-t))",
+      "prs": [
+        "119503"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Graduated the `ReadWriteOncePod` feature gate to `GA`. ([#121077](https://github.com/kubernetes/kubernetes/pull/121077), [@chrishenzie](https://github.com/chrishenzie))",
+      "prs": [
+        "121077"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ReadWriteOncePod"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Graduated the following kubelet resource metrics to **general availability**:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`container_cpu_usage_seconds_total`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`container_memory_working_set_bytes`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`container_start_time_seconds`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`node_cpu_usage_seconds_total`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`node_memory_working_set_bytes`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`pod_cpu_usage_seconds_total`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`pod_memory_working_set_bytes`",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`resource_scrape_error` Deprecated (renamed) `scrape_error` in favor of `resource_scrape_error` ([#116897](https://github.com/kubernetes/kubernetes/pull/116897), [@Richabanker](https://github.com/Richabanker)) [SIG Architecture, Instrumentation, Node and Testing]",
+      "prs": [
+        "116897"
+      ],
+      "keps": [],
+      "sigs": [
+        "Architecture, Instrumentation, Node and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Implemented API for streaming for the `etcd` store implementation. When `sendInitialEvents ListOption` is set together with `watch=true`, it begins the watch stream with synthetic init events followed by a synthetic `Bookmark`, after which the server continues streaming events. ([#119557](https://github.com/kubernetes/kubernetes/pull/119557), [@p0lyn0mial](https://github.com/p0lyn0mial))",
+      "prs": [
+        "119557"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Bookmark"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Improved memory usage of `kube-scheduler` by dropping the `.metadata.managedFields` field that `kube-scheduler` doesn't require. ([#119556](https://github.com/kubernetes/kubernetes/pull/119556), [@linxiulei](https://github.com/linxiulei))",
+      "prs": [
+        "119556"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "In a scheduler with `Permit` plugins, when a Pod is rejected during `WaitOnPermit`, the scheduler records the plugin. The scheduler will use the record to honor cluster events and queueing `hints registered` for the plugin, to inform whether to retry the pod. ([#119785](https://github.com/kubernetes/kubernetes/pull/119785), [@sanposhiho](https://github.com/sanposhiho))",
+      "prs": [
+        "119785"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Permit",
+        "WaitOnPermit"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "In-tree cloud providers are now switched off by default. Please use `DisableCloudProviders` and `DisableKubeletCloudCredentialProvider` feature flags if you still need this functionality. ([#117503](https://github.com/kubernetes/kubernetes/pull/117503), [@dims](https://github.com/dims))",
+      "prs": [
+        "117503"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "DisableCloudProviders",
+        "DisableKubeletCloudCredentialProvider"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Introduced new apiserver metric `apiserver_flowcontrol_current_inqueue_seats`. This metric is analogous to `apiserver_flowcontrol_current_inqueue_requests`, but tracks the total number of seats, as each request can take more than one seat. ([#119385](https://github.com/kubernetes/kubernetes/pull/119385), [@andrewsykim](https://github.com/andrewsykim))",
+      "prs": [
+        "119385"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Introduced the `job_finished_indexes_total` metric for the `BackoffLimitPerIndex` feature. ([#121292](https://github.com/kubernetes/kubernetes/pull/121292), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "121292"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "BackoffLimitPerIndex"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Kubeadm: supported updating certificate organization during `kubeadm certs renew` operation. ([#121841](https://github.com/kubernetes/kubernetes/pull/121841), [@SataQiu](https://github.com/SataQiu))",
+      "prs": [
+        "121841"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Kubernetes is now built with Go `1.21.0`. ([#118996](https://github.com/kubernetes/kubernetes/pull/118996), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "118996"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Kubernetes is now built with Go `1.21.1`. ([#120493](https://github.com/kubernetes/kubernetes/pull/120493), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "120493"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Kubernetes is now built with Go `1.21.2`. ([#121021](https://github.com/kubernetes/kubernetes/pull/121021), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121021"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Kubernetes is now built with Go `1.21.4`. ([#121808](https://github.com/kubernetes/kubernetes/pull/121808), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121808"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Kubernetes is now built with Go `v1.21.3`. ([#121149](https://github.com/kubernetes/kubernetes/pull/121149), [@cpanato](https://github.com/cpanato))",
+      "prs": [
+        "121149"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "List of metric labels can now be configured by supplying a manifest using the `--allow-metric-labels-manifest` flag. ([#118299](https://github.com/kubernetes/kubernetes/pull/118299), [@rexagod](https://github.com/rexagod))",
+      "prs": [
+        "118299"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Listed the pods using `<PVC>` as an ephemeral storage volume in \"Used by:\" part of the output of `kubectl describe pvc <PVC>` command. ([#120427](https://github.com/kubernetes/kubernetes/pull/120427), [@MaGaroo](https://github.com/MaGaroo))",
+      "prs": [
+        "120427"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Migrated the `nodevolumelimits` scheduler plugin to use [contextual logging](https://k8s.io/docs/concepts/cluster-administration/system-logs/#contextual-logging). ([#116884](https://github.com/kubernetes/kubernetes/pull/116884), [@mengjiao-liu](https://github.com/mengjiao-liu))",
+      "prs": [
+        "116884"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Migrated the `volumebinding scheduler plugins` to use [contextual logging](https://k8s.io/docs/concepts/cluster-administration/system-logs/#contextual-logging). ([#116803](https://github.com/kubernetes/kubernetes/pull/116803), [@mengjiao-liu](https://github.com/mengjiao-liu))",
+      "prs": [
+        "116803"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Priority and Fairness feature is now `stable`, the feature gate will be removed in `v1.31`. ([#121638](https://github.com/kubernetes/kubernetes/pull/121638), [@tkashem](https://github.com/tkashem))",
+      "prs": [
+        "121638"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Promoted `PodHostIPs` condition to `beta`. ([#120257](https://github.com/kubernetes/kubernetes/pull/120257), [@wzshiming](https://github.com/wzshiming))",
+      "prs": [
+        "120257"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodHostIPs"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Promoted `PodHostIPs` condition to `beta`. ([#121477](https://github.com/kubernetes/kubernetes/pull/121477), [@wzshiming](https://github.com/wzshiming))",
+      "prs": [
+        "121477"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodHostIPs"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Promoted `PodReplacementPolicy` to `beta`. ([#121491](https://github.com/kubernetes/kubernetes/pull/121491), [@dejanzele](https://github.com/dejanzele))",
+      "prs": [
+        "121491"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodReplacementPolicy"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Promoted `ServiceNodePortStaticSubrange` to stable and lock to default. ([#120233](https://github.com/kubernetes/kubernetes/pull/120233), [@xuzhenglun](https://github.com/xuzhenglun))",
+      "prs": [
+        "120233"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ServiceNodePortStaticSubrange"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "Promoted plugin subcommand resolution feature to `beta`. ([#120663](https://github.com/kubernetes/kubernetes/pull/120663), [@ardaguclu](https://github.com/ardaguclu))",
+      "prs": [
+        "120663"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Removed `/livez` livezchecks for KMS v1 and v2 to ensure KMS health does not cause `kube-apiserver` restart. KMS health checks are still in place as a healthz and readiness checks. ([#120583](https://github.com/kubernetes/kubernetes/pull/120583), [@ritazh](https://github.com/ritazh))",
+      "prs": [
+        "120583"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Restartable init containers resource in pod autoscaler are now calculated. ([#120001](https://github.com/kubernetes/kubernetes/pull/120001), [@qingwave](https://github.com/qingwave))",
+      "prs": [
+        "120001"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Sidecar termination is now serialized and each sidecar container will receive a `SIGTERM` after all main containers and later starting sidecar containers have terminated. ([#120620](https://github.com/kubernetes/kubernetes/pull/120620), [@tzneal](https://github.com/tzneal))",
+      "prs": [
+        "120620"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "SIGTERM"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The CRD validation rule with feature gate `CustomResourceValidationExpressions` was promoted to `GA`. ([#121373](https://github.com/kubernetes/kubernetes/pull/121373), [@cici37](https://github.com/cici37))",
+      "prs": [
+        "121373"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CustomResourceValidationExpressions"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The KMSv2 features with feature gates `KMSv2` and `KMSv2KDF` are promoted to `GA`.  The `KMSv1` feature gate is now disabled by default. ([#121485](https://github.com/kubernetes/kubernetes/pull/121485), [@ritazh](https://github.com/ritazh))",
+      "prs": [
+        "121485"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "KMSv2",
+        "KMSv2KDF",
+        "KMSv1"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `--interactive` flag in `kubectl delete` is now visible to all users by default. ([#120416](https://github.com/kubernetes/kubernetes/pull/120416), [@ardaguclu](https://github.com/ardaguclu))",
+      "prs": [
+        "120416"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The `CloudDualStackNodeIPs` feature is now `beta`, meaning that when using an external cloud provider that has been updated to support the feature, you can pass comma-separated dual-stack `--node-ips` to `kubelet` and have the cloud provider take both IPs into account. ([#120275](https://github.com/kubernetes/kubernetes/pull/120275), [@danwinship](https://github.com/danwinship))",
+      "prs": [
+        "120275"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CloudDualStackNodeIPs"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `Dockerfile` for the kubectl image has been updated with the addition of a specific base image and essential utilities (bash and jq). ([#119592](https://github.com/kubernetes/kubernetes/pull/119592), [@rayandas](https://github.com/rayandas))",
+      "prs": [
+        "119592"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Dockerfile"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `SidecarContainers` feature has graduated to `beta` and is enabled by default. ([#121579](https://github.com/kubernetes/kubernetes/pull/121579), [@gjkim42](https://github.com/gjkim42))",
+      "prs": [
+        "121579"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "SidecarContainers"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "The `kube-apiserver` will now expose four new metrics to inform about errors on the clusterIP and nodePort allocation logic. ([#120843](https://github.com/kubernetes/kubernetes/pull/120843), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "120843"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "The `volume_zone` plugin will consider `beta` labels as `GA` labels during the scheduling process. Therefore, if the values of the labels are the same, PVs with `beta` labels can also be scheduled to nodes with `GA` labels. ([#118923](https://github.com/kubernetes/kubernetes/pull/118923), [@AxeZhan](https://github.com/AxeZhan))",
+      "prs": [
+        "118923"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Updated the generic apiserver library to produce an error if a new API server is configured with support for a data format other than JSON, YAML, or Protobuf. ([#121325](https://github.com/kubernetes/kubernetes/pull/121325), [@benluddy](https://github.com/benluddy)) [SIG API Machinery]",
+      "prs": [
+        "121325"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Use of secret-based service account tokens now adds an `authentication.k8s.io/legacy-token-autogenerated-secret` or `authentication.k8s.io/legacy-token-manual-secret` audit annotation containing the name of the secret used. ([#118598](https://github.com/kubernetes/kubernetes/pull/118598), [@yuanchen8911](https://github.com/yuanchen8911)) [SIG Auth, Instrumentation and Testing]",
+      "prs": [
+        "118598"
+      ],
+      "keps": [],
+      "sigs": [
+        "Auth, Instrumentation and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`--sync-frequency` will not affect the update interval of volumes that use `ConfigMaps` or `Secrets` when the `configMapAndSecretChangeDetectionStrategy` is set to `Cache`. The update interval is only affected by `node.alpha.kubernetes.io/ttl` node annotation.\" ([#120255](https://github.com/kubernetes/kubernetes/pull/120255), [@likakuli](https://github.com/likakuli))",
+      "prs": [
+        "120255"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ConfigMaps",
+        "Secrets",
+        "Cache"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`CRDValidationRatcheting`: added support for ratcheting `x-kubernetes-validations` in schema. ([#121016](https://github.com/kubernetes/kubernetes/pull/121016), [@alexzielenski](https://github.com/alexzielenski))",
+      "prs": [
+        "121016"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CRDValidationRatcheting"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`DevicePluginCDIDevices` feature has been graduated to `beta` and enabled by default in the kubelet. ([#121254](https://github.com/kubernetes/kubernetes/pull/121254), [@bart0sh](https://github.com/bart0sh))",
+      "prs": [
+        "121254"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "DevicePluginCDIDevices"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`ValidatingAdmissionPolicy` now preserves types of composition variables, and raises type-related errors early. ([#121001](https://github.com/kubernetes/kubernetes/pull/121001), [@jiahuif](https://github.com/jiahuif))",
+      "prs": [
+        "121001"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ValidatingAdmissionPolicy"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`cluster/gce`: added webhook to replace `PersistentVolumeLabel` admission controller. ([#121628](https://github.com/kubernetes/kubernetes/pull/121628), [@andrewsykim](https://github.com/andrewsykim))",
+      "prs": [
+        "121628"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PersistentVolumeLabel"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`dra`: the scheduler plugin now avoids additional scheduling attempts in some cases by falling back to SSA after a conflict. ([#120534](https://github.com/kubernetes/kubernetes/pull/120534), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "120534"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`etcd`: image is now based on `v3.5.9`. ([#121567](https://github.com/kubernetes/kubernetes/pull/121567), [@mzaian](https://github.com/mzaian))",
+      "prs": [
+        "121567"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-apiserver` added:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`alpha` support (guarded by the `ServiceAccountTokenJTI` feature gate) for adding a `jti` (JWT ID) claim to service account tokens it issues, adding an `authentication.kubernetes.io/credential-id` audit annotation in audit logs when the tokens are issued, and `authentication.kubernetes.io/credential-id` entry in the extra user info when the token is used to authenticate.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ServiceAccountTokenJTI"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`alpha` support (guarded by the `ServiceAccountTokenPodNodeInfo` feature gate) for including the node name (and uid, if the node exists) as additional claims in service account tokens it issues which are bound to pods, and `authentication.kubernetes.io/node-name` and `authentication.kubernetes.io/node-uid` extra user info when the token is used to authenticate.",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ServiceAccountTokenPodNodeInfo"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`alpha` support (guarded by the `ServiceAccountTokenNodeBinding` feature gate) for allowing `TokenRequests` that bind tokens directly to nodes, and (guarded by the ServiceAccountTokenNodeBindingValidation feature gate) for validating the node name and uid still exist when the token is used. ([#120780](https://github.com/kubernetes/kubernetes/pull/120780), [@munnerz](https://github.com/munnerz))",
+      "prs": [
+        "120780"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ServiceAccountTokenNodeBinding",
+        "TokenRequests"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-apiserver` updated:",
+      "prs": [],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "Updated encryption configuration file watch logic from using inotify watch to polling at an interval of every minute. Moved the logic to polling because there are variations on file changes (like symlink swapping of directories that contain the encryption config) that the file watch logic would fail to detect. Polling at a set interval prevents any such issues. Note that there is no guarantee on how quickly the API server will process the encryption config. The `apiserver_encryption_config_controller_automatic_reload_last_timestamp_seconds` metric must be used to determine when the new config becomes effective.([#121310](https://github.com/kubernetes/kubernetes/pull/121310), [@nilekhc](https://github.com/nilekhc))",
+      "prs": [
+        "121310"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-controller-manager`: The `LegacyServiceAccountTokenCleanUp` feature gate is now `beta` and enabled by default. When enabled, legacy auto-generated service account token secrets are auto-labeled with a `kubernetes.io/legacy-token-invalid-since` label if the credentials have not been used in the time specified by `--legacy-service-account-token-clean-up-period` (defaulting to one year), **and** are referenced from the `.secrets` list of a ServiceAccount object, **and**  are not referenced from pods. This label causes the authentication layer to reject use of the credentials. After being labeled as invalid, if the time specified by `--legacy-service-account-token-clean-up-period` (defaulting to one year) passes without the credential being used, the secret is automatically deleted. Secrets labeled as invalid which have not been auto-deleted yet can be re-activated by removing the `kubernetes.io/legacy-token-invalid-since` label. ([#120682](https://github.com/kubernetes/kubernetes/pull/120682), [@yt2985](https://github.com/yt2985))",
+      "prs": [
+        "120682"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "LegacyServiceAccountTokenCleanUp"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-proxy` will only install the `DROP` rules for invalid `conntrack` states if the `nf_conntrack_tcp_be_liberal` is not set. ([#120412](https://github.com/kubernetes/kubernetes/pull/120412), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "120412"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-scheduler` implemented scheduling hints for the `NodeUnschedulable` plugin. The scheduling hints allow the scheduler to only retry scheduling a `Pod` that was previously rejected by the `NodeSchedulable` plugin if a new `Node` or a `Node` update sets `.spec.unschedulable` to false. ([#119396](https://github.com/kubernetes/kubernetes/pull/119396), [@wackxu](https://github.com/wackxu))",
+      "prs": [
+        "119396"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "NodeUnschedulable",
+        "NodeSchedulable"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kube-scheduler` implements scheduling hints for the `NodeAffinity` plugin. The scheduling hints allow the scheduler to only retry scheduling a `Pod` that was previously rejected by the `NodeAffinity` plugin if a new `Node` or a `Node` update matches the `Pod`'s node affinity. ([#119155](https://github.com/kubernetes/kubernetes/pull/119155), [@carlory](https://github.com/carlory))",
+      "prs": [
+        "119155"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "NodeAffinity"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kubeadm`: promoted feature gate `EtcdLearnerMode` to `beta`. Learner mode for joining `etcd` members is now enabled by default. ([#120228](https://github.com/kubernetes/kubernetes/pull/120228), [@pacoxu](https://github.com/pacoxu))",
+      "prs": [
+        "120228"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "EtcdLearnerMode"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kubeadm`: turned on feature gate `MergeCLIArgumentsWithConfig` to merge the config from flag and config file, otherwise, if the flag `--ignore-preflight-errors` is set from the CLI, then the value from config file will be ignored. ([#119946](https://github.com/kubernetes/kubernetes/pull/119946), [@chendave](https://github.com/chendave))",
+      "prs": [
+        "119946"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "MergeCLIArgumentsWithConfig"
+      ]
+    },
+    {
+      "category": "Feature",
+      "text": "`kubeadm`: will now allow deploying a kubelet that is 3 versions older than the version of `kubeadm` (N-3). This aligns with the recent change made by SIG Architecture that extends the support skew between the control plane and kubelets. Tolerate this new kubelet skew for the commands `init`, `join` and `upgrade`. Note that if the `kubeadm` user applies a control plane version that is older than the `kubeadm` version (N-1 maximum) then the skew between the kubelet and control plane would become a maximum of N-2. ([#120825](https://github.com/kubernetes/kubernetes/pull/120825), [@pacoxu](https://github.com/pacoxu))",
+      "prs": [
+        "120825"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kubelet` , when using `--cloud-provider=external`, will now initialize the node addresses with the value of `--node-ip` , if it exists, or waits for the cloud provider to assign the addresses. ([#121028](https://github.com/kubernetes/kubernetes/pull/121028), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "121028"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kubelet` allows pods to use the `net.ipv4.tcp_fin_timeout`, \u201cnet.ipv4.tcp_keepalive_intvl\u201d and \u201cnet.ipv4.tcp_keepalive_probes\u201c sysctl by default; Pod Security Admission allows this sysctl in `v1.29+` versions of the baseline and restricted policies. ([#121240](https://github.com/kubernetes/kubernetes/pull/121240), [@HirazawaUi](https://github.com/HirazawaUi))",
+      "prs": [
+        "121240"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kubelet` now allows pods to use the `net.ipv4.tcp_keepalive_time` sysctl by default and the minimal kernel version is 4.5; Pod Security Admission allows this sysctl in `v1.29+` versions of the baseline and restricted policies. ([#118846](https://github.com/kubernetes/kubernetes/pull/118846), [@cyclinder](https://github.com/cyclinder))",
+      "prs": [
+        "118846"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kubelet` now emits a metric for end-to-end pod startup latency, including image pull. ([#121041](https://github.com/kubernetes/kubernetes/pull/121041), [@ruiwen-zhao](https://github.com/ruiwen-zhao))",
+      "prs": [
+        "121041"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Feature",
+      "text": "`kubelet` now exposes latency metrics of different stages of the node startup. ([#118568](https://github.com/kubernetes/kubernetes/pull/118568), [@qiutongs](https://github.com/qiutongs))",
+      "prs": [
+        "118568"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "bugfixes": [
+    {
+      "category": "Bug or Regression",
+      "text": "'`kubeadm`: printing the default component configs for `reset` and `join` is now unsupported.' ([#119346](https://github.com/kubernetes/kubernetes/pull/119346), [@chendave](https://github.com/chendave))",
+      "prs": [
+        "119346"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "'`kubeadm`: removed `system:masters` organization from `etcd/healthcheck-client` certificate.' ([#119859](https://github.com/kubernetes/kubernetes/pull/119859), [@SataQiu](https://github.com/SataQiu))",
+      "prs": [
+        "119859"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Added `CAP_NET_RAW` to netadmin debug profile and removed privileges when debugging nodes. ([#118647](https://github.com/kubernetes/kubernetes/pull/118647), [@mochizuki875](https://github.com/mochizuki875))",
+      "prs": [
+        "118647"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Added a check on a user attempting to create a static pod via the `kubelet` without specifying a name. They will now get a visible validation error. ([#119522](https://github.com/kubernetes/kubernetes/pull/119522), [@YTGhost](https://github.com/YTGhost))",
+      "prs": [
+        "119522"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Added a redundant process to remove tracking finalizers from Pods that belong to Jobs. The process kicks in after the control plane marks a Job as finished. ([#119944](https://github.com/kubernetes/kubernetes/pull/119944), [@Sharpz7](https://github.com/Sharpz7))",
+      "prs": [
+        "119944"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Added more accurate requeueing in scheduling queue for Pods rejected by the temporal failure (e.g., temporal failure on `kube-apiserver`). ([#119105](https://github.com/kubernetes/kubernetes/pull/119105), [@sanposhiho](https://github.com/sanposhiho))",
+      "prs": [
+        "119105"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Allowed specifying `ExternalTrafficPolicy` for `Services` with `ExternalIPs`. ([#119150](https://github.com/kubernetes/kubernetes/pull/119150), [@tnqn](https://github.com/tnqn))",
+      "prs": [
+        "119150"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ExternalTrafficPolicy",
+        "Services",
+        "ExternalIPs"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Changed kubelet logs from `error` to `info` for uncached partitions when using CRI stats provider. ([#100448](https://github.com/kubernetes/kubernetes/pull/100448), [@saschagrunert](https://github.com/saschagrunert))",
+      "prs": [
+        "100448"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Empty values are no longer assigned to undefined resources (CPU or memory) when storing the resources allocated to the pod in checkpoint. ([#117615](https://github.com/kubernetes/kubernetes/pull/117615), [@aheng-ch](https://github.com/aheng-ch))",
+      "prs": [
+        "117615"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed CEL estimated cost of `replace()` to handle a zero length replacement string correctly. Previously this would cause the estimated cost to be higher than it should be. ([#120097](https://github.com/kubernetes/kubernetes/pull/120097), [@jpbetz](https://github.com/jpbetz)) [SIG API Machinery]",
+      "prs": [
+        "120097"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed OpenAPI v3 not being cleaned up after deleting `APIServices`. ([#120108](https://github.com/kubernetes/kubernetes/pull/120108), [@tnqn](https://github.com/tnqn))",
+      "prs": [
+        "120108"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "APIServices"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed [121094](https://github.com/kubernetes/kubernetes/issues/121094) by re-introducing the readiness predicate for `externalTrafficPolicy: Local` services. ([#121116](https://github.com/kubernetes/kubernetes/pull/121116), [@alexanderConstantinescu](https://github.com/alexanderConstantinescu))",
+      "prs": [
+        "121116"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed `kubectl events` not filtering events by `GroupVersion` for resources with a full name. ([#120119](https://github.com/kubernetes/kubernetes/pull/120119), [@Ithrael](https://github.com/Ithrael))",
+      "prs": [
+        "120119"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "GroupVersion"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed `systemLogQuery` service name matching. ([#120678](https://github.com/kubernetes/kubernetes/pull/120678), [@rothgar](https://github.com/rothgar))",
+      "prs": [
+        "120678"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `1.27` scheduling regression that `PostFilter` plugin may not function if previous `PreFilter` plugins return `Skip`. ([#119769](https://github.com/kubernetes/kubernetes/pull/119769), [@Huang-Wei](https://github.com/Huang-Wei))",
+      "prs": [
+        "119769"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PostFilter",
+        "PreFilter"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `v1.26` regression scheduling bug by ensuring that preemption is skipped when a `PreFilter` plugin returns `UnschedulableAndUnresolvable`. ([#119778](https://github.com/kubernetes/kubernetes/pull/119778), [@sanposhiho](https://github.com/sanposhiho))",
+      "prs": [
+        "119778"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PreFilter",
+        "UnschedulableAndUnresolvable"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `v1.28.0` regression where `kube-controller-manager` can crash when `StatefulSet` with `Parallel` policy and PVC labels are scaled up. ([#121142](https://github.com/kubernetes/kubernetes/pull/121142), [@aleksandra-malinowska](https://github.com/aleksandra-malinowska))",
+      "prs": [
+        "121142"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "StatefulSet",
+        "Parallel"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `v1.28` regression around restarting init containers in the right order relative to normal containers. ([#120281](https://github.com/kubernetes/kubernetes/pull/120281), [@gjkim42](https://github.com/gjkim42))",
+      "prs": [
+        "120281"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `v1.28` regression handling negative index json patches. ([#120327](https://github.com/kubernetes/kubernetes/pull/120327), [@liggitt](https://github.com/liggitt))",
+      "prs": [
+        "120327"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a `v1.28` regression in scheduler: a pod with concurrent events could incorrectly get moved to the unschedulable queue where it could get stuck until the next periodic purging after 5 minutes, if there was no other event for it. ([#120413](https://github.com/kubernetes/kubernetes/pull/120413), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "120413"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug around restarting init containers in the right order relative to normal containers with `SidecarContainers` feature enabled. ([#120269](https://github.com/kubernetes/kubernetes/pull/120269), [@gjkim42](https://github.com/gjkim42))",
+      "prs": [
+        "120269"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "SidecarContainers"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug in the cronjob controller where already created jobs might be missing from the status. ([#120649](https://github.com/kubernetes/kubernetes/pull/120649), [@andrewsykim](https://github.com/andrewsykim))",
+      "prs": [
+        "120649"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where `Services` using finalizers may hold onto `ClusterIP` and/or `NodePort` allocated resources for longer than expected if the finalizer is removed using the status subresource. ([#120623](https://github.com/kubernetes/kubernetes/pull/120623), [@aojea](https://github.com/aojea))",
+      "prs": [
+        "120623"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Services",
+        "ClusterIP",
+        "NodePort"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where an API group's path was not unregistered from the API server's root paths when the group was deleted. ([#121283](https://github.com/kubernetes/kubernetes/pull/121283), [@tnqn](https://github.com/tnqn)) [SIG API Machinery and Testing]",
+      "prs": [
+        "121283"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where containers would not start on `cgroupv2` systems where `swap` is disabled. ([#120784](https://github.com/kubernetes/kubernetes/pull/120784), [@elezar](https://github.com/elezar))",
+      "prs": [
+        "120784"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where the CPU set allocated to an init container, with containerRestartPolicy of `Always`, were erroneously reused by a regular container. ([#119447](https://github.com/kubernetes/kubernetes/pull/119447), [@gjkim42](https://github.com/gjkim42)) [SIG Node and Testing]",
+      "prs": [
+        "119447"
+      ],
+      "keps": [],
+      "sigs": [
+        "Node and Testing"
+      ],
+      "identifiers": [
+        "Always"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where the device resources allocated to an init container, with `containerRestartPolicy` of `Always`, were erroneously reused by a regular container. ([#120461](https://github.com/kubernetes/kubernetes/pull/120461), [@gjkim42](https://github.com/gjkim42))",
+      "prs": [
+        "120461"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "Always"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a bug where the memory resources allocated to an init container, with containerRestartPolicy of `Always`, were erroneously reused by a regular container. ([#120715](https://github.com/kubernetes/kubernetes/pull/120715), [@gjkim42](https://github.com/gjkim42)) [SIG Node]",
+      "prs": [
+        "120715"
+      ],
+      "keps": [],
+      "sigs": [
+        "Node"
+      ],
+      "identifiers": [
+        "Always"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a concurrent map access in `TopologyCache`'s `HasPopulatedHints` method. ([#118189](https://github.com/kubernetes/kubernetes/pull/118189), [@Miciah](https://github.com/Miciah))",
+      "prs": [
+        "118189"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "TopologyCache",
+        "HasPopulatedHints"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression (`CLIENTSET_PKG: unbound variable`) when invoking deprecated `generate-groups.sh` script. ([#120877](https://github.com/kubernetes/kubernetes/pull/120877), [@soltysh](https://github.com/soltysh))",
+      "prs": [
+        "120877"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression in `kube-proxy` where it might refuse to start if given single-stack `IPv6` configuration options on a node that has both `IPv4` and `IPv6` IPs. ([#121008](https://github.com/kubernetes/kubernetes/pull/121008), [@danwinship](https://github.com/danwinship))",
+      "prs": [
+        "121008"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression in default configurations, which enabled `PodDisruptionConditions` by default, that prevented the control plane's pod garbage collector from deleting pods that contained duplicated field keys (environmental variables with repeated keys or container ports). ([#121103](https://github.com/kubernetes/kubernetes/pull/121103), [@mimowo](https://github.com/mimowo))",
+      "prs": [
+        "121103"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "PodDisruptionConditions"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression in the default `v1.27` configurations in `kube-apiserver`: fixed the `AggregatedDiscoveryEndpoint` feature (`beta` in `v1.27+`) to successfully fetch discovery information from aggregated API servers that do not check `Accept` headers when serving the `/apis` endpoint. ([#119870](https://github.com/kubernetes/kubernetes/pull/119870), [@Jefftree](https://github.com/Jefftree))",
+      "prs": [
+        "119870"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "AggregatedDiscoveryEndpoint",
+        "Accept"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression in the kubelet's behavior while creating a container when the `EventedPLEG` feature gate is enabled. ([#120942](https://github.com/kubernetes/kubernetes/pull/120942), [@sairameshv](https://github.com/sairameshv))",
+      "prs": [
+        "120942"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "EventedPLEG"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a regression since `v1.27.0` in the scheduler framework when running score plugins. The `skippedScorePlugins` number might be greater than `enabledScorePlugins`, so when initializing a slice the `cap(len(skippedScorePlugins) - len(enabledScorePlugins))` is negative, which is not allowed. ([#121632](https://github.com/kubernetes/kubernetes/pull/121632), [@kerthcet](https://github.com/kerthcet))",
+      "prs": [
+        "121632"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed a situation when, sometimes, the scheduler incorrectly placed a pod in the `unschedulable` queue instead of the `backoff` queue. This happened when some plugin previously declared the pod as `unschedulable` and then in a later attempt encounters some other error. Scheduling of that pod then got delayed by up to five minutes, after which periodic flushing moved the pod back into the `active` queue. ([#120334](https://github.com/kubernetes/kubernetes/pull/120334), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "120334"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed an issue related to not draining all the pods in a namespace when an empty selector, i.e., \"{},\" is specified in a Pod Disruption Budget (PDB). ([#119732](https://github.com/kubernetes/kubernetes/pull/119732), [@sairameshv](https://github.com/sairameshv))",
+      "prs": [
+        "119732"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed an issue where `StatefulSet` might not restart a pod after eviction or node failure. ([#120398](https://github.com/kubernetes/kubernetes/pull/120398), [@aleksandra-malinowska](https://github.com/aleksandra-malinowska))",
+      "prs": [
+        "120398"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "StatefulSet"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed an issue where a `CronJob` could fail to clean up Jobs when the `ResourceQuota` for `Jobs` had been reached. ([#119776](https://github.com/kubernetes/kubernetes/pull/119776), [@ASverdlov](https://github.com/ASverdlov))",
+      "prs": [
+        "119776"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "CronJob",
+        "ResourceQuota"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed an issue where a `StatefulSet` might not restart a pod after eviction or node failure. ([#121389](https://github.com/kubernetes/kubernetes/pull/121389), [@aleksandra-malinowska](https://github.com/aleksandra-malinowska))",
+      "prs": [
+        "121389"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "StatefulSet"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed an issue with the `garbagecollection` controller registering duplicate event handlers if discovery requests failed. ([#117992](https://github.com/kubernetes/kubernetes/pull/117992), [@liggitt](https://github.com/liggitt))",
+      "prs": [
+        "117992"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed attaching volumes after detach errors. Now volumes that failed to detach are not treated as attached. Kubernetes will make sure they are fully attached before they can be used by pods. ([#120595](https://github.com/kubernetes/kubernetes/pull/120595), [@jsafrane](https://github.com/jsafrane))",
+      "prs": [
+        "120595"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed bug that kubelet resource metric `container_start_time_seconds` had timestamp equal to container start time. ([#120518](https://github.com/kubernetes/kubernetes/pull/120518), [@saschagrunert](https://github.com/saschagrunert)) [SIG Instrumentation, Node and Testing]",
+      "prs": [
+        "120518"
+      ],
+      "keps": [],
+      "sigs": [
+        "Instrumentation, Node and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed inconsistency in the calculation of number of nodes that have an image, which affect the scoring in the `ImageLocality` plugin. ([#116938](https://github.com/kubernetes/kubernetes/pull/116938), [@olderTaoist](https://github.com/olderTaoist))",
+      "prs": [
+        "116938"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ImageLocality"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed issue with incremental id generation for `loadbalancer` and `endpoint` in `kubeproxy` mock test framework. ([#120723](https://github.com/kubernetes/kubernetes/pull/120723), [@princepereira](https://github.com/princepereira))",
+      "prs": [
+        "120723"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed panic in Job controller when `podRecreationPolicy: Failed` is used, and the number of terminating pods exceeds parallelism. ([#121147](https://github.com/kubernetes/kubernetes/pull/121147), [@kannon92](https://github.com/kannon92))",
+      "prs": [
+        "121147"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed regression with adding aggregated `APIservices` panicking and affected health check introduced in release `v1.28.0`. ([#120814](https://github.com/kubernetes/kubernetes/pull/120814), [@Jefftree](https://github.com/Jefftree))",
+      "prs": [
+        "120814"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "APIservices"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed some invalid and unimportant log calls. ([#121249](https://github.com/kubernetes/kubernetes/pull/121249), [@pohly](https://github.com/pohly)) [SIG Cloud Provider, Cluster Lifecycle and Testing]",
+      "prs": [
+        "121249"
+      ],
+      "keps": [],
+      "sigs": [
+        "Cloud Provider, Cluster Lifecycle and Testing"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed stale SMB mount issue when SMB file share is deleted and then unmounted. ([#121851](https://github.com/kubernetes/kubernetes/pull/121851), [@andyzhangx](https://github.com/andyzhangx))",
+      "prs": [
+        "121851"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed the bug where images that were pinned by the container runtime could be garbage collected by `kubelet`. ([#119986](https://github.com/kubernetes/kubernetes/pull/119986), [@ruiwen-zhao](https://github.com/ruiwen-zhao))",
+      "prs": [
+        "119986"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed the bug where kubelet couldn't output logs after log file rotated when `kubectl logs POD_NAME -f` is running. ([#115702](https://github.com/kubernetes/kubernetes/pull/115702), [@xyz-li](https://github.com/xyz-li))",
+      "prs": [
+        "115702"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed the calculation of the requeue time in the cronjob controller, resulting in proper handling of failed/stuck jobs. ([#121327](https://github.com/kubernetes/kubernetes/pull/121327), [@soltysh](https://github.com/soltysh))",
+      "prs": [
+        "121327"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed the issue where pod with ordinal number lower than the rolling partitioning number was being deleted. It was coming up with updated image. ([#120731](https://github.com/kubernetes/kubernetes/pull/120731), [@adilGhaffarDev](https://github.com/adilGhaffarDev))",
+      "prs": [
+        "120731"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Fixed tracking of terminating Pods in the Job status. The field was not updated unless there were other changes to apply. ([#121342](https://github.com/kubernetes/kubernetes/pull/121342), [@dejanzele](https://github.com/dejanzele))",
+      "prs": [
+        "121342"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Forbidden sysctls for pod sharing the respective namespaces with the host are now checked when creating or updating pods without such sysctls. ([#118705](https://github.com/kubernetes/kubernetes/pull/118705), [@pacoxu](https://github.com/pacoxu))",
+      "prs": [
+        "118705"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "If a watch with the `progressNotify` option set is to be created, and the registry hasn't provided a `newFunc`, return an error. ([#120212](https://github.com/kubernetes/kubernetes/pull/120212), [@p0lyn0mial](https://github.com/p0lyn0mial)) [SIG API Machinery]",
+      "prs": [
+        "120212"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Improved handling of jsonpath expressions for `kubectl wait --for`. It is now possible to use simple filter expressions which match on a field's content. ([#118748](https://github.com/kubernetes/kubernetes/pull/118748), [@andreaskaris](https://github.com/andreaskaris))",
+      "prs": [
+        "118748"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "In the `wait.PollUntilContextTimeout` function, if `immediate` is true, the condition will now be invoked before waiting, guaranteeing that the condition is invoked at least once and then wait a interval before executing again. ([#119762](https://github.com/kubernetes/kubernetes/pull/119762), [@AxeZhan](https://github.com/AxeZhan))",
+      "prs": [
+        "119762"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Incorporating feedback on PR #119341 ([#120087](https://github.com/kubernetes/kubernetes/pull/120087), [@divyasri537](https://github.com/divyasri537)) [SIG API Machinery]",
+      "prs": [
+        "119341",
+        "120087"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "KCCM: fixed transient node addition and removal caused by #121090 while syncing load balancers on large clusters with a lot of churn. ([#121091](https://github.com/kubernetes/kubernetes/pull/121091), [@alexanderConstantinescu](https://github.com/alexanderConstantinescu))",
+      "prs": [
+        "121090",
+        "121091"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Kubeadm: changed the \"system:masters\" Group in the apiserver-kubelet-client.crt certificate Subject to be \"kubeadm:cluster-admins\" which is a less privileged Group. ([#121837](https://github.com/kubernetes/kubernetes/pull/121837), [@neolit123](https://github.com/neolit123))",
+      "prs": [
+        "121837"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Metric buckets for `pod_start_duration_seconds` were changed to `{0.5, 1, 2, 3, 4, 5, 6, 8, 10, 20, 30, 45, 60, 120, 180, 240, 300, 360, 480, 600, 900, 1200, 1800, 2700, 3600}`. ([#120680](https://github.com/kubernetes/kubernetes/pull/120680), [@ruiwen-zhao](https://github.com/ruiwen-zhao))",
+      "prs": [
+        "120680"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Mitigated http/2 DOS vulnerabilities for `CVE-2023-44487` and `CVE-2023-39325` for the API server when the client is unauthenticated. The mitigation may be disabled by setting the `UnauthenticatedHTTP2DOSMitigation` feature gate to `false` (it is enabled by default). An API server fronted by an L7 load balancer that already mitigates these http/2 attacks may choose to disable the kube-apiserver mitigation to avoid disrupting load balancer -> kube-apiserver connections if http/2 requests from multiple clients share the same backend connection. An API server on a private network may opt to disable the kube-apiserver mitigation to prevent performance regressions for unauthenticated clients. Authenticated requests rely on the fix in golang.org/x/net `v0.17.0` alone. https://issue.k8s.io/121197 tracks further mitigation of http/2 attacks by authenticated clients. ([#121120](https://github.com/kubernetes/kubernetes/pull/121120), [@enj](https://github.com/enj))",
+      "prs": [
+        "121120"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "UnauthenticatedHTTP2DOSMitigation"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "No-op and GC related updates to cluster trust bundles no longer require attest authorization when the `ClusterTrustBundleAttest` plugin is enabled. ([#120779](https://github.com/kubernetes/kubernetes/pull/120779), [@enj](https://github.com/enj))",
+      "prs": [
+        "120779"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ClusterTrustBundleAttest"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Registered metric `apiserver_request_body_size_bytes` to track the size distribution of requests by `resource` and `verb`. ([#120474](https://github.com/kubernetes/kubernetes/pull/120474), [@YaoC](https://github.com/YaoC)) [SIG API Machinery and Instrumentation]",
+      "prs": [
+        "120474"
+      ],
+      "keps": [],
+      "sigs": [
+        "API Machinery and Instrumentation"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Revised the logic for `DaemonSet` rolling update to exclude nodes if scheduling constraints are not met. This eliminates the problem of rolling updates to a `DaemonSet` getting stuck around tolerations. ([#119317](https://github.com/kubernetes/kubernetes/pull/119317), [@mochizuki875](https://github.com/mochizuki875))",
+      "prs": [
+        "119317"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "DaemonSet"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Scheduler: in 1.29 pre-releases, enabling contextual logging slowed down pod scheduling. ([#121715](https://github.com/kubernetes/kubernetes/pull/121715), [@pohly](https://github.com/pohly)) [SIG Instrumentation and Scheduling]",
+      "prs": [
+        "121715"
+      ],
+      "keps": [],
+      "sigs": [
+        "Instrumentation and Scheduling"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Service Controller: will now update load balancer hosts after node's `ProviderID` is updated. ([#120492](https://github.com/kubernetes/kubernetes/pull/120492), [@cezarygerard](https://github.com/cezarygerard))",
+      "prs": [
+        "120492"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ProviderID"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Setting the `status.loadBalancer` of a Service whose `spec.type` is not `LoadBalancer` was previously allowed, but any update to the `metadata` or `spec` would wipe that field. Setting this field is no longer permitted unless `spec.type` is  `LoadBalancer`.  In the very unlikely event that this has unexpected impact, you can enable the `AllowServiceLBStatusOnNonLB` feature gate, which will restore the previous behavior.  If you do need to set this, please file an issue with the Kubernetes project to help contributors understand why you need it. ([#119789](https://github.com/kubernetes/kubernetes/pull/119789), [@thockin](https://github.com/thockin))",
+      "prs": [
+        "119789"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "LoadBalancer",
+        "AllowServiceLBStatusOnNonLB"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "The `--bind-address` parameter in kube-proxy is misleading, no port is opened with this address. Instead it is translated internally to \"nodeIP\". The nodeIPs for both families are now taken from the Node object if `--bind-address` is unspecified or set to the \"any\" address (0.0.0.0 or ::). It is recommended to leave `--bind-address` unspecified, and in particular avoid to set it to localhost (127.0.0.1 or ::1) ([#119525](https://github.com/kubernetes/kubernetes/pull/119525), [@uablrek](https://github.com/uablrek)) [SIG Network and Scalability]",
+      "prs": [
+        "119525"
+      ],
+      "keps": [],
+      "sigs": [
+        "Network and Scalability"
+      ],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Updated `kube-openapi` to remove invalid defaults: OpenAPI spec no longer includes default of `{}` for certain fields where it did not make sense. ([#120757](https://github.com/kubernetes/kubernetes/pull/120757), [@alexzielenski](https://github.com/alexzielenski))",
+      "prs": [
+        "120757"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Updated the CRI-O socket path, so users who configure kubelet to use a location like `/run/crio/crio.sock` don't see strange behaviour from CRI stats provider. ([#118704](https://github.com/kubernetes/kubernetes/pull/118704), [@dgl](https://github.com/dgl))",
+      "prs": [
+        "118704"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "Volume attach or publish operation will not fail at `kubelet` if target path directory already exists on the node. ([#119735](https://github.com/kubernetes/kubernetes/pull/119735), [@akankshapanse](https://github.com/akankshapanse))",
+      "prs": [
+        "119735"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`cluster-bootstrap`: improved the security of the functions responsible for generation and validation of bootstrap tokens. ([#120400](https://github.com/kubernetes/kubernetes/pull/120400), [@neolit123](https://github.com/neolit123))",
+      "prs": [
+        "120400"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`etcd`: updated to `v3.5.10`. ([#121566](https://github.com/kubernetes/kubernetes/pull/121566), [@mzaian](https://github.com/mzaian))",
+      "prs": [
+        "121566"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`k8s.io/dynamic-resource-allocation/controller:` `UnsuitableNodes` can now handle a mix of allocated and unallocated claims correctly. ([#120338](https://github.com/kubernetes/kubernetes/pull/120338), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "120338"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "UnsuitableNodes"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`k8s.io/dynamic-resource-allocation/controller`: `ResourceClaimParameters` and `ResourceClassParameters` validation errors are now visible on `ResourceClaim`, `ResourceClass` and `Pod`. ([#121065](https://github.com/kubernetes/kubernetes/pull/121065), [@byako](https://github.com/byako))",
+      "prs": [
+        "121065"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": [
+        "ResourceClaimParameters",
+        "ResourceClassParameters",
+        "ResourceClaim",
+        "ResourceClass"
+      ]
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`k8s.io/dynamic-resource-allocation`: can now handle a `selected` node which isn't listed as `potential` node. ([#120871](https://github.com/kubernetes/kubernetes/pull/120871), [@pohly](https://github.com/pohly))",
+      "prs": [
+        "120871"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`kube-proxy` now reports its health more accurately in dual-stack clusters when there are problems with only one IP family. ([#118146](https://github.com/kubernetes/kubernetes/pull/118146), [@aroradaman](https://github.com/aroradaman))",
+      "prs": [
+        "118146"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    },
+    {
+      "category": "Bug or Regression",
+      "text": "`kubeadm`: Fixed the bug where it always did CRI detection when `--config` was passed, even if it is not required by the subcommand. ([#120828](https://github.com/kubernetes/kubernetes/pull/120828), [@SataQiu](https://github.com/SataQiu))",
+      "prs": [
+        "120828"
+      ],
+      "keps": [],
+      "sigs": [],
+      "identifiers": []
+    }
+  ],
+  "other": [],
+  "patch_releases": [
+    {
+      "tag": "v1.29.9",
+      "total_items": 6,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Kubernetes is now built with go 1.22.6 ([#126971](https://github.com/kubernetes/kubernetes/pull/126971), [@cpanato](https://github.com/cpanato)) [SIG Release and Testing]",
+          "prs": [
+            "126971"
+          ],
+          "keps": [],
+          "sigs": [
+            "Release and Testing"
+          ],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": [
+        {
+          "category": "Bug or Regression",
+          "text": "Fix a scheduler preemption issue where the victim pod was not deleted due to incorrect status patching. This issue occurred when the preemptor and victim pods had different QoS classes in their status, causing the preemption to fail entirely. ([#126694](https://github.com/kubernetes/kubernetes/pull/126694), [@Huang-Wei](https://github.com/Huang-Wei)) [SIG Scheduling]",
+          "prs": [
+            "126694"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fix race condition in kube-proxy initialization that could blackhole UDP traffic to service VIP. ([#126689](https://github.com/kubernetes/kubernetes/pull/126689), [@wedaly](https://github.com/wedaly)) [SIG Network]",
+          "prs": [
+            "126689"
+          ],
+          "keps": [],
+          "sigs": [
+            "Network"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fixed a bug where init containers may fail to start due to a temporary container runtime failure. ([#127214](https://github.com/kubernetes/kubernetes/pull/127214), [@SergeyKanzhelev](https://github.com/SergeyKanzhelev)) [SIG Node]",
+          "prs": [
+            "127214"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fixed a regression in 1.29+ default configurations, where regular init containers may fail to start due to a temporary container runtime failure. ([#127204](https://github.com/kubernetes/kubernetes/pull/127204), [@SergeyKanzhelev](https://github.com/SergeyKanzhelev)) [SIG Node]",
+          "prs": [
+            "127204"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Terminated Pods on a node will not be re-admitted on kubelet restart. This fixes the problem of Completed Pods awaiting for the finalizer marked as Failed after the kubelet restart. ([#127209](https://github.com/kubernetes/kubernetes/pull/127209), [@SergeyKanzhelev](https://github.com/SergeyKanzhelev)) [SIG Node and Testing]",
+          "prs": [
+            "127209"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node and Testing"
+          ],
+          "identifiers": []
+        }
+      ]
+    },
+    {
+      "tag": "v1.29.8",
+      "total_items": 9,
+      "features": [
+        {
+          "category": "API Change",
+          "text": "Fixed a bug in the API server where empty collections of ValidatingAdmissionPolicies did not have an `items` field. ([#126157](https://github.com/kubernetes/kubernetes/pull/126157), [@xyz-li](https://github.com/xyz-li)) [SIG API Machinery]",
+          "prs": [
+            "126157"
+          ],
+          "keps": [],
+          "sigs": [
+            "API Machinery"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "API Change",
+          "text": "Use omitempty for optional Job Pod Failure Policy fields ([#126046](https://github.com/kubernetes/kubernetes/pull/126046), [@mimowo](https://github.com/mimowo)) [SIG Apps]",
+          "prs": [
+            "126046"
+          ],
+          "keps": [],
+          "sigs": [
+            "Apps"
+          ],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": [
+        {
+          "category": "Bug or Regression",
+          "text": "Fix the bug where PodIP field is temporarily removed for a terminal pod ([#125404](https://github.com/kubernetes/kubernetes/pull/125404), [@mimowo](https://github.com/mimowo)) [SIG Node and Testing]",
+          "prs": [
+            "125404"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fixed a bug that init containers with `Always` restartPolicy may not terminate gracefully if the pod hasn't initialized yet. ([#126332](https://github.com/kubernetes/kubernetes/pull/126332), [@gjkim42](https://github.com/gjkim42)) [SIG Node and Testing]",
+          "prs": [
+            "126332"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node and Testing"
+          ],
+          "identifiers": [
+            "Always"
+          ]
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kube-apiserver: fixes a 1.27+ regression watching a single namespace via the deprecated /api/v1/watch/namespaces/$name endpoint where watch events were not delivered after the watch was established ([#126151](https://github.com/kubernetes/kubernetes/pull/126151), [@xyz-li](https://github.com/xyz-li)) [SIG API Machinery and Testing]",
+          "prs": [
+            "126151"
+          ],
+          "keps": [],
+          "sigs": [
+            "API Machinery and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kube-apiserver: fixes a potential crash serving CustomResourceDefinitions that combine an invalid schema and CEL validation rules. ([#126167](https://github.com/kubernetes/kubernetes/pull/126167), [@cici37](https://github.com/cici37)) [SIG API Machinery and Testing]",
+          "prs": [
+            "126167"
+          ],
+          "keps": [],
+          "sigs": [
+            "API Machinery and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Mount-utils: treat syscall.ENODEV as corrupted mount ([#126174](https://github.com/kubernetes/kubernetes/pull/126174), [@dobsonj](https://github.com/dobsonj)) [SIG Storage]",
+          "prs": [
+            "126174"
+          ],
+          "keps": [],
+          "sigs": [
+            "Storage"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "StatefulSet autodelete will respect controlling owners on PVC claims as described in https://github.com/kubernetes/enhancements/pull/4375 ([#126580](https://github.com/kubernetes/kubernetes/pull/126580), [@mattcary](https://github.com/mattcary)) [SIG Apps, Storage and Testing]",
+          "prs": [
+            "126580"
+          ],
+          "keps": [],
+          "sigs": [
+            "Apps, Storage and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Stop using wmic on Windows to get uuid in the kubelet ([#126012](https://github.com/kubernetes/kubernetes/pull/126012), [@marosset](https://github.com/marosset)) [SIG Node and Windows]",
+          "prs": [
+            "126012"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node and Windows"
+          ],
+          "identifiers": []
+        }
+      ]
+    },
+    {
+      "tag": "v1.29.7",
+      "total_items": 9,
+      "features": [
+        {
+          "category": "Feature",
+          "text": "Kubernetes is now built with go 1.22.4 ([#125668](https://github.com/kubernetes/kubernetes/pull/125668), [@cpanato](https://github.com/cpanato)) [SIG Release and Testing]",
+          "prs": [
+            "125668"
+          ],
+          "keps": [],
+          "sigs": [
+            "Release and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Kubernetes is now built with go 1.22.5 ([#125896](https://github.com/kubernetes/kubernetes/pull/125896), [@cpanato](https://github.com/cpanato)) [SIG Release and Testing]",
+          "prs": [
+            "125896"
+          ],
+          "keps": [],
+          "sigs": [
+            "Release and Testing"
+          ],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": [
+        {
+          "category": "Bug or Regression",
+          "text": "Add `/sys/devices/virtual/powercap` to default masked paths. It avoids the potential security risk that the ability to read these files may offer a power-based sidechannel attack against any workloads running on the same kernel. ([#125970](https://github.com/kubernetes/kubernetes/pull/125970), [@carlory](https://github.com/carlory)) [SIG Node]",
+          "prs": [
+            "125970"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Drop additional rule requirement (cronjobs/finalizers) in the roles who use kubectl create cronjobs to be backwards compatible ([#124883](https://github.com/kubernetes/kubernetes/pull/124883), [@ardaguclu](https://github.com/ardaguclu)) [SIG CLI]",
+          "prs": [
+            "124883"
+          ],
+          "keps": [],
+          "sigs": [
+            "CLI"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fix a bug that Pods could stuck in the unschedulable pod pool if they're rejected by PreEnqueue plugins that could change its result by a change in resources apart from Pods. DRA plugin is the only plugin that meets the criteria of the bug in in-tree, and hence if you have `DynamicResourceAllocation` feature flag enabled, your DRA Pods could be affected by this bug. ([#125644](https://github.com/kubernetes/kubernetes/pull/125644), [@sanposhiho](https://github.com/sanposhiho)) [SIG Scheduling and Testing]",
+          "prs": [
+            "125644"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling and Testing"
+          ],
+          "identifiers": [
+            "DynamicResourceAllocation"
+          ]
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fix endpoints status out-of-sync when the pod state changes rapidly ([#125675](https://github.com/kubernetes/kubernetes/pull/125675), [@tnqn](https://github.com/tnqn)) [SIG Apps, Network and Testing]",
+          "prs": [
+            "125675"
+          ],
+          "keps": [],
+          "sigs": [
+            "Apps, Network and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "For statically provisioned PVs, if its volume source is CSI type or it has migrated annotation, when it's deleted, the PersisentVolume controller won't changes its phase to the Failed state. With this patch, the external provisioner can remove the finalizer in next reconcile loop. Unfortunately if the provious existing pv has the Failed state, this patch won't take effort. It requires users to remove finalizer. ([#126044](https://github.com/kubernetes/kubernetes/pull/126044), [@carlory](https://github.com/carlory)) [SIG Apps and Storage]",
+          "prs": [
+            "126044"
+          ],
+          "keps": [],
+          "sigs": [
+            "Apps and Storage"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kubeadm: do not exit with an error if the \"super-admin.conf\" cannot create a ClusterRoleBinding for the \"cluster-admin\" user, due to the ClusterRoleBInding already existing. ([#125821](https://github.com/kubernetes/kubernetes/pull/125821), [@neolit123](https://github.com/neolit123)) [SIG Cluster Lifecycle]",
+          "prs": [
+            "125821"
+          ],
+          "keps": [],
+          "sigs": [
+            "Cluster Lifecycle"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "NONE ([#126128](https://github.com/kubernetes/kubernetes/pull/126128), [@cji](https://github.com/cji)) [SIG Node and Windows]",
+          "prs": [
+            "126128"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node and Windows"
+          ],
+          "identifiers": []
+        }
+      ]
+    },
+    {
+      "tag": "v1.29.6",
+      "total_items": 9,
+      "features": [
+        {
+          "category": "API Change",
+          "text": "Improved scheduling performance when many nodes, and prefilter returns 1-2 nodes (e.g. daemonset) For developers of out-of-tree PostFilter plugins, note that the semantics of NodeToStatusMap are changing: A node with an absent value in the NodeToStatusMap should be interpreted as having an UnschedulableAndUnresolvable status ([#125307](https://github.com/kubernetes/kubernetes/pull/125307), [@gabesaba](https://github.com/gabesaba)) [SIG Scheduling]",
+          "prs": [
+            "125307"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Kubernetes is now built with go 1.21.10 ([#124830](https://github.com/kubernetes/kubernetes/pull/124830), [@cpanato](https://github.com/cpanato)) [SIG Release and Testing]",
+          "prs": [
+            "124830"
+          ],
+          "keps": [],
+          "sigs": [
+            "Release and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Feature",
+          "text": "Kubernetes is now built with go 1.21.11 ([#125367](https://github.com/kubernetes/kubernetes/pull/125367), [@cpanato](https://github.com/cpanato)) [SIG Architecture, Cloud Provider, Release, Storage and Testing]",
+          "prs": [
+            "125367"
+          ],
+          "keps": [],
+          "sigs": [
+            "Architecture, Cloud Provider, Release, Storage and Testing"
+          ],
+          "identifiers": []
+        }
+      ],
+      "bugfixes": [
+        {
+          "category": "Bug or Regression",
+          "text": "Emition of RecreatingFailedPod and RecreatingTerminatedPod events has been removed from stateful set lifecycle. ([#123809](https://github.com/kubernetes/kubernetes/pull/123809), [@atiratree](https://github.com/atiratree)) [SIG Apps and Testing]",
+          "prs": [
+            "123809"
+          ],
+          "keps": [],
+          "sigs": [
+            "Apps and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fixed PersistentolumeLabel providing wrong topology labels to Azure Disk PersistentVolumes when the external Azure cloud provider is used. ([#124528](https://github.com/kubernetes/kubernetes/pull/124528), [@jsafrane](https://github.com/jsafrane)) [SIG Cloud Provider]",
+          "prs": [
+            "124528"
+          ],
+          "keps": [],
+          "sigs": [
+            "Cloud Provider"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Improved scheduling latency when many gated pods ([#124849](https://github.com/kubernetes/kubernetes/pull/124849), [@gabesaba](https://github.com/gabesaba)) [SIG Scheduling and Testing]",
+          "prs": [
+            "124849"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kube-apiserver: fixes a 1.28 regression printing pods with invalid initContainer status ([#124909](https://github.com/kubernetes/kubernetes/pull/124909), [@liggitt](https://github.com/liggitt)) [SIG Node]",
+          "prs": [
+            "124909"
+          ],
+          "keps": [],
+          "sigs": [
+            "Node"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kube-scheduler: fixes a 1.29.5 regression that can lead to a scheduler crash when processing pods with affinity that doesn't match a real/valid node ([#125041](https://github.com/kubernetes/kubernetes/pull/125041), [@AxeZhan](https://github.com/AxeZhan)) [SIG Scheduling and Testing]",
+          "prs": [
+            "125041"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Reduce critical section in watchcache to fix kube-apiserver scalability under heavy load of list requests ([#122027](https://github.com/kubernetes/kubernetes/pull/122027), [@wojtek-t](https://github.com/wojtek-t)) [SIG API Machinery]",
+          "prs": [
+            "122027"
+          ],
+          "keps": [],
+          "sigs": [
+            "API Machinery"
+          ],
+          "identifiers": []
+        }
+      ]
+    },
+    {
+      "tag": "v1.29.5",
+      "total_items": 4,
+      "features": [],
+      "bugfixes": [
+        {
+          "category": "Bug or Regression",
+          "text": "Fixed a bug that a pod may remain unscheduled if any PreFilter plugin returns nodes that do not exist. ([#124559](https://github.com/kubernetes/kubernetes/pull/124559), [@chengjoey](https://github.com/chengjoey)) [SIG Scheduling and Testing]",
+          "prs": [
+            "124559"
+          ],
+          "keps": [],
+          "sigs": [
+            "Scheduling and Testing"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Fixes a 1.29.0 regression that introduced a possible data race that could cause panics in kube-controller-manager and kube-scheduler ([#124518](https://github.com/kubernetes/kubernetes/pull/124518), [@wojtek-t](https://github.com/wojtek-t)) [SIG API Machinery and Scheduling]",
+          "prs": [
+            "124518"
+          ],
+          "keps": [],
+          "sigs": [
+            "API Machinery and Scheduling"
+          ],
+          "identifiers": []
+        },
+        {
+          "category": "Bug or Regression",
+          "text": "Kubeadm: fix a bug when using external CA mode and trying to upgrade to 1.29 using \"kubeadm upgrade apply\". Show a warning that kubeadm cannot sign the new \"super-admin.conf\" as the host does not have a CA and show some instructions on how to manually migrate to the separate \"admin.conf\" and \"super-admin.conf\" kubeconfig files. ([#124682](https://github.com/kubernetes/kubernetes/pull/124682), [@neolit123](https://github.com/neolit123)) [SIG Cluster Lifecycle]",
+          "prs": [
+            "124682"
+          ],
+          "keps": [],
+          "sigs": [
+            "Cluster Lifecycle"
+          ],
+          "identifiers": []
+        }
+      ]
+    }
+  ]
+}

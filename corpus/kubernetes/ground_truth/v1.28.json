@@ -1,0 +1,174 @@
+{
+  "project": "kubernetes",
+  "version": "v1.28",
+  "blog_title": "Kubernetes v1.28: Planternetes",
+  "release_date": "2023-08-15",
+  "reported_enhancements_count": 45,
+  "spotlight_count": 14,
+  "spotlights": [
+    {
+      "heading": "Changes to supported skew between control plane and node versions",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.28 expands the supported skew between core node and control plane components by one minor version, from _n-2_ to _n-3_, so that node components (kubelet and kube-proxy) for the oldest supported minor version work with control plane components (kube-apiserver, kube-scheduler, kube-controller-manager, cloud-controller-manager) for the newest supported minor version."
+    },
+    {
+      "heading": "Generally available: recovery from non-graceful node shutdown",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DELETE",
+        "Terminating"
+      ],
+      "summary": "If a node shuts down unexpectedly or ends up in a non-recoverable state (perhaps due to hardware failure or unresponsive OS), Kubernetes allows you to clean up afterward and allow stateful workloads to restart on a different node. For Kubernetes v1.28, that's now a stable feature.  This allows stateful workloads to fail over to a different node successfully after the original node is shut down or in a non-recoverable state, such as the hardware failure or broken OS.      Versions of Kubernetes earlier than v1.20 lacked handling for node shutdown on Linux, the kubelet integrates with systemd an"
+    },
+    {
+      "heading": "Improvements to CustomResourceDefinition validation rules",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [Common Expression Language (CEL)](https://github.com/google/cel-go) can be used to validate [custom resources](/docs/concepts/extend-kubernetes/api-extension/custom-resources/). The primary goal is to allow the majority of the validation use cases that might once have needed you, as a CustomResourceDefinition (CRD) author, to design and implement a webhook. Instead, and as a beta feature, you can add _validation expressions_ directly into the schema of a CRD.      CRDs need direct support for non-trivial validation. While admission webhooks do support CRDs validation, they significantly c"
+    },
+    {
+      "heading": "ValidatingAdmissionPolicies graduate to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ValidatingAdmissionPolicy"
+      ],
+      "summary": "Common Expression language for admission control is customizable, in-process validation of requests to the Kubernetes API server as an alternative to validating admission webhooks.  This builds on the capabilities of the CRD Validation Rules feature that graduated to beta in 1.25 but with a focus on the policy enforcement capabilities of validating admission control.      This will lower the infrastructure barrier to enforcing customizable policies as well as providing primitives that help the community establish and adhere to the best practices of both K8s and its extensions."
+    },
+    {
+      "heading": "Match conditions for admission webhooks",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.27 lets you specify _match conditions_ for admission webhooks, which lets you narrow the scope of when Kubernetes makes a remote HTTP call at admission time. The `matchCondition` field for ValidatingWebhookConfiguration and MutatingWebhookConfiguration is a CEL expression that must evaluate to true for the admission request to be sent to the webhook.  In Kubernetes v1.28, that field moved to beta, and it's enabled by default."
+    },
+    {
+      "heading": "Beta support for enabling swap space on Linux",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This adds swap support to nodes in a controlled, predictable manner so that Kubernetes users can perform testing and provide data to continue building cluster capabilities on top of swap.  There are two distinct types of users for swap, who may overlap:  - Node administrators, who may want swap available for node-level performance tuning and stability/reducing noisy neighbor issues."
+    },
+    {
+      "heading": "Mixed version proxy (alpha)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When a cluster has multiple API servers at mixed versions (such as during an upgrade/downgrade or when runtime-config changes and a rollout happens), not every apiserver can serve every resource at every version.  For Kubernetes v1.28, you can enable the _mixed version proxy_ within the API server's aggregation layer. The mixed version proxy finds requests that the local API server doesn't recognize but another API server inside the control plan is able to support. Having found a suitable peer, the aggregation layer proxies the request to a compatible API server; this is transparent from the c"
+    },
+    {
+      "heading": "Source code reorganization for control plane components",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes contributors have begun to reorganize the code for the kube-apiserver to build on a new staging repository that consumes [k/apiserver](https://github.com/kubernetes/apiserver) but has a bigger, carefully chosen subset of the functionality of kube-apiserver such that it is reusable.  This is a gradual reorganization; eventually there will be a new git repository with generic functionality abstracted from Kubernetes' API server."
+    },
+    {
+      "heading": "Support for CDI injection into containers (alpha)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "CDI provides a standardized way of injecting complex devices into a container (i.e. devices that logically require more than just a single /dev node to be injected for them to work). This new feature enables plugin developers to utilize the CDIDevices field added to the CRI in 1.27 to pass CDI devices directly to CDI enabled runtimes (of which containerd and crio-o are in recent releases)."
+    },
+    {
+      "heading": "API awareness of sidecar containers (alpha)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "Always",
+        "Never",
+        "OnFailure"
+      ],
+      "summary": "Kubernetes 1.28 introduces an alpha `restartPolicy` field for [init containers](https://github.com/kubernetes/website/blob/main/content/en/docs/concepts/workloads/pods/init-containers.md), and uses that to indicate when an init container is also a _sidecar container_. The kubelet will start init containers with `restartPolicy: Always` in the order they are defined, along with other init containers. Instead of waiting for that sidecar container to complete before starting the main container(s) for the Pod, the kubelet only waits for the sidecar init container to have started."
+    },
+    {
+      "heading": "Automatic, retroactive assignment of a default StorageClass graduates to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes automatically sets a `storageClassName` for a PersistentVolumeClaim (PVC) if you don't provide a value. The control plane also sets a StorageClass for any existing PVC that doesn't have a `storageClassName` defined. Previous versions of Kubernetes also had this behavior; for Kubernetes v1.28 it is automatic and always active; the feature has graduated to stable (general availability)."
+    },
+    {
+      "heading": "Pod replacement policy for Jobs (alpha)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "Indexed"
+      ],
+      "summary": "Kubernetes 1.28 adds a new field for the Job API that allows you to specify if you want the control plane to make new Pods as soon as the previous Pods begin termination (existing behavior),  or only once the existing pods are fully terminated (new, optional behavior).      Many common machine learning frameworks, such as Tensorflow and JAX, require unique pods per index. With the older behaviour, if a pod that belongs to an `Indexed` Job enters a terminating state (due to preemption, eviction or other external factors), a replacement pod is created but then immediately fails to start due"
+    },
+    {
+      "heading": "Job retry backoff limit, per index (alpha)",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This extends the Job API to support indexed jobs where the backoff limit is per index, and the Job can continue execution despite some of its indexes failing.      Currently, the indexes of an indexed job share a single backoff limit. When the job reaches this shared backoff limit, the job controller marks the entire job as failed, and the resources are cleaned up, including indexes that have yet to run to completion.  As a result, the existing implementation did not cover the situation where the workload is truly [embarrassingly parallel](https://en.wikipedia.org/wiki/Embarrassingly_parallel)"
+    },
+    {
+      "heading": "Feature graduations and deprecations in Kubernetes v1.28",
+      "stage": "Stable",
+      "keps": [
+        "1440",
+        "3333",
+        "2268",
+        "606",
+        "3325",
+        "1669",
+        "2595",
+        "3178",
+        "3453",
+        "3743",
+        "2403",
+        "3685",
+        "1488"
+      ],
+      "prs": [
+        "118303",
+        "118143"
+      ],
+      "identifiers": [],
+      "summary": "### Graduations to stable  This release includes a total of 12 enhancements promoted to Stable:  * [`kubectl events`](https://github.com/kubernetes/enhancements/issues/1440) * [Retroactive default StorageClass assignment](https://github.com/kubernetes/enhancements/issues/3333)"
+    }
+  ],
+  "ground_truth_keps": [
+    "1440",
+    "3333",
+    "2268",
+    "606",
+    "3325",
+    "1669",
+    "2595",
+    "3178",
+    "3453",
+    "3743",
+    "2403",
+    "3685",
+    "1488"
+  ],
+  "ground_truth_identifiers": [
+    "DELETE",
+    "Terminating",
+    "ValidatingAdmissionPolicy",
+    "Always",
+    "Never",
+    "OnFailure",
+    "Indexed"
+  ]
+}

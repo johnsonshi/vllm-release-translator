@@ -1,0 +1,533 @@
+{
+  "project": "vllm",
+  "version": "v0.30.0",
+  "published_date": "2026-09-22",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "New models",
+      "summary": "**New models**: DeepSeek-V4.1-Flash (#56214, #56228, #56208) with the whole KV stored in MXFP8 through the FlashMLA V4.1 record on SM100 (#56893), DeepGEMM Mega-mHC (#56962), and async Engram prefetch with Engram DP sharding (#56512); DeepSeek-V4-Flash-Vision-Exp (#54566), also on ROCm (#55107) and with LoRA (#55897); GLM-5.3-Flash (#53906) with EPLB (#55119); K2-Horizon (#55063); Cohere Compass (#54774); Bailing V3 VL (#55921); Nanbeige4.2 via the Transformers backend (#56071); and a DeepSeek-V4 CPU backend with AVX512/AMX sparse MLA, indexer, mHC and compressor kernels (#55355).",
+      "prs": [
+        "56214",
+        "56228",
+        "56208",
+        "56893",
+        "56962",
+        "56512",
+        "54566",
+        "55107",
+        "55897",
+        "53906",
+        "55119",
+        "55063",
+        "54774",
+        "55921",
+        "56071",
+        "55355"
+      ]
+    },
+    {
+      "heading": "Fast Start",
+      "summary": "**Fast Start**: a persistent per-GPU weight-cache daemon holds post-quantized, TP-sharded weights in GPU memory so restarting engines map them over CUDA IPC with `--load-format ipc_cache` instead of reloading from disk (#54921), now covering FP4 checkpoints (#55465) and multi-node TP (#55468).",
+      "prs": [
+        "54921",
+        "55465",
+        "55468"
+      ]
+    },
+    {
+      "heading": "Watermarking",
+      "summary": "**Watermarking**: Gumbel-max watermarked generation and detection with a keyed PRF, per-request opt-out and an example detection endpoint (#54053); dual-key Gumbel-max makes it compatible with speculative decoding (#56122); the Rust frontend forwards the per-request controls (#56338).",
+      "prs": [
+        "54053",
+        "56122",
+        "56338"
+      ]
+    },
+    {
+      "heading": "HiSparse",
+      "summary": "**HiSparse**: a host-resident tier for sparse-MLA decode that spills KV pages to pinned host memory under GPU pressure and serves top-k misses from a per-request GPU hot buffer, enabled through `HiSparseConnector` (#53781), with Prometheus counters (#56061), a host cache shared across TP ranks (#56629), and the attention config inferred from the connector (#57041).",
+      "prs": [
+        "53781",
+        "56061",
+        "56629",
+        "57041"
+      ]
+    },
+    {
+      "heading": "Model Runner V2",
+      "summary": "**Model Runner V2**: dual-batch overlap in eager mode (#50945) and with FULL CUDA graphs for microbatched steps (#51700); MTP (#46994) and EAGLE3/DFlash/DSpark (#50514) speculative decoding under pipeline parallelism; adaptive verification for every draft-model speculator through an online acceptance estimator (#52228); gc frozen during graph capture, cutting capture from 12s to 2s and engine init from 28.9s to 8.2s on H200 (#54646); `--return-sampling-mask` compacted on GPU, fixing an about 2x RL step-time regression (#54901).",
+      "prs": [
+        "50945",
+        "51700",
+        "46994",
+        "50514",
+        "52228",
+        "54646",
+        "54901"
+      ]
+    },
+    {
+      "heading": "Qwen3.8-Flash-Next performance",
+      "summary": "**Qwen3.8-Flash-Next performance**: separate prefill and decode QSA indexer kernels (#54513), fused PLE kernels (#54517), FP8 indexer cache (#54890), padded-index skipping in sparse GQA (#54873), fused PLE residual and QSA output gate (#55309), UVA PLE offload and Engram tensor parallelism via `--engram-config` (#54371), and torch.compile removed from the NVIDIA implementation so FP8 fits on a single GB300 (#55272).",
+      "prs": [
+        "54513",
+        "54517",
+        "54890",
+        "54873",
+        "55309",
+        "54371",
+        "55272"
+      ]
+    },
+    {
+      "heading": "Kimi K3 performance",
+      "summary": "**Kimi K3 performance**: native CUDA AttnRes default on SM100 (#54261), KDA mixed-batch gather/scatter removed (5.2-7.7% E2E throughput, #56159), grouped FP8 MLA cache insertion (4-6x kernel speedup at small batch, #55356), DSV3 low-latency GEMM on strided tensors (12-81% kernel speedup, #54565), overlapped TP8 KDA projections (#54697), FlashInfer KDA kernels (#55364), internal prefix checkpoints with partial prefix caching and speculative decoding (#53614), and symmetric DCP disaggregation for hybrid Mamba models (#55531).",
+      "prs": [
+        "54261",
+        "56159",
+        "55356",
+        "54565",
+        "54697",
+        "55364",
+        "53614",
+        "55531"
+      ]
+    },
+    {
+      "heading": "Large scale serving",
+      "summary": "**Large scale serving**: PCP+DCP on sparse-MLA models (#56157), PCP with single-module MTP and replicated DSpark (#56107) and decode-only FULL CUDA graphs (#53867), Elastic EP reusing CUDA graphs across reconfiguration (#54985), an opt-in FlashInfer PCIe IPC all-reduce for NVLink-less boxes (#53576), DeepEP v2 async finalize overlapping shared experts with combine (#52781), Mooncake Store heterogeneous TP sharing (#53129), a KVCR secondary-tier adapter (#53624), and encoder-cache sharing over NIXL (#47941) and Mooncake (#41567).",
+      "prs": [
+        "56157",
+        "56107",
+        "53867",
+        "54985",
+        "53576",
+        "52781",
+        "53129",
+        "53624",
+        "47941",
+        "41567"
+      ]
+    },
+    {
+      "heading": "Quantization",
+      "summary": "**Quantization**: targeted online quantization through `quantization_config.targets` (#51285) and on partially pre-quantized checkpoints from any quant method (#51392), W4A16 DSA with the `nvfp4_fp8_ds_mla` KV cache (#51724), FlashInfer CuTeDSL NVFP4 W4A16 default over Marlin on SM100/103 (#53014), NVFP4 in the torch linear backend (#53319), per-quantization linear backend overrides (#51204), AutoRound 2/3/5/6/7-bit on CUDA (#52890), and DeepSelect top-k for the DSA sparse indexer (#56464).",
+      "prs": [
+        "51285",
+        "51392",
+        "51724",
+        "53014",
+        "53319",
+        "51204",
+        "52890",
+        "56464"
+      ]
+    },
+    {
+      "heading": "Breaking changes",
+      "summary": "**Breaking changes**: scale-out endpoints are opt-in on plain `vllm serve` via `--enable-scale-out`, replacing `VLLM_ENABLE_SCALE_OUT_ENDPOINTS` (#54579, #55176); GPTQ activation ordering (`g_idx`) removed (#54809); items deprecated for 0.29 removed, including the `VLLM_PREFIX_CACHE_RETENTION_INTERVAL` and `VLLM_MM_HASHER_ALGORITHM` env vars (#55353); the `all` Mamba cache mode deprecated (#55041); `python -m vllm.entrypoints.grpc_server` deprecated in favor of `vllm serve --grpc` (#56746); YaRN aligned with Transformers so vendor YaRN aliases no longer re-scale `max_model_len` (#56446).",
+      "prs": [
+        "54579",
+        "55176",
+        "54809",
+        "55353",
+        "55041",
+        "56746",
+        "56446"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "Scale-out endpoints (`/render`, `/derender`, `/inference/v1/generate`) are no longer registered on plain `vllm serve` unless `--enable-scale-out` is passed; `VLLM_ENABLE_SCALE_OUT_ENDPOINTS` was removed. `vllm launch render` and `vllm serve --tokens-only` always register them (#54579, #55176).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "54579",
+        "55176"
+      ]
+    },
+    {
+      "change": "GPTQ group/dynamic activation ordering removed: `g_idx` is ignored and the related Marlin, GPTQ, CPU and RDNA3 kernels are gone (#54809).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "54809"
+      ]
+    },
+    {
+      "change": "Items deprecated for 0.29 removed: `VLLM_PREFIX_CACHE_RETENTION_INTERVAL` and `VLLM_MM_HASHER_ALGORITHM` env vars (use the config fields), the `use_fp4_indexer_cache` alias (use `indexer_kv_dtype`), the `CUDA_VISIBLE_DEVICES` fallback on ROCm (use `HIP_VISIBLE_DEVICES`), and the `seq_lens_cpu` / `num_computed_tokens_cpu` attention metadata properties (#55353).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "55353"
+      ]
+    },
+    {
+      "change": "The `all` Mamba cache mode is deprecated and falls back to Model Runner V1 (#55041).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "55041"
+      ]
+    },
+    {
+      "change": "`python -m vllm.entrypoints.grpc_server` is deprecated; use `vllm serve --grpc` (#56746). `sse_keep_alive` moved to `vllm.entrypoints.serve.utils` (#56369).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "56746",
+        "56369"
+      ]
+    },
+    {
+      "change": "YaRN aligned with Transformers: vendor YaRN aliases no longer multiply `max_position_embeddings` by the factor a second time, so derived `max_model_len` drops for some models (TeleChat3-36B-Thinking 131072 to 32768, sarvam-105b 5242880 to 131072); `attn_factor` and `extrapolation_factor` are ignored in favor of `mscale`/`attention_factor` (#56446).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "56446"
+      ]
+    },
+    {
+      "change": "Attention implementations must explicitly declare DCP support; DCP with ROCm standard attention, Triton, FlexAttention or TurboQuant now fails at backend selection (#55780).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "55780"
+      ]
+    },
+    {
+      "change": "MoRI-IO connector WRITE mode with hybrid KV cache groups now requires `--disable-hybrid-kv-cache-manager`; use READ mode otherwise (#53721).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "53721"
+      ]
+    },
+    {
+      "change": "Default audio resampler switched from PyAV to torchaudio (#52598); audio decoding is backend-selectable with soundfile first in `auto` (#51826, #55642).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52598",
+        "51826",
+        "55642"
+      ]
+    },
+    {
+      "change": "New defaults: FlashInfer CuTeDSL NVFP4 W4A16 over Marlin on SM100/103 (#53014), W4A4 NVFP4 over weight-only kernels on SM120/121 (#55170), BF16x3 router GEMM on SM100 (#55899), DeepEP v2 combine overlap on with `VLLM_DEEPEP_V2_COMBINE_OVERLAP=0` to disable (#52781), AITER custom AG/RS on for DP attention + TP experts with `VLLM_ROCM_USE_AITER_CUSTOM_AR=0` to disable (#48247), native CUDA AttnRes for Kimi-K3 on SM100 (#54261), and `VLLM_USE_BREAKABLE_CUDAGRAPH=1` no longer overriding FULL graphs on MRV1 (#56312).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "53014",
+        "55170",
+        "55899",
+        "52781",
+        "48247",
+        "54261",
+        "56312"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "56214",
+    "56228",
+    "56208",
+    "56893",
+    "56962",
+    "56512",
+    "54566",
+    "55107",
+    "55897",
+    "53906",
+    "55119",
+    "55063",
+    "54774",
+    "55921",
+    "56071",
+    "55355",
+    "54921",
+    "55465",
+    "55468",
+    "54053",
+    "56122",
+    "56338",
+    "53781",
+    "56061",
+    "56629",
+    "57041",
+    "50945",
+    "51700",
+    "46994",
+    "50514",
+    "52228",
+    "54646",
+    "54901",
+    "54513",
+    "54517",
+    "54890",
+    "54873",
+    "55309",
+    "54371",
+    "55272",
+    "54261",
+    "56159",
+    "55356",
+    "54565",
+    "54697",
+    "55364",
+    "53614",
+    "55531",
+    "56157",
+    "56107",
+    "53867",
+    "54985",
+    "53576",
+    "52781",
+    "53129",
+    "53624",
+    "47941",
+    "41567",
+    "51285",
+    "51392",
+    "51724",
+    "53014",
+    "53319",
+    "51204",
+    "52890",
+    "56464",
+    "54579",
+    "55176",
+    "54809",
+    "55353",
+    "55041",
+    "56746",
+    "56446",
+    "54579",
+    "55176",
+    "54809",
+    "55353",
+    "55041",
+    "56746",
+    "56369",
+    "56446",
+    "55780",
+    "53721",
+    "52598",
+    "51826",
+    "55642",
+    "53014",
+    "55170",
+    "55899",
+    "52781",
+    "48247",
+    "54261",
+    "56312"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Model Support",
+      "claim": "**GLM-5.3-Flash**: EPLB support (#55119), FlashKDA for KDA chunked prefill (1.7-3.8x faster than the Triton chunk path, #55737), dense and masked-MHA sparse prefill for the NoPE (256, 0, 256) layout (#55738), decode hot-path cleanups removing per-layer copies and a duplicate router GEMM (#55736), and the `glm5next` NVIDIA subtree now packaged in wheels (#55214).",
+      "prs": [
+        "55119",
+        "55737",
+        "55738",
+        "55736",
+        "55214"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "claim": "**Multimodal**: torchcodec audio decoding and a selectable `audio_backend` in `--media-io-kwargs` (#51826) with automatic decoding kept soundfile-first (#55642), torchaudio as the default resampler (#52598), `media_io_kwargs` in multimodal hashes (#54241), cache hash kwargs scoped by modality (#54918), empty video URLs with multimodal UUIDs (#54220), cached audio inputs with UUIDs (#56310), encoder CUDA graphs for MiniCPM-V 2.5/2.6/4.0 (#42785), Voxtral Realtime with `FULL_DECODE_ONLY` graphs (#51167), Triton/FlashInfer composite attention for multimodal prefixes (#56305), pruned sliding-window tiles for Gemma 4 multimodal prompts (up to 3-4x E2E, #53147), SDPA for BLIP-2 Q-Former (#55285), baddbmm Conformer scores (#55062), fused DeepEncoder relative bias (#55629), Gemma3n sparse GELU Triton kernel (#48498), and no duplicate text embedding in Qwen2.5-Omni (#55415).",
+      "prs": [
+        "51826",
+        "55642",
+        "52598",
+        "54241",
+        "54918",
+        "54220",
+        "56310",
+        "42785",
+        "51167",
+        "56305",
+        "53147",
+        "55285",
+        "55062",
+        "55629",
+        "48498",
+        "55415"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "claim": "**Kernels**: FlashInfer ReplaySSM backend for Mamba2 (#52506), B12X causal paged attention for SM120/SM121 via `--attention-backend B12X_ATTN` (#52017), FlashInfer XQA decode on SM90 (#50439), DeepSelect top-k with `--sparse-indexer-topk-backend` (#56464), BF16x3 router GEMM default on SM100 for FP32-router models (#55899), split-row Triton top-p for small batches (#54651), manual `ActivationQuantFusionPass` producer for Llama (#51415), fused add-RMSNorm + NVFP4 (#51925), prefix-prefill tiling independent of KV page size (#54194), FlashInfer GDN prefill on SM12x (#55715), fused GDN MTP decode for SM110 (#53835), masked MoE activation for padded layouts (#51217), cooperative `batched_moe_align_block_size` (#53280), PDL in `fusedQKNormRopeKernel` (#55755) and weight prefetch in fused q/kv RMSNorm (#55020), XD-RoPE folded into M-RoPE (#56078), and the FlashAttention pin synced with upstream (#54819).",
+      "prs": [
+        "52506",
+        "52017",
+        "50439",
+        "56464",
+        "55899",
+        "54651",
+        "51415",
+        "51925",
+        "54194",
+        "55715",
+        "53835",
+        "51217",
+        "53280",
+        "55755",
+        "55020",
+        "56078",
+        "54819"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "claim": "**Robustness**: attention implementations must explicitly declare DCP support (#55780), unavailable piecewise CUDA graphs raise instead of producing garbled output (#54782), non-compiled models fall back to `FULL_DECODE_ONLY` graphs (#55095), MRV1 breakable graphs scoped to the piecewise path (#56312), sync checks cover paged async copies (#53491) and torch.compile (#56904), more H2D copies pinned (#54660, #55202, #56138), GDN capture metadata built without a device sync (#55404), queued work carried over when materializing the dedicated stream (#56382), FlexAttention recompiles avoided (#55888), persistent top-k falling back on low-shared-memory GPUs (#54110), KV page size scaled for hidden-state extraction with TP (#50894), out-of-bounds access in SM90 sparse MLA mixed batches (#56969), sparse-MLA piecewise capture crash (#56825), TRT-LLM ragged prefill regression (#55499), MoE fused sum int32 overflow (#50220), odd-row per-token-group quant cliff (#56478), dummy-load re-initialization (#56682, #56688), `warning_once` retaining the LLM instance (#54098), DSpark cache-group capability under `python -O` (#55234), sparse-MLA DCP stabilized for GLM PCP configurations (#55879), DeepGEMM FP8 warmup coverage (#56452), Triton autotune inspection skipped without Triton (#56676), `mm_device_do_normalize` under encoder CUDA graphs (#55370), VidCom2 frame budgets read once (#55331), the CUDA profiler start fix (#55237), FlashInfer all-reduce workspace failures logged as errors (#55127), and backend-neutral KV cache and MFU log lines (#55650).",
+      "prs": [
+        "55780",
+        "54782",
+        "55095",
+        "56312",
+        "53491",
+        "56904",
+        "54660",
+        "55202",
+        "56138",
+        "55404",
+        "56382",
+        "55888",
+        "54110",
+        "50894",
+        "56969",
+        "56825",
+        "55499",
+        "50220",
+        "56478",
+        "56682",
+        "56688",
+        "54098",
+        "55234",
+        "55879",
+        "56452",
+        "56676",
+        "55370",
+        "55331",
+        "55237",
+        "55127",
+        "55650"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**NVIDIA**: FlashInfer PCIe IPC all-reduce (#53576), DeepGEMM pinned to the vLLM fork 2.8.0 with SM120 and SM90 paged-MQA ports (#56876), public CUDA 13.4 Rubin build path (#54640, #56545), SM12x blockwise FP8 CTA raster swizzle for GB10/DGX Spark (#55180), W4A4 NVFP4 preferred on SM120/121 (#55170), H20 block-FP8 MoE tuning (+21%, #54668), an A100 PCIe fused-MoE config for Qwen3.5-122B TP2 (#55511), ReLU2 fused with static FP8 quant for Nemotron-H (#53793), and NVFP4 KV cache FMHA sped up (#55031).",
+      "prs": [
+        "53576",
+        "56876",
+        "54640",
+        "56545",
+        "55180",
+        "55170",
+        "54668",
+        "55511",
+        "53793",
+        "55031"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**AMD ROCm**: TheRock base bumped to ROCm 10.0 (#55246) with nightly TheRock images (#55014), AITER 0.1.21.post2 (#52826, #55968), AITER custom AG/RS on the DP group (about 3% TPOT, #48247), multi-stream performance and rocprofiler fixes (#55099, #56098), bpreshuffled blockscaled FP8 GEMM (+4-8% QPS on DSv3, #51692), low-M FP32 router GEMM on gfx950 (#54845), DeepSeek V4 FHMoE shared-expert fusion (#53161), CSA multi-stream overlap (#51794), AITER OPUS for large sparse prefill (#54855), DSv4.1 mHC through AITER (#56503, #56513), MXFP8 dequant-once (#56560), strided DSA decode mask (#56628) and K=512 top-k tuning (#56743), MiniMax-M3 indexer and top-k work (#54682, #52664, #55235, #56170) with fused allreduce+GemmaRMSNorm (#54787), Kimi-K3 fused KDA prefill relanded (#54038) and fused MLA norms (#52494), GLM-5.2 kept on MRV1 (#53155), GLM-5.3-Flash MTP through ragged sparse MLA (#55239), W4A16 packed zero-points (-26% TPOT on Gemma 4 AWQ, #54965), Triton W4A16 GEMM as a custom op (#51453), split AITER CK/Triton MXFP4 backends (#50622, #54773), RDNA3 W4A16 MoE on the oracle path (#55522), Quark per-block FP8 MoE (#52263), KV connectors with `ROCM_AITER_UNIFIED_ATTN` (#53695), MoRI-IO SWA+HMA (#53721), attention sinks in AITER sparse MLA (#54404), non-causal DSpark drafts in AITER MLA decode (#55966), shared KV prefill (#55887), V-cache padding masked (#53856), elastic EP deadlock (#56610), profiler fixes (#54171, #56190), breakable CUDA graphs auto-enabled for DeepSeek-V4.1 (#56349), the AITER paged-MQA outputs guard removed for DeepSeek-V4 (#55808), DSV4 indexer gather cold-compile churn removed (#56153), PDL JIT warmup skipped where unsupported (#56035), Kimi-K3 fused prefill state_indices crash (#56526), Ray NIXL agents for sharded RDT (#56687), Qwen3-Omni audio encoder TP with non-divisible heads (#45900), Quark MXFP4 Qwen3.8-Flash-Next shared experts on gfx950 (#55213), AITER preshuffled FP8 block-scale kernel (#56433), linear biases with `requires_grad=False` (#56161), a clearer unsupported KV dtype error (#55236), Mooncake in the ROCm image (#55002), and AINIC pins (#54112, #56459).",
+      "prs": [
+        "55246",
+        "55014",
+        "52826",
+        "55968",
+        "48247",
+        "55099",
+        "56098",
+        "51692",
+        "54845",
+        "53161",
+        "51794",
+        "54855",
+        "56503",
+        "56513",
+        "56560",
+        "56628",
+        "56743",
+        "54682",
+        "52664",
+        "55235",
+        "56170",
+        "54787",
+        "54038",
+        "52494",
+        "53155",
+        "55239",
+        "54965",
+        "51453",
+        "50622",
+        "54773",
+        "55522",
+        "52263",
+        "53695",
+        "53721",
+        "54404",
+        "55966",
+        "55887",
+        "53856",
+        "56610",
+        "54171",
+        "56190",
+        "56349",
+        "55808",
+        "56153",
+        "56035",
+        "56526",
+        "56687",
+        "45900",
+        "55213",
+        "56433",
+        "56161",
+        "55236",
+        "55002",
+        "54112",
+        "56459"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**CLI and benchmarks**: `vllm bench serve` accounts for client queue time (#54136) with consistent streaming TTFT/E2E accounting (#55508), non-positive `--max-concurrency` rejected (#54887), `mm-processor` crash fixed (#56300), complete pooling responses measured (#56760), explicit empty and zero arguments honored in `vllm chat`/`complete` (#55710), `vllm launch render` shutdown hang fixed (#54913), double `/stop_profile` crash fixed (#51678), and remaining non-OpenAI content moved out of the openai folder (#56369).",
+      "prs": [
+        "54136",
+        "55508",
+        "54887",
+        "56300",
+        "56760",
+        "55710",
+        "54913",
+        "51678",
+        "56369"
+      ]
+    },
+    {
+      "category": "Security",
+      "claim": "Validation-error response bodies bounded, closing an about 5,300x response amplification (#54684); client-supplied sparse embeddings bounded before densification (#54632).",
+      "prs": [
+        "54684",
+        "54632"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "claim": "Attention implementations must explicitly declare DCP support; DCP with ROCm standard attention, Triton, FlexAttention or TurboQuant now fails at backend selection (#55780).",
+      "prs": [
+        "55780"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "claim": "New defaults: FlashInfer CuTeDSL NVFP4 W4A16 over Marlin on SM100/103 (#53014), W4A4 NVFP4 over weight-only kernels on SM120/121 (#55170), BF16x3 router GEMM on SM100 (#55899), DeepEP v2 combine overlap on with `VLLM_DEEPEP_V2_COMBINE_OVERLAP=0` to disable (#52781), AITER custom AG/RS on for DP attention + TP experts with `VLLM_ROCM_USE_AITER_CUSTOM_AR=0` to disable (#48247), native CUDA AttnRes for Kimi-K3 on SM100 (#54261), and `VLLM_USE_BREAKABLE_CUDAGRAPH=1` no longer overriding FULL graphs on MRV1 (#56312).",
+      "prs": [
+        "53014",
+        "55170",
+        "55899",
+        "52781",
+        "48247",
+        "54261",
+        "56312"
+      ]
+    }
+  ]
+}

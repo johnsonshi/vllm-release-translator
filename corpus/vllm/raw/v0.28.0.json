@@ -1,0 +1,598 @@
+{
+  "project": "vllm",
+  "version": "v0.28.0",
+  "published_date": "2026-08-26",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
+  "commits_count": 584,
+  "contributors_count": 270,
+  "total_raw_items": 48,
+  "counts_by_category": {
+    "Model Support": 9,
+    "Engine Core": 6,
+    "Hardware & Performance": 4,
+    "Large Scale Serving": 5,
+    "Quantization": 4,
+    "API & Frontend": 6,
+    "Security": 4,
+    "Dependencies": 4,
+    "Breaking Changes & Deprecations": 6
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "**New models**: Muse Glimmer (#51655), Ling 3.0 Flash with BF16, MTP, and parser support (#51045) plus an FP8 variant (#51265) and hybrid MXFP4 routed experts (#52114), Dots3 NOTE native multimodal support (#51255), and Interns2mobius (#51149).",
+      "prs": [
+        "51655",
+        "51045",
+        "51265",
+        "52114",
+        "51255",
+        "51149"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Qwen**: Qwen3.8 enabled on AMD ROCm (#50068), fused CUDA post-conv MTP decode kernel for Qwen3.5 GDN (#51674), GDN gates aligned with speculative tokens (#51812), and Qwen3.5 fixes for text-only checkpoints (#50734, #50355).",
+      "prs": [
+        "50068",
+        "51674",
+        "51812",
+        "50734",
+        "50355"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Transformers modeling backend**: MLA support (#48250), hardware-agnostic model definition (#49458), fully generalized input embedding handling (#51247), logit softcapping (#52173), and a hardened multimodal path (#51408, #51657).",
+      "prs": [
+        "48250",
+        "49458",
+        "51247",
+        "52173",
+        "51408",
+        "51657"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**LoRA**: vision tower LoRA for Gemma4 (#42662), tower/connector LoRA for Keye (#51780) and Ultravox (#48215).",
+      "prs": [
+        "42662",
+        "51780",
+        "48215"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Vision encoders**: ViT full CUDA graph for Kimi-K2.5 (#50929) and Ernie-4.5-VL (#45254, #51461), torch.compile for the Qwen3-VL encoder (#40116), and long-blocking H2D copies avoided in ViT (#51841).",
+      "prs": [
+        "50929",
+        "45254",
+        "51461",
+        "40116",
+        "51841"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**MoE**: extended EPLB support for Mistral Large 3 and additional MoE backends (#48355), CuTe DSL skinny GEMM extended to GLM-5.2 (#49791).",
+      "prs": [
+        "48355",
+        "49791"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Speculative decoding coverage**: EAGLE3 support declared on KimiLinear (#52171), Qwen3.6 dSpark acceptance coverage (#51310).",
+      "prs": [
+        "52171",
+        "51310"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Correctness**: MiniMax-M3 NVFP4 inference (#48929) and compressed-tensors FP8 MoE SwiGLU params (#46845), Gemma3n/Gemma4 variable-length audio batch padding (#50958), Gemma 4 compatibility with the upcoming Transformers version (#49797), and a Qwen3-Omni crash on video without an audio track (#48420).",
+      "prs": [
+        "48929",
+        "46845",
+        "50958",
+        "49797",
+        "48420"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "**Multimodal performance**: fused on-device multimodal preprocess normalization (#50411), faster placeholder and token-match scanning (#50716), and repeated prompt-update scans avoided (#51774).",
+      "prs": [
+        "50411",
+        "50716",
+        "51774"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Speculative decoding**: DSpark confidence-scheduled verification (#47808), top-k DSpark Markov projection (#49969), DFlash2 with local convolution and a candidate selector (#52816), async scheduling auto-enabled for draft models (#48341), fused MTP trailing all-reduce with local-argmax draft tokens (#49793), and an adaptive budget for speculative scheduled input tokens (#51725).",
+      "prs": [
+        "47808",
+        "49969",
+        "52816",
+        "48341",
+        "49793",
+        "51725"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**KV cache & scheduling**: per-request scheduling for MLA chunked context (#50613), partial-tail prefix reuse with fine-grained prefix matching (#50507), backend-published KV packing in the KV-cache layout refactor (#51612, #51704), LIFO free-block reuse order restored when prefix caching is off (#51482), and silent request skipping in priority scheduling fixed (#49206).",
+      "prs": [
+        "50613",
+        "50507",
+        "51612",
+        "51704",
+        "51482",
+        "49206"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Performance**: continued elimination of GPU<->CPU syncs on the execution path (#51458, #51738, #52369) now guarded by a CI sync check (#43107), new JIT warmup infrastructure with predicate filtering (#49315), the top-k/top-p Triton sampler launched with 8 warps (#51507), detokenization skipped in offline beam search (#50333), Mask Replay (#49577), optimized long-context MLA cache gathers (#51739), and HF revisions resolved to a commit hash once per model load (#49990).",
+      "prs": [
+        "51458",
+        "51738",
+        "52369",
+        "43107",
+        "49315",
+        "51507",
+        "50333",
+        "49577",
+        "51739",
+        "49990"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Hybrid/Mamba**: prefix caching on by default (#50991), the final part of the Mamba attention module refactor (#44857), 3D-grid tiling of the state-copy Triton kernels (#49436), and Mamba alignment applied before encoder caps (#51603).",
+      "prs": [
+        "50991",
+        "44857",
+        "49436",
+        "51603"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**RL workflows**: stateful trainer send over NCCL and sparse NCCL (#50902), `CuMemAllocator.discard()` for tag-selective GPU memory release (#52514), level-2 sleep/wake/reload fixed with LoRA enabled (#39935), and rewritten weight-transfer docs with standardized examples (#51729).",
+      "prs": [
+        "50902",
+        "52514",
+        "39935",
+        "51729"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "**Startup robustness**: file:// rendezvous for single-node executors eliminates startup port races (#50999, #51652), frontend processes are watched during engine startup (#43417), a `get_open_port()` livelock on DP-reserved ports was fixed (#50965), and NVML is no longer re-initialized on every device-capability check (#50393).",
+      "prs": [
+        "50999",
+        "51652",
+        "43417",
+        "50965",
+        "50393"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**NVIDIA**: FlashInfer XQA decode support on SM12x (#49718), a CuTeDSL fused query kernel on SM100 (#49792), programmatic dependent launch for the DSA decode kernels (#50230), the native DSA decode path for MTP=3 on SM90 (#52164), GB10 fused-MoE FP8 tuning configs (#52502), and B12X dense linear backends (#52016).",
+      "prs": [
+        "49718",
+        "49792",
+        "50230",
+        "52164",
+        "52502",
+        "52016"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**AMD ROCm**: torch 2.12 / triton 3.7 stack bump (#50607), AITER and FP8 inference enabled on GFX120x (#43615), DeepSeek-V4 on gfx11 (#47017), optimized Triton sparse-MLA decode on gfx950 (#52212), FlyDSL decode-attention kernel for 4-bit TurboQuant KV cache (#47896) and an fp8 MQA logits kernel on gfx942 (#49544), a fused Kimi-K3 KDA decode kernel (#50654), fused bf16\u2192fp32 router GEMM (#50268), pinned memory on supported WSL2 kernels (#50126), and preshuffled sparse indexing for 16-token blocks (#51216).",
+      "prs": [
+        "50607",
+        "43615",
+        "47017",
+        "52212",
+        "47896",
+        "49544",
+        "50654",
+        "50268",
+        "50126",
+        "51216"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**Intel XPU**: a torch linear backend including blockwise GEMM (#49664, #50826), MXFP8 linear weights for the INC DeepSeek V4 model (#48476), async-scheduling PP sampled-token broadcast overlapped with compute (#51650), an XPU wheel added to the release pipeline (#52108), tuned Mamba SSU configs for Arc Pro B70 (#50534), and UVA weight offloading fixes (#51770).",
+      "prs": [
+        "49664",
+        "50826",
+        "48476",
+        "51650",
+        "52108",
+        "50534",
+        "51770"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "**CPU**: an MLA backend so DeepSeek-V2/V3 can run on CPU (#49453), a triton-cpu wheel (#52092), GPTQ and AWQ enabled on s390x (#51148) along with tcmalloc (#50841), BF16 MoE routed through zentorch on AMD (#44201), an unquantized MoE backend for Power (VSX) (#51624), unquantized MoE migrated to the modular-kernel experts structure (#50133), and the MXFP4 block scale folded in 2 instructions instead of 4 (#51583).",
+      "prs": [
+        "49453",
+        "52092",
+        "51148",
+        "50841",
+        "44201",
+        "51624",
+        "50133",
+        "51583"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**E/P/D disaggregation**: Model Runner V2 E/P/D support (#38390), duplicate image preprocessing removed with GPU-side preprocessing (#50390), KV consumers may omit multimodal embeddings (#52697), encoder-instance requests kept alive until their images are encoded (#50275), and EC connector scheduler/worker metadata plumbing (#49579, #49585).",
+      "prs": [
+        "38390",
+        "50390",
+        "52697",
+        "50275",
+        "49579",
+        "49585"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**KV offloading**: disk offloading for SimpleCPUOffloadConnector (#49644), out-of-tree secondary tier managers via `module_path` (#51007), partial secondary-tier load results (#50321), tiering offloading metrics (#48798), data-parallel topology exposed to offloading backends (#51879), a canonical CPU layout for parallelism-agnostic offload (#48414), and quadratic ARC batch eviction avoided (#50992).",
+      "prs": [
+        "49644",
+        "51007",
+        "50321",
+        "48798",
+        "51879",
+        "48414",
+        "50992"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Mooncake**: store group semantics (#44956), tenant ID support (#48069), and official wheels in the Docker image (#51067).",
+      "prs": [
+        "44956",
+        "48069",
+        "51067"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Connectors**: transfer mode (push/pull) included in the NIXL compatibility hash (#50620), a MoRIIO per-layer READ-completion barrier (#48534), 2P2D wide-EP with mori-ep/mori-io at dp=ep=16 (#45043), and stale remote cleanup in the push connector (#50234).",
+      "prs": [
+        "50620",
+        "48534",
+        "45043",
+        "50234"
+      ]
+    },
+    {
+      "category": "Large Scale Serving",
+      "text": "**Parallelism**: EPLB balancedness calculation fixed and tested (#51813), dense multinode DP rescope (#49212).",
+      "prs": [
+        "51813",
+        "49212"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Online quantization**: online MXFP4 support (#49347), online weight scales shared across TP (#49764), precision preserved in online NVFP4 expert packing (#50029), and the online NVFP4 MoE kernel reused across reloads (#50074).",
+      "prs": [
+        "49347",
+        "49764",
+        "50029",
+        "50074"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**NVFP4**: batch-invariant NVFP4 MoE via CUTLASS (#40372), KV 4-over-6 scale search (#45187), CuTeDSL MoE with SwiGLU-OAI and ReLU2 activations (#47106), and out_dtype matched to the model dtype (#48861).",
+      "prs": [
+        "40372",
+        "45187",
+        "47106",
+        "48861"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**New kernels**: block-wise scaled_mm (#49932), DeepSeek-V4 AMD Quark NVFP4 with an emulation kernel (#47972).",
+      "prs": [
+        "49932",
+        "47972"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "**Fixes**: dynamic INT8 W8A8 MoE config no longer built as W8A16 (#50833) and a TritonExperts crash (#51411), MXFP4 conversion for FlashInfer CUTLASS (#51038), fp32 weight scales and per-expert checkpoint mapping for MXFP4 (#51419), and fused block-scale orientation (#50727).",
+      "prs": [
+        "50833",
+        "51411",
+        "51038",
+        "51419",
+        "50727"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**New capabilities**: request priority parsed from an HTTP header (#51089), session ID plumbing into requests (#48048), `count_reasoning_tokens` in the streaming parser engine (#45802), `content_parts` on `/inference/v1/generate` (#51478), `model` optional on all `/derender` request classes (#51463), output token IDs logged at DEBUG level (#52098), and vLLM Recipes connected to native config-based deployment and benchmarking (#51308, #51878).",
+      "prs": [
+        "51089",
+        "48048",
+        "45802",
+        "51478",
+        "51463",
+        "52098",
+        "51308",
+        "51878"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Rust frontend**: a standalone renderer (#50289), gRPC multimodal image inference (#50368), explicit data-parallel rank routing (#51178), RL lifecycle control (#51316), dynamic tools from developer messages (#51144), protobuf schemas published to Buf (#51276), and MiniJinja upgraded to 2.22 (#51235).",
+      "prs": [
+        "50289",
+        "50368",
+        "51178",
+        "51316",
+        "51144",
+        "51276",
+        "51235"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Anthropic API**: 4xx returned for client-caused errors on `/v1/messages` (#52246), `disable_parallel_tool_use` preserved (#52021), and stop sequences bounded (#51997).",
+      "prs": [
+        "52246",
+        "52021",
+        "51997"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Cohere**: upstreamed parser fixes (#51998), stop sequences reported correctly (#51556), and vectorized binary embedding bit-packing (#52277).",
+      "prs": [
+        "51998",
+        "51556",
+        "52277"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Structured output**: request stop tokens masked in xgrammar until the grammar terminates (#49227, #50595), NUL bytes rejected in `structured_outputs.regex` (#51796), negative token IDs rejected as out-of-vocabulary (#51795), and `VLLMValidationError` raised from validators (#52394).",
+      "prs": [
+        "49227",
+        "50595",
+        "51796",
+        "51795",
+        "52394"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "**Robustness**: uvicorn signal handlers disabled instead of racing them (#50916), a consolidated entrypoint exception handler (#52261), 400 instead of 500 on non-object JSON bodies (#51654, #52528), generation inputs bounded before expensive work (#51447), and `cache_salt` now required to be non-empty (#50816).",
+      "prs": [
+        "50916",
+        "52261",
+        "51654",
+        "52528",
+        "51447",
+        "50816"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Fixed a DoS via sample-rate forgery that bypassed the audio decode duration guard (#49948); the audio decode duration limit is now also enforced in NanoNemotronVL (#50221).",
+      "prs": [
+        "49948",
+        "50221"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "DeepStream classified as a GPU backend with pixel limits enforced (#50755).",
+      "prs": [
+        "50755"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "`_load_ov2_processor` guarded with `resolve_trust_remote_code` (#52952).",
+      "prs": [
+        "52952"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Documentation now warns that `--api-key` does not gate all endpoints (#51999).",
+      "prs": [
+        "51999"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers 5.15.0 (#51668), huggingface-hub 1.27.0 (#51422), fastsafetensors upgrade (#50827).",
+      "prs": [
+        "51668",
+        "51422",
+        "50827"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "ROCm: torch 2.12, triton 3.7, torchaudio, torchvision (#50607).",
+      "prs": [
+        "50607"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Runtime image upgraded to Ubuntu 24.04, picking up rdma-core > 44 (#51058).",
+      "prs": [
+        "51058"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "DeepGEMM pinned to the deepseek-ai nv_dev tip (#52035), DeepEP pinned by full commit hash (#52028), FlashAttention 3 built with the torch stable API (#49599).",
+      "prs": [
+        "52035",
+        "52028",
+        "49599"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "bitsandbytes support is now an out-of-tree plugin (#43529).",
+      "prs": [
+        "43529"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "The deprecated `calculate_kv_scales` runtime KV scale calculation was removed (#49389).",
+      "prs": [
+        "49389"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "`override_attention_dtype` was removed (#48684).",
+      "prs": [
+        "48684"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "`reasoning_content` output removal is documented as a breaking client change (#50624).",
+      "prs": [
+        "50624"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "KV offload tiering metrics renamed from `kv_offload_tiering_block_{queries,hits}` to `..._chunk_...` (#52812).",
+      "prs": [
+        "52812"
+      ]
+    },
+    {
+      "category": "Breaking Changes & Deprecations",
+      "text": "MoE legacy code removed (#51078).",
+      "prs": [
+        "51078"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "bitsandbytes support is now an out-of-tree plugin (#43529).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "43529"
+      ]
+    },
+    {
+      "change": "The deprecated `calculate_kv_scales` runtime KV scale calculation was removed (#49389).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "49389"
+      ]
+    },
+    {
+      "change": "`override_attention_dtype` was removed (#48684).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "48684"
+      ]
+    },
+    {
+      "change": "`reasoning_content` output removal is documented as a breaking client change (#50624).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "50624"
+      ]
+    },
+    {
+      "change": "KV offload tiering metrics renamed from `kv_offload_tiering_block_{queries,hits}` to `..._chunk_...` (#52812).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "52812"
+      ]
+    },
+    {
+      "change": "MoE legacy code removed (#51078).",
+      "action": "Verify compatibility before upgrading",
+      "prs": [
+        "51078"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "**NVIDIA**: FlashInfer XQA decode support on SM12x (#49718), a CuTeDSL fused query kernel on SM100 (#49792), programmatic dependent launch for the DSA decode kernels (#50230), the native DSA decode path for MTP=3 on SM90 (#52164), GB10 fused-MoE FP8 tuning configs (#52502), and B12X dense linear backends (#52016).",
+      "prs": [
+        "49718",
+        "49792",
+        "50230",
+        "52164",
+        "52502",
+        "52016"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**AMD ROCm**: torch 2.12 / triton 3.7 stack bump (#50607), AITER and FP8 inference enabled on GFX120x (#43615), DeepSeek-V4 on gfx11 (#47017), optimized Triton sparse-MLA decode on gfx950 (#52212), FlyDSL decode-attention kernel for 4-bit TurboQuant KV cache (#47896) and an fp8 MQA logits kernel on gfx942 (#49544), a fused Kimi-K3 KDA decode kernel (#50654), fused bf16\u2192fp32 router GEMM (#50268), pinned memory on supported WSL2 kernels (#50126), and preshuffled sparse indexing for 16-token blocks (#51216).",
+      "prs": [
+        "50607",
+        "43615",
+        "47017",
+        "52212",
+        "47896",
+        "49544",
+        "50654",
+        "50268",
+        "50126",
+        "51216"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "**CPU**: an MLA backend so DeepSeek-V2/V3 can run on CPU (#49453), a triton-cpu wheel (#52092), GPTQ and AWQ enabled on s390x (#51148) along with tcmalloc (#50841), BF16 MoE routed through zentorch on AMD (#44201), an unquantized MoE backend for Power (VSX) (#51624), unquantized MoE migrated to the modular-kernel experts structure (#50133), and the MXFP4 block scale folded in 2 instructions instead of 4 (#51583).",
+      "prs": [
+        "49453",
+        "52092",
+        "51148",
+        "50841",
+        "44201",
+        "51624",
+        "50133",
+        "51583"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "**Anthropic API**: 4xx returned for client-caused errors on `/v1/messages` (#52246), `disable_parallel_tool_use` preserved (#52021), and stop sequences bounded (#51997).",
+      "prs": [
+        "52246",
+        "52021",
+        "51997"
+      ]
+    }
+  ]
+}

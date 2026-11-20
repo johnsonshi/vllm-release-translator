@@ -1,0 +1,591 @@
+{
+  "project": "vllm",
+  "version": "v0.27.0",
+  "published_date": "2026-08-10",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.27.0",
+  "commits_count": 561,
+  "contributors_count": 242,
+  "total_raw_items": 42,
+  "counts_by_category": {
+    "Model Support": 6,
+    "Engine Core": 10,
+    "Hardware & Performance": 6,
+    "Large Scale Serving & Distributed": 7,
+    "Quantization": 3,
+    "API & Frontend": 5,
+    "Dependencies": 3,
+    "Deprecations & Removals": 2
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "Kimi K3: new model (#50000) with model files and kernels (#50089), Python frontend (#50093), Rust frontend (#50104), AttnRes kernels (#50090), DeepGEMM support (#50458), DSpark AR fusion (#50242), and optional shared-expert sharding (#50656).",
+      "prs": [
+        "50000",
+        "50089",
+        "50093",
+        "50104",
+        "50090",
+        "50458",
+        "50242",
+        "50656"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "New models: Qwen3.5 text-only dense and MoE (#50210), K-EXAONE-2.0-750B-A37B (#50524), VaultGemma via Transformers backend (#49803), jina-embeddings-v5-text-nano with EuroBERT encoder backbone (#50688).",
+      "prs": [
+        "50210",
+        "50524",
+        "49803",
+        "50688"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Inkling: llm-compressor NVFP4 weights (#49258) and compressed-tensors dynamic FP8 (#48876).",
+      "prs": [
+        "49258",
+        "48876"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Multimodal: VidCom2 video token pruning (#47750), EVS for Qwen3.5 (#48912), ViT CUDA graph for Gemma-4 (#46837), Cosmos3 FP8 ModelOpt/Diffusers remapping (#48952), MiniMax-M3 MSA speculative decode verification (#50032) and default video processor (#50305), DeepSeek-OCR-2 TTFT optimization (#49531), longer max audio duration for MOSS-TD (#49403).",
+      "prs": [
+        "47750",
+        "48912",
+        "46837",
+        "48952",
+        "50032",
+        "50305",
+        "49531",
+        "49403"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Diffusion models: top_k and top_p sampling for DiffusionGemma (#45429).",
+      "prs": [
+        "45429"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Transformers modeling backend: audio model support (#39330), improved `fx` tracer (#49957), fused residual-add + RMSNorm compilation pass (#48757), and fixes for MLA padding + grouped topk routing (#49982), MQA with TP (#49987), and Qwen3-VL M-RoPE (#49292).",
+      "prs": [
+        "39330",
+        "49957",
+        "48757",
+        "49982",
+        "49987",
+        "49292"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Warmup: new JIT warmup infrastructure (#47451), runner-owned Triton kernels warmed before the first request (#49903), and proper renderer warmup (#50408).",
+      "prs": [
+        "47451",
+        "49903",
+        "50408"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Attention: FlashAttention 4 SM100 FP8 KV cache (#42569) and headdim-256 (#42669); query replication for MLA decode under DCP for DeepSeek-V2/R1 and Kimi-K2.5 (#45964); masked MHA for sparse MLA prefills (#48770); skip sparse indexer scoring for short dense prefills (#48407); FlexAttention epilogue hook (#45841) and encoder block-mask compile explosion avoided (#50339); attention backends stay eligible for text-only serving of prefix-LM models (#48796); merge-attention context count as a runtime argument (#48739); unified multi-path encoder CUDA graph support (#49934); encoder cache extension hooks (#48218).",
+      "prs": [
+        "42569",
+        "42669",
+        "45964",
+        "48770",
+        "48407",
+        "45841",
+        "50339",
+        "48796",
+        "48739",
+        "49934",
+        "48218"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Model Runner V2: encoder-only attention (#49331), sequence pooling for embedding and classification (#48791), encoder token classification (#50293), encoder token embedding (#50574), BGE-M3 pooling (#50661), multimodal on CPU (#50073), multi-layer MTP speculator (#48892), PCP selects MRV2 (#50034), attention metadata always built at capture time (#49364), encoder cache profiling (#47985), skipped no-op FP32 logits materialization (#47711), chunked rejection sampler to avoid OOM (#48630), fewer GPU<->CPU syncs in hybrid Mamba (#49736).",
+      "prs": [
+        "49331",
+        "48791",
+        "50293",
+        "50574",
+        "50661",
+        "50073",
+        "48892",
+        "50034",
+        "49364",
+        "47985",
+        "47711",
+        "48630",
+        "49736"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "KV offloading: generic P2P secondary tier with peer lookup/serving (#48021), per-request tier filtering with TierFilter/TierMatcher (#48123), self-describing KV events with TieringOffloadingSpec (#48679), pluggable eviction policies via CachePolicyFactory (#49114), deduplicated replicated MLA KV in the shared CPU region (#48906), single-copy MLA layout for CPUOffloadingSpec (#50301), CPUOffloadingSpec moved onto SharedOffloadRegion (#50094), TP-independent compact secondary identity (#49858), batched C store/load for filesystem offload (#49152), reliable partial-tail offload for sub-block prompts (#49502), per-layer canonical KV page mappings for parallelism-agnostic offload (#48408).",
+      "prs": [
+        "48021",
+        "48123",
+        "48679",
+        "49114",
+        "48906",
+        "50301",
+        "50094",
+        "49858",
+        "49152",
+        "49502",
+        "48408"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Mamba/hybrid: ReplaySSM caching for faster Mamba2 standard decode (#48018), fused align-mode DS-conv state migration with num_accepted_tokens > 1 (#49291), FlashInfer Mamba SSU algorithm selection (#50157), fixed `/wake_up` crash on hybrid models (#41602).",
+      "prs": [
+        "48018",
+        "49291",
+        "50157",
+        "41602"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Spec decode: DSpark Markov head replicated across TP ranks (#49731), `sample_from_anchor` loaded from speculators config (#48639), earliest-completing stop string selected (#49391).",
+      "prs": [
+        "49731",
+        "48639",
+        "49391"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Structured outputs: grammar advanced across the reasoning boundary with spec decode (#44993).",
+      "prs": [
+        "44993"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Preprocessing performance: derender CPU work offloaded to the renderer thread pool (#49396), raw-prompt preprocessing off the event loop in AsyncLLM (#49608), multimodal preprocessing isolated on its own executor (#49524), MM embeds loading deferred off the event loop (#49477), parallel preprocessing within a request for online pooling (#49153), videos hashed by source bytes (#49607), original image mode preserved in ImageIO (#49159).",
+      "prs": [
+        "49396",
+        "49608",
+        "49524",
+        "49477",
+        "49153",
+        "49607",
+        "49159"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "RL: weight version tagging for RL rollouts (#49040), stateful trainer-send IPC (#48981), vLLM config set during weight reload (#45989), router replay output from the FlashInfer monolithic MoE kernel (#44214).",
+      "prs": [
+        "49040",
+        "48981",
+        "45989",
+        "44214"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Memory & robustness: CuMem slept-L1 fragmentation accounting (#49208), cgroup memory limits respected on all platforms (#49966), fail fast when /dev/shm is too small (#48879), zero-copy tensor pickling in shm_broadcast (#48442), LRU hash-split skipped in free_blocks when prefix caching is off (#48017), location-derived path vars excluded from torch.compile cache factors (#47573), `CustomOp.forward_native` compiled for ReLU^2 (#50244), HF config used for HF tokenizers (#49907), batch-invariant RMSNorm via pinned block size (#48391).",
+      "prs": [
+        "49208",
+        "49966",
+        "48879",
+        "48442",
+        "48017",
+        "47573",
+        "50244",
+        "49907",
+        "48391"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepSeek-V4: sequence parallelism (#46789), ~2x kernel skipping empty c128 launches (#48957), 3.4% E2E TTFT skipping topk/router in decode (#49486), 3.9% E2E TTFT workspace reuse (#49236), 1.88x kernel removing a redundant full kernel (#50298), adaptive topk width 1.0% E2E (#50004), 448 MiB GPU memory saved (#50312), compact MXFP4 indexer KV cache (#48993), sparse-MLA q-head padding removed for FlashInfer >= 0.6.14 (#48047).",
+      "prs": [
+        "46789",
+        "48957",
+        "49486",
+        "49236",
+        "50298",
+        "50004",
+        "50312",
+        "48993",
+        "48047"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Kernels: RMSNorm uncontiguous support with 1.2\u20133.1x kernel improvement (#49750), MoE `reduce_scatter` regression fix restoring 5% E2E throughput (#48763), non-grouped bias-less topk routing dispatched to the fused path (#49618), tuned LL BF16 router GEMM (#48774) with warmup skipped for non-MoE models (#49659), Triton tensor-descriptor path for fused MoE via `VLLM_TRITON_USE_TD` (#42436), cudagraph/DP padding skipped in topk (#48979), coalesced HBM access in the Marlin INT4-FP8 AWQ preprocess kernel (#47268).",
+      "prs": [
+        "49750",
+        "48763",
+        "49618",
+        "48774",
+        "49659",
+        "42436",
+        "48979",
+        "47268"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "NVIDIA next-gen: `sm_107` for Rubin (#49387), NVLink all-reduce paths on SM107 (#49647), fixed CUDA arch detection producing kernel-less builds on SM121 (#49904).",
+      "prs": [
+        "49387",
+        "49647",
+        "49904"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "ROCm: gfx1250 architecture enabled (#46516), AITER FP8 ViT encoder attention (#49937), fused shared expert for Quark DeepSeek-V4 checkpoints (#48044), Quark GLM-5.2 checkpoint inference fixes (#48886), DSv3.2 per-decode FillFunctor launches eliminated in the sparse-MLA hot loop (#44527), B-preshuffled attention FP8 projections for DSv4 (#46720), TML Inkling enabled (#48841), tuned selective_state_update float16 config for MI325X (#50006), GPT-J-style MRoPE fixed and optimized (#49906), quickreduce accuracy fix in cudagraph mode (#46913), cached fp32 upcast of static e8m0 weight scales (#47773), batch DMA for CPU KV cache loads (#49843), elastic EP scaling accuracy fix (#47206).",
+      "prs": [
+        "46516",
+        "49937",
+        "48044",
+        "48886",
+        "44527",
+        "46720",
+        "48841",
+        "50006",
+        "49906",
+        "46913",
+        "47773",
+        "49843",
+        "47206"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "XPU: QK Norm + RoPE fusion pass (#49394), FP8 o_proj with fp8_bmm and load-time scale transpose (#48334), DeepSeek-V4 fuse_index_q SYCL kernel path (#45991), TD operand loads for batched MoE GEMM (#46340), RMSNorm kernels unified with vllm_c (#46981).",
+      "prs": [
+        "49394",
+        "48334",
+        "45991",
+        "46340",
+        "46981"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "CPU: INT8 fused MoE kernel for Arm CPUs (#48637), s390x inference optimization with oneDNN INT8 GEMM (#50219), GDN conv path optimized for speculative decoding (#48577), granite-4 enabled (#47641), FAST_EXP for Power (#49571), CPU kernels bumped to the latest version (#50387), macOS build fixes (#49021, #50915).",
+      "prs": [
+        "48637",
+        "50219",
+        "48577",
+        "47641",
+        "49571",
+        "50387",
+        "49021",
+        "50915"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Fault tolerance framework (simplified) for DP+EP external LB deployments (#44428).",
+      "prs": [
+        "44428"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Elastic EP: async preparation (#47288) and non-contiguous weight transfer fix (#50641).",
+      "prs": [
+        "47288",
+        "50641"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "P/D disaggregation: NIXL P/D for hybrid MLA+SSM models (#49762), NIXL heterogeneous P/D block sizes for hybrid models (#49612), MoRIIO heterogeneous TP<->DP prefill/decode read routing (#46116), optional lookup disable on PD decode (#50498), prefill token ids reused on the decode chat path (#48145), detokenization streaming derender (#47301), NixlPush skips an extra handshake step in D->P (#49345).",
+      "prs": [
+        "49762",
+        "49612",
+        "46116",
+        "50498",
+        "48145",
+        "47301",
+        "49345"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Fixes: P/D preemption race (#50297), KV lease deadlines rebased onto the worker clock (#50326), NIXL hybrid MLA+mamba heterogeneous TP (#49297), internal LB load-balancing (#49204).",
+      "prs": [
+        "50297",
+        "50326",
+        "49297",
+        "49204"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Mooncake: vectorized `prepare_value` on the KV load path (#48531), full external hits re-derived on stored boundaries (#49481).",
+      "prs": [
+        "48531",
+        "49481"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Encoder-cache connectors: `has_pending_push_work` (#49582).",
+      "prs": [
+        "49582"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Communicators: process-checkpoint lifecycle hooks, starting with FlashInfer (#46877).",
+      "prs": [
+        "46877"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "New capabilities: FP4 Qutlass integration for compressed-tensors (#43229), CuTeDSL MoE for ReLU2 NVFP4 (#49580), MXFP8 linear support in INC (#47514), AutoRound W4A16 MoE and MXFP4 linear/MoE on XPU (#47124), KV quant mode for TurboQuant (#50533), ModelOpt FP8 emulation on SM80 (#50019), `--linear-backend` honored for ModelOpt W4A16 (#50273).",
+      "prs": [
+        "43229",
+        "49580",
+        "47514",
+        "47124",
+        "50533",
+        "50019",
+        "50273"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Checkpoints: compressed-tensors support for DeepSeek-V4 (#41276) and Kimi-K3 (#50500); `find_matched_target` prioritizes fused-name matches (#49483).",
+      "prs": [
+        "41276",
+        "50500",
+        "49483"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "MoE refactor: FusedMoE renamed to FusedMoEFactory (#44941), MoeWNA16 migrated to the MK oracle scheme (#44120), Quark w8a8-int8 (#46765) and MXFP4 `aiter`/`emulation` backends (#49348, #48949) moved to kernel abstractions, CT WNA16 Marlin/MoE methods merged (#44570), Quark W4A8 (INT4-FP8) MoE CI coverage (#48050).",
+      "prs": [
+        "44941",
+        "44120",
+        "46765",
+        "49348",
+        "48949",
+        "44570",
+        "48050"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Rust frontend: gRPC control plane with engine-aware health reporting (#48992), abort control RPC (#49255), server and model discovery (#49491), and KV event source discovery (#50033); `vllm-bench` integrated into `vllm-rs` and the `vllm` CLI (#48930) with opt-in Rust delegation for `vllm bench serve` (#50081); zero-copy multimodal tensor slicing (#48781), multimodal tensors in auxiliary frames (#49341), `--limit-mm-per-prompt` (#49604), ordinary-text tokenizer encoding (#49992).",
+      "prs": [
+        "48992",
+        "49255",
+        "49491",
+        "50033",
+        "48930",
+        "50081",
+        "48781",
+        "49341",
+        "49604",
+        "49992"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "APIs: Cohere chat v2 API support (#47189), `cache_salt` in the Anthropic Messages API (#49498), strict tool calling and constrained decoding for GPT-OSS Harmony (#45560), unified engine-based Mistral parser for reasoning and tool calls (#48947), `stream_interval` exposed as a per-request sampling param (#49754), additional sampling parameters for the translation API (#45839), `diarized_json` for MOSS-Transcribe-Diarize (#48543), cumulative speech-to-text chunk timestamps (#41131).",
+      "prs": [
+        "47189",
+        "49498",
+        "45560",
+        "48947",
+        "49754",
+        "45839",
+        "48543",
+        "41131"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Multimodal: mm hash algorithm selection via CLI (#49686), configurable PyNvVideoCodec decoder concurrency (#49753), RFC 2397 parameters accepted in base64 data URLs (#48973).",
+      "prs": [
+        "49686",
+        "49753",
+        "48973"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "UX & validation: standardized request error handling with a VLLMError hierarchy (#49665), reduced startup log noise (#50590), incompatible nested runtime overrides rejected (#49247), improved data-parallel launch validation (#49124), DCP topology validation (#49777), 400 instead of 500 for non-numeric logprobs (#49144), bare Inkling text preserved in Python and Rust parsers (#50403).",
+      "prs": [
+        "49665",
+        "50590",
+        "49247",
+        "49124",
+        "49777",
+        "49144",
+        "50403"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Benchmarks: probe requests in `vllm bench serve` (#49611).",
+      "prs": [
+        "49611"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "PyTorch 2.13.0, torchvision 0.28.0, Triton 3.7.1 (#48155); torch 2.13 for XPU (#48677) and CPU (#50412).",
+      "prs": [
+        "48155",
+        "48677",
+        "50412"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers 5.14.1 (#49223), FlashInfer 0.6.15 (#48914) then 0.6.16.post3 (#50892), AITER 0.1.16.post5 (#48683) then 0.1.19 (#49361), NCCL 2.30.7 enabling DeepEPv2 in the vllm/vllm-openai image (#45321), tpu-inference v0.25.0 (#49431) then v0.26.0 (#50522), Helion 1.4.0 (#50307), NIXL and UCX upgraded on ROCm (#49251).",
+      "prs": [
+        "49223",
+        "48914",
+        "50892",
+        "48683",
+        "49361",
+        "45321",
+        "49431",
+        "50522",
+        "50307",
+        "49251"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Build: vllm-flash-attn bumped to a C++20-compatible commit for torch-nightly (#49326), ABI-stable FA2 build pin (#50474).",
+      "prs": [
+        "49326",
+        "50474"
+      ]
+    },
+    {
+      "category": "Deprecations & Removals",
+      "text": "Models removed: Plamo2 (#49729), Ouro (#49786).",
+      "prs": [
+        "49729",
+        "49786"
+      ]
+    },
+    {
+      "category": "Deprecations & Removals",
+      "text": "Removed the no-longer-supported `max_num_partial_prefills` and `max_long_partial_prefills` arguments (#49244).",
+      "prs": [
+        "49244"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "Models removed: Plamo2 (#49729), Ouro (#49786).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "49729",
+        "49786"
+      ]
+    },
+    {
+      "change": "Removed the no-longer-supported `max_num_partial_prefills` and `max_long_partial_prefills` arguments (#49244).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "49244"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Model Support",
+      "claim": "Multimodal: VidCom2 video token pruning (#47750), EVS for Qwen3.5 (#48912), ViT CUDA graph for Gemma-4 (#46837), Cosmos3 FP8 ModelOpt/Diffusers remapping (#48952), MiniMax-M3 MSA speculative decode verification (#50032) and default video processor (#50305), DeepSeek-OCR-2 TTFT optimization (#49531), longer max audio duration for MOSS-TD (#49403).",
+      "prs": [
+        "47750",
+        "48912",
+        "46837",
+        "48952",
+        "50032",
+        "50305",
+        "49531",
+        "49403"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "DeepSeek-V4: sequence parallelism (#46789), ~2x kernel skipping empty c128 launches (#48957), 3.4% E2E TTFT skipping topk/router in decode (#49486), 3.9% E2E TTFT workspace reuse (#49236), 1.88x kernel removing a redundant full kernel (#50298), adaptive topk width 1.0% E2E (#50004), 448 MiB GPU memory saved (#50312), compact MXFP4 indexer KV cache (#48993), sparse-MLA q-head padding removed for FlashInfer >= 0.6.14 (#48047).",
+      "prs": [
+        "46789",
+        "48957",
+        "49486",
+        "49236",
+        "50298",
+        "50004",
+        "50312",
+        "48993",
+        "48047"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "Kernels: RMSNorm uncontiguous support with 1.2\u20133.1x kernel improvement (#49750), MoE `reduce_scatter` regression fix restoring 5% E2E throughput (#48763), non-grouped bias-less topk routing dispatched to the fused path (#49618), tuned LL BF16 router GEMM (#48774) with warmup skipped for non-MoE models (#49659), Triton tensor-descriptor path for fused MoE via `VLLM_TRITON_USE_TD` (#42436), cudagraph/DP padding skipped in topk (#48979), coalesced HBM access in the Marlin INT4-FP8 AWQ preprocess kernel (#47268).",
+      "prs": [
+        "49750",
+        "48763",
+        "49618",
+        "48774",
+        "49659",
+        "42436",
+        "48979",
+        "47268"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "ROCm: gfx1250 architecture enabled (#46516), AITER FP8 ViT encoder attention (#49937), fused shared expert for Quark DeepSeek-V4 checkpoints (#48044), Quark GLM-5.2 checkpoint inference fixes (#48886), DSv3.2 per-decode FillFunctor launches eliminated in the sparse-MLA hot loop (#44527), B-preshuffled attention FP8 projections for DSv4 (#46720), TML Inkling enabled (#48841), tuned selective_state_update float16 config for MI325X (#50006), GPT-J-style MRoPE fixed and optimized (#49906), quickreduce accuracy fix in cudagraph mode (#46913), cached fp32 upcast of static e8m0 weight scales (#47773), batch DMA for CPU KV cache loads (#49843), elastic EP scaling accuracy fix (#47206).",
+      "prs": [
+        "46516",
+        "49937",
+        "48044",
+        "48886",
+        "44527",
+        "46720",
+        "48841",
+        "50006",
+        "49906",
+        "46913",
+        "47773",
+        "49843",
+        "47206"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "CPU: INT8 fused MoE kernel for Arm CPUs (#48637), s390x inference optimization with oneDNN INT8 GEMM (#50219), GDN conv path optimized for speculative decoding (#48577), granite-4 enabled (#47641), FAST_EXP for Power (#49571), CPU kernels bumped to the latest version (#50387), macOS build fixes (#49021, #50915).",
+      "prs": [
+        "48637",
+        "50219",
+        "48577",
+        "47641",
+        "49571",
+        "50387",
+        "49021",
+        "50915"
+      ]
+    }
+  ]
+}

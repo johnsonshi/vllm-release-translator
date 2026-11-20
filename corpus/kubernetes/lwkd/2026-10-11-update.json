@@ -1,0 +1,146 @@
+{
+  "edition_id": "2026-10-11-update",
+  "title": "Week Ending October 11, 2026",
+  "date": "2026-10-15",
+  "featured_prs": [
+    {
+      "headline": "[142913: [KEP-4443] Add more granular job failure condition reasons](https://github.com/kubernetes/kubernetes/pull/142913)",
+      "body": "[ameukam](https://github.com/ameukam) added more granular failure condition reasons for Jobs using `PodFailurePolicy`. Previously, multiple rules using the `FailJob` action could produce the same generic failure reason, making it difficult for higher-level controllers to determine why a Job failed. This change allows rules to be named so that the resulting Job failure condition can identify the rule responsible, falling back to the rule's index when no name is specified. This gives controllers such as JobSet more precise information to make decisions about retries and recovery. The change is part of [KEP-4443](https://github.com/kubernetes/enhancements/tree/master/keps/sig-apps/4443-configurable-pod-failure-policy-reasons).",
+      "prs": [
+        "142913"
+      ],
+      "keps": [
+        "4443",
+        "4443"
+      ]
+    },
+    {
+      "headline": "[142898: e2e: test KEP-4006 WebSocket exec, attach and port-forward without SPDY fallback](https://github.com/kubernetes/kubernetes/pull/142898)",
+      "body": "[seans3](https://github.com/seans3) added end-to-end tests for `exec`, `attach`, and `port-forward` over WebSockets without allowing a fallback to SPDY. Tests that permit fallback can pass even when the WebSocket path is broken, leaving gaps in coverage for Kubernetes' transition away from SPDY. By explicitly exercising these operations without fallback, this change helps verify that WebSocket streaming works independently and provides stronger confidence in the new protocol paths. The work is part of [KEP-4006](https://github.com/kubernetes/enhancements/tree/master/keps/sig-api-machinery/4006-transition-spdy-to-websockets), with promotion of the tests to conformance planned as a follow-up after a soak period.",
+      "prs": [
+        "142898"
+      ],
+      "keps": [
+        "4006",
+        "4006"
+      ]
+    },
+    {
+      "headline": "[142897: apiserver, kubelet: graduate the KEP-4006 WebSocket streaming metrics to BETA](https://github.com/kubernetes/kubernetes/pull/142897)",
+      "body": "[seans3](https://github.com/seans3) graduated WebSocket streaming metrics in the API server and kubelet from Alpha to Beta as part of [KEP-4006](https://github.com/kubernetes/enhancements/tree/master/keps/sig-api-machinery/4006-transition-spdy-to-websockets). The metrics provide visibility into WebSocket streaming requests handled by the API server and kubelet, including requests processed through the API server's stream translator and tunnel. Advancing these metrics to Beta improves their stability and makes them more useful for monitoring and troubleshooting as Kubernetes continues its transition from SPDY to WebSockets.",
+      "prs": [
+        "142897"
+      ],
+      "keps": [
+        "4006",
+        "4006"
+      ]
+    }
+  ],
+  "other_merges": [
+    {
+      "bullet": "kubectl kustomize [no longer loads kustomize Go (`.so`) plugins](https://github.com/kubernetes/kubernetes/pull/142791); exec and KRM function plugins are unaffected",
+      "prs": [
+        "142791"
+      ]
+    },
+    {
+      "bullet": "Updated TokenReview internal type to [improve cast speed from latest external version](https://github.com/kubernetes/kubernetes/pull/142750)",
+      "prs": [
+        "142750"
+      ]
+    },
+    {
+      "bullet": "Strengthened [runtime PodGroup and CompositePodGroup hierarchy validation in kube-scheduler](https://github.com/kubernetes/kubernetes/pull/142719) to verify maximum tree depth, Workload reference consistency, scheduling policies, and disruption modes",
+      "prs": [
+        "142719"
+      ]
+    },
+    {
+      "bullet": "applyconfiguration-gen now honors [`+k8s:openapi-model-package` when looking up OpenAPI definitions](https://github.com/kubernetes/kubernetes/pull/142697), and fails if the schema has no definition for a root type",
+      "prs": [
+        "142697"
+      ]
+    },
+    {
+      "bullet": "kube-apiserver and other servers built on k8s.io/apiserver now [accept up to 16384 request header values](https://github.com/kubernetes/kubernetes/pull/142607)",
+      "prs": [
+        "142607"
+      ]
+    },
+    {
+      "bullet": "API server now returns [400 instead of 500 status code](https://github.com/kubernetes/kubernetes/pull/142591) on GET request with invalid revision",
+      "prs": [
+        "142591"
+      ]
+    },
+    {
+      "bullet": "Fixed[ API warnings on ReplicationController updates](https://github.com/kubernetes/kubernetes/pull/142443), which described the previous pod template instead of the new one",
+      "prs": [
+        "142443"
+      ]
+    },
+    {
+      "bullet": "DRA consumable capacity + CEL: [fixed name comparisons and lookup](https://github.com/kubernetes/kubernetes/pull/142202)",
+      "prs": [
+        "142202"
+      ]
+    },
+    {
+      "bullet": "Fix: [kubectl create ingress panics on rules with extra equals signs](https://github.com/kubernetes/kubernetes/pull/142640)",
+      "prs": [
+        "142640"
+      ]
+    },
+    {
+      "bullet": "kubectl: [keep a multi-line event message inside its table row](https://github.com/kubernetes/kubernetes/pull/142149)",
+      "prs": [
+        "142149"
+      ]
+    },
+    {
+      "bullet": "ktesting: the former internal packages are now [available as k8s.io/ktesting and k8s.io/client-go/ktesting](https://github.com/kubernetes/kubernetes/pull/142146)",
+      "prs": [
+        "142146"
+      ]
+    },
+    {
+      "bullet": "DRA: [fixed a deadlock](https://github.com/kubernetes/kubernetes/pull/141108) when an `ErrorHandler` calls `Update`, or a kubelet plugin's `HandleError` calls `PublishResources`, in response to pools that do not match `ReconcilePoolWithName`",
+      "prs": [
+        "141108"
+      ]
+    },
+    {
+      "bullet": "Added `percentageOfPlacementsToScore` [to the scheduler config](https://github.com/kubernetes/kubernetes/pull/139859)",
+      "prs": [
+        "139859"
+      ]
+    },
+    {
+      "bullet": "The deployment controller now [retries when scaling down an old ReplicaSet fails during a rolling update](https://github.com/kubernetes/kubernetes/pull/142650), instead of treating that failure as success",
+      "prs": [
+        "142650"
+      ]
+    },
+    {
+      "bullet": "The metrics `apiserver_resource_size_estimate_bytes` and `apiserver_resource_objects` now [include explicit observation timestamps](https://github.com/kubernetes/kubernetes/pull/142007)",
+      "prs": [
+        "142007"
+      ]
+    },
+    {
+      "bullet": "Added [conditional authorization support to kube-apiserver](https://github.com/kubernetes/kubernetes/pull/137633)",
+      "prs": [
+        "137633"
+      ]
+    },
+    {
+      "bullet": "[kubemark has been removed](https://github.com/kubernetes/kubernetes/pull/142700) from the kubernetes repository",
+      "prs": [
+        "142700"
+      ]
+    }
+  ],
+  "deprecations": [],
+  "raw_markdown": "---\nlayout: post\ntitle: Week Ending October 11, 2026\ndate: 2026-10-15 23:45:00 -0000\nslug: 2026-10-11-update\n---\n\n## Developer News\n\nWei Fu ([@fuweid](https://github.com/fuweid)) has [joined SIG etcd as a lead](https://github.com/kubernetes/community/pull/9190).\n\nSIG Apps has [added `workload-class` as a new subproject](https://github.com/kubernetes/community/pull/9197).\n\nSIG Autoscaling has [added `model-serving-signals` as a new subproject](https://github.com/kubernetes/community/pull/9196).\n\nWG LTS has been [wound down and its documentation archived](https://github.com/kubernetes/community/pull/9211) under `archive/wg-lts`.\n\nSIG Architecture has [fixed inverted SPDY and WebSocket client guidance](https://github.com/kubernetes/community/pull/9150) in the developer guide; contributors building clients should re-read the corrected section.\n\nThe [Kubernetes SIG Meet & Greet at KubeCon NA 2026](https://groups.google.com/a/kubernetes.io/g/dev/c/ELCI9hCyAH4) will take place in Salt Lake City on Wednesday, November 11, from 12:20 PM to 2:20 PM MST, giving contributors a chance to meet SIG and Working Group representatives during lunch. Please [sign up to staff your SIG table](https://github.com/kubernetes/community/issues/9192).\n\n## Release Schedule\n\n**Next Deadline: [Docs: Open placeholder PRs](https://github.com/kubernetes/sig-release/blob/master/releases/release_phases.md#docs), [October 29](https://github.com/kubernetes/sig-release/tree/master/releases/release-1.38#timeline)**\n\nContributors with enhancements that require documentation should prepare placeholder docs PRs against the `dev-1.38` branch ahead of the October 29 deadline.\n\nKubernetes [v1.38.0-alpha.2](https://github.com/kubernetes/kubernetes/releases/tag/v1.38.0-alpha.2) has been built and pushed using Go 1.27.1 on October 7. The release notes are updated in [CHANGELOG-1.38.md](https://git.k8s.io/kubernetes/CHANGELOG/CHANGELOG-1.38.md), with a pointer to them on [GitHub](https://github.com/kubernetes/kubernetes/releases/tag/v1.38.0-alpha.2).\n\nOctober [patch releases](https://kubernetes.io/releases/patch-releases/) are postponed by one week to October 20 to include the latest Go releases and CVE fixes. Cherry-picks are now due this Friday, October 16.\n\n## Featured PRs\n\n### [142913: [KEP-4443] Add more granular job failure condition reasons](https://github.com/kubernetes/kubernetes/pull/142913)\n\n[ameukam](https://github.com/ameukam) added more granular failure condition reasons for Jobs using `PodFailurePolicy`. Previously, multiple rules using the `FailJob` action could produce the same generic failure reason, making it difficult for higher-level controllers to determine why a Job failed. This change allows rules to be named so that the resulting Job failure condition can identify the rule responsible, falling back to the rule's index when no name is specified. This gives controllers such as JobSet more precise information to make decisions about retries and recovery. The change is part of [KEP-4443](https://github.com/kubernetes/enhancements/tree/master/keps/sig-apps/4443-configurable-pod-failure-policy-reasons).\n\n### [142898: e2e: test KEP-4006 WebSocket exec, attach and port-forward without SPDY fallback](https://github.com/kubernetes/kubernetes/pull/142898)\n\n[seans3](https://github.com/seans3) added end-to-end tests for `exec`, `attach`, and `port-forward` over WebSockets without allowing a fallback to SPDY. Tests that permit fallback can pass even when the WebSocket path is broken, leaving gaps in coverage for Kubernetes' transition away from SPDY. By explicitly exercising these operations without fallback, this change helps verify that WebSocket streaming works independently and provides stronger confidence in the new protocol paths. The work is part of [KEP-4006](https://github.com/kubernetes/enhancements/tree/master/keps/sig-api-machinery/4006-transition-spdy-to-websockets), with promotion of the tests to conformance planned as a follow-up after a soak period.\n\n### [142897: apiserver, kubelet: graduate the KEP-4006 WebSocket streaming metrics to BETA](https://github.com/kubernetes/kubernetes/pull/142897)\n\n[seans3](https://github.com/seans3) graduated WebSocket streaming metrics in the API server and kubelet from Alpha to Beta as part of [KEP-4006](https://github.com/kubernetes/enhancements/tree/master/keps/sig-api-machinery/4006-transition-spdy-to-websockets). The metrics provide visibility into WebSocket streaming requests handled by the API server and kubelet, including requests processed through the API server's stream translator and tunnel. Advancing these metrics to Beta improves their stability and makes them more useful for monitoring and troubleshooting as Kubernetes continues its transition from SPDY to WebSockets.\n\n## KEP of the Week\n\n### [KEP-5945: DRA Optional Node Operations](https://github.com/kubernetes/enhancements/blob/master/keps/sig-node/5945-dra-optional-node-operations/README.md)\n\nDynamic Resource Allocation (DRA) normally makes kubelet call a node-local driver\nto prepare a device before a container starts and clean it up when its Pod ends.\nSome controller-managed resources need neither call, yet still require a no-op\ndriver on every node. Others need preparation but clean up automatically.\n\nKEP-5945 adds `skipNodeOperations` to `ResourceSlice` and carries it into\n`ResourceClaim` allocation results. Kubelet skips a gRPC call only when all\ndevices from a driver in the claim mark that operation to skip. A driver can\nskip `NodeUnprepareResources` alone or both it and `NodePrepareResources`.\nCustom allocators must copy the field for the kubelet to apply this choice.\n\nTroy Chiu drafted the KEP with SIG Node in May 2026 after discussion in the WG\nDevice Management meeting. It reached Alpha in v1.37 with the\n`DRAOptionalNodeOperations` gate off by default. KEP 5945 is implementable; its\n[Beta update merged September 28](https://github.com/kubernetes/enhancements/pull/6372) targets\nBeta in v1.38 with the gate on by default and Stable in v1.40. The\n[enhancement issue](https://github.com/kubernetes/enhancements/issues/5945) tracks\nthe work.\n\n## Other Merges\n\n* kubectl kustomize [no longer loads kustomize Go (`.so`) plugins](https://github.com/kubernetes/kubernetes/pull/142791); exec and KRM function plugins are unaffected\n* Updated TokenReview internal type to [improve cast speed from latest external version](https://github.com/kubernetes/kubernetes/pull/142750)\n* Strengthened [runtime PodGroup and CompositePodGroup hierarchy validation in kube-scheduler](https://github.com/kubernetes/kubernetes/pull/142719) to verify maximum tree depth, Workload reference consistency, scheduling policies, and disruption modes\n* applyconfiguration-gen now honors [`+k8s:openapi-model-package` when looking up OpenAPI definitions](https://github.com/kubernetes/kubernetes/pull/142697), and fails if the schema has no definition for a root type\n* kube-apiserver and other servers built on k8s.io/apiserver now [accept up to 16384 request header values](https://github.com/kubernetes/kubernetes/pull/142607)\n* API server now returns [400 instead of 500 status code](https://github.com/kubernetes/kubernetes/pull/142591) on GET request with invalid revision\n* Fixed[ API warnings on ReplicationController updates](https://github.com/kubernetes/kubernetes/pull/142443), which described the previous pod template instead of the new one\n* DRA consumable capacity + CEL: [fixed name comparisons and lookup](https://github.com/kubernetes/kubernetes/pull/142202)\n* Fix: [kubectl create ingress panics on rules with extra equals signs](https://github.com/kubernetes/kubernetes/pull/142640)\n* kubectl: [keep a multi-line event message inside its table row](https://github.com/kubernetes/kubernetes/pull/142149)\n* ktesting: the former internal packages are now [available as k8s.io/ktesting and k8s.io/client-go/ktesting](https://github.com/kubernetes/kubernetes/pull/142146)\n*  DRA: [fixed a deadlock](https://github.com/kubernetes/kubernetes/pull/141108) when an `ErrorHandler` calls `Update`, or a kubelet plugin's `HandleError` calls `PublishResources`, in response to pools that do not match `ReconcilePoolWithName`\n* Added `percentageOfPlacementsToScore` [to the scheduler config](https://github.com/kubernetes/kubernetes/pull/139859)\n* The deployment controller now [retries when scaling down an old ReplicaSet fails during a rolling update](https://github.com/kubernetes/kubernetes/pull/142650), instead of treating that failure as success\n* The metrics `apiserver_resource_size_estimate_bytes` and `apiserver_resource_objects` now [include explicit observation timestamps](https://github.com/kubernetes/kubernetes/pull/142007)\n* Added [conditional authorization support to kube-apiserver](https://github.com/kubernetes/kubernetes/pull/137633)\n* [kubemark has been removed](https://github.com/kubernetes/kubernetes/pull/142700) from the kubernetes repository\n\n## Promotions\n\n* [`WindowsCPUAndMemoryAffinity` to Beta](https://github.com/kubernetes/kubernetes/pull/142500)\n* [`KubeProxyNFTablesLocalhostNodePorts` to Beta](https://github.com/kubernetes/kubernetes/pull/142490)\n* [Graduated `kuberc` support to stable](https://github.com/kubernetes/kubernetes/pull/142619)\n\n## Version Updates\n\n* Kubernetes is now built with [Go v1.27.2](https://github.com/kubernetes/kubernetes/pull/142873)\n* otel to [v1.47.0](https://github.com/kubernetes/kubernetes/pull/142794)\n* node local DNS to [v1.27.1](https://github.com/kubernetes/kubernetes/pull/142686)\n\n## Subprojects and Dependency Updates\n\n* [cluster-api v1.14.3](https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.14.3): Fixes a race in KCP proxy DialContext, matches etcd members to machines being deleted by KCP, and bumps grpc to 1.83.2 for security advisories; also [v1.13.7](https://github.com/kubernetes-sigs/cluster-api/releases/tag/v1.13.7)\n* [cri-o v1.37.2](https://github.com/cri-o/cri-o/releases/tag/v1.37.2): Switches release bundle SBOMs to SPDX 3.0.1 JSON-LD format\n* [prometheus v3.13.4](https://github.com/prometheus/prometheus/releases/tag/v3.13.4): Fixes GO-2026-6348 HTTP/2 DATA frame fragmentation memory exhaustion and corruption of float native histograms in federation\n* [nerdctl v2.4.1](https://github.com/containerd/nerdctl/releases/tag/v2.4.1): Fixes CDI support in compose, fixes port forwarding on Windows, and updates bundled containerd to 2.4.1\n\n## Shoutouts\n\n* No shoutouts this week. Want to thank someone for special efforts to improve Kubernetes? Tag them in the #shoutouts channel.\n"
+}

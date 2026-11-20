@@ -1,0 +1,360 @@
+{
+  "project": "kubernetes",
+  "version": "v1.32",
+  "blog_title": "Kubernetes v1.32: Penelope",
+  "release_date": "2024-12-11",
+  "reported_enhancements_count": 44,
+  "spotlight_count": 29,
+  "spotlights": [
+    {
+      "heading": "A note on DRA enhancements",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In this release, like the previous one, the Kubernetes project continues proposing a number of enhancements to the Dynamic Resource Allocation (DRA), a key component of the Kubernetes resource management system. These enhancements aim to improve the flexibility and efficiency of resource allocation for workloads that require specialized hardware, such as GPUs, FPGAs and network adapters. These features are particularly useful for use-cases such as machine learning or high-performance computing applications. The core part enabling DRA Structured parameter support [got promoted to beta](#structu"
+    },
+    {
+      "heading": "Quality of life improvements on nodes and sidecar containers update",
+      "stage": "Unspecified",
+      "keps": [
+        "753"
+      ],
+      "prs": [
+        "127566",
+        "127918"
+      ],
+      "identifiers": [
+        "ImagePullBackOff"
+      ],
+      "summary": "[SIG Node](https://github.com/kubernetes/community/tree/master/sig-node) has the following highlights that go beyond KEPs:  1. The systemd watchdog capability is now used to restart the kubelet when its health check fails, while also limiting the maximum number of restarts within a given time period. This enhances the reliability of the kubelet. For more details, see pull request [#127566](https://github.com/kubernetes/kubernetes/pull/127566)."
+    },
+    {
+      "heading": "Custom Resource field selectors",
+      "stage": "Unspecified",
+      "keps": [
+        "4358"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Custom resource field selector allows developers to add field selectors to custom resources, mirroring the functionality available for built-in Kubernetes objects. This allows for more efficient and precise filtering of custom resources, promoting better API design practices.  This work was done as a part of [KEP #4358](https://github.com/kubernetes/enhancements/issues/4358), by [SIG API Machinery](https://github.com/kubernetes/community/tree/master/sig-api-machinery)."
+    },
+    {
+      "heading": "Support to size memory backed volumes",
+      "stage": "Unspecified",
+      "keps": [
+        "1967"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature makes it possible to dynamically size memory-backed volumes based on Pod resource limits, improving the workload's portability and overall node resource utilization.  This work was done as a part of [KEP #1967](https://github.com/kubernetes/enhancements/issues/1967), by [SIG Node](https://github.com/kubernetes/community/tree/master/sig-node)."
+    },
+    {
+      "heading": "Bound service account token improvement",
+      "stage": "Unspecified",
+      "keps": [
+        "4193"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The inclusion of the node name in the service account token claims allows users to use such information during  authorization and admission (ValidatingAdmissionPolicy). Furthermore this improvement keeps service account credentials from being a privilege escalation path for nodes.  This work was done as part of [KEP #4193](https://github.com/kubernetes/enhancements/issues/4193) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth)."
+    },
+    {
+      "heading": "Structured authorization configuration",
+      "stage": "Unspecified",
+      "keps": [
+        "3221"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Multiple authorizers can be configured in the API server to allow for structured authorization decisions,  with support for CEL match conditions in webhooks. This work was done as part of [KEP #3221](https://github.com/kubernetes/enhancements/issues/3221) by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth)."
+    },
+    {
+      "heading": "Auto remove PVCs created by StatefulSet",
+      "stage": "Unspecified",
+      "keps": [
+        "1847"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "PersistentVolumeClaims (PVCs) created by StatefulSets get automatically deleted when no longer needed,  while ensuring data persistence during StatefulSet updates and node maintenance.  This feature simplifies storage management for StatefulSets and reduces the risk of orphaned PVCs.  This work was done as part of [KEP #1847](https://github.com/kubernetes/enhancements/issues/1847) by [SIG Apps](https://github.com/kubernetes/community/tree/master/sig-apps)."
+    },
+    {
+      "heading": "Job API managed-by mechanism",
+      "stage": "Unspecified",
+      "keps": [
+        "4368"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `managedBy` field for Jobs was promoted to beta in the v1.32 release. This feature enables external controllers (like [Kueue](https://kueue.sigs.k8s.io/)) to manage Job synchronization, offering greater flexibility and integration with advanced workload management systems.  This work was done as a part of [KEP #4368](https://github.com/kubernetes/enhancements/issues/4368), by [SIG Apps](https://github.com/kubernetes/community/tree/master/sig-apps)."
+    },
+    {
+      "heading": "Only allow anonymous auth for configured endpoints",
+      "stage": "Unspecified",
+      "keps": [
+        "4633"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature lets admins specify which endpoints are allowed for anonymous requests. For example, the admin can choose to only allow anonymous access to health endpoints like `/healthz`, `/livez`, and `/readyz` while making sure preventing anonymous access to other cluster endpoints or resources even if a user misconfigures RBAC.      This work was done as a part of [KEP #4633](https://github.com/kubernetes/enhancements/issues/4633), by [SIG"
+    },
+    {
+      "heading": "Per-plugin callback functions for accurate requeueing in kube-scheduler\u00a0enhancements",
+      "stage": "Unspecified",
+      "keps": [
+        "4247"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature enhances scheduling throughput with more efficient scheduling retry decisions by per-plugin callback functions (QueueingHint). All plugins now have QueueingHints.  This work was done as a part of [KEP #4247](https://github.com/kubernetes/enhancements/issues/4247), by [SIG Scheduling](https://github.com/kubernetes/community/tree/master/sig-scheduling)."
+    },
+    {
+      "heading": "Recover from volume expansion failure",
+      "stage": "Unspecified",
+      "keps": [
+        "1790"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature lets users recover from volume expansion failure by retrying with a smaller size. This enhancement ensures that volume expansion is more resilient and reliable, reducing the risk of data loss or corruption during the process.  This work was done as a part of [KEP #1790](https://github.com/kubernetes/enhancements/issues/1790), by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage)."
+    },
+    {
+      "heading": "Volume group snapshot",
+      "stage": "Unspecified",
+      "keps": [
+        "3476"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature introduces a VolumeGroupSnapshot API, which lets users take a snapshot of multiple volumes together, ensuring data consistency across the volumes.  This work was done as a part of [KEP #3476](https://github.com/kubernetes/enhancements/issues/3476), by [SIG Storage](https://github.com/kubernetes/community/tree/master/sig-storage)."
+    },
+    {
+      "heading": "Structured parameter support",
+      "stage": "Unspecified",
+      "keps": [
+        "4381"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The core part of Dynamic Resource Allocation (DRA), the structured parameter support, got promoted to beta. This allows the kube-scheduler and Cluster Autoscaler to simulate claim allocation directly, without needing a third-party driver. These components can now predict whether resource requests can be fulfilled based on the cluster's current state without actually committing to the allocation. By eliminating the need for a third-party driver to validate or test allocations, this feature improves planning and decision-making for resource distribution, making the scheduling and scaling process"
+    },
+    {
+      "heading": "Label and field selector authorization",
+      "stage": "Unspecified",
+      "keps": [
+        "4601"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Label and field selectors can be used in authorization decisions. The node authorizer  automatically takes advantage of this to limit nodes to list or watch their pods only. Webhook authorizers can be updated to limit requests based on the label or field selector used.  This work was done as part of [KEP #4601](https://github.com/kubernetes/enhancements/issues/4601)  by [SIG Auth](https://github.com/kubernetes/community/tree/master/sig-auth)."
+    },
+    {
+      "heading": "Asynchronous preemption in the\u00a0Kubernetes Scheduler",
+      "stage": "Unspecified",
+      "keps": [
+        "4832"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Kubernetes scheduler has been enhanced with Asynchronous Preemption, a feature that improves scheduling throughput by handling preemption operations asynchronously. Preemption ensures higher-priority pods get the resources they need by evicting lower-priority ones, but this process previously involved heavy operations like API calls to delete pods, slowing down the scheduler. With this enhancement, such tasks are now processed in parallel, allowing the scheduler to continue scheduling other pods without delays. This improvement is particularly beneficial in clusters with high Pod churn or "
+    },
+    {
+      "heading": "Mutating admission policies using CEL expressions",
+      "stage": "Unspecified",
+      "keps": [
+        "3962"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature leverages CEL's object instantiation and JSON Patch strategies, combined with Server Side Apply\u2019s merge algorithms. It simplifies policy definition, reduces mutation conflicts, and enhances admission control performance while laying a foundation for more robust, extensible policy frameworks in Kubernetes.  The Kubernetes API server now supports Common Expression Language (CEL)-based Mutating Admission Policies, providing a lightweight, efficient alternative to mutating admission webhooks. With this enhancement, administrators can use CEL to"
+    },
+    {
+      "heading": "Pod-level resource specifications",
+      "stage": "Unspecified",
+      "keps": [
+        "2837"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This enhancement simplifies resource management in Kubernetes by introducing the ability to set resource requests and limits at the Pod level, creating a shared pool that all containers in the Pod can dynamically use. This is particularly valuable for workloads with containers that have fluctuating or bursty resource needs, as it minimizes over-provisioning and improves overall resource efficiency.  By leveraging Linux cgroup settings at the Pod level, Kubernetes ensures that these resource limits are enforced while"
+    },
+    {
+      "heading": "Allow zero value for sleep action of PreStop hook",
+      "stage": "Unspecified",
+      "keps": [
+        "4818"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PodLifecycleSleepActionAllowZero"
+      ],
+      "summary": "This enhancement introduces the ability to set a zero-second sleep duration for the PreStop lifecycle hook in Kubernetes, offering a more flexible and no-op option for resource validation and customization. Previously, attempting to define a zero value for the sleep action resulted in validation errors, restricting its use. With this update, users can configure a zero-second duration as a valid sleep setting, enabling immediate execution and termination behaviors where needed."
+    },
+    {
+      "heading": "DRA: Standardized network interface data for resource claim status",
+      "stage": "Unspecified",
+      "keps": [
+        "4817"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This enhancement adds a new field that allows drivers to report specific device status data for each allocated object  in a ResourceClaim. It also establishes a standardized way to represent networking devices information.  This work was done as a part of  [KEP #4817](https://github.com/kubernetes/enhancements/issues/4817), by  [SIG Network](https://github.com/kubernetes/community/tree/master/sig-network)."
+    },
+    {
+      "heading": "New statusz and flagz endpoints for core components",
+      "stage": "Unspecified",
+      "keps": [
+        "4827",
+        "4828"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "You can enable two new  HTTP endpoints, `/statusz` and `/flagz`, for core components.  These enhance cluster debuggability by gaining insight into what versions (e.g. Golang version) that component is  running as, along with details about its uptime, and which command line flags that component was executed with; making it easier to diagnose both runtime and configuration issues.  This work was done as part of"
+    },
+    {
+      "heading": "Windows strikes back!",
+      "stage": "Unspecified",
+      "keps": [
+        "4802",
+        "4885"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for graceful shutdowns of Windows nodes in Kubernetes clusters has been added.  Before this release, Kubernetes provided graceful node shutdown functionality for Linux nodes  but lacked equivalent support for Windows. This enhancement enables the kubelet on Windows nodes to handle system  shutdown events properly. Doing so, it ensures that Pods running on Windows nodes are gracefully terminated,  allowing workloads to be rescheduled without disruption. This improvement enhances the reliability and stability  of clusters that include Windows nodes, especially during a planned maintenanc"
+    },
+    {
+      "heading": "Graduations to Stable",
+      "stage": "Stable",
+      "keps": [
+        "3221",
+        "4193",
+        "4358",
+        "4420",
+        "1860",
+        "2681",
+        "4292",
+        "1769",
+        "1967",
+        "3545",
+        "4026",
+        "4017",
+        "1847"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 13 enhancements promoted to Stable:  - [Structured Authorization Configuration](https://github.com/kubernetes/enhancements/issues/3221)"
+    },
+    {
+      "heading": "Deprecations and removals",
+      "stage": "Deprecation",
+      "keps": [
+        "3063",
+        "4381"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones for the project's overall health. See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process.      #### Withdrawal of the old DRA implementation"
+    },
+    {
+      "heading": "Release notes and upgrade actions required",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Check out the full details of the Kubernetes v1.32 release in our [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.32.md)."
+    },
+    {
+      "heading": "Even more DRA enhancements!",
+      "stage": "Unspecified",
+      "keps": [
+        "4680"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In this release, like the previous one, the Kubernetes project continues proposing a number of enhancements to the Dynamic Resource Allocation (DRA), a key component of the Kubernetes resource management system. These enhancements aim to improve the flexibility and efficiency of resource allocation for workloads that require specialized hardware, such as GPUs, FPGAs and network adapters. This release introduces improvements, including the addition of resource health status in the Pod status, as outlined in KEP [#4680](https://github.com/kubernetes/enhancements/issues/4680)."
+    },
+    {
+      "heading": "Windows strikes back!",
+      "stage": "Unspecified",
+      "keps": [
+        "4802"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "KEP [#4802](https://github.com/kubernetes/enhancements/issues/4802) adds support for graceful shutdowns of Windows nodes in Kubernetes clusters. Before this release, Kubernetes provided graceful node shutdown functionality for Linux nodes but lacked equivalent support for Windows. This enhancement enables the kubelet on Windows nodes to handle system shutdown events properly. Doing so, it ensures that Pods running on Windows nodes are gracefully terminated,"
+    },
+    {
+      "heading": "Allow special characters in environment variables",
+      "stage": "Unspecified",
+      "keps": [
+        "4369"
+      ],
+      "prs": [],
+      "identifiers": [
+        "RelaxedEnvironmentVariableValidation"
+      ],
+      "summary": "With the graduation of this [enhancement](https://github.com/kubernetes/enhancements/issues/4369) to beta, Kubernetes now allows almost all printable ASCII characters (excluding \"=\") to be used as environment variable names. This change addresses the limitations previously imposed on variable naming, facilitating a broader adoption of Kubernetes by accommodating various application needs. The relaxed validation will be enabled by default via the `RelaxedEnvironmentVariableValidation` feature gate, ensuring that users can easily utilize environment variables without strict constraints, enhancin"
+    },
+    {
+      "heading": "Make Kubernetes aware of the LoadBalancer behavior",
+      "stage": "Stable",
+      "keps": [
+        "1860"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "KEP [#1860](https://github.com/kubernetes/enhancements/issues/1860) graduates to GA, introducing the `ipMode` field for a Service of `type: LoadBalancer`, which can be set to either `\"VIP\"` or `\"Proxy\"`. This enhancement is aimed at improving how cloud providers load balancers interact with kube-proxy and it is a change transparent to the end user. The existing behavior of kube-proxy is preserved when using `\"VIP\"`, where kube-proxy handles the load balancing. Using `\"Proxy\"` results in traffic sent directly to the load balancer,"
+    },
+    {
+      "heading": "Retry generate name for resources",
+      "stage": "Unspecified",
+      "keps": [
+        "4420"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This [enhancement](https://github.com/kubernetes/enhancements/issues/4420) improves how name conflicts are handled for Kubernetes resources created with the `generateName` field. Previously, if a name conflict occurred, the API server returned a 409 HTTP Conflict error and clients had to manually retry the request. With this update, the API server automatically retries generating a new name up to seven times in case of a conflict. This significantly reduces the chances of collision, ensuring smooth generation of up to 1 million names with less than a 0.1% probability of a conflict,"
+    }
+  ],
+  "ground_truth_keps": [
+    "753",
+    "4358",
+    "1967",
+    "4193",
+    "3221",
+    "1847",
+    "4368",
+    "4633",
+    "4247",
+    "1790",
+    "3476",
+    "4381",
+    "4601",
+    "4832",
+    "3962",
+    "2837",
+    "4818",
+    "4817",
+    "4827",
+    "4828",
+    "4802",
+    "4885",
+    "4420",
+    "1860",
+    "2681",
+    "4292",
+    "1769",
+    "3545",
+    "4026",
+    "4017",
+    "3063",
+    "4680",
+    "4369"
+  ],
+  "ground_truth_identifiers": [
+    "ImagePullBackOff",
+    "PodLifecycleSleepActionAllowZero",
+    "RelaxedEnvironmentVariableValidation"
+  ]
+}

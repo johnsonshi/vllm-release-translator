@@ -1,0 +1,543 @@
+{
+  "project": "vllm",
+  "version": "v0.34.0",
+  "published_date": "2026-11-16",
+  "tldr_bullets": [
+    "**10 new models** (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)",
+    "**Extensible KV cache is on by default:** vLLM sizes the KV cache from memory actually free after warmup, so most models get a bigger cache and more throughput - in most cases you should now **remove `gpu_memory_utilization`** from your configs.",
+    "**Model Runner V1 is gone.** Model Runner V2 is now the only GPU runner.",
+    "**Big speedups** on Blackwell and MI355X: up to 1.95\u00d7 decode (Step5 on GB200), 1.6\u00d7 throughput (GLM-5.3-Flash), 1.24\u20131.40\u00d7 faster long-prompt TTFT (GLM-5.3).",
+    "**Upgrade check:** default block size is now 64, ROCm 7.2 images are gone, and `huggingface_hub >= 2.0.0` is required. See [Before you upgrade](#before-you-upgrade)."
+  ],
+  "highlight_subsections": [
+    {
+      "heading": "10 new models",
+      "summary": "**10 new models** (Mistral Large 4, MiniMax-M3.1-Flash, Nemotron-3.5-Transcribe, and more!)",
+      "prs": []
+    },
+    {
+      "heading": "Extensible KV cache is on by default:",
+      "summary": "**Extensible KV cache is on by default:** vLLM sizes the KV cache from memory actually free after warmup, so most models get a bigger cache and more throughput - in most cases you should now **remove `gpu_memory_utilization`** from your configs.",
+      "prs": []
+    },
+    {
+      "heading": "Model Runner V1 is gone.",
+      "summary": "**Model Runner V1 is gone.** Model Runner V2 is now the only GPU runner.",
+      "prs": []
+    },
+    {
+      "heading": "Big speedups",
+      "summary": "**Big speedups** on Blackwell and MI355X: up to 1.95\u00d7 decode (Step5 on GB200), 1.6\u00d7 throughput (GLM-5.3-Flash), 1.24\u20131.40\u00d7 faster long-prompt TTFT (GLM-5.3).",
+      "prs": []
+    },
+    {
+      "heading": "Upgrade check:",
+      "summary": "**Upgrade check:** default block size is now 64, ROCm 7.2 images are gone, and `huggingface_hub >= 2.0.0` is required. See [Before you upgrade](#before-you-upgrade).",
+      "prs": []
+    },
+    {
+      "heading": "Extensible KV cache, on by default",
+      "summary": "- On CUDA and ROCm, the KV cache is sized from memory actually free **after** CUDA graph capture and warmup, not from an estimate (#56492). - **Result:** a larger cache (e.g. MiniMax-M3 on H200: 433k \u2192 672k tokens), so throughput is higher and TTFT lower at high concurrency. - **Trade-off:** per-token decode latency can rise on some models (TPOT +6\u201318% on some H200 models at concurrency 128). Opt out with `--gpu-memory-utilization 0.9` or `--no-enable-extensible-kv-cache`. - Hardened with fixes for allocator fragmentation, startup OOMs and KV connectors (#67296, #67485, #66731, #66523, #66197,",
+      "prs": [
+        "56492",
+        "67296",
+        "67485",
+        "66731",
+        "66523",
+        "66197",
+        "65137",
+        "66605",
+        "66674"
+      ]
+    },
+    {
+      "heading": "Model Runner V2 only",
+      "summary": "- Model Runner V1 is removed (#63373). - Dual-batch overlap now runs on MRV2, including with speculative decoding and DCP (#61464).",
+      "prs": [
+        "63373",
+        "61464"
+      ]
+    },
+    {
+      "heading": "Speculative decoding",
+      "summary": "- **Suffix decoding** runs on MRV2 with a GPU speculator; Arctic Inference is no longer needed (#60339). - **Custom speculators:** declarative configs plus a `register_speculative_method` plugin API (#63205). - **CUDA graphs** for MRV2 draft-model speculators (#60989). - **Adaptive verification** works with XPress (#65175). - **Draft KV cache matches the target's dtype**, so an FP8 target gets an FP8 draft cache (#65198).",
+      "prs": [
+        "60339",
+        "63205",
+        "60989",
+        "65175",
+        "65198"
+      ]
+    },
+    {
+      "heading": "Performance",
+      "summary": "| Improvement | Hardware | Gain | PR | |---|---|---|---| | Step5 NVFP4 MoE on TRTLLM-Gen | 4\u00d7GB200 | up to **1.95\u00d7** decode | #65152 | | GLM-5.3-Flash DeepGEMM FP8 MegaMoE | NVIDIA | **1.6\u00d7** output throughput vs DEP4 | #60895 | | Muse Spark Open specialized decode (opt-in) | GB300 | **1.5\u00d7** single-stream decode | #64077 | | Token-sharded sparse-MLA prefill under TP (default) | GB200 | GLM-5.3 TTFT **1.24\u20131.40\u00d7** faster at 32K\u2013128K | #63956 | | KV-balanced MLA decode for Kimi-K3 (opt-in) | GB300 | **1.34\u20131.59\u00d7** decode attention | #63638 | | Qwen3.5 on breakable CUDA graphs (no torch.compile)",
+      "prs": [
+        "65152",
+        "60895",
+        "64077",
+        "63956",
+        "63638",
+        "51012",
+        "63440"
+      ]
+    },
+    {
+      "heading": "AMD ROCm",
+      "summary": "- Release images and wheels are **ROCm 10.0 only** (#61939). - MoRI EPv2 via `--all2all-backend mori` (#61361). - Kimi-K3 specialized decode on MI355X, opt-in (#61435). - TRITON_ATTN is the default attention backend on RDNA3 and RDNA4 (#60418).",
+      "prs": [
+        "61939",
+        "61361",
+        "61435",
+        "60418"
+      ]
+    },
+    {
+      "heading": "Serving and operations",
+      "summary": "- **Checkpoint/restore** (CRIU + `cuda-checkpoint`) through `/checkpoint/prepare`, `/checkpoint/status` and `/checkpoint/restore`, in both the Python and Rust frontends (#62570). - **Fault-tolerant DP+EP scale-down:** dead ranks are removed and their experts redistributed without a restart (#46370). - Best-effort **NUMA binding** on by default (#61258). - Opt-in **cache-aware admission** ordering (#54625). - Rust frontend: stateless **Responses API** (#63902) and **`n > 1`** (#65625).",
+      "prs": [
+        "62570",
+        "46370",
+        "61258",
+        "54625",
+        "63902",
+        "65625"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "**Model Runner V1 removed** (#63373).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63373"
+      ]
+    },
+    {
+      "change": "`VLLM_USE_V2_MODEL_RUNNER` and `VllmConfig.use_v2_model_runner` are gone; setting the env var to anything but `1` fails at startup.",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": []
+    },
+    {
+      "change": "Dropped with it: the V1 logits-processor API (`vllm.v1.worker.gpu.sample.logits_processor` is the only interface), the `custom_class` speculative method, `use_heterogeneous_vocab`, `disable_padded_drafter_batch`, `parallel_drafting` outside DFlash/DSpark, PP with `external_launcher`, `NGramPerReqLogitsProcessor`, and x86 CPUs without Triton.",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": []
+    },
+    {
+      "change": "Deprecated: `parallel_drafting`, `capture_torch_profiler`, `enable_layerwise_nvtx_tracing`.",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": []
+    },
+    {
+      "change": "**Default `--block-size` is 64** instead of 16 (#63231). Backends with a preferred block size still override it (ROCm paged attention keeps 16), and an explicit `--block-size` still wins.",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63231"
+      ]
+    },
+    {
+      "change": "**`gpu_memory_utilization` defaults to 1.0** when unset with the extensible KV cache on (#56492). An explicit value in (0.8, 1.0) that withholds 1 GiB or more logs a warning (#66704).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "56492",
+        "66704"
+      ]
+    },
+    {
+      "change": "**ROCm 7.2** wheels and `-rocm72` images are no longer published (#61939).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "61939"
+      ]
+    },
+    {
+      "change": "**Removed:**: QuTLASS and the `fp_quant` method (#65230).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65230"
+      ]
+    },
+    {
+      "change": "**Removed:**: Marlin INT8/FP8-activation (W4A8) paths and `VLLM_MARLIN_INPUT_DTYPE`; use `--quantization humming` with `VLLM_HUMMING_INPUT_QUANT_CONFIG` (#65542).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65542"
+      ]
+    },
+    {
+      "change": "**Removed:**: Keye-VL and Keye-VL-1.5 (#64287); `disable_mtp_completeness_check` (#49459); the `refresh_derived_weights` hook (#65914).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "64287",
+        "49459",
+        "65914"
+      ]
+    },
+    {
+      "change": "**Removed:**: **Dependencies:** `huggingface_hub >= 2.0.0` (#64779); `mistral-common >= 1.13.0` (#64169); XPU requires vllm_xpu_kernels 0.1.17 (#60609).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "64779",
+        "64169",
+        "60609"
+      ]
+    },
+    {
+      "change": "**Removed:**: **Model and plugin code:** all `process_weights_after_loading` hooks share one signature and the loader runs every module's hook (#57678); config `compute_hash()` replaced by `compile_factors()` / `hash_config()` (#65652).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "57678",
+        "65652"
+      ]
+    },
+    {
+      "change": "**API behavior:**: llama3_json no longer streams tool arguments incrementally (#63569).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63569"
+      ]
+    },
+    {
+      "change": "**API behavior:**: Canary transcription without `language` returns 400 (#65445).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65445"
+      ]
+    },
+    {
+      "change": "**API behavior:**: An empty `tools` array is accepted in both frontends (#65547, #65854).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65547",
+        "65854"
+      ]
+    },
+    {
+      "change": "**API behavior:**: `/v1/systemone` rejects request-supplied chat templates without `--trust-request-chat-template` (#64503).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "64503"
+      ]
+    },
+    {
+      "change": "**API behavior:**: LoRA adapters on modules vLLM does not wrap are refused (#63489); misconfigured NCCL weight transfer raises (#57022).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63489",
+        "57022"
+      ]
+    },
+    {
+      "change": "**API behavior:**: `vllm-rs serve` no longer reads `--data-parallel-rank` from `VLLM_DP_RANK` (#65369).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65369"
+      ]
+    },
+    {
+      "change": "**API behavior:**: AITER fused shared experts with MiniMax M3 and DeepSeek V4 need `VLLM_ROCM_USE_AITER=1` (#61457).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "61457"
+      ]
+    },
+    {
+      "change": "**API behavior:**: **Still deprecated:** `--mamba-cache-mode` has no effect; its removal was postponed (#64838).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "64838"
+      ]
+    },
+    {
+      "change": "**New defaults:**: Extensible KV cache (#56492); block size 64 (#63231); best-effort NUMA binding (#61258).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "56492",
+        "63231",
+        "61258"
+      ]
+    },
+    {
+      "change": "**New defaults:**: Token-sharded sparse-MLA prefill at 1024 or more prefill tokens (#63956); MLA decode up-projection before the A2A merge (#64994).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63956",
+        "64994"
+      ]
+    },
+    {
+      "change": "**New defaults:**: `VLLM_COMPILE_ON_ONE_RANK` (#63247); minimum valid EPLB `num_redundant_experts` (#30614).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "63247",
+        "30614"
+      ]
+    },
+    {
+      "change": "**New defaults:**: HiSparse on the extensible KV cache (#65214); encoder CUDA graphs up to `encoder_cudagraph_max_token_budget=5120`, eager above (#65227).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "65214",
+        "65227"
+      ]
+    },
+    {
+      "change": "**New defaults:**: TRITON_ATTN on RDNA3/RDNA4 (#60418); MRV2 on non-Triton CPUs (#61995); `float32` Mamba SSM cache for Nemotron Omni (#63218); Zipf routing in `vllm bench forward` (#64167).",
+      "action": "Review breaking/deprecation note before upgrading",
+      "prs": [
+        "60418",
+        "61995",
+        "63218",
+        "64167"
+      ]
+    },
+    {
+      "change": "Model Runner V1 removed",
+      "action": "Remove `VLLM_USE_V2_MODEL_RUNNER=0`; it now fails at startup. Port V1 logits processors to `vllm.v1.worker.gpu.sample.logits_processor`.",
+      "prs": [
+        "63373"
+      ]
+    },
+    {
+      "change": "Default `--block-size` is 64 (was 16)",
+      "action": "Pass `--block-size 16` to keep the old behavior. ROCm paged attention still uses 16.",
+      "prs": [
+        "63231"
+      ]
+    },
+    {
+      "change": "Extensible KV cache on by default; `gpu_memory_utilization` defaults to 1.0",
+      "action": "**In most cases it's now best to not set `gpu_memory_utilization`**. This should provide maximum kv cache capacity while avoiding runtime OOMs. Use it to share a GPU with other processes or when extensible kv cache is disabled.",
+      "prs": [
+        "56492"
+      ]
+    },
+    {
+      "change": "ROCm 7.2 artifacts dropped",
+      "action": "Use the ROCm 10.0 wheels and images. `-rocm72` is no longer published.",
+      "prs": [
+        "61939"
+      ]
+    },
+    {
+      "change": "`huggingface_hub >= 2.0.0` required",
+      "action": "Also requires `tokenizers >= 0.23.3` and `timm >= 1.0.30`.",
+      "prs": [
+        "64779"
+      ]
+    },
+    {
+      "change": "QuTLASS / `fp_quant` removed",
+      "action": "`fp_quant` checkpoints no longer load.",
+      "prs": [
+        "65230"
+      ]
+    },
+    {
+      "change": "Marlin W4A8 removed",
+      "action": "Use `--quantization humming` with `VLLM_HUMMING_INPUT_QUANT_CONFIG` instead of `VLLM_MARLIN_INPUT_DTYPE`.",
+      "prs": [
+        "65542"
+      ]
+    },
+    {
+      "change": "Keye-VL and Keye-VL-1.5 removed",
+      "action": "\u2014",
+      "prs": [
+        "64287"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "56492",
+    "67296",
+    "67485",
+    "66731",
+    "66523",
+    "66197",
+    "65137",
+    "66605",
+    "66674",
+    "63373",
+    "61464",
+    "60339",
+    "63205",
+    "60989",
+    "65175",
+    "65198",
+    "65152",
+    "60895",
+    "64077",
+    "63956",
+    "63638",
+    "51012",
+    "63440",
+    "61939",
+    "61361",
+    "61435",
+    "60418",
+    "62570",
+    "46370",
+    "61258",
+    "54625",
+    "63902",
+    "65625",
+    "63373",
+    "63231",
+    "56492",
+    "66704",
+    "61939",
+    "65230",
+    "65542",
+    "64287",
+    "49459",
+    "65914",
+    "64779",
+    "64169",
+    "60609",
+    "57678",
+    "65652",
+    "63569",
+    "65445",
+    "65547",
+    "65854",
+    "64503",
+    "63489",
+    "57022",
+    "65369",
+    "61457",
+    "64838",
+    "61258",
+    "63956",
+    "64994",
+    "63247",
+    "30614",
+    "65214",
+    "65227",
+    "60418",
+    "61995",
+    "63218",
+    "64167"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Model support",
+      "claim": "**DeepSeek-V4 / V4.1**: `fused_inv_rope_fp8_quant` 3.5\u00d7 faster, prefill 6% faster (#63540).",
+      "prs": [
+        "63540"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**DeepSeek-V4 / V4.1**: Packed multi-image vision encoding, 1.6\u20132.6\u00d7 (#65030).",
+      "prs": [
+        "65030"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**Muse Spark**: One RoPE cache shared across layers: 11.5 GiB per GPU saved, 14.5% more KV cache on 8\u00d7B200 (#65206).",
+      "prs": [
+        "65206"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**MiniMax-M3 / M3.1**: Sequence parallelism and GEMM-RS for TP + MegaMoE, 14\u201320% lower P50 TTFT (#64659), also with PP (#65537).",
+      "prs": [
+        "64659",
+        "65537"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**MiniMax-M3 / M3.1**: Fused norm + MXFP8 quant, 1.39\u20131.60\u00d7 (#64852).",
+      "prs": [
+        "64852"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**Qwen**: GDN prefill state gather/scatter fused for Qwen3-Next/Qwen3.5 and Kimi KDA, 1.16\u20131.50\u00d7 (#66064).",
+      "prs": [
+        "66064"
+      ]
+    },
+    {
+      "category": "Model support",
+      "claim": "**Other models**: Moved to the Transformers modeling backend: OLMoE (#63384), Gemma v1 and StableLM (#66393), Aria (#59767; temporarily about 11% less KV cache and 25% lower image throughput).",
+      "prs": [
+        "63384",
+        "66393",
+        "59767"
+      ]
+    },
+    {
+      "category": "Engine core",
+      "claim": "**Extensible KV cache**: Headroom for measured allocator fragmentation, validated on Qwen3.5-397B-A17B-FP8 at TP8+EP on 8\u00d7H200 (#67296).",
+      "prs": [
+        "67296"
+      ]
+    },
+    {
+      "category": "Engine core",
+      "claim": "**Model Runner V2**: Staged writes copied straight into UVA (#63633); idle sampler writes skipped, about 10\u201311% faster small-batch decode (#62748).",
+      "prs": [
+        "63633",
+        "62748"
+      ]
+    },
+    {
+      "category": "Engine core",
+      "claim": "**Speculative decoding**: Trace replay with ngram/EAGLE3/MTP, 1.47\u20132.03\u00d7 (#63275); 3\u00d7 faster resample kernel (#65100).",
+      "prs": [
+        "63275",
+        "65100"
+      ]
+    },
+    {
+      "category": "Engine core",
+      "claim": "**Scheduler and engine overhead**: Prompt token ids kept as int32 buffers: 40\u00d7 less per-request CPU on a 128K prompt (#62702).",
+      "prs": [
+        "62702"
+      ]
+    },
+    {
+      "category": "Engine core",
+      "claim": "**Startup and compile**: `BasevLLMParameter`'s Python `__torch_function__` dropped: GLM-5.2-FP8 TTFT \u22126.1% on GB300 (#63785).",
+      "prs": [
+        "63785"
+      ]
+    },
+    {
+      "category": "Large-scale serving",
+      "claim": "**KV connectors**: NIXL: push mode via `transfer_mode` (#64230); `ucx_backend_params` (rocm_ipc on MI355X: 3.4 \u2192 483.7 Gbps, #62905); 38% fewer hybrid SSM transfer bytes (#62317); block pairing across different P/D block sizes (#59746), with mismatched push handshakes rejected (#59747); same-host NVLink with the extensible KV cache (#65137).",
+      "prs": [
+        "64230",
+        "62905",
+        "62317",
+        "59746",
+        "59747",
+        "65137"
+      ]
+    },
+    {
+      "category": "Large-scale serving",
+      "claim": "**HiSparse**: Fused slot invalidation, up to 1.8% lower TPOT on GLM-5.3-NVFP4 (#60103); fewer hash probes (#61263); speculative-group prefetch (#63801).",
+      "prs": [
+        "60103",
+        "61263",
+        "63801"
+      ]
+    },
+    {
+      "category": "Hardware",
+      "claim": "**NVIDIA**: DeepSeek-V4.1: latency_specialized decode extended, 5.9\u201317% faster decode step on GB300 (#63921); swap-AB CuTe DSL decode attention for TP2/TP4, 1.4\u20132.15\u00d7 (#62633); opt-in fused DSpark Markov sampling, 1.6\u20133.9\u00d7 (#64442).",
+      "prs": [
+        "63921",
+        "62633",
+        "64442"
+      ]
+    }
+  ]
+}

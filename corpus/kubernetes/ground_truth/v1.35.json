@@ -1,0 +1,474 @@
+{
+  "project": "kubernetes",
+  "version": "v1.35",
+  "blog_title": "Kubernetes v1.35: Timbernetes (The World Tree Release)",
+  "release_date": "2025-12-17",
+  "reported_enhancements_count": 60,
+  "spotlight_count": 41,
+  "spotlights": [
+    {
+      "heading": "Stable: In-place update of Pod resources",
+      "stage": "Stable",
+      "keps": [
+        "1287"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes has graduated in-place updates for Pod resources to General Availability (GA). This feature allows users to adjust CPU and memory resources without restarting Pods or Containers. Previously, such modifications required recreating Pods, which could disrupt workloads, particularly for stateful or batch applications. Earlier Kubernetes releases allowed you to change only infrastructure resource settings (requests and limits) for existing Pods. The new in-place functionality allows for smoother, nondisruptive vertical scaling, improves efficiency, and can also simplify development.  Thi"
+    },
+    {
+      "heading": "Beta: Pod certificates for workload identity and security",
+      "stage": "Beta",
+      "keps": [
+        "4317"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Previously, delivering certificates to pods required external controllers (cert-manager, SPIFFE/SPIRE), CRD orchestration, and Secret management, with rotation handled by sidecars or init containers. Kubernetes v1.35 enables native workload identity with automated certificate rotation, drastically simplifying service mesh and zero-trust architectures.   Now, the `kubelet` generates keys, requests certificates via PodCertificateRequest, and writes credential bundles directly to the Pod's filesystem. The `kube-apiserver` enforces node restriction at admission time, eliminating the most common pi"
+    },
+    {
+      "heading": "Alpha: Node declared features before scheduling",
+      "stage": "Alpha",
+      "keps": [
+        "5328"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When control planes enable new features but nodes lag behind (permitted by Kubernetes skew policy), the scheduler can place pods requiring those features onto incompatible older nodes. The node-declaration features framework allows nodes to declare their supported Kubernetes features. With the new alpha feature enabled, a Node reports the features it supports, publishing this information to the control plane via a new `.status.declaredFeatures` field. Then, the `kube-scheduler`, admission controllers, and third-party components can use these declarations. For example, you can enforce schedulin"
+    },
+    {
+      "heading": "PreferSameNode traffic distribution",
+      "stage": "Unspecified",
+      "keps": [
+        "3015"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PreferSameNode",
+        "PreferClose",
+        "PreferSameZone"
+      ],
+      "summary": "The `trafficDistribution` field for Services has been updated to provide more explicit control over traffic routing. A new option, `PreferSameNode`, has been introduced to let services strictly prioritize endpoints on the local node if available, falling back to remote endpoints otherwise.  Simultaneously, the existing `PreferClose` option has been renamed to `PreferSameZone`. This change makes the API self-explanatory by explicitly indicating that traffic is preferred within the current availability zone. While `PreferClose` is preserved for backward compatibility, `PreferSameZone` is now the"
+    },
+    {
+      "heading": "Job API managed-by mechanism",
+      "stage": "Unspecified",
+      "keps": [
+        "693",
+        "4368"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Job API now includes a `managedBy` field that allows an external controller to handle Job status synchronization. This feature, which graduates to stable in Kubernetes v1.35, is primarily driven by [MultiKueue](https://github.com/kubernetes-sigs/kueue/tree/main/keps/693-multikueue), a multi-cluster dispatching system where a Job created in a management cluster is mirrored and executed in a worker cluster, with status updates propagated back. To enable this workflow, the built-in Job controller must not act on a particular Job resource so that the Kueue controller can manage status updates "
+    },
+    {
+      "heading": "Reliable Pod update tracking with `.metadata.generation`",
+      "stage": "Unspecified",
+      "keps": [
+        "5067"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Historically, the Pod API lacked the `metadata.generation` field found in other Kubernetes objects such as Deployments. Because of this omission, controllers and users had no reliable way to verify whether the `kubelet` had actually processed the latest changes to a Pod's specification. This ambiguity was particularly problematic for features like [In-Place Pod Vertical Scaling](#stable-in-place-update-of-pod-resources), where it was difficult to know exactly when a resource resize request had been enacted.  Kubernetes v1.33 added `.metadata.generation` fields for Pods, as an alpha feature. Th"
+    },
+    {
+      "heading": "Configurable NUMA node limit for topology manager",
+      "stage": "Unspecified",
+      "keps": [
+        "4622"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [topology manager](/docs/concepts/policy/node-resource-managers/) historically used a hard-coded limit of 8 for the maximum number of NUMA nodes it can support, preventing state explosion during affinity calculation. (There's an important detail here; a _NUMA node_ is not the same as a Node in the Kubernetes API.) This limit on the number of NUMA nodes prevented Kubernetes from fully utilizing modern high-end servers, which increasingly feature CPU architectures with more than 8 NUMA nodes.  Kubernetes v1.31 introduced a new, **beta** `max-allowable-numa-nodes` option to the topology manag"
+    },
+    {
+      "heading": "Expose node topology labels via Downward API",
+      "stage": "Unspecified",
+      "keps": [
+        "4742"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Accessing node topology information, such as region and zone, from within a Pod has typically required querying the Kubernetes API server. While functional, this approach creates complexity and security risks by necessitating broad RBAC permissions or sidecar containers just to retrieve infrastructure metadata. Kubernetes v1.35 promotes the capability to expose node topology labels directly via the Downward API to beta.   The `kubelet` can now inject standard topology labels, such as `topology.kubernetes.io/zone` and `topology.kubernetes.io/region`, into Pods as environment variables or projec"
+    },
+    {
+      "heading": "Native support for storage version migration",
+      "stage": "Unspecified",
+      "keps": [
+        "4192"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes v1.35, the native support for storage version migration graduates to beta and is enabled by default. This move integrates the migration logic directly into the core Kubernetes control plane (\"in-tree\"), eliminating the dependency on external tools.  Historically, administrators relied on manual \"read/write loops\"\u2014often piping `kubectl get` into `kubectl replace`\u2014to update schemas or re-encrypt data at rest. This method was inefficient and prone to conflicts, especially for large resources like Secrets. With this release, the built-in controller automatically handles update confli"
+    },
+    {
+      "heading": "Mutable Volume attach limits",
+      "stage": "Unspecified",
+      "keps": [
+        "4876"
+      ],
+      "prs": [],
+      "identifiers": [
+        "CSINode",
+        "ContainerCreating",
+        "CSIDriver",
+        "MutableCSINodeAllocatableCount"
+      ],
+      "summary": "A CSI (Container Storage Interface) driver is a Kubernetes plugin that provides a consistent way for storage systems to be exposed to containerized workloads. The `CSINode` object records details about all CSI drivers installed on a node. However, a mismatch can arise between the reported and actual attachment capacity on nodes. When volume slots are consumed after a CSI driver starts up, the `kube-scheduler` may assign stateful pods to nodes without sufficient capacity, ultimately getting stuck in a `ContainerCreating` state.  Kubernetes v1.35 makes `CSINode.spec.drivers[*].allocatable.count`"
+    },
+    {
+      "heading": "Opportunistic batching",
+      "stage": "Unspecified",
+      "keps": [
+        "5598"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Historically, the Kubernetes scheduler processes pods sequentially with time complexity of `O(num pods \u00d7 num nodes)`, which can result in redundant computation for compatible pods. This KEP introduces an opportunistic batching mechanism that aims to improve performance by identifying such compatible Pods via `Pod scheduling signature` and batching them together, allowing shared filtering and scoring results across them.  The pod scheduling signature ensures that two pods with the same signature are \u201cthe same\u201d from a scheduling perspective. It takes into account not only the pod and node attrib"
+    },
+    {
+      "heading": "`maxUnavailable` for StatefulSets",
+      "stage": "Unspecified",
+      "keps": [
+        "961"
+      ],
+      "prs": [],
+      "identifiers": [
+        "RollingUpdate"
+      ],
+      "summary": "A StatefulSet runs a group of Pods and maintains a sticky identity for each of those Pods. This is critical for stateful workloads requiring stable network identifiers or persistent storage. When a StatefulSet's `.spec.updateStrategy.<type>` is set to `RollingUpdate`, the StatefulSet controller will delete and recreate each Pod in the StatefulSet. It will proceed in the same order as Pod termination (from the largest ordinal to the smallest), updating each Pod one at a time.  Kubernetes v1.24 added a new **alpha** field to a StatefulSet's `rollingUpdate` configuration settings, called `maxUnav"
+    },
+    {
+      "heading": "Configurable credential plugin policy in `kuberc`",
+      "stage": "Unspecified",
+      "keps": [
+        "3104"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The optional [`kuberc` file](/docs/reference/kubectl/kuberc/) is a way to separate server configurations and cluster credentials from user preferences without disrupting already running CI pipelines with unexpected outputs.  As part of the v1.35 release, `kuberc` gains additional functionality which allows users to configure credential plugin policy. This change introduces two fields `credentialPluginPolicy`, which allows or denies all plugins, and allows specifying a list of allowed plugins using `credentialPluginAllowlist`.  This work was done as part of [KEP #3104](https://kep.k8s.io/3104) "
+    },
+    {
+      "heading": "KYAML",
+      "stage": "Unspecified",
+      "keps": [
+        "5295"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "YAML is a human-readable format of data serialization. In Kubernetes, YAML files are used to define and configure resources, such as Pods, Services, and Deployments. However, complex YAML is difficult to read. YAML's significant whitespace requires careful attention to indentation and nesting, while its optional string-quoting can lead to unexpected type coercion (see: The Norway Bug). While JSON is an alternative, it lacks support for comments and has strict requirements for trailing commas and quoted keys.  KYAML is a safer and less ambiguous subset of YAML designed specifically for Kubernet"
+    },
+    {
+      "heading": "Configurable tolerance for HorizontalPodAutoscalers",
+      "stage": "Unspecified",
+      "keps": [
+        "4951"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The Horizontal Pod Autoscaler (HPA) has historically relied on a fixed, global 10% tolerance for scaling actions. A drawback of this hardcoded value was that workloads requiring high sensitivity, such as those needing to scale on a 5% load increase, were often blocked from scaling, while others might oscillate unnecessarily.  With Kubernetes v1.35, the configurable tolerance feature graduates to beta and is enabled by default. This enhancement allows users to define a custom tolerance window on a per-resource basis within the HPA `behavior` field. By setting a specific tolerance (e.g., lowerin"
+    },
+    {
+      "heading": "Support for user namespaces in Pods",
+      "stage": "Unspecified",
+      "keps": [
+        "127"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes is adding support for user namespaces, allowing pods to run with isolated user and group ID mappings instead of sharing host IDs. This means containers can operate as root internally while actually being mapped to an unprivileged user on the host, reducing the risk of privilege escalation in the event of a compromise. The feature improves pod-level security and makes it safer to run workloads that need root inside the container. Over time, support has expanded to both stateless and stateful Pods through id-mapped mounts.  This work was done as part of [KEP #127](https://kep.k8s.io/1"
+    },
+    {
+      "heading": "VolumeSource: OCI artifact and/or image",
+      "stage": "Unspecified",
+      "keps": [
+        "4639"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When creating a Pod, you often need to provide data, binaries, or configuration files for your containers. This meant including the content into the main container image or using a custom init container to download and unpack files into an `emptyDir`. Both these approaches are still valid. Kubernetes v1.31 added support for the `image` volume type allowing Pods to declaratively pull and unpack OCI container image artifacts into a volume. This lets you package and deliver data-only artifacts such as configs, binaries, or machine learning models using standard OCI registry tools.   With this fea"
+    },
+    {
+      "heading": "Enforced `kubelet` credential verification for cached images",
+      "stage": "Unspecified",
+      "keps": [
+        "2535"
+      ],
+      "prs": [],
+      "identifiers": [
+        "KubeletEnsureSecretPulledImages"
+      ],
+      "summary": "The `imagePullPolicy: IfNotPresent` setting currently allows a Pod to use a container image that is already cached on a node, even if the Pod itself does not possess the credentials to pull that image. A drawback of this behavior is that it creates a security vulnerability in multi-tenant clusters: if a Pod with valid credentials pulls a sensitive private image to a node, a subsequent unauthorized Pod on the same node can access that image simply by relying on the local cache.  This KEP introduces a mechanism where the `kubelet` enforces credential verification for cached images. Before allowi"
+    },
+    {
+      "heading": "Fine-grained Container restart rules",
+      "stage": "Unspecified",
+      "keps": [
+        "5307"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Historically, the `restartPolicy` field was defined strictly at the Pod level, forcing the same behavior on all containers within a Pod. A drawback of this global setting was the lack of granularity for complex workloads, such as AI/ML training jobs. These often required `restartPolicy: Never` for the Pod to manage job completion, yet individual containers would benefit from in-place restarts for specific, retriable errors (like network glitches or GPU init failures).  Kubernetes v1.35 addresses this by enabling `restartPolicy` and `restartPolicyRules` within the container API itself. This all"
+    },
+    {
+      "heading": "CSI driver opt-in for service account tokens via secrets field",
+      "stage": "Unspecified",
+      "keps": [
+        "5538"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Providing ServiceAccount tokens to Container Storage Interface (CSI) drivers has traditionally relied on injecting them into the `volume_context` field. This approach presents a significant security risk because `volume_context` is intended for non-sensitive configuration data and is frequently logged in plain text by drivers and debugging tools, potentially leaking credentials.   Kubernetes v1.35 introduces an opt-in mechanism for CSI drivers to receive ServiceAccount tokens via the dedicated secrets field in the NodePublishVolume request. Drivers can now enable this behavior by setting the `"
+    },
+    {
+      "heading": "Deployment status: count of terminating replicas",
+      "stage": "Unspecified",
+      "keps": [
+        "3973"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Historically, the Deployment status provided details on available and updated replicas but lacked explicit visibility into Pods that were in the process of shutting down. A drawback of this omission was that users and controllers could not easily distinguish between a stable Deployment and one that still had Pods executing cleanup tasks or adhering to long grace periods.  Kubernetes v1.35 promotes the `terminatingReplicas` field within the Deployment status to beta. This field provides a count of Pods that have a deletion timestamp set but have not yet been removed from the system. This featur"
+    },
+    {
+      "heading": "Gang scheduling support in Kubernetes",
+      "stage": "Stable",
+      "keps": [
+        "4671"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Scheduling interdependent workloads, such as AI/ML training jobs or HPC simulations, has traditionally been challenging because the default Kubernetes scheduler places Pods individually. This often leads to partial scheduling where some Pods start while others wait indefinitely for resources, resulting in deadlocks and wasted cluster capacity.  Kubernetes v1.35 introduces native support for so-called \"gang scheduling\" via the new Workload API and PodGroup concept. This feature implements an \"all-or-nothing\" scheduling strategy, ensuring that a defined group of Pods is scheduled only if the clu"
+    },
+    {
+      "heading": "Constrained impersonation",
+      "stage": "Unspecified",
+      "keps": [
+        "5284"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ConstrainedImpersonation"
+      ],
+      "summary": "Historically, the `impersonate` verb in Kubernetes RBAC functioned on an all-or-nothing basis: once a user was authorized to impersonate a target identity, they gained all associated permissions. A drawback of this broad authorization was that it violated the principle of least privilege, preventing administrators from restricting impersonators to specific actions or resources.  Kubernetes v1.35 introduces a new alpha feature, constrained impersonation, which adds a secondary authorization check to the impersonation flow. When enabled via the `ConstrainedImpersonation` feature gate, the API se"
+    },
+    {
+      "heading": "Flagz for Kubernetes components",
+      "stage": "Unspecified",
+      "keps": [
+        "4828"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Verifying the runtime configuration of Kubernetes components, such as the API server or `kubelet`, has traditionally required privileged access to the host node or process arguments. To address this, the `/flagz` endpoint was introduced to expose command-line options via HTTP. However, its output was initially limited to plain text, making it difficult for automated tools to parse and validate configurations reliably.  In Kubernetes v1.35, the `/flagz` endpoint has been enhanced to support structured, machine-readable JSON output. Authorized users can now request a versioned JSON response usin"
+    },
+    {
+      "heading": "Statusz for Kubernetes components",
+      "stage": "Unspecified",
+      "keps": [
+        "4827"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Troubleshooting Kubernetes components like the `kube-apiserver` or `kubelet` has traditionally involved parsing unstructured logs or text output, which is brittle and difficult to automate. While a basic `/statusz` endpoint existed previously, it lacked a standardized, machine-readable format, limiting its utility for external monitoring systems.  In Kubernetes v1.35, the `/statusz` endpoint has been enhanced to support structured, machine-readable JSON output. Authorized users can now request this format using standard HTTP content negotiation to retrieve precise status data\u2014such as version i"
+    },
+    {
+      "heading": "CCM: watch-based route controller reconciliation using informers",
+      "stage": "Unspecified",
+      "keps": [
+        "5237"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Managing network routes within cloud environments has traditionally relied on the Cloud Controller Manager (CCM) periodically polling the cloud provider's API to verify and update route tables. This fixed-interval reconciliation approach can be inefficient, often generating a high volume of unnecessary API calls and introducing latency between a node state change and the corresponding route update.  For the Kubernetes v1.35 release, the cloud-controller-manager library introduces a watch-based reconciliation strategy for the route controller. Instead of relying on a timer, the controller now u"
+    },
+    {
+      "heading": "Extended toleration operators for threshold-based placement",
+      "stage": "Unspecified",
+      "keps": [
+        "5471"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.35 introduces SLA-aware scheduling by enabling workloads to express reliability requirements. The feature adds numeric comparison operators to tolerations, allowing pods to match or avoid nodes based on SLA-oriented taints such as service guarantees or fault-domain quality.  The primary benefit is enhancing the scheduler with more precise placement. Critical workloads can demand higher-SLA nodes, while lower priority workloads can opt into lower SLA ones. This improves utilization and reduces cost without compromising reliability.  This work was done as part of [KEP #5471](https:"
+    },
+    {
+      "heading": "Mutable container resources when Job is suspended",
+      "stage": "Unspecified",
+      "keps": [
+        "5440"
+      ],
+      "prs": [],
+      "identifiers": [
+        "MutablePodResourcesForSuspendedJobs"
+      ],
+      "summary": "Running batch workloads often involves trial and error with resource limits. Currently, the Job specification is immutable, meaning that if a Job fails due to an Out of Memory (OOM) error or insufficient CPU, the user cannot simply adjust the resources; they must delete the Job and create a new one, losing the execution history and status.  Kubernetes v1.35 introduces the capability to update resource requests and limits for Jobs that are in a suspended state. Enabled via the `MutablePodResourcesForSuspendedJobs` feature gate, this enhancement allows users to pause a failing Job, modify its Po"
+    },
+    {
+      "heading": "Continued innovation in Dynamic Resource Allocation (DRA)",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [core functionality](https://kep.k8s.io/4381) was graduated to stable in v1.34, with the ability to turn it off. In v1.35 it is always enabled. Several alpha features have also been significantly improved and are ready for testing. We encourage users to provide feedback on these capabilities to help clear the path for their target promotion to beta in upcoming releases.  #### Extended Resource Requests via DRA  Several functional gaps compared to Extended Resource requests via Device Plugins were addressed, for example scoring and reuse of devices in init containers."
+    },
+    {
+      "heading": "Comparable resource version semantics",
+      "stage": "Unspecified",
+      "keps": [
+        "5504"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.35 changes the way that clients are allowed to interpret [resource versions](/docs/reference/using-api/api-concepts/#resource-versions).  Before v1.35, the only supported comparison that clients could make was to check for string equality: if two resource versions were equal, they were the same. Clients could also provide a resource version to the API server and ask the control plane to do internal comparisons, such as streaming all events since a particular resource version.  In v1.35, all in-tree resource versions meet a new stricter definition: the values are a special form of"
+    },
+    {
+      "heading": "Graduations to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as *general availability*). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 15 enhancements promoted to stable:  * [Add CPUManager policy option to restrict reservedSystemCPUs to system daemons and interrupt processing](https://kep.k8s.io/4540) * [Pod Generation](https://kep.k8s.io/5067)"
+    },
+    {
+      "heading": "Deprecations, removals and community updates",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "NotReady",
+        "Ready"
+      ],
+      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones to improve the project's overall health. See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process. Kubernetes v1.35 includes a couple of deprecations.  #### Ingress NGINX retirement"
+    },
+    {
+      "heading": "cgroup v1 support",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "On Linux nodes, container runtimes typically rely on cgroups (short for \"control groups\"). Support for using cgroup v2 has been stable in Kubernetes since v1.25, providing an alternative to the original v1 cgroup support. While cgroup v1 provided the initial resource control mechanism, it suffered from well-known inconsistencies and limitations. Adding support for cgroup v2 allowed use of a unified control group hierarchy, improved resource isolation, and served as the foundation for modern features, making legacy cgroup v1 support ready for removal. The removal of cgroup v1 support will only "
+    },
+    {
+      "heading": "Deprecation of ipvs mode in kube-proxy",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Many releases ago, the Kubernetes project implemented an [ipvs](/docs/reference/networking/virtual-ips/#proxy-mode-ipvs) mode in `kube-proxy`. It was adopted as a way to provide high-performance service load balancing, with better performance than the existing `iptables` mode. However, maintaining feature parity between ipvs and other kube-proxy modes became difficult, due to technical complexity and diverging requirements. This created significant technical debt and made the ipvs backend impractical to support alongside newer networking capabilities.  The Kubernetes project intends to depreca"
+    },
+    {
+      "heading": "Kubernetes is deprecating containerd v1.y support",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "While Kubernetes v1.35 still supports containerd 1.7 and other LTS releases of containerd, as a consequence of automated cgroup driver detection, the Kubernetes SIG Node community has formally agreed upon a final support timeline for containerd v1.X. Kubernetes v1.35 is the last release to offer this support (aligned with containerd 1.7 EOL).   This is a final warning that if you are using containerd 1.X, you must switch to 2.0 or later before upgrading Kubernetes to the next version. You are able to monitor the `kubelet_cri_losing_support` metric to determine if any nodes in your cluster are "
+    },
+    {
+      "heading": "Node declared features",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When scheduling Pods, Kubernetes uses node labels, taints, and tolerations to match workload requirements with node capabilities. However, managing feature compatibility becomes challenging during cluster upgrades due to version skew between the control plane and nodes. This can lead to Pods being scheduled on nodes that lack required features, resulting in runtime failures.  The _node declared features_ framework will introduce a standard mechanism for nodes to declare their supported Kubernetes features. With the new alpha feature enabled, a Node reports the features it can support, publishi"
+    },
+    {
+      "heading": "In-place update of Pod resources",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "UpdateContainerResources",
+        "ContainerStatus"
+      ],
+      "summary": "Kubernetes is graduating in-place updates for Pod resources to General Availability (GA). This feature allows users to adjust `cpu` and `memory` resources without restarting Pods or Containers. Previously, such modifications required recreating Pods, which could disrupt workloads, particularly for stateful or batch applications. Previous Kubernetes releases already allowed you to change infrastructure resources settings (requests and limits) for existing Pods. This allows for smoother [vertical scaling](/docs/concepts/workloads/autoscaling/vertical-pod-autoscale/), improves efficiency, and can"
+    },
+    {
+      "heading": "Pod certificates",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When running microservices, Pods often require a strong cryptographic identity to authenticate with each other using mutual TLS (mTLS). While Kubernetes provides Service Account tokens, these are designed for authenticating to the API server, not for general-purpose workload identity.   Before this enhancement, operators had to rely on complex, external projects like SPIFFE/SPIRE or cert-manager to provision and rotate certificates for their workloads. But what if you could  issue a unique, short-lived certificate to your Pods natively and automatically? KEP-4317 is designed to enable such nat"
+    },
+    {
+      "heading": "Numeric values for taints",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "Equal",
+        "Exists"
+      ],
+      "summary": "Kubernetes is enhancing [taints and tolerations](/docs/concepts/scheduling-eviction/taint-and-toleration/) by adding numeric comparison operators, such as `Gt` (Greater Than) and `Lt` (Less Than).  Previously, tolerations supported only exact (`Equal`) or existence (`Exists`) matches, which were not suitable for numeric properties such as reliability SLAs.  With this change, a Pod can use a toleration to \"opt-in\" to nodes that meet a specific numeric threshold. For example, a Pod can require a Node with an SLA taint value greater than 950 (`operator: Gt`, `value: \"950\"`)."
+    },
+    {
+      "heading": "User namespaces",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When running Pods, you can use `securityContext` to drop privileges, but containers inside the pod often still run as root (UID 0). This simplicity poses a significant challenge, as that container UID 0 maps directly to the host's root user.   Before this enhancement, a container breakout vulnerability could grant an attacker full root access to the node. But what if you could dynamically remap the container's root user to a safe, unprivileged user on the host? KEP-127 specifically allows such native support for Linux User Namespaces. It opens up various possibilities for pod security by isola"
+    },
+    {
+      "heading": "Support for mounting OCI images as volumes",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When provisioning a Pod, you often need to bundle data, binaries, or configuration files for your containers. Before this enhancement, people often included that kind of data directly into the main container image, or required a custom init container to download and unpack files into an `emptyDir`. You can still take either of those approaches, of course.  But what if you could populate a volume directly from a data-only artifact in an OCI registry, just like pulling a container image? Kubernetes v1.31 added support for the `image` volume type, allowing Pods to pull and unpack OCI container im"
+    }
+  ],
+  "ground_truth_keps": [
+    "1287",
+    "4317",
+    "5328",
+    "3015",
+    "693",
+    "4368",
+    "5067",
+    "4622",
+    "4742",
+    "4192",
+    "4876",
+    "5598",
+    "961",
+    "3104",
+    "5295",
+    "4951",
+    "127",
+    "4639",
+    "2535",
+    "5307",
+    "5538",
+    "3973",
+    "4671",
+    "5284",
+    "4828",
+    "4827",
+    "5237",
+    "5471",
+    "5440",
+    "5504"
+  ],
+  "ground_truth_identifiers": [
+    "PreferSameNode",
+    "PreferClose",
+    "PreferSameZone",
+    "CSINode",
+    "ContainerCreating",
+    "CSIDriver",
+    "MutableCSINodeAllocatableCount",
+    "RollingUpdate",
+    "KubeletEnsureSecretPulledImages",
+    "ConstrainedImpersonation",
+    "MutablePodResourcesForSuspendedJobs",
+    "NotReady",
+    "Ready",
+    "UpdateContainerResources",
+    "ContainerStatus",
+    "Equal",
+    "Exists"
+  ]
+}

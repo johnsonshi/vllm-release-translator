@@ -1,0 +1,479 @@
+{
+  "project": "vllm",
+  "version": "v0.26.0",
+  "published_date": "2026-07-27",
+  "url": "https://github.com/vllm-project/vllm/releases/tag/v0.26.0",
+  "commits_count": 411,
+  "contributors_count": 212,
+  "total_raw_items": 42,
+  "counts_by_category": {
+    "Model Support": 6,
+    "Engine Core": 8,
+    "Hardware & Performance": 10,
+    "Large Scale Serving & Distributed": 3,
+    "Quantization": 4,
+    "API & Frontend": 5,
+    "Security": 3,
+    "Dependencies": 2,
+    "Deprecations & Removals": 1
+  },
+  "items": [
+    {
+      "category": "Model Support",
+      "text": "New models: Inkling family (#48799, #48822, #48858, #48869, #48884, #48990), BertForMaskedLM (#48463), RobertaForTokenClassification / XLMRobertaForTokenClassification (#47991), LongCat-Flash-Lite n-gram embedding (#47857), Cosmos3 Edge Reasoner (#48291) and Cosmos3-Super registration (#48211), TranslateGemma-12b-it (#41599).",
+      "prs": [
+        "48799",
+        "48822",
+        "48858",
+        "48869",
+        "48884",
+        "48990",
+        "48463",
+        "47991",
+        "47857",
+        "48291",
+        "48211",
+        "41599"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Transformers backend migrations: Olmo/Olmo2 (#48100), MistralLarge3 to AutoWeightsLoader (#48153), HunyuanVL native transformers processor for transformers 5.13 (#47872).",
+      "prs": [
+        "48100",
+        "48153",
+        "47872"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "GLM5.2: migrate MoE sequence-parallel support to the non-torch-compiled path (#47881).",
+      "prs": [
+        "47881"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "LoRA: FlashInfer MoE LoRA for BF16 models (#48632), LoRA for tower/connector in LlavaNextVideo (#48594), fp32 `lm_head` on the LoRA path (#48525), optimized `TrtLlmLoRAExperts` (#48759).",
+      "prs": [
+        "48632",
+        "48594",
+        "48525",
+        "48759"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Multimodal: automatic fallback to ViT data parallelism when TP is unavailable (#49046).",
+      "prs": [
+        "49046"
+      ]
+    },
+    {
+      "category": "Model Support",
+      "text": "Fixes: correct pooling scores for chunked prefill under `torch.compile` (#48901).",
+      "prs": [
+        "48901"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "fp32 `lm_head` for generation models via `head_dtype` (#48390); lower memory for capturing large CUDA graph sizes (#48483); opt-in persistence and reuse of the memory-profiling result across boots (#47388); improved InstantTensor loading (#46868).",
+      "prs": [
+        "48390",
+        "48483",
+        "47388",
+        "46868"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Attention: select a different attention backend per KV-cache group (#48012); sliding-window as an explicit backend capability (#48011); KV-cache layout refactor packing K/V into the content dim across backends (#44455); MRV2 virtual-batch PCP for MLA (#46570).",
+      "prs": [
+        "48012",
+        "48011",
+        "44455",
+        "46570"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Speculative decoding: runtime draft weight update (#46725), hybrid (SWA + full attention) DFlash drafters (#47914), SWA support for qwen-eagle3 (#47568), Gemma4-12B DSpark draft model (#47216), DSv4 DSpark on AMD (#47419), separate `kv_cache_dtype` for `speculative_config` (#48787).",
+      "prs": [
+        "46725",
+        "47914",
+        "47568",
+        "47216",
+        "47419",
+        "48787"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "KV offloading: basic offloading metrics (#45958), split CPU cache usage into read/write gauges (#47666) and tiering-lookup-delay into sync/async histograms (#47679), tier-owned event handling and BlockStored events (#46544, #47923), object-store secondary tier with workload identity (#47063, #47274, #48150), DP-replica-aware tiering (#47987), `blocks_per_chunk` config for heterogeneous KV groups (#48878), P2P default host/port env vars (#47636).",
+      "prs": [
+        "45958",
+        "47666",
+        "47679",
+        "46544",
+        "47923",
+        "47063",
+        "47274",
+        "48150",
+        "47987",
+        "48878",
+        "47636"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Caching: partial prefix-cache hit for hybrid models (#46384), selective hybrid cache retention (#47782), report prefix-cache-reused blocks in full report mode (#45261).",
+      "prs": [
+        "46384",
+        "47782",
+        "45261"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Reasoning: optimize TPOT for thinking budget when used with speculative decoding (#46662).",
+      "prs": [
+        "46662"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "RLHF: stateful trainer-send abstractions (#48042).",
+      "prs": [
+        "48042"
+      ]
+    },
+    {
+      "category": "Engine Core",
+      "text": "Fixes: host memory leak from undrained `new_block_ids` (#44490), DSv3.2 + MTP + sequence-parallel accuracy (#48036).",
+      "prs": [
+        "44490",
+        "48036"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "DeepSeek-V4: specialized routing kernel (2.94% E2E TPOT, #48660), `fused_topk_bias` 1.5\u20132x (#47463), redundant repeat/copy removal (1.8% TPOT, #48137).",
+      "prs": [
+        "48660",
+        "47463",
+        "48137"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "MoE router GEMMs: BF16x3 router GEMM (#47973), FP32 router GEMV (#48335), generic CuteDSL LL BF16 router GEMM (#42562); TRTLLM BF16 MoE modular kernel (#45182); write FlashInfer combine into final output (#47156).",
+      "prs": [
+        "47973",
+        "48335",
+        "42562",
+        "45182",
+        "47156"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Qwen: fuse more RMSNorm + all-reduce in Qwen3.5 (#46998), replace MoE all-reduce with reduce-scatter (#47006), Qwen3.5 H20 optimization (#48350), expand Triton warmup coverage (#47546).",
+      "prs": [
+        "46998",
+        "47006",
+        "48350",
+        "47546"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "MLA: dense MHA path for short sparse-MLA sequences (#47327); MiniMax-M3 long-context decode indexer on sm100 (#48582).",
+      "prs": [
+        "47327",
+        "48582"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Kernels: CUDA kernel for ReLUSquaredActivation / relu^2 (#39058), Helion kernel lazy registration (#48264), vectorize `_copy_mamba_state_block` to uint64 (#48110), stop upcasting logits to fp32 in the sampler (#48641).",
+      "prs": [
+        "39058",
+        "48264",
+        "48110",
+        "48641"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "ROCm: fp32 `head_dtype` `torch.mm` fast path (#48688), DSv4 two-stage compressor kernel (#47718), sparse decode/prefill optimizations (#48519, #48788, #46275), DSv3.2 sparse MLA KV-split heuristic (#46832) and MTP CUDA-graph mode (#45149), MXFP8 GEMM for MiniMax-M3 (#46117), AITER sparse paged attention + spec decode for MiniMax-M3 (#47287, #47984), MiniMax-M2 fused QK-norm + all-reduce via AITER (#44849), HybridW4A16 linear kernel (#40977), Qwen3-30B-A3B QK-Norm+RoPE+KV runtime fusion (#42749).",
+      "prs": [
+        "48688",
+        "47718",
+        "48519",
+        "48788",
+        "46275",
+        "46832",
+        "45149",
+        "46117",
+        "47287",
+        "47984",
+        "44849",
+        "40977",
+        "42749"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "XPU: batch-invariant kernels (#41934), HND KV layout support (#47975), DSpark spec decode for DSv4 (#47677), nightly/release image publishing (#47880, #48126).",
+      "prs": [
+        "41934",
+        "47975",
+        "47677",
+        "47880",
+        "48126"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "CPU: DFlash speculative decoding for GDN models on CPU (#46090), s390x NUMA topology (#40714), native macOS arm64 CPU wheel builds (#48289); POWER VSX math function optimization (#47321) and IBM Power docker builds using prebuilt wheels (#46017).",
+      "prs": [
+        "46090",
+        "40714",
+        "48289",
+        "47321",
+        "46017"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Distributed fusion: FlashInfer MNNVL all-reduce RMS quant fusion (#48064).",
+      "prs": [
+        "48064"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "text": "Build/autotune: arm64 Blackwell SM10x/SM110 image builds (#48041); skip CuTeDSL fp4_gemm autotuning by default (#48268).",
+      "prs": [
+        "48041",
+        "48268"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Decode Context Parallel (DCP): hybrid attention support (#40996), DCP + Eagle for Tokenspeed MLA backends (#48180).",
+      "prs": [
+        "40996",
+        "48180"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "PD disaggregation: NIXL pipeline-parallel prefill in push mode (#45880).",
+      "prs": [
+        "45880"
+      ]
+    },
+    {
+      "category": "Large Scale Serving & Distributed",
+      "text": "Encoder-cache connectors: EC transfer params (#42433) and CPU-offloading EC connector (#47423).",
+      "prs": [
+        "42433",
+        "47423"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "Humming w[2-7]a[4,8] weight-only inference with compressed-tensors (#46390); int4 quantization for the emulation MoE backend (#48451); INT2 XPU weight-only quant linear (#47521).",
+      "prs": [
+        "46390",
+        "48451",
+        "47521"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "NVFP4/MXFP4: `nvfp4_per_token` online MoE quantization (#48538), CuTe-DSL FlashInfer MXFP4 quantization (#48417); bounded peak memory when repacking FP4 MoE weights for Marlin (#47851) and for NVFP4 MoE weight loading (#46276).",
+      "prs": [
+        "48538",
+        "48417",
+        "47851",
+        "46276"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "MLA: `kv_cache_dtype_skip_layers` support (#47309).",
+      "prs": [
+        "47309"
+      ]
+    },
+    {
+      "category": "Quantization",
+      "text": "ROCm: HybridW4A16 linear kernel (#40977).",
+      "prs": [
+        "40977"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Rust frontend: multimodal video (#47959) and audio (#48554), Seed-OSS tool parser (#47741), native `vllm-bench` port (#48107), `continue_final_message` handling with renderer sentinel (#47844).",
+      "prs": [
+        "47959",
+        "48554",
+        "47741",
+        "48107",
+        "47844"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "OpenAI compatibility: `bad_words` in `/v1/completions` (#46793), expose `logprob_token_ids` on Python OpenAI endpoints (#43463), `include_reasoning` param for non-Harmony models (#44301), populate `num_cache_creation_tokens` on Messages responses (#48535).",
+      "prs": [
+        "46793",
+        "43463",
+        "44301",
+        "48535"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Endpoint plugins framework (#47454); `/abort_requests` on the RLHF dev API router (#47173); Deepstream video decoding backend (#42424); overlap preprocessing and computation for pooling models in offline inference (#47699).",
+      "prs": [
+        "47454",
+        "47173",
+        "42424",
+        "47699"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "UX: human-readable integers for more CLI args (#47608), CuTeDSL compilation progress bar (#48881), expanded GPU profiler config scope/annotations (#37524), log worker exit code when a process dies unexpectedly (#38641).",
+      "prs": [
+        "47608",
+        "48881",
+        "37524",
+        "38641"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "text": "Stability/correctness: handle grammar compilation failures without crashing the engine (#47312), fix logprobs token-string collision from SentencePiece spaces (#48674).",
+      "prs": [
+        "47312",
+        "48674"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Replace diskcache to eliminate pickle deserialization (#44549).",
+      "prs": [
+        "44549"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Fix a concurrent sparse-invariant race that bypassed CVE remediation (#48583).",
+      "prs": [
+        "48583"
+      ]
+    },
+    {
+      "category": "Security",
+      "text": "Add resource-bounds validation to derender endpoints (#47260); sanitize server file paths from validation error responses (#46415); bound the completion prompt list to prevent unbounded engine fan-out (#47845); guard lm-format-enforcer regex compilation with a timeout (#47595).",
+      "prs": [
+        "47260",
+        "46415",
+        "47845",
+        "47595"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "Transformers 5.13.0 (#47867), FlashInfer 0.6.14 (#47669), NIXL 1.3.1 (#47559), tpu-inference v0.24.0 (#47835), nvidia-cutlass-dsl 4.6.0 (#47442), vllm_xpu_kernels v0.1.11.1 (#48942).",
+      "prs": [
+        "47867",
+        "47669",
+        "47559",
+        "47835",
+        "47442",
+        "48942"
+      ]
+    },
+    {
+      "category": "Dependencies",
+      "text": "FlashAttention 3 pinned to the torch stable-ABI commit (#47995); ABI-stable FlashMLA build (#48174).",
+      "prs": [
+        "47995",
+        "48174"
+      ]
+    },
+    {
+      "category": "Deprecations & Removals",
+      "text": "Models removed: TeleChat (#47989), Persimmon and Fuyu (#48096).",
+      "prs": [
+        "47989",
+        "48096"
+      ]
+    }
+  ],
+  "upgrade_notices": [
+    {
+      "change": "Models removed: TeleChat (#47989), Persimmon and Fuyu (#48096).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "47989",
+        "48096"
+      ]
+    }
+  ],
+  "benchmarks": [
+    {
+      "category": "Engine Core",
+      "claim": "Reasoning: optimize TPOT for thinking budget when used with speculative decoding (#46662).",
+      "prs": [
+        "46662"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "DeepSeek-V4: specialized routing kernel (2.94% E2E TPOT, #48660), `fused_topk_bias` 1.5\u20132x (#47463), redundant repeat/copy removal (1.8% TPOT, #48137).",
+      "prs": [
+        "48660",
+        "47463",
+        "48137"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "MoE router GEMMs: BF16x3 router GEMM (#47973), FP32 router GEMV (#48335), generic CuteDSL LL BF16 router GEMM (#42562); TRTLLM BF16 MoE modular kernel (#45182); write FlashInfer combine into final output (#47156).",
+      "prs": [
+        "47973",
+        "48335",
+        "42562",
+        "45182",
+        "47156"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "CPU: DFlash speculative decoding for GDN models on CPU (#46090), s390x NUMA topology (#40714), native macOS arm64 CPU wheel builds (#48289); POWER VSX math function optimization (#47321) and IBM Power docker builds using prebuilt wheels (#46017).",
+      "prs": [
+        "46090",
+        "40714",
+        "48289",
+        "47321",
+        "46017"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "Build/autotune: arm64 Blackwell SM10x/SM110 image builds (#48041); skip CuTeDSL fp4_gemm autotuning by default (#48268).",
+      "prs": [
+        "48041",
+        "48268"
+      ]
+    }
+  ]
+}

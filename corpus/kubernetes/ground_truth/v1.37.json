@@ -1,0 +1,737 @@
+{
+  "project": "kubernetes",
+  "version": "v1.37",
+  "blog_title": "Kubernetes v1.37: Garhwal",
+  "release_date": "2026-08-26",
+  "reported_enhancements_count": 67,
+  "spotlight_count": 51,
+  "spotlights": [
+    {
+      "heading": "Stable: Resilient watchcache initialization",
+      "stage": "Stable",
+      "keps": [
+        "4568"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ResilientWatchCacheInitialization",
+        "WatchCacheInitializationPostStartHook",
+        "Retry-After"
+      ],
+      "summary": "Kubernetes v1.37 completes the work on _resilient watch cache initialization_: the `ResilientWatchCacheInitialization` feature gate reached Stable back in v1.34, and in v1.37 the remaining `WatchCacheInitializationPostStartHook` gate graduates to Stable and is locked on. It has defaulted to enabled since v1.36, hardening the API server at startup and during recovery.  Watchcache initialization and reinitialization no longer create a traffic spike of requests against `etcd`, and requests are handled gracefully instead of piling up while the cache warms."
+    },
+    {
+      "heading": "Beta: HorizontalPodAutoscaler scale to zero",
+      "stage": "Beta",
+      "keps": [
+        "2021"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ScaledToZero",
+        "True",
+        "HorizontalPodAutoscaler",
+        "False",
+        "NotScaledToZero"
+      ],
+      "summary": "In Kubernetes v1.37, HorizontalPodAutoscaler _scale to zero_ support is graduating to Beta. First introduced in Kubernetes v1.16, it is now **enabled by default**. For workloads that are using object or external metrics, this feature allows HorizontalPodAutoscalers to scale down to zero Pods when idle, then restore them when demand returns. Doing that can reduce costs for queue consumers, batch jobs, and GPU workloads. Setting `spec.minReplicas: 0` applies this functionality for workloads."
+    },
+    {
+      "heading": "Beta: Manifest-based admission control configuration",
+      "stage": "Beta",
+      "keps": [
+        "5793"
+      ],
+      "prs": [],
+      "identifiers": [
+        "AdmissionConfiguration"
+      ],
+      "summary": "Kubernetes v1.37 graduates [manifest-based admission control](/docs/reference/access-authn-authz/manifest-admission-control/) configuration to Beta. Admission webhooks and CEL-based policies can now be loaded from manifest files on disk, via the `staticManifestsDir` field in `AdmissionConfiguration`, instead of living only in the Kubernetes API. Policies loaded this way are enforced from API server startup, keep working while `etcd` is unavailable, and can protect the API-based admission resources themselves from modification."
+    },
+    {
+      "heading": "Alpha: Pod-level checkpoint and restore",
+      "stage": "Alpha",
+      "keps": [
+        "5823"
+      ],
+      "prs": [],
+      "identifiers": [
+        "CheckpointPod",
+        "RestorePod"
+      ],
+      "summary": "Kubernetes v1.37 introduces Alpha support for **Pod-level** checkpoint and restore, extending the CRI with `CheckpointPod` and `RestorePod` RPCs, which allow the kubelet and compatible container runtimes to create a Pod checkpoint and restore a Pod from it. To use this feature, your container runtime(s) must also implement these new RPCs.  This work was done as part of [KEP #5823](https://www.kubernetes.dev/resources/keps/5823/) led by [SIG Node](https://www.kubernetes.dev/community/community-groups/sigs/node/)."
+    },
+    {
+      "heading": "KYAML",
+      "stage": "Unspecified",
+      "keps": [
+        "5295"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "_KYAML_ is a safer and less ambiguous subset of YAML designed specifically for Kubernetes, **not a replacement for it**. Every KYAML file is valid YAML, so KYAML is a valid input for any version of `kubectl`, and spec files do not need to be written in KYAML for the input to be parsed. Your existing manifests, tooling, and pipelines don't need to change. Introduced as an Alpha feature in v1.34 and graduating to Beta in v1.35, KYAML graduates to Stable in v1.37 with conformance testing complete, and `kubectl get -o kyaml` is now Stable."
+    },
+    {
+      "heading": "The metrics.k8s.io API",
+      "stage": "Stable",
+      "keps": [
+        "5207"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The _metrics.k8s.io_ API graduates to Stable in Kubernetes v1.37 after spending nearly nine years in Beta. The API provides a standard way to retrieve CPU and memory usage for pods and nodes, powering widely used Kubernetes features such as the HorizontalPodAutoscaler (HPA) and commands like `kubectl top`.  The graduation follows the Kubernetes project\u2019s goal of avoiding permanent Beta APIs. Now that `v1` exists, future Kubernetes releases will move over to it; `v1beta1` remains usable throughout the transition, in line with the API"
+    },
+    {
+      "heading": "`SELinuxMount` and `SELinuxChangePolicy`",
+      "stage": "Stable",
+      "keps": [
+        "1710"
+      ],
+      "prs": [],
+      "identifiers": [
+        "SELinuxMount",
+        "SELinuxChangePolicy",
+        "Recursive"
+      ],
+      "summary": "In Kubernetes v1.37, `SELinuxMount` and `SELinuxChangePolicy` flags reach Stable and are enabled by default: this means that volumes get mounted with `-o context=<label>` (the MountOption default) instead of being recursively relabeled, but only when the volume's CSI driver opts in via `.spec.seLinuxMount: true` for the CSIDriver object.  A mount can only carry one SELinux context, so [Pods with different SELinux labels sharing a volume on the same node, which used to coexist under recursive relabeling, can now fail to start](https://www.kubernetes.dev/resources/keps/1710/#story-3-cluster-upgr"
+    },
+    {
+      "heading": "DRA features graduating to Stable",
+      "stage": "Stable",
+      "keps": [
+        "4817",
+        "5004",
+        "5055",
+        "6072"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "#### DRA: ResourceClaim status with possible standardized network interface data  The ResourceClaim `.status.devices` reaches Stable in Kubernetes v1.37, which allows drivers to report device-specific device status data for each allocated device in a resource claim. This makes it easier to see how a device is configured, troubleshoot problems, and use the device with other services."
+    },
+    {
+      "heading": "Node declared features",
+      "stage": "Stable",
+      "keps": [
+        "5328"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "_Node declared features_ graduate to Stable in Kubernetes v1.37, providing a framework to declare the availability of specific, feature-gated Kubernetes features for Nodes. This would then be used by control plane components (such as the `kube-scheduler`, admission controllers, or the API server itself) to manage version skew.  The feature introduces a new `.status.declaredFeatures` field for Nodes, which is used to declare a feature graduating through the Alpha \u2192 Beta \u2192 Stable stages. The control plane can use this to adopt the correct behavior even in a cluster running a mixture of different"
+    },
+    {
+      "heading": "Storage version migrator",
+      "stage": "Stable",
+      "keps": [
+        "4192"
+      ],
+      "prs": [],
+      "identifiers": [
+        "StorageVersionMigrator"
+      ],
+      "summary": "Kubernetes v1.37 sees the _StorageVersionMigration API_ (`storagemigration.k8s.io/v1`) graduate to Stable and become enabled by default. It helps migrate existing resources, both built-in and custom, from an older storage version to the new storage version after an API upgrade, such as when the preferred storage version changes from `v1beta1` to `v1`. It can also be used to rewrite existing data after a change to encryption at rest, so that stale data is stored using the new encryption settings.  Historically, cluster administrators and CustomResourceDefinition authors had to use manual `kubec"
+    },
+    {
+      "heading": "Stable: Pod certificates and Cluster Trust Bundles",
+      "stage": "Stable",
+      "keps": [
+        "4317",
+        "3257"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "[Pod certificates](/docs/reference/access-authn-authz/certificate-signing-requests/#pod-certificate-requests) and the closely related [ClusterTrustBundles](/docs/reference/access-authn-authz/certificate-signing-requests/#cluster-trust-bundles) both graduate to Stable in Kubernetes v1.37, providing first-class support for distributing private keys, X.509 certificates, and trust bundles to Pods.  To use this, the developer or administrator chooses a signer name and deploys a _signer controller_ that watches PodCertificateRequest objects, issues and refreshes certificates for eligible Pods, and m"
+    },
+    {
+      "heading": "Gang scheduling support in Kubernetes",
+      "stage": "Stable",
+      "keps": [
+        "4671"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As Kubernetes becomes the de facto standard for managing AI/ML workloads at scale, scheduling workloads such as AI/ML training jobs and HPC simulations becomes more important than ever. However, scheduling becomes challenging because the default Kubernetes scheduler schedules Pods individually, which can result in some Pods being scheduled while others remain pending due to insufficient resources. This partial scheduling can lead to deadlocks and inefficient use of cluster resources.  _Gang scheduling_ graduates to Beta in Kubernetes v1.37, improving upon native support for gang scheduling thr"
+    },
+    {
+      "heading": "Native histogram support for Kubernetes metrics",
+      "stage": "Unspecified",
+      "keps": [
+        "5808"
+      ],
+      "prs": [],
+      "identifiers": [
+        "NativeHistograms",
+        "PrometheusProto"
+      ],
+      "summary": "Kubernetes exposes hundreds of histogram metrics in [Prometheus format](https://prometheus.io/docs/instrumenting/exposition_formats/) across its control plane components, which are essential to monitor cluster health and debug performance issues. However, classical Prometheus histograms relied on static, pre-defined buckets that forced a compromise between data accuracy and memory usage. To mitigate this, Prometheus introduced _native histograms_ that use dynamic exponential bucket boundaries instead of fixed boundaries, providing significant storage efficiency, improved query performance, and"
+    },
+    {
+      "heading": "WAS: Features graduating to Beta",
+      "stage": "Beta",
+      "keps": [
+        "5710",
+        "5729"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "#### Workload-aware preemption  Kubernetes traditionally performs preemption at the Pod level, which can be inefficient for workloads made up of multiple tightly coupled Pods. In Kubernetes v1.37, workload-aware preemption graduates to Beta, allowing the scheduler to consider a PodGroup when making preemption decisions. This helps the scheduler consider the workload as a whole when preempting lower priority workloads, reducing cases where individual Pods are disrupted without providing enough capacity for the workload to"
+    },
+    {
+      "heading": "cAdvisor-less, CRI-full container and Pod stats",
+      "stage": "Unspecified",
+      "keps": [
+        "2371"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PodAndContainerStatsFromCRI"
+      ],
+      "summary": "The `kubelet` has historically obtained container and Pod statistics from `cAdvisor`, while the Container Runtime Interface (CRI) exposes statistics of its own. Having two sources for the same metrics makes it harder to tell where a particular value came from.  In Kubernetes v1.37, the cAdvisor-less, CRI-full Container and Pod Stats enhancement graduates to Beta. The enhancement expands the CRI to provide the container and pod statistics needed by Kubernetes, allowing the `kubelet` to get these metrics"
+    },
+    {
+      "heading": "Support memory QoS with cgroups v2",
+      "stage": "Unspecified",
+      "keps": [
+        "2570"
+      ],
+      "prs": [],
+      "identifiers": [
+        "MemoryQoS"
+      ],
+      "summary": "Kubernetes is improving its quality of service mechanisms to cover memory protection and isolation for Kubernetes workloads. For nodes running Linux, the _memory QoS_ feature uses memory requests and limits to configure cgroup controls that can protect requested memory from reclamation and throttle memory usage before workloads reach their hard limits. This can help reduce the impact of memory pressure on memory-sensitive workloads and improve node stability.  In Kubernetes v1.37, memory QoS support is graduating to Beta. The feature uses cgroups v2 memory controls such as `memory.min`, `memor"
+    },
+    {
+      "heading": "Pod-level resource managers",
+      "stage": "Beta",
+      "keps": [
+        "5526"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PodLevelResourceManagers"
+      ],
+      "summary": "In Kubernetes v1.37, _Pod-level resource managers_ graduate to Beta behind the `PodLevelResourceManagers` feature gate,  which stays **disabled by default**. Enabling it allows the topology, CPU, and memory resource  managers to use the resources defined for an entire Pod when making"
+    },
+    {
+      "heading": "Watch-based route controller reconciliation",
+      "stage": "Unspecified",
+      "keps": [
+        "5237"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The route controller in the cloud-controller-manager library previously reconciled routes on a fixed interval, by default every 10 seconds. This could result in unnecessary requests to infrastructure providers, even when nothing had changed and could also delay route updates when a new Node is added.   _Watch-based route controller reconciliation_ graduated to beta in Kubernetes v1.37. This release also adds observability for this work: the route controller's Alpha `route_sync_total` metric gains two labels, `trigger` (`periodic` or `node_change`) and `outcome` (`changed`, `noop`, or `error`),"
+    },
+    {
+      "heading": "Storage capacity scoring of Nodes",
+      "stage": "Unspecified",
+      "keps": [
+        "1845",
+        "4049"
+      ],
+      "prs": [],
+      "identifiers": [
+        "VolumeBinding",
+        "StorageCapacityScoring",
+        "VolumeCapacityPriority",
+        "Score",
+        "CSIStorageCapacity",
+        "Shape",
+        "VolumeBindingArgs",
+        "CSIDriver"
+      ],
+      "summary": "The `VolumeBinding` scheduler plugin has always been able to score nodes for statically bound PVs based on free capacity, but that scoring never extended to dynamic provisioning.  When a CSI driver provisions a new volume on demand, the scheduler had no way to prefer a node with more or less free space.  This was a gap for local storage, as an admin might want pods landing on the node with the most free capacity to leave room for a later volume expansion or on the node with the least (but still sufficient) free capacity to bin-pack workloads and cut down on the number of nodes a cloud cluster "
+    },
+    {
+      "heading": "Integrate CSI volume attach limits with Cluster Autoscaler",
+      "stage": "Unspecified",
+      "keps": [
+        "5030"
+      ],
+      "prs": [],
+      "identifiers": [
+        "NodeVolumeLimits",
+        "CSINode",
+        "VolumeLimitScaling",
+        "CSIDriver",
+        "PreventPodSchedulingIfMissing",
+        "CSIDriverMissingOnNode",
+        "CSINodeMissing"
+      ],
+      "summary": "Kubernetes v1.37 improves Cluster Autoscaler's integration with CSI volume attach limits, so that when it creates new nodes for pending Pods, Cluster Autoscaler can more accurately determine how many new nodes are required to attach all pending Pods that use CSI volumes. Cluster Autoscaler already had visibility into CSI volume attach limits for existing nodes, but not for the nodes it was about to create, which means it could undershoot scale-ups and leave volume-backed Pods pending even after adding capacity. The problem compounds on the scheduling side: the `NodeVolumeLimits` plugin treats "
+    },
+    {
+      "heading": "Report last used time on a PVC",
+      "stage": "Beta",
+      "keps": [
+        "5541"
+      ],
+      "prs": [],
+      "identifiers": [
+        "PersistentVolumeClaims",
+        "PersistentVolumeClaimUnusedSinceTime",
+        "Unused",
+        "PersistentVolumeClaimStatus"
+      ],
+      "summary": "`PersistentVolumeClaims` tend to outlive the workloads that created them. When an app gets deleted or migrated, its PVC remains behind, consuming storage and increasing costs.   Kubernetes v1.37 graduates PVC \"last used\" tracking to Beta behind the `PersistentVolumeClaimUnusedSinceTime` feature gate, which shipped disabled by default in Alpha (v1.36) and is now enabled by default. The feature adds a new `Unused` condition to `PersistentVolumeClaimStatus`, managed by the existing PVC protection controller: `Status=True (Reason=NoPodsUsingPVC)` once the last non-terminal Pod referencing the PVC "
+    },
+    {
+      "heading": "etcd RangeStream support",
+      "stage": "Unspecified",
+      "keps": [
+        "5966"
+      ],
+      "prs": [],
+      "identifiers": [
+        "Range",
+        "RangeStream",
+        "EtcdRangeStream",
+        "RangeRequest",
+        "MaxRequestBytes",
+        "GetList",
+        "WatchList"
+      ],
+      "summary": "`etcd`'s unary `Range` RPC builds an entire response in memory before sending it back, which becomes a problem at scale. On a large list, say kube-apiserver's watch cache warming up on a big cluster, the raw key-value slice, its serialized protobuf form, and the gRPC send buffer all have to coexist in memory at once, and the resulting spikes ripple through kube-apiserver too. Pagination doesn't really fix the underlying cost either because each paginated page still walks the entire B-tree index to recompute the total result count, turning what should be an `O(limit)` operation into an `O(total"
+    },
+    {
+      "heading": "Concurrent watch object decode",
+      "stage": "Unspecified",
+      "keps": [
+        "5966",
+        "6178"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ConcurrentWatchObjectDecode",
+        "EtcdRangeStream"
+      ],
+      "summary": "`kube-apiserver` decodes and transforms every watch event from `etcd` one at a time on a single goroutine, so one slow per-event transform, most notably a CRD conversion webhook call, blocks every event queued behind it. That's mostly a nuisance for built-in resources, but for a CRD whose served version differs from its stored version, converting a cold cache serially can take minutes. If that exceeds `etcd`'s default 5-minute compaction interval, the revision the cache started reading from gets compacted before initialization finishes, the watch can't resume, and init just restarts and never "
+    },
+    {
+      "heading": "Stale controller mitigation",
+      "stage": "Stable",
+      "keps": [
+        "5647"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ResourceEventHandlerFuncs",
+        "BookmarkFunc",
+        "StaleControllerConsistency",
+        "MonitorInformerStaleness",
+        "AtomicFIFO",
+        "UnlockWhileProcessingFIFO"
+      ],
+      "summary": "Every controller in `kube-controller-manager` works off a local cache built from watching the `kube-apiserver`, and that watch stream is only eventually consistent. A change can show up in milliseconds, or it can take seconds or even minutes under load. Today operators have no visibility into that lag and no way to tell a normal delay from a controller that's fallen dangerously out of sync, so a controller can keep reconciling against a view of the world that's already stale.  Stale controller mitigation has been Beta since v1.36, enabled by default per controller behind a `StaleControllerCons"
+    },
+    {
+      "heading": "Manifest-based admission control config",
+      "stage": "Unspecified",
+      "keps": [
+        "5793"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes, admission control is responsible for enforcing policies on resources before they are accepted by the API server. However, admission webhooks and policies configured through the Kubernetes API are dependent on the API server and etcd during cluster startup and cannot protect the admission configuration resources themselves. This creates a gap during cluster bootstrap and allows critical admission policies to be modified or removed by users with sufficient privileged access.  In Kubernetes v1.37, [manifest-based admission control](/docs/reference/access-authn-authz/manifest-admiss"
+    },
+    {
+      "heading": "Improved handling for undecryptable resources",
+      "stage": "Unspecified",
+      "keps": [
+        "3926"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes stores resources in etcd, where encryption at rest can be used to protect sensitive data. However, when encrypted resources can no longer be decrypted, for example because the encryption key is unavailable, the API server cannot read or manage those resources normally. This can leave resources in the cluster that cannot be accessed through the Kubernetes API, requiring administrators to manually modify the underlying etcd data to recover them.  Kubernetes v1.37 includes Beta support for cluster administrators to identify and remove resources that cannot be decrypted by the API serve"
+    },
+    {
+      "heading": "New `Recreate` strategy for StatefulSet rollouts",
+      "stage": "Unspecified",
+      "keps": [
+        "3541"
+      ],
+      "prs": [],
+      "identifiers": [
+        "Recreate",
+        "StatefulSetRecreateStrategy"
+      ],
+      "summary": "Kubernetes v1.37 introduces the `Recreate` strategy for StatefulSet rollouts. The StatefulSet API previously only offered two update strategies: OnDelete (manual) and RollingUpdate (automatic, default). Similar to Deployments, the `Recreate` update strategy deletes all of the StatefulSet's Pods before creating new Pods that reflect modifications made to a StatefulSet's `.spec.template`. Using this strategy requires the `StatefulSetRecreateStrategy` [feature gate](/docs/reference/command-line-tools-reference/feature-gates/#StatefulSetRecreateStrategy) to be enabled.   This work was done as part"
+    },
+    {
+      "heading": "DRA: Alpha features to look out for",
+      "stage": "Alpha",
+      "keps": [
+        "5517",
+        "6080",
+        "5963"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "#### DRA: Node allocatable resource request  Kubernetes v1.37 improves Alpha support for managing node resources such as CPU, memory, and huge pages through DRA. It unifies standard and DRA resource accounting, helping prevent the same node capacity from being counted twice.  This update introduces distinct API fields for `mapping` (for devices directly modeling core resources, like CPU/memory DRA drivers) and `overhead` (like auxiliary host memory for accelerator devices). The kubelet now enforces these allocations across pod and container cgroups, integrates them with Memory QoS, OOM score c"
+    },
+    {
+      "heading": "Scheduler preemption for in-place Pod resize",
+      "stage": "Alpha",
+      "keps": [
+        "5836"
+      ],
+      "prs": [],
+      "identifiers": [
+        "InPlacePodVerticalScalingSchedulerPreemption",
+        "Deferred"
+      ],
+      "summary": "Kubernetes v1.37 introduces _scheduler preemption for in-place pod resize_, behind  the (opt-in, Alpha) `InPlacePodVerticalScalingSchedulerPreemption` feature gate. This change addresses an important feature gap that remained after the core [in-place Pod vertical scaling](/docs/concepts/workloads/pods/pod-lifecycle/#pod-resize-inplace) feature graduated to Stable: if a running pod requested additional resources that exceeded the node's available capacity, `kubelet` marked the request as `Deferred`, leaving the pod waiting until sufficient resources became available on the node. With this enhan"
+    },
+    {
+      "heading": "Dynamic resize of memory-backed volumes",
+      "stage": "Alpha",
+      "keps": [
+        "6030"
+      ],
+      "prs": [],
+      "identifiers": [
+        "InPlacePodVerticalScalingMemoryBackedVolumes"
+      ],
+      "summary": "Also building upon in-place Pod vertical scaling, the Alpha _in-place scaling for memory backed volumes_ feature extends the pod  `/resize` subresource, which previously only enabled dynamic CPU and memory adjustments without restarting containers, to support updating the `sizeLimit` of memory-backed (medium: Memory) `emptyDir` volumes on running pods. When a volume's `sizeLimit` is explicitly adjusted via the /resize subresource, Kubelet dynamically updates the underlying tmpfs mount without container disruption while safely preventing out-of-memory errors or false-positive eviction triggers."
+    },
+    {
+      "heading": "Specialized lifecycle management for Nodes",
+      "stage": "Unspecified",
+      "keps": [
+        "5683"
+      ],
+      "prs": [],
+      "identifiers": [
+        "DrainInProgress",
+        "Drained",
+        "MaintenancePlanned",
+        "MaintenanceInProgress",
+        "GracefulNodeShutdownInProgress"
+      ],
+      "summary": "Several Kubernetes components need to understand a Node's lifecycle state, and today each one infers it from a different mix of Node readiness, taints, Pod state, labels, annotations, and provider APIs. This enhancement introduces well-known lifecycle conditions on Nodes, giving administrators a single Kubernetes-owned place to publish lifecycle state that core controllers and ecosystem tooling can consume. These new Node Conditions are: `DrainInProgress`, `Drained`, `MaintenancePlanned`, `MaintenanceInProgress`, and `GracefulNodeShutdownInProgress`   This work was done as part of [KEP #5683]("
+    },
+    {
+      "heading": "WAS: Alpha features to look out for",
+      "stage": "Alpha",
+      "keps": [
+        "6012",
+        "6089",
+        "5547"
+      ],
+      "prs": [],
+      "identifiers": [
+        "CompositePodGroup"
+      ],
+      "summary": "#### CompositePodGroup API  While previous releases introduced support for gang scheduling of workloads with a flat structure, modern AI/ML workloads are complex and have more sophisticated scheduling requirements. In Kubernetes v1.37, the new Alpha `CompositePodGroup` API allows Kubernetes to describe complex workloads as a hierarchy of groups"
+    },
+    {
+      "heading": "localhost NodePort userspace proxy for `nftables`",
+      "stage": "Unspecified",
+      "keps": [
+        "6032"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes v1.37 adds an opt-in userspace proxy to the `nftables` `kube-proxy` backend, allowing NodePort services to be accessed through `localhost` over IPv4 and IPv6. This closes a gap between the `nftables` and `iptables` backends, as `nftables` could not previously serve localhost NodePorts.   The proxy is enabled when `localhost` or a loopback address is included in the `kube-proxy` `--nodeport-addresses` configuration. This can be useful for workloads such as local container registries that rely on `localhost:<NodePort>`"
+    },
+    {
+      "heading": "`maxUnavailable` for StatefulSets back on by default",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "137409"
+      ],
+      "identifiers": [
+        "MaxUnavailableStatefulSet"
+      ],
+      "summary": "The `maxUnavailable` field for StatefulSets has been re-enabled by default in Kubernetes v1.37 (after a bug was observed in v1.36).  The bug occurred where a faulty initial StatefulSet revision created a Pod that never became ready, and with `MaxUnavailableStatefulSet` enabled, the StatefulSet controller failed to update that Pod to the newer, corrected revision. When the bug triggered, the affected Pod could end up stuck in a CrashLoopBackOff state indefinitely (see [kubernetes#137409](https://github.com/kubernetes/kubernetes/issues/137409))."
+    },
+    {
+      "heading": "Improved `nftables` performance",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "kube-proxy now uses the kernel\u2019s netlink interface for nftables rule operations, bypassing the `nft` command-line tool. This makes kube-proxy more efficient when inspecting and managing its nftables rules, improving rule-management performance."
+    },
+    {
+      "heading": "Context handling and contextual logging in client-go",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for context propagation and contextual logging in client-go is complete, with the exception of a small number of authentication plugin log calls that still rely on the global klog logger because the underlying APIs do not support context passing."
+    },
+    {
+      "heading": "Graduations to Stable",
+      "stage": "Stable",
+      "keps": [
+        "1710",
+        "3257",
+        "4317",
+        "4762",
+        "4817",
+        "4951",
+        "5311",
+        "4680",
+        "5055",
+        "5004",
+        "5328",
+        "3085",
+        "4192",
+        "4568",
+        "6072",
+        "5207",
+        "5295"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to Stable (also known as general availability). For a full list of updates including new features and graduations from Alpha to Beta, see the release notes.  This release includes a total of 16 enhancements promoted to Stable:  * [Speed up recursive SELinux label change](https://www.kubernetes.dev/resources/keps/1710/)"
+    },
+    {
+      "heading": "Deprecation of `kube-dns`",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "CoreDNS has been the default cluster DNS add-on since Kubernetes v1.13, and `kube-dns` has not kept pace since then; features like EndpointSlices and dual-stack Services aren't available in it.  Kubernetes has already retired the kube-dns subproject and has split node-local-dns out into its own [repository](https://github.com/kubernetes-sigs/node-local-dns), where it continues to be maintained and works with CoreDNS. It is expected that no new packages will be built for kube-dns after v1.40.   If you still run `kube-dns`, [start planning to migrate your clusters to CoreDNS](/docs/tasks/adminis"
+    },
+    {
+      "heading": "Deprecating `kube-proxy`'s support for `ipvs` mode",
+      "stage": "Unspecified",
+      "keps": [
+        "5495"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "`kube-proxy` support for `ipvs` mode was introduced in v1.8 to resolve `iptables` performance bottlenecks. However, since the kernel `ipvs` API alone cannot fully implement Kubernetes Services, `ipvs` mode continues to use `iptables` underneath  ([KEP-3866, \"The ipvs mode of kube-proxy will not save us\"](https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/3866-nftables-proxy/README.md#the-ipvs-mode-of-kube-proxy-will-not-save-us)).  Clusters running `kube-proxy` in `ipvs` mode (or mode: `ipvs` in KubeProxyConfiguration) now log a deprecation warning on startup. The deprecat"
+    },
+    {
+      "heading": "`kubectl`: `kubectl run --filename/-f` to be deprecated",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "138671"
+      ],
+      "identifiers": [
+        "NAME"
+      ],
+      "summary": "The `--filename` (or `-f`) flag for `kubectl run` is being deprecated as the generated pod is always built purely from CLI arguments like `NAME` and `--image`.  See [kubernetes/kubernetes#138671](https://github.com/kubernetes/kubernetes/issues/138671) for the original issue and discussion."
+    },
+    {
+      "heading": "`kubelet`: static Pods can no longer reference Secrets or ConfigMaps",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "140226"
+      ],
+      "identifiers": [
+        "PreventStaticPodAPIReferences"
+      ],
+      "summary": "Static Pods were never meant to read API resources directly, since they aren't created through the API server \u2014 but a bug let them reference Secrets or ConfigMaps via fields like `configMapRef` or `secretRef`. That bug is now fixed: as of v1.37 these references are strictly prohibited, and the `PreventStaticPodAPIReferences` feature gate that previously let you opt out of the restriction has been removed.  See [kubernetes/kubernetes#140226](https://github.com/kubernetes/kubernetes/issues/140226) for the original issue and discussion."
+    },
+    {
+      "heading": "Ongoing major change: Future removal of cgroup v1 support",
+      "stage": "Removal",
+      "keps": [
+        "5573"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As modern Linux distributions and container runtimes use [cgroup v2](/docs/concepts/architecture/cgroups/) as the default, support for the legacy cgroup v1 is officially being phased out. Since the v1.35 release, the `failCgroupV1` setting has defaulted to true. Consequently, the `kubelet` will fail to initialize on any nodes that still rely on cgroup v1 unless an explicit configuration override is applied.  ```yaml"
+    },
+    {
+      "heading": "Event updates",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Explore the upcoming KubeCons worldwide:  - [KubeCon + CloudNativeCon China](https://www.lfopensource.cn/kubecon-cloudnativecon-openinfra-summit-pytorch-conference-china/):   September 7\u20139, 2026, in Shanghai, China - [KubeCon + CloudNativeCon North America](https://events.linuxfoundation.org/kubecon-cloudnativecon-north-america/):   November 9\u201312, 2026, in Salt Lake City, United States"
+    },
+    {
+      "heading": "Kubectl: `kubectl run --filename/-f` to be deprecated",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "138671"
+      ],
+      "identifiers": [
+        "NAME"
+      ],
+      "summary": "The `--filename` (or `-f`) flag for `kubectl run` is being deprecated as the generated pod is always built purely from CLI arguments like `NAME` and `--image`.  See [kubernetes/kubernetes#138671](https://github.com/kubernetes/kubernetes/issues/138671) for the original issue and discussion."
+    },
+    {
+      "heading": "Kubelet: Static Pods can no longer reference Secrets or ConfigMaps",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [
+        "140226"
+      ],
+      "identifiers": [
+        "PreventStaticPodAPIReferences"
+      ],
+      "summary": "Static Pods were never meant to read API resources directly, since they aren't created through the API server \u2014 but a bug let them reference Secrets or ConfigMaps via fields like `configMapRef` or `secretRef`. That bug is now fixed: as of v1.37 these references are strictly prohibited, and the `PreventStaticPodAPIReferences` feature gate that previously let you opt out of the restriction has been removed.  See [kubernetes/kubernetes#140226](https://github.com/kubernetes/kubernetes/issues/140226) for the original issue and discussion."
+    },
+    {
+      "heading": "Deprecating kube-proxy's support for `ipvs` mode",
+      "stage": "Unspecified",
+      "keps": [
+        "5495"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "`kube-proxy` support for `ipvs` mode was introduced in v1.8 to resolve `iptables` performance bottlenecks. However, since the kernel `ipvs` API alone cannot fully implement Kubernetes Services, `ipvs` mode continues to use `iptables` underneath ([KEP-3866, \"The ipvs mode of kube-proxy will not save us\"](https://github.com/kubernetes/enhancements/blob/master/keps/sig-network/3866-nftables-proxy/README.md#the-ipvs-mode-of-kube-proxy-will-not-save-us)).  Clusters running `kube-proxy` in ipvs mode (or mode: ipvs in KubeProxyConfiguration) would now be logging a deprecation warning on startup. The "
+    },
+    {
+      "heading": "Future removal of cgroup v1 support",
+      "stage": "Removal",
+      "keps": [
+        "5573"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As modern Linux distributions and container runtimes use [cgroup v2](/docs/concepts/architecture/cgroups/) as the default, support for the legacy cgroup v1 is officially being phased out. Since the v1.35 release, the `failCgroupV1` setting has defaulted to true. Consequently, the `kubelet` will fail to initialize on any nodes that still rely on cgroup v1 unless an explicit configuration override is applied.  ```yaml apiVersion: kubelet.config.k8s.io/v1beta1 kind: KubeletConfiguration failCgroupV1: false # temporary override"
+    },
+    {
+      "heading": "SELinux volume relabeling (\"SELinuxMount\") graduates to GA",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "SELinuxMount is expected to reach GA and be enabled by default in v1.37. Volumes would then be mounted with `-o context=<label>` (the mount option default) instead of being recursively relabeled, but **only** when the volume's CSI driver opts in via a CSIDriver that sets `.spec seLinuxMount: true`.  Because a single mount can only hold one SELinux context, pods with different SELinux labels sharing a volume on the same node (which previously coexisted under recursive relabeling) may now fail to start. To retain the previous recursive behavior for a specific workload, set `seLinuxChangePolicy: "
+    },
+    {
+      "heading": "Metrics API goes GA",
+      "stage": "Stable",
+      "keps": [
+        "5207"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `metrics.k8s.io` API is expected to graduate to Stable (GA) in Kubernetes v1.37 after spending nearly nine years in Beta. The API provides a standard way to retrieve CPU and memory usage for pods and nodes, powering widely used Kubernetes features such as the Horizontal Pod Autoscaler (HPA) and commands like `kubectl top`.  This graduation recognizes the API's stability and widespread adoption, with no functional changes expected. Both `v1` and `v1beta1` will remain usable during the transition, enabling developers to adopt the stable API at their own pace without breaking existing workflo"
+    },
+    {
+      "heading": "Kubelet in UserNS a.k.a. Rootless Mode",
+      "stage": "Unspecified",
+      "keps": [
+        "2033"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Traditionally, Kubernetes node components such as the `kubelet` run with root privileges on the host. While necessary for many deployments, this also means that a vulnerability in one of these components could potentially have a greater impact on the underlying system.   With Kubernetes v1.37, kubelet in User Namespace (Rootless Mode) is expected to graduate to Beta. This enhancement allows Kubernetes node components to run inside a Linux user namespace as an unprivileged user on the host while still behaving as root within the namespace. By reducing the need for host-level root privileges, it"
+    },
+    {
+      "heading": "Volume health monitor",
+      "stage": "Unspecified",
+      "keps": [
+        "1432"
+      ],
+      "prs": [],
+      "identifiers": [
+        "ControllerListVolumeHealth",
+        "ControllerGetVolumeHealth",
+        "PersistentVolumeClaim.status.healthStatus",
+        "NodeGetVolumeHealth",
+        "Pod.status.volumeHealth",
+        "NodeGetStorageHealth",
+        "CSINode.status.storageHealth",
+        "Inaccessible"
+      ],
+      "summary": "Historically, Kubernetes has lacked an API for CSI drivers to report storage failures, which become evident only through failed mounts or hung I/O. Since remediation controllers had nothing machine-readable to act upon, the only way to figure out the root cause behind this failure was to cross-reference Kubernetes objects alongside external vendor dashboards.   In Kubernetes v1.37, this KEP resets graduation to Alpha after an initial implementation in v1.21 and introduces four new CSI RPCs. The controller plugin reports the health of storage volumes using `ControllerListVolumeHealth` (lists un"
+    }
+  ],
+  "ground_truth_keps": [
+    "4568",
+    "2021",
+    "5793",
+    "5823",
+    "5295",
+    "5207",
+    "1710",
+    "4817",
+    "5004",
+    "5055",
+    "6072",
+    "5328",
+    "4192",
+    "4317",
+    "3257",
+    "4671",
+    "5808",
+    "5710",
+    "5729",
+    "2371",
+    "2570",
+    "5526",
+    "5237",
+    "1845",
+    "4049",
+    "5030",
+    "5541",
+    "5966",
+    "6178",
+    "5647",
+    "3926",
+    "3541",
+    "5517",
+    "6080",
+    "5963",
+    "5836",
+    "6030",
+    "5683",
+    "6012",
+    "6089",
+    "5547",
+    "6032",
+    "4762",
+    "4951",
+    "5311",
+    "4680",
+    "3085",
+    "5495",
+    "5573",
+    "2033",
+    "1432"
+  ],
+  "ground_truth_identifiers": [
+    "ResilientWatchCacheInitialization",
+    "WatchCacheInitializationPostStartHook",
+    "ScaledToZero",
+    "HorizontalPodAutoscaler",
+    "False",
+    "NotScaledToZero",
+    "AdmissionConfiguration",
+    "CheckpointPod",
+    "RestorePod",
+    "SELinuxMount",
+    "SELinuxChangePolicy",
+    "Recursive",
+    "StorageVersionMigrator",
+    "NativeHistograms",
+    "PrometheusProto",
+    "PodAndContainerStatsFromCRI",
+    "MemoryQoS",
+    "PodLevelResourceManagers",
+    "VolumeBinding",
+    "StorageCapacityScoring",
+    "VolumeCapacityPriority",
+    "Score",
+    "CSIStorageCapacity",
+    "Shape",
+    "VolumeBindingArgs",
+    "CSIDriver",
+    "NodeVolumeLimits",
+    "CSINode",
+    "VolumeLimitScaling",
+    "PreventPodSchedulingIfMissing",
+    "CSIDriverMissingOnNode",
+    "CSINodeMissing",
+    "PersistentVolumeClaims",
+    "PersistentVolumeClaimUnusedSinceTime",
+    "Unused",
+    "PersistentVolumeClaimStatus",
+    "Range",
+    "RangeStream",
+    "EtcdRangeStream",
+    "RangeRequest"
+  ]
+}

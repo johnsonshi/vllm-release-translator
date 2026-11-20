@@ -1,0 +1,477 @@
+{
+  "project": "kubernetes",
+  "version": "v1.33",
+  "blog_title": "Kubernetes v1.33: Octarine",
+  "release_date": "2025-04-23",
+  "reported_enhancements_count": 64,
+  "spotlight_count": 48,
+  "spotlights": [
+    {
+      "heading": "Stable: Sidecar containers",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The sidecar pattern involves deploying separate auxiliary container(s) to handle extra capabilities in areas such as networking, logging, and metrics gathering. Sidecar containers graduate to stable in v1.33.  Kubernetes implements sidecars as a special class of init containers with `restartPolicy: Always`, ensuring that sidecars start before application containers, remain running throughout the pod's"
+    },
+    {
+      "heading": "Beta: In-place resource resize for vertical scaling of Pods",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Workloads can be defined using APIs like Deployment, StatefulSet, etc. These describe the template for the Pods that should run, including memory and CPU resources, as well as the replica count of the number of Pods that should run. Workloads can be scaled horizontally by updating the Pod replica count, or vertically by updating the resources required in the Pods container(s). Before this enhancement, container resources defined in a Pod's `spec` were immutable, and updating any of these details within a Pod template would trigger Pod replacement."
+    },
+    {
+      "heading": "Alpha: New configuration option for kubectl with `.kuberc` for user preferences",
+      "stage": "Alpha",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In v1.33, `kubectl` introduces a new alpha feature with opt-in configuration file `.kuberc` for user preferences. This file can contain `kubectl` aliases and overrides (e.g. defaulting to use [server-side apply](/docs/reference/using-api/server-side-apply/)), while leaving cluster credentials and host information in kubeconfig. This separation allows sharing the same user preferences for `kubectl` interaction, regardless of target cluster and kubeconfig used."
+    },
+    {
+      "heading": "Backoff limits per index for indexed Jobs",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "\u200bThis release graduates a feature that allows setting backoff limits on a per-index basis for Indexed Jobs. Traditionally, the `backoffLimit` parameter in Kubernetes Jobs specifies the number of retries before considering the entire Job as failed. This enhancement allows each index within an Indexed Job to have its own backoff limit, providing more granular control over retry behavior for individual tasks. This ensures that the failure of specific indices does not prematurely terminate the entire Job, allowing the other indices to continue processing independently."
+    },
+    {
+      "heading": "Job success policy",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Using `.spec.successPolicy`, users can specify which pod indexes must succeed (`succeededIndexes`), how many pods must succeed (`succeededCount`), or a combination of both. This feature benefits various workloads, including simulations where partial completion is sufficient, and leader-worker patterns where only the leader's success determines the Job's overall outcome.  This work was done as part of [KEP-3998: Job success/completion policy](https://kep.k8s.io/3998) led"
+    },
+    {
+      "heading": "Bound ServiceAccount token security improvements",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This enhancement introduced features such as including a unique token identifier (i.e. [JWT ID Claim, also known as JTI](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.7)) and node information within the tokens, enabling more precise validation and auditing. Additionally, it supports node-specific restrictions, ensuring that tokens are only usable on designated nodes, thereby reducing the risk of token misuse and potential security breaches. These improvements, now generally available, aim to enhance the overall security posture of service account tokens within"
+    },
+    {
+      "heading": "Subresource support in kubectl",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `--subresource` argument is now generally available for kubectl subcommands such as `get`, `patch`, `edit`, `apply` and `replace`, allowing users to fetch and update subresources for all resources that support them. To learn more about the subresources supported, visit the [kubectl reference](/docs/reference/kubectl/conventions/#subresources).  This work was done as part of"
+    },
+    {
+      "heading": "Multiple Service CIDRs",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "ServiceCIDR",
+        "IPAddress"
+      ],
+      "summary": "This enhancement introduced a new implementation of allocation logic for Service IPs. Across the whole cluster, every Service of `type: ClusterIP` must have a unique IP address assigned to it. Trying to create a Service with a specific cluster IP that has already been allocated will return an error. The updated IP address allocator logic uses two newly stable API objects: `ServiceCIDR` and `IPAddress`. Now generally available, these APIs allow cluster administrators to dynamically increase the number of IP addresses available for `type: ClusterIP` Services (by creating new"
+    },
+    {
+      "heading": "`nftables` backend for kube-proxy",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `nftables` backend for kube-proxy is now stable, adding a new implementation that significantly improves performance and scalability for Services implementation within Kubernetes clusters. For compatibility reasons, `iptables` remains the default on Linux nodes. Check the [migration guide](/docs/reference/networking/virtual-ips/#migrating-from-iptables-mode-to-nftables) if you want to try it out."
+    },
+    {
+      "heading": "Topology aware routing with `trafficDistribution: PreferClose`",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "PreferClose"
+      ],
+      "summary": "This release graduates topology-aware routing and traffic distribution to GA, which would allow us to optimize service traffic in multi-zone clusters. The topology-aware hints in EndpointSlices would enable components like kube-proxy to prioritize routing traffic to endpoints within the same zone, thereby reducing latency and cross-zone data transfer costs. Building upon this, `trafficDistribution` field is added to the Service specification, with the `PreferClose` option directing traffic to the nearest available endpoints based on network topology. This configuration"
+    },
+    {
+      "heading": "Options to reject non SMT-aligned workload",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature added policy options to the CPU Manager, enabling it to reject workloads that do not align with Simultaneous Multithreading (SMT) configurations. This enhancement, now generally available, ensures that when a pod requests exclusive use of CPU cores, the CPU Manager can enforce allocation of entire core pairs (comprising primary and sibling threads) on SMT-enabled systems, thereby preventing scenarios where workloads share CPU resources in unintended ways."
+    },
+    {
+      "heading": "Defining Pod affinity or anti-affinity using `matchLabelKeys` and `mismatchLabelKeys`",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `matchLabelKeys` and `mismatchLabelKeys` fields are available in Pod affinity terms, enabling users to finely control the scope where Pods are expected to co-exist (Affinity) or not (AntiAffinity). These newly stable options complement the existing `labelSelector` mechanism. The affinity fields facilitate enhanced scheduling for versatile rolling updates, as well as isolation of services managed by tools or controllers based on global configurations."
+    },
+    {
+      "heading": "Considering taints and tolerations when calculating Pod topology spread skew",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "PodTopologySpread",
+        "Honor",
+        "Ignore"
+      ],
+      "summary": "This enhanced `PodTopologySpread` by introducing two fields: `nodeAffinityPolicy` and `nodeTaintsPolicy`. These fields allow users to specify whether node affinity rules and node taints should be considered when calculating pod distribution across nodes. By default, `nodeAffinityPolicy` is set to `Honor`, meaning only nodes matching the pod's node affinity or selector are included in the distribution calculation. The `nodeTaintsPolicy` defaults to `Ignore`, indicating that node taints are not considered unless specified. This enhancement provides finer"
+    },
+    {
+      "heading": "Volume populators",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "After being released as beta in v1.24, _volume populators_ have graduated to GA in v1.33. This newly stable feature provides a way to allow users to pre-populate volumes with data from various sources, and not just from PersistentVolumeClaim (PVC) clones or volume snapshots. The mechanism relies on the `dataSourceRef` field within a PersistentVolumeClaim. This field offers more flexibility than the existing `dataSource` field, and allows for custom resources to be used as data sources."
+    },
+    {
+      "heading": "Always honor PersistentVolume reclaim policy",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This enhancement addressed an issue where the Persistent Volume (PV) reclaim policy is not consistently honored, leading to potential storage resource leaks. Specifically, if a PV is deleted before its associated Persistent Volume Claim (PVC), the \"Delete\" reclaim policy may not be executed, leaving the underlying storage assets intact. To mitigate this, Kubernetes now sets finalizers on relevant PVs, ensuring that the reclaim policy is enforced regardless of the deletion sequence. This enhancement prevents unintended retention of storage resources and maintains"
+    },
+    {
+      "heading": "Support for Direct Service Return (DSR) in Windows kube-proxy",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "DSR provides performance optimizations by allowing the return traffic routed through load balancers to bypass the load balancer and respond directly to the client; reducing load on the load balancer and also reducing overall latency. For information on DSR on Windows, read [Direct Server Return (DSR) in a nutshell](https://techcommunity.microsoft.com/blog/networkingblog/direct-server-return-dsr-in-a-nutshell/693710).  Initially introduced in v1.14, support for DSR has been promoted to beta by SIG Windows as part of"
+    },
+    {
+      "heading": "Structured parameter support",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "While structured parameter support continues as a beta feature in Kubernetes v1.33, this core part of Dynamic Resource Allocation (DRA) has seen significant improvements. A new v1beta2 version simplifies the `resource.k8s.io` API, and regular users with the namespaced cluster `edit` role can now use DRA.  The `kubelet` now includes seamless upgrade support, enabling drivers deployed as DaemonSets to use"
+    },
+    {
+      "heading": "Dynamic Resource Allocation (DRA) for network interfaces",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The standardized reporting of network interface data via DRA, introduced in v1.32, has graduated to beta in v1.33. This enables more native Kubernetes network integrations, simplifying the development and management of networking devices. This was covered previously in the [v1.32 release announcement blog](/blog/2024/12/11/kubernetes-v1-32-release/#dra-standardized-network-interface-data-for-resource-claim-status).  This work was done as part of"
+    },
+    {
+      "heading": "Handle unscheduled pods early when scheduler does not have any pod on activeQ",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature improves queue scheduling behavior. Behind the scenes, the scheduler achieves this by popping pods from the _backoffQ_, which are not backed off due to errors, when the _activeQ_ is empty. Previously, the scheduler would become idle even when the _activeQ_ was empty; this enhancement improves scheduling efficiency by preventing that.  This work was done as part of"
+    },
+    {
+      "heading": "Asynchronous preemption in the Kubernetes Scheduler",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Preemption ensures higher-priority pods get the resources they need by evicting lower-priority ones. Asynchronous Preemption, introduced in v1.32 as alpha, has graduated to beta in v1.33. With this enhancement, heavy operations such as API calls to delete pods are processed in parallel, allowing the scheduler to continue scheduling other pods without delays. This improvement is particularly beneficial in clusters with high Pod churn or frequent scheduling failures, ensuring a more efficient and resilient scheduling process."
+    },
+    {
+      "heading": "ClusterTrustBundles",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "ClusterTrustBundle, a cluster-scoped resource designed for holding X.509 trust anchors (root certificates), has graduated to beta in v1.33. This API makes it easier for in-cluster certificate signers to publish and communicate X.509 trust anchors to cluster workloads.  This work was done as part of [KEP-3257: ClusterTrustBundles (previously Trust Anchor Sets)](https://kep.k8s.io/3257) led by SIG"
+    },
+    {
+      "heading": "Fine-grained SupplementalGroups control",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "SupplementalGroupsPolicy"
+      ],
+      "summary": "Introduced in v1.31, this feature graduates to beta in v1.33 and is now enabled by default. Provided that your cluster has the `SupplementalGroupsPolicy` feature gate enabled, the `supplementalGroupsPolicy` field within a Pod's `securityContext` supports two policies: the default Merge policy maintains backward compatibility by combining specified groups with those from the container image's `/etc/group` file, whereas the new Strict policy applies only to explicitly defined groups."
+    },
+    {
+      "heading": "Support for mounting images as volumes",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Support for using Open Container Initiative (OCI) images as volumes in Pods, introduced in v1.31, has graduated to beta. This feature allows users to specify an image reference as a volume in a Pod while reusing it as a volume mount within containers. It opens up the possibility of packaging the volume data separately, and sharing them among containers in a Pod without including them in the main image, thereby reducing vulnerabilities and simplifying image creation."
+    },
+    {
+      "heading": "Support for user namespaces within Linux Pods",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "One of the oldest open KEPs as of writing is [KEP-127](https://kep.k8s.io/127), Pod security improvement by using Linux [User namespaces](/docs/concepts/workloads/pods/user-namespaces/) for Pods. This KEP was first opened in late 2016, and after multiple iterations, had its alpha release in v1.25, initial beta in v1.30 (where it was disabled by default), and has moved to on-by-default beta as part of v1.33."
+    },
+    {
+      "heading": "Pod `procMount` option",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `procMount` option, introduced as alpha in v1.12, and off-by-default beta in v1.31, has moved to an on-by-default beta in v1.33. This enhancement improves Pod isolation by allowing users to fine-tune access to the `/proc` filesystem. Specifically, it adds a field to the Pod `securityContext` that lets you override the default behavior of masking and marking certain `/proc` paths as read-only. This is particularly useful for scenarios where users want to run unprivileged containers inside the Kubernetes Pod using user namespaces. Normally, the container runtime (via the"
+    },
+    {
+      "heading": "CPUManager policy to distribute CPUs across NUMA nodes",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature adds a new policy option for the CPU Manager to distribute CPUs across Non-Uniform Memory Access (NUMA) nodes, rather than concentrating them on a single node. It optimizes CPU resource allocation by balancing workloads across multiple NUMA nodes, thereby improving performance and resource utilization in multi-NUMA systems.  This work was done as part of"
+    },
+    {
+      "heading": "Zero-second sleeps for container PreStop hooks",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes 1.29 introduced a Sleep action for the `preStop` lifecycle hook in Pods, allowing containers to pause for a specified duration before termination. This provides a straightforward method to delay container shutdown, facilitating tasks such as connection draining or cleanup operations.  The Sleep action in a `preStop` hook can now accept a zero-second duration as a beta feature. This"
+    },
+    {
+      "heading": "Internal tooling for declarative validation of Kubernetes-native types",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Behind the scenes, the internals of Kubernetes are starting to use a new mechanism for validating objects and changes to objects. Kubernetes v1.33 introduces `validation-gen`, an internal tool that Kubernetes contributors use to generate declarative validation rules. The overall goal is to improve the robustness and maintainability of API validations by enabling developers to specify validation constraints declaratively, reducing manual coding errors and ensuring consistency across the codebase."
+    },
+    {
+      "heading": "Configurable tolerance for HorizontalPodAutoscalers",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature introduces configurable tolerance for HorizontalPodAutoscalers, which dampens scaling reactions to small metric variations.  This work was done as part of [KEP-4951: Configurable tolerance for Horizontal Pod Autoscalers](https://kep.k8s.io/4951) led by SIG Autoscaling."
+    },
+    {
+      "heading": "Configurable container restart delay",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Introduced as alpha1 in v1.32, this feature provides a set of kubelet-level configurations to fine-tune how CrashLoopBackOff is handled.  This work was done as part of [KEP-4603: Tune CrashLoopBackOff](https://kep.k8s.io/4603) led by SIG Node."
+    },
+    {
+      "heading": "Custom container stop signals",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "StopSignal",
+        "ContainerStopSignals"
+      ],
+      "summary": "Before Kubernetes v1.33, stop signals could only be set in container image definitions (for example, via the `StopSignal` configuration field in the image metadata). If you wanted to modify termination behavior, you needed to build a custom container image. By enabling the (alpha) `ContainerStopSignals` feature gate in Kubernetes v1.33, you can now define custom stop signals directly within Pod specifications. This is defined in the container's `lifecycle.stopSignal` field and requires the Pod's `spec.os.name` field to be present. If unspecified, containers fall back to"
+    },
+    {
+      "heading": "DRA enhancements galore!",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DRADeviceTaints",
+        "DRAPrioritizedList",
+        "DRAAdminAccess",
+        "DRAPartitionableDevices",
+        "DynamicResourceAllocation"
+      ],
+      "summary": "Kubernetes v1.33 continues to develop Dynamic Resource Allocation (DRA) with features designed for today\u2019s complex infrastructures. DRA is an API for requesting and sharing resources between pods and containers inside a pod. Typically those resources are devices such as GPUs, FPGAs, and network adapters.  The following are all the alpha DRA feature gates introduced in v1.33:"
+    },
+    {
+      "heading": "Robust image pull policy to authenticate images for `IfNotPresent` and `Never`",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature allows users to ensure that kubelet requires an image pull authentication check for each new set of credentials, regardless of whether the image is already present on the node.  This work was done as part of [KEP-2535: Ensure secret pulled images](https://kep.k8s.io/2535) led by SIG Auth."
+    },
+    {
+      "heading": "Node topology labels are available via downward API",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature enables Node topology labels to be exposed via the downward API. Prior to Kubernetes v1.33, a workaround involved using an init container to query the Kubernetes API for the underlying node; this alpha feature simplifies how workloads can access Node topology information.  This work was done as part of [KEP-4742: Expose Node labels via downward API](https://kep.k8s.io/4742) led by SIG Node."
+    },
+    {
+      "heading": "Better pod status with generation and observed generation",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Prior to this change, the `metadata.generation` field was unused in pods. Along with extending to support `metadata.generation`, this feature will introduce `status.observedGeneration` to provide clearer pod status.  This work was done as part of [KEP-5067: Pod Generation](https://kep.k8s.io/5067) led by SIG Node."
+    },
+    {
+      "heading": "Support for split level 3 cache architecture with kubelet\u2019s CPU Manager",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The previous kubelet\u2019s CPU Manager was unaware of split L3 cache architecture (also known as Last Level Cache, or LLC), and can potentially distribute CPU assignments without considering the split L3 cache, causing a noisy neighbor problem. This alpha feature improves the CPU Manager to better assign CPU cores for better performance.  This work was done as part of"
+    },
+    {
+      "heading": "PSI (Pressure Stall Information) metrics for scheduling improvements",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This feature adds support on Linux nodes for providing PSI stats and metrics using cgroupv2. It can detect resource shortages and provide nodes with more granular control for pod scheduling.  This work was done as part of [KEP-4205: Support PSI based on cgroupv2](https://kep.k8s.io/4205) led by SIG Node."
+    },
+    {
+      "heading": "Secret-less image pulls with kubelet",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The kubelet's on-disk credential provider now supports optional Kubernetes ServiceAccount (SA) token fetching. This simplifies authentication with image registries by allowing cloud providers to better integrate with OIDC compatible identity solutions.  This work was done as part of [KEP-4412: Projected service account tokens for Kubelet image credential providers](https://kep.k8s.io/4412)"
+    },
+    {
+      "heading": "Graduations to stable",
+      "stage": "Stable",
+      "keps": [
+        "3094",
+        "3633",
+        "4193",
+        "1495",
+        "1880",
+        "2433",
+        "2589",
+        "2644",
+        "3866",
+        "4004",
+        "2590",
+        "3850",
+        "3998",
+        "753",
+        "4008",
+        "2625",
+        "4444",
+        "3857"
+      ],
+      "prs": [],
+      "identifiers": [
+        "MatchLabelKeys"
+      ],
+      "summary": "This lists all the features that have graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the release notes.  This release includes a total of 18 enhancements promoted to stable:"
+    },
+    {
+      "heading": "Deprecations and removals",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "GitRepoVolumeDriver"
+      ],
+      "summary": "As Kubernetes develops and matures, features may be deprecated, removed, or replaced with better ones to improve the project's overall health. See the Kubernetes [deprecation and removal policy](/docs/reference/using-api/deprecation-policy/) for more details on this process. Many of these deprecations and removals were announced in the [Deprecations and Removals blog post](/blog/2025/03/26/kubernetes-v1-33-upcoming-changes/)."
+    },
+    {
+      "heading": "Deprecation of the stable Endpoints API",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The [EndpointSlices](/docs/concepts/services-networking/endpoint-slices/) API has been stable since v1.21, which effectively replaced the original Endpoints API. While the original Endpoints API was simple and straightforward, it also posed some challenges when scaling to large numbers of network endpoints. The EndpointSlices API has introduced new features such as dual-stack networking, making the original Endpoints API ready for deprecation.  This deprecation only impacts those who use the Endpoints API directly from workloads or scripts; these users should migrate to use EndpointSlices inst"
+    },
+    {
+      "heading": "Removal of kube-proxy version information in node status",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Following its deprecation in v1.31, as highlighted in the [release announcement](/blog/2024/07/19/kubernetes-1-31-upcoming-changes/#deprecation-of-status-nodeinfo-kubeproxyversion-field-for-nodes-kep-4004-https-github-com-kubernetes-enhancements-issues-4004), the `status.nodeInfo.kubeProxyVersion` field will be removed in v1.33. This field was set by kubelet, but its value was not consistently accurate. As it has been disabled by default since v1.31, the v1.33 release will remove this field entirely.  You can find more in [KEP-4004: Deprecate status.nodeInfo.kubeProxyVersion field](https://kep"
+    },
+    {
+      "heading": "Removal of host network support for Windows pods",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Windows Pod networking aimed to achieve feature parity with Linux and provide better cluster density by allowing containers to use the Node\u2019s networking namespace. The original implementation landed as alpha with v1.26, but as it faced unexpected containerd behaviours, and alternative solutions were available, the Kubernetes project has decided to withdraw the associated KEP. We're expecting to see support fully removed in v1.33.  You can find more in [KEP-3503: Host network support for Windows pods](https://kep.k8s.io/3503)."
+    },
+    {
+      "heading": "Support for user namespaces within Linux Pods",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "One of the oldest open KEPs today is [KEP-127](https://kep.k8s.io/127), Pod security improvement by using Linux [User namespaces](/docs/concepts/workloads/pods/user-namespaces/) for Pods. This KEP was first opened in late 2016, and after multiple iterations, had its alpha release in v1.25, initial beta in v1.30 (where it was disabled by default), and now is set to be a part of v1.33, where the feature is available by default.  This support will not impact existing Pods unless you manually specify `pod.spec.hostUsers` to opt in. As highlighted in the [v1.30 sneak peek blog](/blog/2024/03/12/kub"
+    },
+    {
+      "heading": "In-place resource resize for vertical scaling of Pods",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "When provisioning a Pod, you can use various resources such as Deployment, StatefulSet, etc. Scalability requirements may need horizontal scaling by updating the Pod replica count, or vertical scaling by updating resources allocated to Pod\u2019s container(s). Before this enhancement, container resources defined in a Pod's `spec` were immutable, and updating any of these details within a Pod template would trigger Pod replacement.  But what if you could dynamically update the resource configuration for your existing Pods without restarting them?  The [KEP-1287](https://kep.k8s.io/1287) is precisely"
+    },
+    {
+      "heading": "DRA\u2019s ResourceClaim Device Status graduates to beta",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `devices` field in ResourceClaim `status`, originally introduced in the v1.32 release, is likely to graduate to beta in v1.33. This field allows drivers to report device status data, improving both observability and troubleshooting capabilities.  For example, reporting the interface name, MAC address, and IP addresses of network interfaces in the status of a ResourceClaim can significantly help in configuring and managing network services, as well as in debugging network related issues. You can read more about ResourceClaim Device Status in [Dynamic Resource Allocation: ResourceClaim Devic"
+    },
+    {
+      "heading": "Ordered namespace deletion",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This KEP introduces a more structured deletion process for Kubernetes namespaces to ensure secure and deterministic resource removal. The current semi-random deletion order can create security gaps or unintended behaviour, such as Pods persisting after their associated NetworkPolicies are deleted. By enforcing a structured deletion sequence that respects logical and security dependencies, this approach ensures Pods are removed before other resources. The design improves Kubernetes\u2019s security and reliability by mitigating risks associated with non-deterministic deletions.  You can find more in "
+    },
+    {
+      "heading": "Enhancements for indexed job management",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "These two KEPs are both set to graduate to GA to provide better reliability for job handling, specifically for indexed jobs. [KEP-3850](https://kep.k8s.io/3850) provides per-index backoff limits for indexed jobs, which allows each index to be fully independent of other indexes. Also, [KEP-3998](https://kep.k8s.io/3998) extends Job API to define conditions for making an indexed job as successfully completed when not all indexes are succeeded.  You can find more in [KEP-3850: Backoff Limit Per Index For Indexed Jobs](https://kep.k8s.io/3850) and [KEP-3998: Job success/completion policy](https://"
+    }
+  ],
+  "ground_truth_keps": [
+    "3094",
+    "3633",
+    "4193",
+    "1495",
+    "1880",
+    "2433",
+    "2589",
+    "2644",
+    "3866",
+    "4004",
+    "2590",
+    "3850",
+    "3998",
+    "753",
+    "4008",
+    "2625",
+    "4444",
+    "3857"
+  ],
+  "ground_truth_identifiers": [
+    "ServiceCIDR",
+    "IPAddress",
+    "PreferClose",
+    "PodTopologySpread",
+    "Honor",
+    "Ignore",
+    "SupplementalGroupsPolicy",
+    "StopSignal",
+    "ContainerStopSignals",
+    "DRADeviceTaints",
+    "DRAPrioritizedList",
+    "DRAAdminAccess",
+    "DRAPartitionableDevices",
+    "DynamicResourceAllocation",
+    "IfNotPresent",
+    "Never",
+    "MatchLabelKeys",
+    "GitRepoVolumeDriver"
+  ]
+}

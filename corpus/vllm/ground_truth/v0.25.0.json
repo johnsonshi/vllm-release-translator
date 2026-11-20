@@ -1,0 +1,182 @@
+{
+  "project": "vllm",
+  "version": "v0.25.0",
+  "published_date": "2026-07-11",
+  "tldr_bullets": [],
+  "highlight_subsections": [
+    {
+      "heading": "Model Runner V2 is now the default for all dense models",
+      "summary": "**Model Runner V2 is now the default for all dense models** (#44443). Building on quantized-model support from the previous release, MRv2 is now the standard execution path, with new support for EVS (#46535), realtime embeddings (#46762), prefix caching for Mamba hybrid models (#42406), multimodal-prefix bidirectional attention (#46942), and dynamic speculative decoding compatible with full CUDA graphs (#45953).",
+      "prs": [
+        "44443",
+        "46535",
+        "46762",
+        "42406",
+        "46942",
+        "45953"
+      ]
+    },
+    {
+      "heading": "PagedAttention has been removed",
+      "summary": "**PagedAttention has been removed** (#47361). The legacy attention implementation is deleted now that V1/MRv2 backends are the standard path.",
+      "prs": [
+        "47361"
+      ]
+    },
+    {
+      "heading": "The Transformers modeling backend is now as fast as native vLLM",
+      "summary": "**The Transformers modeling backend is now as fast as native vLLM** (#47187), and gained FP8 MoE support (#46820), CUDA graph + embed scaling fixes (#48010), and migration of GPTBigCode/Starcoder2 (#30966) and RoBERTa (#47452).",
+      "prs": [
+        "47187",
+        "46820",
+        "48010",
+        "30966",
+        "47452"
+      ]
+    },
+    {
+      "heading": "New models",
+      "summary": "**New models**: LLaVA-OneVision-2 (#44785), Unlimited OCR (#46564, #47102), MOSS-Transcribe-Diarize (#47729), openai/privacy-filter (#41026), and Hy3 (#47192). GLM-5 / DeepSeek-V3.2 landed in the model zoo (#46808) with GLM-5.2 tuning, and MiniMax-M3 gained pipeline parallelism (#45810) and NVFP4 support (#46756).",
+      "prs": [
+        "44785",
+        "46564",
+        "47102",
+        "47729",
+        "41026",
+        "47192",
+        "46808",
+        "45810",
+        "46756"
+      ]
+    },
+    {
+      "heading": "New Streaming Parser Engine",
+      "summary": "**New Streaming Parser Engine** (#46610) \u2014 a unified tool-call/reasoning parsing framework, with a new Kimi k2.5/k2.6/k2.7 parser and ports of seed_oss (#46314) and DeepSeek V4 (#45877). The Rust frontend continues to mature with HTTPS/mTLS (#45890), a DP supervisor (#47076), and profiler control routes (#46306).",
+      "prs": [
+        "46610",
+        "46314",
+        "45877",
+        "45890",
+        "47076",
+        "46306"
+      ]
+    },
+    {
+      "heading": "Universal speculative decoding for heterogeneous vocabularies (TLI)",
+      "summary": "**Universal speculative decoding for heterogeneous vocabularies (TLI)** (#38174), plus new DSpark (#46995) and DFlash (#46770, #46853) drafters.",
+      "prs": [
+        "38174",
+        "46995",
+        "46770",
+        "46853"
+      ]
+    }
+  ],
+  "upgrade_rows": [
+    {
+      "change": "**PagedAttention deleted** (#47361).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "47361"
+      ]
+    },
+    {
+      "change": "Models removed: Baichuan (#46362), Aquila (#46605), Grok (#46706), Tarsier / Tarsier2 (#47143), AyaVision / MusicFlamingo (#47263), Mantis (#46806).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "46362",
+        "46605",
+        "46706",
+        "47143",
+        "47263",
+        "46806"
+      ]
+    },
+    {
+      "change": "Deprecated the old FP8 online MoE quantization class (#44514); legacy `api_server.py` moved to the examples directory (#46783); `gptq_marlin` removed from supported ROCm quant schemes (#46655).",
+      "action": "Check deprecation/removal impact before upgrading",
+      "prs": [
+        "44514",
+        "46783",
+        "46655"
+      ]
+    }
+  ],
+  "ground_truth_prs": [
+    "44443",
+    "46535",
+    "46762",
+    "42406",
+    "46942",
+    "45953",
+    "47361",
+    "47187",
+    "46820",
+    "48010",
+    "30966",
+    "47452",
+    "44785",
+    "46564",
+    "47102",
+    "47729",
+    "41026",
+    "47192",
+    "46808",
+    "45810",
+    "46756",
+    "46610",
+    "46314",
+    "45877",
+    "45890",
+    "47076",
+    "46306",
+    "38174",
+    "46995",
+    "46770",
+    "46853",
+    "47361",
+    "46362",
+    "46605",
+    "46706",
+    "47143",
+    "47263",
+    "46806",
+    "44514",
+    "46783",
+    "46655"
+  ],
+  "ground_truth_benchmarks": [
+    {
+      "category": "Hardware & Performance",
+      "claim": "GLM-5.2 / DeepSeek: `fused_indexer_q_rope_quant` Triton kernel (1.9\u20133.3% E2E throughput) (#46862), reduce-scatter MoE all-reduce (3.1\u20133.2% E2E) (#46635), op fusion for GLM5/DSV3.2 (#46876), `token_to_req_indices` cache for DSv4 (5\u20136x kernel speedup) (#47474), better DSv4 MXFP8 kernel (#47229), redundant-op removal (#47198, #46651).",
+      "prs": [
+        "46862",
+        "46635",
+        "46876",
+        "47474",
+        "47229",
+        "47198",
+        "46651"
+      ]
+    },
+    {
+      "category": "Hardware & Performance",
+      "claim": "NVIDIA/Blackwell: FlashInfer fused all-reduce tuned for world_size=16 on GB300 (#46392), restored NVFP4 swizzled-scale zero-init to recover Blackwell decode throughput (#45739), CuTeDSL/FA4-MLA warmup infrastructure (#46182), skip cooperative top-K on SM120 (#47164), B12x backend for non-gated MoEs (#43328).",
+      "prs": [
+        "46392",
+        "45739",
+        "46182",
+        "47164",
+        "43328"
+      ]
+    },
+    {
+      "category": "API & Frontend",
+      "claim": "CLI/UX: TTFT and TPS printing in `vllm chat` (#46775), `model_class_overrides` for development/debugging (#47148).",
+      "prs": [
+        "46775",
+        "47148"
+      ]
+    }
+  ]
+}

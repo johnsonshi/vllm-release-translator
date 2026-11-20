@@ -1,0 +1,153 @@
+{
+  "project": "kubernetes",
+  "version": "v1.29",
+  "blog_title": "Kubernetes v1.29: Mandala",
+  "release_date": "2023-12-13",
+  "reported_enhancements_count": 49,
+  "spotlight_count": 15,
+  "spotlights": [
+    {
+      "heading": "ReadWriteOncePod PersistentVolume access mode ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes, volume [access modes](/docs/concepts/storage/persistent-volumes/#access-modes) are the way you can define how durable storage is consumed. These access modes are a part of the spec for PersistentVolumes (PVs) and PersistentVolumeClaims (PVCs). When using storage, there are different ways to model how that storage is consumed. For example, a storage system like a network file share can have many users all reading and writing data simultaneously. In other cases maybe everyone is allowed to read data but not write it. For highly sensitive data, maybe only one user is allowed to rea"
+    },
+    {
+      "heading": "Node volume expansion Secret support for CSI drivers ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "In Kubernetes, a volume expansion operation may include the expansion of the volume on the node, which involves filesystem resize. Some CSI drivers require secrets, for example a credential for accessing a SAN fabric, during the node expansion for the following use cases: * When a PersistentVolume represents encrypted block storage, for example using LUKS, you may need to provide a passphrase in order to expand the device. * For various validations, the CSI driver needs to have credentials to communicate with the backend storage system at time of node expansion.  To meet this requirement, the "
+    },
+    {
+      "heading": "KMS v2 encryption at rest generally available ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "One of the first things to consider when securing a Kubernetes cluster is encrypting persisted API data at rest. KMS provides an interface for a provider to utilize a key stored in an external key service to perform this encryption. With the Kubernetes v1.29, KMS v2 has become a stable feature bringing numerous improvements in performance, key rotation, health check & status, and observability. These enhancements provide users with a reliable solution to encrypt all resources in their Kubernetes clusters. You can read more about this in [KEP-3299](https://kep.k8s.io/3299)."
+    },
+    {
+      "heading": "Node lifecycle separated from taint management ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "TaintManager",
+        "NodeLifecycleController"
+      ],
+      "summary": "As title describes, it's to decouple `TaintManager` that performs taint-based pod eviction from `NodeLifecycleController` and make them two separate controllers: `NodeLifecycleController` to add taints to unhealthy nodes and `TaintManager` to perform pod deletion on nodes tainted with NoExecute effect."
+    },
+    {
+      "heading": "Clean up for legacy Secret-based ServiceAccount tokens ()",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Kubernetes switched to using more secure service account tokens, which were time-limited and bound to specific pods by 1.22. Stopped auto-generating legacy secret-based service account tokens in 1.24. Then started labeling remaining auto-generated secret-based tokens still in use with their last-used date in 1.27.  In v1.29, to reduce potential attack surface, the LegacyServiceAccountTokenCleanUp feature labels legacy auto-generated secret-based tokens as invalid if they have not been used for a long time (1 year by default), and automatically removes them if use is not attempted for a long ti"
+    },
+    {
+      "heading": "Define Pod affinity or anti-affinity using `matchLabelKeys` ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "One enhancement will be introduced in PodAffinity/PodAntiAffinity as alpha. It will increase the accuracy of calculation during rolling updates."
+    },
+    {
+      "heading": "nftables backend for kube-proxy ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The default kube-proxy implementation on Linux is currently based on iptables. This was the preferred packet filtering and processing system in the Linux kernel for many years (starting with the 2.4 kernel in 2001). However, unsolvable problems with iptables led to the development of a successor, nftables. Development on iptables has mostly stopped, with new features and performance improvements primarily going into nftables instead.  This feature adds a new backend to kube-proxy based on nftables, since some Linux distributions already started to deprecate and remove iptables, and nftables cl"
+    },
+    {
+      "heading": "APIs to manage IP address ranges for Services ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "Services are an abstract way to expose an application running on a set of Pods. Services can have a cluster-scoped virtual IP address, that is allocated from a predefined CIDR defined in the kube-apiserver flags. However, users may want to add, remove, or resize existing IP ranges allocated for Services without having to restart the kube-apiserver.  This feature implements a new allocator logic that uses 2 new API Objects: ServiceCIDR and IPAddress, allowing users to dynamically increase the number of Services IPs available by creating new ServiceCIDRs. This helps to resolve problems like IP e"
+    },
+    {
+      "heading": "Add support to containerd/kubelet/CRI to support image pull per runtime class ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "RuntimeClassInImageCriApi"
+      ],
+      "summary": "Kubernetes v1.29 adds support to pull container images based on the RuntimeClass of the Pod that uses them. This feature is off by default in v1.29 under a feature gate called `RuntimeClassInImageCriApi`.  Container images can either be a manifest or an index. When the image being pulled is an index (image index has a list of image manifests ordered by platform), platform matching logic in the container runtime is used to pull an appropriate image manifest from the index. By default, the platform matching logic picks a manifest that matches the host that the image pull is being executed from. "
+    },
+    {
+      "heading": "In-place updates for Pod resources, for Windows Pods ()",
+      "stage": "Unspecified",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "As an alpha feature, Kubernetes Pods can be mutable with respect to their `resources`, allowing users to change the _desired_ resource requests and limits for a Pod without the need to restart the Pod. With v1.29, this feature is now supported for Windows containers."
+    },
+    {
+      "heading": "Graduated to stable",
+      "stage": "Stable",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "This lists all the features that graduated to stable (also known as _general availability_). For a full list of updates including new features and graduations from alpha to beta, see the [release notes](https://github.com/kubernetes/kubernetes/blob/master/CHANGELOG/CHANGELOG-1.29.md).  This release includes a total of 11 enhancements promoted to Stable:"
+    },
+    {
+      "heading": "Deprecations and removals",
+      "stage": "Deprecation",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DisableCloudProviders",
+        "DisableKubeletCloudCredentialProviders"
+      ],
+      "summary": "#### Removal of in-tree integrations with cloud providers ([SIG Cloud Provider](https://github.com/kubernetes/community/tree/master/sig-cloud-provider)) {#in-tree-cloud-provider-integration-removal}  Kubernetes v1.29 defaults to operating _without_ a built-in integration to any cloud provider. If you have previously been relying on in-tree cloud provider integrations (with Azure, GCE, or vSphere) then you can either: - enable an equivalent external [cloud controller manager](/docs/concepts/architecture/cloud-controller/)   integration _(recommended)_"
+    },
+    {
+      "heading": "Removal of in-tree integrations with cloud providers ()",
+      "stage": "Removal",
+      "keps": [],
+      "prs": [],
+      "identifiers": [
+        "DisableCloudProviders",
+        "DisableKubeletCloudCredentialProviders"
+      ],
+      "summary": "The [feature gates](/docs/reference/command-line-tools-reference/feature-gates/) `DisableCloudProviders` and `DisableKubeletCloudCredentialProviders` will both be set to `true` by default for Kubernetes v1.29. This change will require that users who are currently using in-tree cloud provider integrations (Azure, GCE, or vSphere) enable external cloud controller managers, or opt in to the legacy integration by setting the associated feature gates to `false`.  Enabling external cloud controller managers means you must run a suitable cloud controller manager within your cluster's control plane; i"
+    },
+    {
+      "heading": "Removal of the `v1beta2` flow control API group",
+      "stage": "Beta",
+      "keps": [],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The _flowcontrol.apiserver.k8s.io/v1beta2_ API version of FlowSchema and PriorityLevelConfiguration will [no longer be served](/docs/reference/using-api/deprecation-guide/#v1-29) in Kubernetes v1.29.   To prepare for this, you can edit your existing manifests and rewrite client software to use the `flowcontrol.apiserver.k8s.io/v1beta3` API version, available since v1.26. All existing persisted objects are accessible via the new API. Notable changes in `flowcontrol.apiserver.k8s.io/v1beta3` include that the PriorityLevelConfiguration `spec.limited.assuredConcurrencyShares` field was renamed to "
+    },
+    {
+      "heading": "Deprecation of the `status.nodeInfo.kubeProxyVersion` field for Node",
+      "stage": "Deprecation",
+      "keps": [
+        "4004"
+      ],
+      "prs": [],
+      "identifiers": [],
+      "summary": "The `.status.kubeProxyVersion` field for Node objects will be [marked as deprecated](https://github.com/kubernetes/enhancements/issues/4004) in v1.29 in preparation for its removal in a future release. This field is not accurate and is set by kubelet, which does not actually know the kube-proxy version, or even if kube-proxy is running."
+    }
+  ],
+  "ground_truth_keps": [
+    "4004"
+  ],
+  "ground_truth_identifiers": [
+    "TaintManager",
+    "NodeLifecycleController",
+    "RuntimeClassInImageCriApi",
+    "DisableCloudProviders",
+    "DisableKubeletCloudCredentialProviders"
+  ]
+}
