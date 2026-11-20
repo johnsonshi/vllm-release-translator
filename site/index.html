@@ -1,88 +1,65 @@
 <!DOCTYPE html>
-<html lang="en" style="color-scheme: dark;">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07090b" />
-  <title>vLLM Pulse — What’s New in vLLM &amp; This Week in vLLM</title>
+  <meta name="theme-color" content="#ffffff" />
+  <title>What’s New in vLLM &amp; Kubernetes — Release Notes for Operators</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg: #07090b;
-      --surface-1: #0d1216;
-      --surface-2: #121920;
-      --surface-3: #18222c;
-      --border: rgba(240, 246, 252, 0.09);
-      --border-strong: rgba(240, 246, 252, 0.18);
-      --text: #f3f7fa;
-      --muted: #9fb0c2;
-      --dim: #687a8f;
-      --lime: #d7f23a;
-      --lime-bg: rgba(215, 242, 58, 0.10);
-      --lime-border: rgba(215, 242, 58, 0.35);
-      --cyan: #54e8d4;
-      --cyan-bg: rgba(84, 232, 212, 0.10);
-      --cyan-border: rgba(84, 232, 212, 0.32);
-      --green: #3ddc84;
-      --green-bg: rgba(61, 220, 132, 0.11);
-      --green-border: rgba(61, 220, 132, 0.35);
-      --amber: #f5a623;
-      --amber-bg: rgba(245, 166, 35, 0.11);
-      --amber-border: rgba(245, 166, 35, 0.35);
-      --red: #ff6b6b;
-      --red-bg: rgba(255, 107, 107, 0.10);
-      --mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-      --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #ffffff;
+      --bg-subtle: #f6f8fa;
+      --bg-callout: #f0f5ff;
+      --bg-warn: #fff8eb;
+      --ink: #111827;
+      --ink-secondary: #374151;
+      --ink-muted: #6b7280;
+      --rule: #e5e7eb;
+      --rule-strong: #d1d5db;
+      --blue: #1d4ed8;
+      --blue-hover: #1e40af;
+      --green-ink: #065f46;
+      --green-bg: #ecfdf5;
+      --amber-ink: #92400e;
+      --amber-bg: #fef3c7;
+      --sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: "Instrument Serif", Georgia, serif;
+      --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
     }
 
     *, *::before, *::after {
       box-sizing: border-box;
-      font-style: normal;
-    }
-
-    @media (pointer: fine) {
-      html {
-        overscroll-behavior: none;
-      }
     }
 
     body {
       margin: 0;
-      background-color: var(--bg);
-      background-image:
-        radial-gradient(85% 50% at 80% -10%, rgba(84, 232, 212, 0.08), transparent 60%),
-        radial-gradient(65% 45% at 15% 0%, rgba(215, 242, 58, 0.06), transparent 60%);
-      color: var(--text);
+      background: var(--bg);
+      color: var(--ink);
       font-family: var(--sans);
-      line-height: 1.6;
+      font-size: 16px;
+      line-height: 1.65;
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
-      touch-action: manipulation;
-    }
-
-    ::selection {
-      background: var(--lime);
-      color: #07090b;
     }
 
     .skip-link {
       position: absolute;
       top: -48px;
       left: 16px;
-      background: var(--lime);
-      color: #07090b;
-      font-weight: 700;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 600;
       padding: 8px 14px;
-      border-radius: 6px;
+      border-radius: 4px;
       z-index: 100;
       text-decoration: none;
-      transition: top 150ms ease;
     }
     .skip-link:focus-visible {
       top: 12px;
-      outline: 2px solid var(--cyan);
+      outline: 2px solid var(--ink);
       outline-offset: 2px;
     }
 
@@ -99,13 +76,14 @@
     }
 
     a {
-      color: var(--cyan);
-      text-decoration: none;
-      transition: color 140ms ease;
+      color: var(--blue);
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
     }
     a:hover {
-      color: var(--lime);
-      text-decoration: underline;
+      color: var(--blue-hover);
+      text-decoration-thickness: 2px;
     }
 
     button {
@@ -116,402 +94,327 @@
 
     button:focus-visible,
     a:focus-visible {
-      outline: 2px solid var(--lime);
+      outline: 2px solid var(--blue);
       outline-offset: 2px;
     }
 
     h1, h2, h3, h4 {
       margin: 0;
+      color: var(--ink);
       text-wrap: balance;
-      letter-spacing: -0.028em;
-      scroll-margin-top: 96px;
+      scroll-margin-top: 24px;
     }
 
     .num {
-      font-family: var(--mono);
       font-variant-numeric: tabular-nums;
     }
 
-    /* TOP PUBLICATION NAVBAR */
-    .navbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(7, 9, 11, 0.88);
-      -webkit-backdrop-filter: blur(16px);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
+    /* TOP MASTHEAD */
+    .site-header {
+      border-bottom: 1px solid var(--rule);
+      background: var(--bg);
     }
 
-    .navbar-inner {
-      max-width: 1320px;
+    .header-inner {
+      max-width: 820px;
       margin: 0 auto;
-      padding: 14px 28px;
+      padding: 16px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 20px;
-      flex-wrap: wrap;
-    }
-
-    .brand-left {
-      display: flex;
-      align-items: center;
       gap: 16px;
       flex-wrap: wrap;
     }
 
-    .project-switcher {
-      display: inline-flex;
-      background: var(--surface-1);
-      border: 1px solid var(--border-strong);
-      border-radius: 9px;
-      padding: 3px;
-      gap: 3px;
+    .header-left {
+      display: flex;
+      align-items: baseline;
+      gap: 20px;
+      flex-wrap: wrap;
     }
 
-    .proj-btn {
+    .site-title {
+      font-family: var(--serif);
+      font-size: 1.85rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--ink);
+      line-height: 1;
+    }
+
+    .project-nav {
+      display: inline-flex;
+      gap: 4px;
+      background: var(--bg-subtle);
+      padding: 3px;
+      border-radius: 6px;
+      border: 1px solid var(--rule);
+    }
+
+    .proj-switch {
       appearance: none;
       border: none;
       background: transparent;
-      color: var(--muted);
-      font-family: var(--mono);
+      color: var(--ink-secondary);
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .proj-switch:hover {
+      color: var(--ink);
+    }
+    .proj-switch[aria-pressed="true"] {
+      background: var(--bg);
+      color: var(--ink);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .format-nav {
+      display: flex;
+      gap: 20px;
+      align-items: baseline;
+    }
+
+    .format-link {
+      appearance: none;
+      border: none;
+      background: transparent;
+      padding: 4px 0;
+      font-size: 0.92rem;
+      font-weight: 500;
+      color: var(--ink-muted);
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .format-link:hover {
+      color: var(--ink);
+    }
+    .format-link[aria-current="page"] {
+      color: var(--ink);
+      font-weight: 600;
+      border-bottom-color: var(--blue);
+    }
+
+    /* COMPACT EDITION STRIP */
+    .edition-strip {
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .edition-strip-inner {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 9px 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .edition-strip-inner::-webkit-scrollbar {
+      display: none;
+    }
+
+    .strip-label {
       font-size: 0.78rem;
       font-weight: 600;
-      padding: 6px 12px;
-      border-radius: 6px;
-      cursor: pointer;
-      transition: background-color 140ms ease, color 140ms ease;
-    }
-    .proj-btn:hover {
-      color: var(--text);
-    }
-    .proj-btn[aria-pressed="true"] {
-      background: var(--lime);
-      color: #07090b;
-    }
-
-    .brand-tagline {
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-
-    .mode-tabs {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .mode-btn {
-      appearance: none;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 0.86rem;
-      font-weight: 600;
-      padding: 8px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
-    }
-    .mode-btn:hover {
-      color: var(--text);
-      border-color: var(--border-strong);
-    }
-    .mode-btn[aria-current="page"] {
-      background: var(--cyan-bg);
-      border-color: var(--cyan-border);
-      color: var(--cyan);
-    }
-
-    .mode-badge {
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.07);
-    }
-
-    /* VERSION BAR (UNDER NAVBAR IN RELEASE MODE) */
-    .version-bar {
-      background: var(--surface-1);
-      border-bottom: 1px solid var(--border);
-    }
-
-    .version-bar-inner {
-      max-width: 1320px;
-      margin: 0 auto;
-      padding: 10px 28px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      overflow-x: auto;
-    }
-
-    .version-bar-label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--dim);
+      color: var(--ink-muted);
       margin-right: 4px;
       white-space: nowrap;
     }
 
-    .ver-pill {
+    .ver-btn {
       appearance: none;
+      border: 1px solid transparent;
       background: transparent;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 600;
-      font-variant-numeric: tabular-nums;
-      padding: 5px 12px;
-      border-radius: 999px;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.83rem;
+      font-weight: 500;
+      color: var(--ink-secondary);
       cursor: pointer;
       white-space: nowrap;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+      font-variant-numeric: tabular-nums;
     }
-    .ver-pill:hover {
-      color: var(--text);
-      border-color: var(--border-strong);
+    .ver-btn:hover {
+      background: var(--bg);
+      border-color: var(--rule);
+      color: var(--ink);
     }
-    .ver-pill[aria-current="true"] {
-      background: var(--lime-bg);
-      border-color: var(--lime-border);
-      color: var(--lime);
+    .ver-btn[aria-current="true"] {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #ffffff;
+      font-weight: 600;
     }
 
-    /* MAIN EDITORIAL CONTAINER */
-    .container {
-      max-width: 1320px;
+    .strip-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--rule-strong);
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    /* SINGLE EDITORIAL READING COLUMN */
+    .layout {
+      max-width: 820px;
       margin: 0 auto;
-      padding: 36px 28px 96px;
+      padding: 32px 24px 96px;
     }
 
-    /* RELEASE ARTICLE LAYOUT (MAIN + STICKY RIGHT TOC) */
-    .article-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 260px;
-      gap: 44px;
-      align-items: start;
-    }
-
-    /* HERO HEADER */
-    .article-hero {
-      padding-bottom: 28px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 32px;
-    }
-
-    .hero-meta {
+    .jump-nav {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid var(--rule);
       display: flex;
-      align-items: center;
-      gap: 10px;
+      align-items: baseline;
       flex-wrap: wrap;
-      margin-bottom: 14px;
-      font-family: var(--mono);
-      font-size: 0.76rem;
-      color: var(--muted);
+      gap: 6px 16px;
+      font-size: 0.85rem;
     }
-
-    .pill-badge {
-      font-family: var(--mono);
-      font-size: 0.7rem;
+    .jump-label {
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      padding: 3px 9px;
-      border-radius: 999px;
-    }
-    .tone-green {
-      background: var(--green-bg);
-      color: var(--green);
-      border: 1px solid var(--green-border);
-    }
-    .tone-amber {
-      background: var(--amber-bg);
-      color: var(--amber);
-      border: 1px solid var(--amber-border);
-    }
-    .tone-cyan {
-      background: var(--cyan-bg);
-      color: var(--cyan);
-      border: 1px solid var(--cyan-border);
-    }
-    .tone-lime {
-      background: var(--lime-bg);
-      color: var(--lime);
-      border: 1px solid var(--lime-border);
+      color: var(--ink-muted);
     }
 
-    .hero-title {
-      font-size: clamp(1.9rem, 3.4vw, 2.75rem);
-      font-weight: 800;
-      line-height: 1.1;
-      letter-spacing: -0.035em;
-      margin-bottom: 18px;
+    /* ARTICLE PROSE */
+    article {
+      min-width: 0;
     }
 
-    .exec-summary-box {
-      background: var(--surface-1);
-      border: 1px solid var(--border-strong);
-      border-left: 4px solid var(--lime);
-      border-radius: 10px;
-      padding: 18px 22px;
-      font-size: 1.01rem;
-      color: #dce6f0;
+    .article-header {
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--rule);
+      margin-bottom: 28px;
+    }
+
+    .article-byline {
+      font-size: 0.88rem;
+      color: var(--ink-muted);
+      margin-bottom: 10px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .article-title {
+      font-family: var(--serif);
+      font-size: clamp(2.15rem, 3.8vw, 2.85rem);
+      font-weight: 400;
+      line-height: 1.12;
+      letter-spacing: -0.015em;
+      margin-bottom: 16px;
+    }
+
+    .article-standfirst {
+      font-size: 1.08rem;
       line-height: 1.65;
-    }
-    .exec-summary-label {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--lime);
-      margin-bottom: 6px;
-      display: block;
+      color: var(--ink-secondary);
+      margin: 0;
     }
 
-    /* 5-PART SECTIONS */
-    .editorial-section {
-      padding: 32px 0;
-      border-bottom: 1px solid var(--border);
+    /* SECTIONS */
+    .doc-section {
+      padding: 28px 0;
+      border-bottom: 1px solid var(--rule);
     }
-    .editorial-section:last-child {
+    .doc-section:last-child {
       border-bottom: none;
     }
 
-    .sec-kicker {
-      font-family: var(--mono);
-      font-size: 0.74rem;
-      font-weight: 600;
-      color: var(--lime);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 4px;
-      display: block;
-    }
-
-    .sec-title {
-      font-size: 1.55rem;
+    .doc-section h2 {
+      font-size: 1.35rem;
       font-weight: 700;
+      letter-spacing: -0.02em;
       margin-bottom: 6px;
     }
 
-    .sec-desc {
-      font-size: 0.92rem;
-      color: var(--muted);
-      margin-bottom: 22px;
+    .section-lead {
+      font-size: 0.94rem;
+      color: var(--ink-muted);
+      margin: 0 0 22px 0;
     }
 
-    /* PART 1: SYSDIG-STYLE FEATURE DEEP-DIVE CARDS */
-    .feature-stack {
+    /* PART 1: EDITORIAL ENTRIES (NO BOX SOUP) */
+    .change-entry + .change-entry {
+      margin-top: 28px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .change-head {
       display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .feature-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      transition: border-color 140ms ease;
-    }
-    .feature-card:hover {
-      border-color: var(--border-strong);
-    }
-
-    .feature-card-head {
-      display: flex;
-      align-items: flex-start;
+      align-items: baseline;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 16px;
+      margin-bottom: 10px;
     }
 
-    .feature-card-title {
-      font-size: 1.18rem;
+    .change-title {
+      font-size: 1.08rem;
       font-weight: 700;
-      color: var(--text);
+      color: var(--ink);
     }
 
-    .feature-badges {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .before-now-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .before-box, .now-box {
-      border-radius: 9px;
-      padding: 14px 16px;
-      font-size: 0.9rem;
-      line-height: 1.58;
-    }
-
-    .before-box {
-      background: rgba(255, 107, 107, 0.05);
-      border: 1px solid rgba(255, 107, 107, 0.18);
-      color: var(--muted);
-    }
-
-    .now-box {
-      background: rgba(61, 220, 132, 0.06);
-      border: 1px solid rgba(61, 220, 132, 0.22);
-      color: var(--text);
-    }
-
-    .box-tag {
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 6px;
-      display: block;
-    }
-    .before-box .box-tag { color: var(--red); }
-    .now-box .box-tag { color: var(--green); }
-
-    .code-block {
-      margin: 0;
-      background: #050709;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 13px 16px;
+    .change-refs {
       font-family: var(--mono);
       font-size: 0.8rem;
-      color: #d2e3f3;
-      overflow-x: auto;
-      line-height: 1.5;
+      font-variant-numeric: tabular-nums;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
     }
 
-    /* PART 2 & PART 4 TABLES */
-    .table-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: 11px;
+    .stage-tag {
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+    .stage-green {
+      background: var(--green-bg);
+      color: var(--green-ink);
+    }
+    .stage-amber {
+      background: var(--amber-bg);
+      color: var(--amber-ink);
+    }
+    .stage-blue {
+      background: var(--bg-callout);
+      color: var(--blue);
+    }
+
+    .change-prose {
+      margin: 0 0 10px 0;
+      color: var(--ink-secondary);
+      font-size: 0.96rem;
+    }
+    .change-prose strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    pre.code-sample {
+      margin: 14px 0 0 0;
+      background: var(--bg-subtle);
+      border: 1px solid var(--rule);
+      border-radius: 6px;
+      padding: 12px 15px;
+      font-family: var(--mono);
+      font-size: 0.81rem;
+      line-height: 1.55;
+      color: var(--ink);
       overflow-x: auto;
+    }
+
+    /* TABLES */
+    .table-scroll {
+      overflow-x: auto;
+      border-top: 1px solid var(--rule-strong);
+      border-bottom: 1px solid var(--rule-strong);
     }
 
     table {
@@ -522,10 +425,10 @@
     }
 
     th, td {
-      padding: 14px 16px;
+      padding: 11px 12px;
       text-align: left;
       vertical-align: top;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid var(--rule);
     }
 
     tr:last-child td {
@@ -533,256 +436,130 @@
     }
 
     th {
-      font-family: var(--mono);
-      font-size: 0.72rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--muted);
-      background: var(--surface-2);
+      color: var(--ink);
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--rule-strong);
+      font-size: 0.82rem;
     }
 
-    /* PART 3: JARGON CARDS */
-    .jargon-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 14px;
-    }
-
-    .jargon-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .jargon-term {
-      font-family: var(--mono);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--cyan);
-    }
-
-    .jargon-plain {
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-
-    .jargon-takeaway {
-      margin-top: auto;
-      padding-top: 10px;
-      border-top: 1px dashed var(--border);
-      font-size: 0.84rem;
-      color: var(--text);
-    }
-    .jargon-takeaway strong {
-      color: var(--lime);
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      margin-right: 6px;
-    }
-
-    /* PART 5: BENCHMARK PROOF BARS */
-    .bench-list {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .bench-row {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px 20px;
-    }
-
-    .bench-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 8px;
-    }
-
-    .bench-title {
-      font-weight: 700;
-      font-size: 0.96rem;
-    }
-
-    .bench-hw {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .bench-gain {
-      font-family: var(--mono);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--lime);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .bench-track {
-      height: 8px;
-      background: var(--surface-3);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-
-    .bench-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--cyan), var(--lime));
-      border-radius: 999px;
-    }
-
-    /* STICKY RIGHT TOC */
-    .toc-box {
-      position: sticky;
-      top: 86px;
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      padding: 18px;
-    }
-
-    .toc-heading {
-      font-family: var(--mono);
-      font-size: 0.72rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--dim);
-      margin-bottom: 12px;
-    }
-
-    .toc-links {
-      list-style: none;
+    /* PART 3: DEFINITION LIST FOR JARGON */
+    dl.glossary-list {
       margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      font-size: 0.84rem;
-    }
-
-    .toc-links a {
-      color: var(--muted);
-      display: block;
-      padding: 4px 0;
-    }
-    .toc-links a:hover {
-      color: var(--lime);
-      text-decoration: none;
-    }
-
-    /* WEEKLY DIGEST (LWKD STYLE) */
-    .tldr-3col {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
+      gap: 18px;
     }
 
-    .tldr-card {
-      background: var(--surface-1);
-      border: 1px solid var(--border);
-      border-top: 3px solid var(--cyan);
-      border-radius: 10px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+    .glossary-item {
+      padding-left: 14px;
+      border-left: 2px solid var(--rule-strong);
+    }
+
+    .glossary-item dt {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+
+    .glossary-item dd {
+      margin: 0;
+      font-size: 0.93rem;
+      color: var(--ink-secondary);
+    }
+
+    .glossary-why {
+      margin-top: 4px;
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    /* CALLOUT NOTE */
+    .verdict-note {
+      background: var(--bg-warn);
+      border-left: 3px solid #d97706;
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      font-size: 0.93rem;
+      color: var(--ink);
     }
 
     code {
       font-family: var(--mono);
-      font-size: 0.84em;
-      background: rgba(255, 255, 255, 0.08);
-      padding: 2px 5px;
-      border-radius: 4px;
-      color: #e4f2ff;
+      font-size: 0.85em;
+      background: var(--bg-subtle);
+      border: 1px solid var(--rule);
+      padding: 1px 4px;
+      border-radius: 3px;
+      color: var(--ink);
+    }
+    pre code {
+      background: none;
+      border: none;
+      padding: 0;
     }
 
-    .article-grid > *,
-    .before-now-grid > *,
-    .tldr-3col > *,
-    .jargon-grid > *,
-    .feature-card {
-      min-width: 0;
+    /* WEEKLY DIGEST LIST */
+    .weekly-list {
+      margin: 0;
+      padding-left: 20px;
+      display: grid;
+      gap: 9px;
+      font-size: 0.95rem;
+      color: var(--ink-secondary);
     }
 
-    @media (max-width: 1024px) {
-      .navbar {
-        position: relative;
-        background: var(--bg);
-      }
-      .article-grid {
+    @media (max-width: 860px) {
+      .layout {
         grid-template-columns: minmax(0, 1fr);
+        gap: 28px;
+        padding-top: 20px;
       }
-      .toc-box {
+      .spine {
+        position: static;
+        border-bottom: 1px solid var(--rule);
+        padding-bottom: 18px;
+      }
+      .version-list {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .ver-btn {
+        width: auto;
+        border: 1px solid var(--rule);
+      }
+      .ver-date {
         display: none;
-      }
-      .before-now-grid, .tldr-3col {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
       }
     }
   </style>
 </head>
 <body>
   <a href="#main-content" class="skip-link">Skip to main content</a>
-  <div id="live-announcer" class="sr-only" aria-live="polite"></div>
 
-  <!-- TOP PUBLICATION NAVBAR -->
-  <header class="navbar">
-    <div class="navbar-inner">
-      <div class="brand-left">
-        <div class="project-switcher" role="group" aria-label="Switch project">
-          <button type="button" class="proj-btn" id="proj-vllm" onclick="switchProject('vllm')" aria-pressed="true">
-            vLLM Pulse
-          </button>
-          <button type="button" class="proj-btn" id="proj-kubernetes" onclick="switchProject('kubernetes')" aria-pressed="false">
-            KubePulse (K8s)
-          </button>
-        </div>
-        <div class="brand-tagline" id="brand-tagline">
-          What changed in vLLM — for the models you serve, the GPUs you own, and your inference bill.
-        </div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="site-title" id="site-title">What’s New in vLLM</div>
+      <div class="project-nav" role="group" aria-label="Select project">
+        <button type="button" class="proj-switch" id="btn-proj-vllm" onclick="switchProject('vllm')" aria-pressed="true">
+          vLLM
+        </button>
+        <button type="button" class="proj-switch" id="btn-proj-k8s" onclick="switchProject('kubernetes')" aria-pressed="false">
+          Kubernetes
+        </button>
       </div>
-
-      <nav class="mode-tabs" aria-label="Publication format">
-        <button type="button" class="mode-btn" id="mode-releases" onclick="switchMode('releases')" aria-current="page">
-          <span>What’s New by Release</span>
-          <span class="mode-badge">Sysdig / Versionlog Style</span>
-        </button>
-        <button type="button" class="mode-btn" id="mode-weekly" onclick="switchMode('weekly')">
-          <span id="weekly-tab-label">This Week in vLLM</span>
-          <span class="mode-badge">LWKD Weekly Style</span>
-        </button>
-      </nav>
     </div>
   </header>
 
-  <!-- VERSION SELECTOR BAR -->
-  <nav class="version-bar" id="version-bar" aria-label="Release versions">
-    <div class="version-bar-inner" id="version-bar-inner"></div>
+  <nav class="edition-strip" aria-label="Version and issue selector">
+    <div class="edition-strip-inner" id="edition-strip-inner"></div>
   </nav>
 
-  <!-- MAIN READER CONTENT -->
-  <main class="container" id="main-content" tabindex="-1"></main>
+  <div class="layout">
+    <main id="main-content" tabindex="-1"></main>
+  </div>
 
   <script src="publication_data.js"></script>
   <script>
@@ -790,7 +567,7 @@
 
     let state = {
       project: 'vllm',
-      mode: 'releases', // 'releases' | 'weekly'
+      mode: 'releases',
       version: 'v0.34.0'
     };
 
@@ -821,26 +598,29 @@
         .replace(/"/g, '&quot;');
     }
 
-    function formatInline(str, project) {
+    function formatProse(str, project) {
       if (!str) return '';
       const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
       let out = escapeHtml(str);
       out = out.replace(/`([^`]+)`/g, '<code translate="no">$1</code>');
       out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-      out = out.replace(/\*([^*]+)\*/g, '<strong>$1</strong>');
+      out = out.replace(/\*([^*]+)\*/g, '<em>$1</em>');
       out = out.replace(/(?<![\/a-zA-Z0-9])#(\d{4,6})\b/g, `<a class="num" href="https://github.com/${repo}/pull/$1" target="_blank" rel="noopener">#$1</a>`);
       out = out.replace(/\bKEP-(\d{3,5})\b/gi, '<a class="num" href="https://github.com/kubernetes/enhancements/issues/$1" target="_blank" rel="noopener">KEP-$1</a>');
       return out;
     }
 
-    function formatPrBadge(ref, project) {
+    function formatRefLink(ref, project) {
       const repo = project === 'kubernetes' ? 'kubernetes/kubernetes' : 'vllm-project/vllm';
       if (String(ref).toUpperCase().startsWith('KEP-')) {
         const num = ref.replace(/[^0-9]/g, '');
-        return `<a class="pill-badge tone-cyan num" href="https://github.com/kubernetes/enhancements/issues/${num}" target="_blank" rel="noopener">${escapeHtml(ref)}</a>`;
+        return `<a class="num" href="https://github.com/kubernetes/enhancements/issues/${num}" target="_blank" rel="noopener">${escapeHtml(ref)}</a>`;
       }
       const num = String(ref).replace('#', '');
-      return `<a class="pill-badge tone-cyan num" href="https://github.com/${repo}/pull/${num}" target="_blank" rel="noopener">#${escapeHtml(num)}</a>`;
+      if (/^\d+$/.test(num)) {
+        return `<a class="num" href="https://github.com/${repo}/pull/${num}" target="_blank" rel="noopener">#${escapeHtml(num)}</a>`;
+      }
+      return `<span class="num">${escapeHtml(ref)}</span>`;
     }
 
     function switchProject(proj) {
@@ -850,350 +630,299 @@
         state.version = projObj.releases[0].version;
       }
       syncUrl();
-      renderPage();
+      render();
     }
 
     function switchMode(mode) {
       state.mode = mode;
       syncUrl();
-      renderPage();
+      render();
     }
 
     function selectVersion(ver) {
       state.version = ver;
+      state.mode = 'releases';
       syncUrl();
-      renderPage();
+      render();
     }
 
-    function renderReleaseArticle(projObj, rel) {
+    function renderEditionStrip(projObj) {
+      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
+      const releases = projObj.releases || [];
+
+      return `
+        <button
+          type="button"
+          class="ver-btn"
+          aria-current="${state.mode === 'weekly' ? 'true' : 'false'}"
+          onclick="switchMode('weekly')"
+        >
+          This Week in ${projName}
+        </button>
+        <span class="strip-divider" aria-hidden="true"></span>
+        <span class="strip-label">Releases:</span>
+        ${releases.map(r => {
+          const isSelected = state.mode === 'releases' && r.version === state.version;
+          return `
+            <button
+              type="button"
+              class="ver-btn"
+              aria-current="${isSelected ? 'true' : 'false'}"
+              onclick="selectVersion('${escapeHtml(r.version)}')"
+            >
+              <span translate="no">${escapeHtml(r.version)}</span>
+            </button>
+          `;
+        }).join('')}
+      `;
+    }
+
+    function renderReleaseView(projObj, rel) {
       const fp = rel.five_parts;
       const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
 
       return `
-        <div class="article-grid">
-          <article>
-            <header class="article-hero">
-              <div class="hero-meta">
-                <span class="pill-badge tone-lime">${escapeHtml(rel.badge)}</span>
-                <span>Released ${escapeHtml(rel.date)}</span>
-                <span>·</span>
-                <span>${escapeHtml(rel.stats)}</span>
-              </div>
-              <h1 class="hero-title">What’s New in ${projName} ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
-              <div class="exec-summary-box">
-                <span class="exec-summary-label">Executive Summary // At a Glance</span>
-                ${formatInline(rel.executive_summary, state.project)}
-              </div>
-            </header>
-
-            <!-- PART 1 -->
-            <section class="editorial-section" id="sec-big-deal" aria-labelledby="h-big-deal">
-              <span class="sec-kicker">Part 01 // What Changed &amp; Why It Matters</span>
-              <h2 class="sec-title" id="h-big-deal">1. What’s the Big Deal?</h2>
-              <p class="sec-desc">The headline architectural changes in ${projName} ${escapeHtml(rel.version)}, explained without assuming you follow upstream PRs full-time.</p>
-
-              <div class="feature-stack">
-                ${fp.big_deal.map(item => `
-                  <div class="feature-card">
-                    <div class="feature-card-head">
-                      <h3 class="feature-card-title">${escapeHtml(item.title)}</h3>
-                      <div class="feature-badges">
-                        <span class="pill-badge tone-${item.status_tone || 'green'}">${escapeHtml(item.status)}</span>
-                        ${(item.prs || []).map(p => formatPrBadge(p, state.project)).join('')}
-                      </div>
-                    </div>
-
-                    <div class="before-now-grid">
-                      <div class="before-box">
-                        <span class="box-tag">Before ${escapeHtml(rel.version)}</span>
-                        ${formatInline(item.before, state.project)}
-                      </div>
-                      <div class="now-box">
-                        <span class="box-tag">Now in ${escapeHtml(rel.version)}</span>
-                        ${formatInline(item.now, state.project)}
-                      </div>
-                    </div>
-
-                    ${item.config_snippet ? `<pre class="code-block"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
-                  </div>
-                `).join('')}
-              </div>
-            </section>
-
-            <!-- PART 2 -->
-            <section class="editorial-section" id="sec-who-benefits" aria-labelledby="h-who-benefits">
-              <span class="sec-kicker">Part 02 // Models, Hardware &amp; Unit Economics</span>
-              <h2 class="sec-title" id="h-who-benefits">2. Who Benefits? (Models, GPUs &amp; Your Bill)</h2>
-              <p class="sec-desc">How ${projName} ${escapeHtml(rel.version)} affects the models/workloads you serve, the GPUs/nodes you own, and your infrastructure spend.</p>
-
-              <div class="table-card">
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col" style="width:22%;">Team / Workload Profile</th>
-                      <th scope="col" style="width:26%;">Models / Workloads</th>
-                      <th scope="col" style="width:24%;">GPUs / Hardware</th>
-                      <th scope="col" style="width:28%;">Impact on Your Bill &amp; Latency</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${fp.who_benefits.map(w => `
-                      <tr>
-                        <td><strong>${escapeHtml(w.persona)}</strong></td>
-                        <td>${formatInline(w.models, state.project)}</td>
-                        <td>${formatInline(w.gpus, state.project)}</td>
-                        <td style="color:var(--lime); font-weight:500;">${formatInline(w.impact, state.project)}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            <!-- PART 3 -->
-            <section class="editorial-section" id="sec-jargon" aria-labelledby="h-jargon">
-              <span class="sec-kicker">Part 03 // Plain-English Glossary</span>
-              <h2 class="sec-title" id="h-jargon">3. What Does the Jargon Mean?</h2>
-              <p class="sec-desc">Quick translations for the inference and systems terms introduced in this release.</p>
-
-              <div class="jargon-grid">
-                ${fp.jargon_decoded.map(j => `
-                  <div class="jargon-card">
-                    <div class="jargon-term" translate="no">${escapeHtml(j.term)}</div>
-                    <div class="jargon-plain">${formatInline(j.plain_english, state.project)}</div>
-                    <div class="jargon-takeaway">
-                      <strong>Bottom Line:</strong> ${formatInline(j.bottom_line, state.project)}
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </section>
-
-            <!-- PART 4 -->
-            <section class="editorial-section" id="sec-upgrade" aria-labelledby="h-upgrade">
-              <span class="sec-kicker">Part 04 // Adoption &amp; Migration Checklist</span>
-              <h2 class="sec-title" id="h-upgrade">4. Should I Upgrade?</h2>
-              <p class="sec-desc">Breaking changes, removed flags, and what to update in your deployment manifests before rolling out ${escapeHtml(rel.version)}.</p>
-
-              <div class="exec-summary-box" style="margin-bottom:18px; border-left-color:var(--amber);">
-                <span class="exec-summary-label" style="color:var(--amber);">Upgrade Verdict</span>
-                <strong>${escapeHtml(fp.upgrade_guide.verdict)}</strong>
-              </div>
-
-              <div class="table-card">
-                <table>
-                  <thead>
-                    <tr>
-                      <th scope="col" style="width:26%;">What Changed</th>
-                      <th scope="col" style="width:34%;">Operational Impact</th>
-                      <th scope="col" style="width:30%;">What You Need to Do</th>
-                      <th scope="col" style="width:10%;">Ref</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    ${fp.upgrade_guide.rows.map(r => `
-                      <tr>
-                        <td><strong>${formatInline(r.change, state.project)}</strong></td>
-                        <td>${formatInline(r.impact, state.project)}</td>
-                        <td style="color:var(--cyan);">${formatInline(r.action, state.project)}</td>
-                        <td class="num">${formatPrBadge(r.pr, state.project)}</td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-              </div>
-            </section>
-
-            <!-- PART 5 -->
-            <section class="editorial-section" id="sec-proof" aria-labelledby="h-proof">
-              <span class="sec-kicker">Part 05 // Quantified Benchmarks &amp; Upstream PRs</span>
-              <h2 class="sec-title" id="h-proof">5. Where’s the Proof?</h2>
-              <p class="sec-desc">Measured throughput, latency, and capacity gains from upstream benchmarks with hardware conditions preserved.</p>
-
-              <div class="bench-list">
-                ${fp.proof_benchmarks.map(b => `
-                  <div class="bench-row">
-                    <div class="bench-top">
-                      <div>
-                        <div class="bench-title">${escapeHtml(b.label)}</div>
-                        <div class="bench-hw">Hardware / Condition: ${escapeHtml(b.hardware)}</div>
-                      </div>
-                      <div style="display:flex; align-items:center; gap:10px;">
-                        <span class="bench-gain">${escapeHtml(b.metric)}</span>
-                        ${formatPrBadge(b.pr, state.project)}
-                      </div>
-                    </div>
-                    <div class="bench-track">
-                      <div class="bench-fill" style="width:${b.pct_bar || 80}%;"></div>
-                    </div>
-                  </div>
-                `).join('')}
-              </div>
-            </section>
-          </article>
-
-          <!-- STICKY 5-PART TABLE OF CONTENTS -->
-          <aside class="toc-box" aria-label="On this page">
-            <div class="toc-heading">5-Part Release Guide</div>
-            <ul class="toc-links">
-              <li><a href="#sec-big-deal">1. What’s the Big Deal?</a></li>
-              <li><a href="#sec-who-benefits">2. Who Benefits? (Models, GPUs &amp; Bill)</a></li>
-              <li><a href="#sec-jargon">3. What Does the Jargon Mean?</a></li>
-              <li><a href="#sec-upgrade">4. Should I Upgrade?</a></li>
-              <li><a href="#sec-proof">5. Where’s the Proof?</a></li>
-            </ul>
-            <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border); font-size:0.78rem; color:var(--muted);">
-              Want the weekly commit digest instead?<br />
-              <button
-                type="button"
-                onclick="switchMode('weekly')"
-                style="margin-top:8px; width:100%; background:var(--cyan-bg); border:1px solid var(--cyan-border); color:var(--cyan); padding:7px 10px; border-radius:6px; font-weight:600; cursor:pointer;"
-              >
-                Read This Week in ${projName} →
-              </button>
+        <article>
+          <header class="article-header">
+            <div class="article-byline">
+              ${escapeHtml(rel.date)} &mdash; ${escapeHtml(rel.stats.replace(/\s*·\s*/g, ', '))}
             </div>
-          </aside>
-        </div>
-      `;
-    }
-
-    function renderWeeklyDigest(projObj) {
-      const w = projObj.weekly;
-      const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
-
-      return `
-        <div>
-          <header class="article-hero">
-            <div class="hero-meta">
-              <span class="pill-badge tone-cyan">${escapeHtml(w.issue_number)}</span>
-              <span>${escapeHtml(w.date_range)}</span>
-              <span>·</span>
-              <span>${escapeHtml(w.reading_time)}</span>
-            </div>
-            <h1 class="hero-title">${escapeHtml(w.headline)}</h1>
-            <div class="exec-summary-box" style="border-left-color:var(--cyan);">
-              <span class="exec-summary-label" style="color:var(--cyan);">Weekly Digest // LWKD Style</span>
-              ${escapeHtml(w.intro)}
-            </div>
+            <h1 class="article-title">What’s New in ${projName} ${escapeHtml(rel.version)}: ${escapeHtml(rel.headline)}</h1>
+            <p class="article-standfirst">${formatProse(rel.executive_summary, state.project)}</p>
+            <nav class="jump-nav" aria-label="Article sections">
+              <span class="jump-label">Contents:</span>
+              <a href="#whats-the-big-deal">What’s the big deal?</a>
+              <a href="#who-benefits">Who benefits?</a>
+              <a href="#jargon-glossary">What the jargon means</a>
+              <a href="#should-i-upgrade">Should I upgrade?</a>
+              <a href="#wheres-the-proof">Where’s the proof?</a>
+            </nav>
           </header>
 
-          <section class="editorial-section">
-            <span class="sec-kicker">Top 3 Takeaways This Week</span>
-            <h2 class="sec-title" style="margin-bottom:18px;">What Merged &amp; Why You Care</h2>
-            <div class="tldr-3col">
-              ${w.tldr_cards.map(c => `
-                <div class="tldr-card">
-                  <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span class="pill-badge tone-lime">${escapeHtml(c.tag)}</span>
-                    <div style="display:flex; gap:5px;">
-                      ${(c.prs || []).map(p => formatPrBadge(p, state.project)).join('')}
+          <section class="doc-section" id="whats-the-big-deal">
+            <h2>What’s the big deal?</h2>
+            <p class="section-lead">The most consequential changes in ${projName} ${escapeHtml(rel.version)} and what they replace.</p>
+
+            <div>
+              ${fp.big_deal.map(item => {
+                const toneClass = item.status_tone === 'amber'
+                  ? 'stage-amber'
+                  : (item.status_tone === 'cyan' ? 'stage-blue' : 'stage-green');
+                return `
+                  <div class="change-entry">
+                    <div class="change-head">
+                      <h3 class="change-title">${escapeHtml(item.title)}</h3>
+                      <div class="change-refs">
+                        <span class="stage-tag ${toneClass}">${escapeHtml(item.status)}</span>
+                        ${(item.prs || []).map(p => formatRefLink(p, state.project)).join(' ')}
+                      </div>
                     </div>
+                    <p class="change-prose"><strong>Previously:</strong> ${formatProse(item.before, state.project)}</p>
+                    <p class="change-prose"><strong>In ${escapeHtml(rel.version)}:</strong> ${formatProse(item.now, state.project)}</p>
+                    ${item.config_snippet ? `<pre class="code-sample"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
                   </div>
-                  <h3 style="font-size:1.05rem; font-weight:700;">${escapeHtml(c.title)}</h3>
-                  <p style="margin:0; font-size:0.88rem; color:var(--muted);">${formatInline(c.summary, state.project)}</p>
-                  <div style="margin-top:auto; padding-top:10px; border-top:1px dashed var(--border); font-size:0.83rem; color:var(--lime);">
-                    <strong>Impact:</strong> ${formatInline(c.impact, state.project)}
-                  </div>
-                </div>
-              `).join('')}
+                `;
+              }).join('')}
             </div>
           </section>
 
-          <section class="editorial-section">
-            <span class="sec-kicker">Featured PRs of the Week</span>
-            <h2 class="sec-title" style="margin-bottom:18px;">Deep Dives (Plain-English Translation)</h2>
-            <div class="feature-stack">
-              ${w.sections[0].items.map(it => `
-                <div class="feature-card">
-                  <div class="feature-card-head">
-                    <h3 class="feature-card-title">${escapeHtml(it.title)}</h3>
-                    ${formatPrBadge(it.pr, state.project)}
-                  </div>
-                  <div class="before-now-grid">
-                    <div class="before-box" style="background:rgba(255,255,255,0.03); border-color:var(--border-strong);">
-                      <span class="box-tag" style="color:var(--cyan);">What Changed Under the Hood</span>
-                      ${formatInline(it.what_it_is, state.project)}
-                    </div>
-                    <div class="now-box">
-                      <span class="box-tag">Why Operators Care</span>
-                      ${formatInline(it.why_you_care, state.project)}
-                    </div>
-                  </div>
-                </div>
-              `).join('')}
+          <section class="doc-section" id="who-benefits">
+            <h2>Who benefits?</h2>
+            <p class="section-lead">Which models, hardware fleets, and workloads see an immediate gain from ${escapeHtml(rel.version)}.</p>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:23%;">Workload / Team</th>
+                    <th scope="col" style="width:26%;">Models / Services</th>
+                    <th scope="col" style="width:23%;">GPUs / Nodes</th>
+                    <th scope="col" style="width:28%;">Practical Impact</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${fp.who_benefits.map(w => `
+                    <tr>
+                      <td><strong>${escapeHtml(w.persona)}</strong></td>
+                      <td>${formatProse(w.models, state.project)}</td>
+                      <td>${formatProse(w.gpus, state.project)}</td>
+                      <td>${formatProse(w.impact, state.project)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
             </div>
           </section>
 
-          <section class="editorial-section" style="border-bottom:none;">
-            <span class="sec-kicker">15-Second Scan</span>
-            <h2 class="sec-title" style="margin-bottom:14px;">${escapeHtml(w.sections[1].category)}</h2>
-            <div class="feature-card">
-              <ul style="margin:0; padding-left:20px; display:grid; gap:10px; font-size:0.93rem;">
-                ${w.sections[1].bullets.map(b => `<li>${formatInline(b, state.project)}</li>`).join('')}
-              </ul>
+          <section class="doc-section" id="jargon-glossary">
+            <h2>What does the jargon mean?</h2>
+            <p class="section-lead">Plain-English definitions for the systems and inference terms that appear in this release.</p>
+
+            <dl class="glossary-list">
+              ${fp.jargon_decoded.map(j => `
+                <div class="glossary-item">
+                  <dt translate="no">${escapeHtml(j.term)}</dt>
+                  <dd>
+                    <div>${formatProse(j.plain_english, state.project)}</div>
+                    <div class="glossary-why"><strong>Why it matters:</strong> ${formatProse(j.bottom_line, state.project)}</div>
+                  </dd>
+                </div>
+              `).join('')}
+            </dl>
+          </section>
+
+          <section class="doc-section" id="should-i-upgrade">
+            <h2>Should I upgrade?</h2>
+            <p class="section-lead">Breaking changes, deprecated flags, and configuration updates to check before rolling out ${escapeHtml(rel.version)}.</p>
+
+            <div class="verdict-note">
+              <strong>Bottom line:</strong> ${escapeHtml(fp.upgrade_guide.verdict)}
+            </div>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:26%;">Change</th>
+                    <th scope="col" style="width:34%;">What Breaks or Changes</th>
+                    <th scope="col" style="width:30%;">Required Action</th>
+                    <th scope="col" style="width:10%;">PR / KEP</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${fp.upgrade_guide.rows.map(r => `
+                    <tr>
+                      <td><strong>${formatProse(r.change, state.project)}</strong></td>
+                      <td>${formatProse(r.impact, state.project)}</td>
+                      <td>${formatProse(r.action, state.project)}</td>
+                      <td class="num">${formatRefLink(r.pr, state.project)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
             </div>
           </section>
-        </div>
+
+          <section class="doc-section" id="wheres-the-proof">
+            <h2>Where’s the proof?</h2>
+            <p class="section-lead">Benchmarks and upstream pull requests with hardware and model conditions preserved.</p>
+
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th scope="col" style="width:36%;">Benchmark / Capability</th>
+                    <th scope="col" style="width:32%;">Hardware &amp; Workload Condition</th>
+                    <th scope="col" style="width:22%;">Measured Gain</th>
+                    <th scope="col" style="width:10%;">Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${fp.proof_benchmarks.map(b => `
+                    <tr>
+                      <td><strong>${escapeHtml(b.label)}</strong></td>
+                      <td>${escapeHtml(b.hardware)}</td>
+                      <td class="num"><strong>${escapeHtml(b.metric)}</strong></td>
+                      <td class="num">${formatRefLink(b.pr, state.project)}</td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </article>
       `;
     }
 
-    function renderPage() {
+    function renderWeeklyView(projObj) {
+      const w = projObj.weekly;
+
+      return `
+        <article>
+          <header class="article-header">
+            <div class="article-byline">
+              ${escapeHtml(w.issue_number)} &mdash; ${escapeHtml(w.date_range)} (${escapeHtml(w.reading_time)})
+            </div>
+            <h1 class="article-title">${escapeHtml(w.headline)}</h1>
+            <p class="article-standfirst">${escapeHtml(w.intro)}</p>
+          </header>
+
+          <section class="doc-section" id="weekly-highlights">
+            <h2>Key takeaways this week</h2>
+            <p class="section-lead">The three most consequential changes merged into main this week.</p>
+
+            <div>
+              ${w.tldr_cards.map(c => `
+                <div class="change-entry">
+                  <div class="change-head">
+                    <h3 class="change-title">${escapeHtml(c.title)}</h3>
+                    <div class="change-refs">
+                      <span class="stage-tag stage-blue">${escapeHtml(c.tag)}</span>
+                      ${(c.prs || []).map(p => formatRefLink(p, state.project)).join(' ')}
+                    </div>
+                  </div>
+                  <p class="change-prose">${formatProse(c.summary, state.project)}</p>
+                  <p class="change-prose"><strong>Why it matters:</strong> ${formatProse(c.impact, state.project)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="doc-section" id="weekly-featured">
+            <h2>Featured pull requests</h2>
+            <p class="section-lead">Plain-English breakdown of notable engineering merges.</p>
+
+            <div>
+              ${w.sections[0].items.map(it => `
+                <div class="change-entry">
+                  <div class="change-head">
+                    <h3 class="change-title">${escapeHtml(it.title)}</h3>
+                    <div class="change-refs">${formatRefLink(it.pr, state.project)}</div>
+                  </div>
+                  <p class="change-prose"><strong>What changed:</strong> ${formatProse(it.what_it_is, state.project)}</p>
+                  <p class="change-prose"><strong>Why operators care:</strong> ${formatProse(it.why_you_care, state.project)}</p>
+                </div>
+              `).join('')}
+            </div>
+          </section>
+
+          <section class="doc-section" id="weekly-merges">
+            <h2>${escapeHtml(w.sections[1].category)}</h2>
+            <p class="section-lead">Compact summary of other merges across the repository.</p>
+            <ul class="weekly-list">
+              ${w.sections[1].bullets.map(b => `<li>${formatProse(b, state.project)}</li>`).join('')}
+            </ul>
+          </section>
+        </article>
+      `;
+    }
+
+    function render() {
       const projObj = PUB[state.project] || PUB.vllm;
       const projName = state.project === 'vllm' ? 'vLLM' : 'Kubernetes';
 
-      document.getElementById('proj-vllm').setAttribute('aria-pressed', state.project === 'vllm' ? 'true' : 'false');
-      document.getElementById('proj-kubernetes').setAttribute('aria-pressed', state.project === 'kubernetes' ? 'true' : 'false');
-      document.getElementById('brand-tagline').textContent = projObj.tagline;
-      document.getElementById('weekly-tab-label').textContent = `This Week in ${projName}`;
+      document.getElementById('site-title').textContent = `What’s New in ${projName}`;
+      document.getElementById('btn-proj-vllm').setAttribute('aria-pressed', state.project === 'vllm' ? 'true' : 'false');
+      document.getElementById('btn-proj-k8s').setAttribute('aria-pressed', state.project === 'kubernetes' ? 'true' : 'false');
 
-      const relBtn = document.getElementById('mode-releases');
-      const wkBtn = document.getElementById('mode-weekly');
-      if (state.mode === 'releases') {
-        relBtn.setAttribute('aria-current', 'page');
-        wkBtn.removeAttribute('aria-current');
-      } else {
-        wkBtn.setAttribute('aria-current', 'page');
-        relBtn.removeAttribute('aria-current');
-      }
-
-      const verBar = document.getElementById('version-bar');
-      const verInner = document.getElementById('version-bar-inner');
       const releases = projObj.releases || [];
-
-      if (state.mode === 'releases') {
-        verBar.style.display = 'block';
-        if (!releases.some(r => r.version === state.version) && releases.length > 0) {
-          state.version = releases[0].version;
-        }
-        verInner.innerHTML = `
-          <span class="version-bar-label">Select ${projName} Version:</span>
-          ${releases.map((r, i) => `
-            <button
-              type="button"
-              class="ver-pill"
-              aria-current="${r.version === state.version ? 'true' : 'false'}"
-              onclick="selectVersion('${escapeHtml(r.version)}')"
-            >
-              <span>${escapeHtml(r.version)}</span>
-              ${i === 0 ? '<span style="font-size:0.65rem; opacity:0.8;">LATEST</span>' : ''}
-            </button>
-          `).join('')}
-        `;
-      } else {
-        verBar.style.display = 'none';
+      if (!releases.some(r => r.version === state.version) && releases.length > 0) {
+        state.version = releases[0].version;
       }
+
+      document.getElementById('edition-strip-inner').innerHTML = renderEditionStrip(projObj);
 
       const mainEl = document.getElementById('main-content');
       if (state.mode === 'releases') {
         const activeRel = releases.find(r => r.version === state.version) || releases[0];
-        mainEl.innerHTML = renderReleaseArticle(projObj, activeRel);
+        mainEl.innerHTML = renderReleaseView(projObj, activeRel);
       } else {
-        mainEl.innerHTML = renderWeeklyDigest(projObj);
+        mainEl.innerHTML = renderWeeklyView(projObj);
       }
     }
 
     readUrl();
-    renderPage();
+    render();
   </script>
 </body>
 </html>
