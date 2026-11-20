@@ -1,24 +1,15 @@
 {
-  "variant": "v4_adoption_engine",
+  "variant": "v5_progressive_clarity_engine",
   "project": "vllm",
   "version": "v0.1.0",
-  "positioning": "Translating VLLM v0.1.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+  "positioning": "vLLM v0.1.0 focuses on What's Changed Enhancements. For operators, this release translates 4 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "vLLM v0.1.0 focuses on What's Changed Enhancements. For operators, this release translates 4 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
   "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
   "sections": {
-    "whats_the_big_deal": [
+    "high_level_changes": [
       {
-        "rank": 1,
-        "theme": "What's Changed Enhancements",
-        "what_changed": "Initial open-source release of vLLM with PagedAttention and continuous batching; Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures; Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray; Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels",
-        "why_it_matters": "Operational reliability and lower maintenance toil",
-        "prs": [
-          "1",
-          "2",
-          "3",
-          "4"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "What's Changed Enhancements",
+        "plain_summary": "Improves what's changed enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
       }
     ],
     "who_benefits": [
@@ -83,6 +74,50 @@
         "keps": []
       }
     ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "What's Changed Enhancements",
+        "previously": "Prior to v0.1.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Initial open-source release of vLLM with PagedAttention and continuous batching (#1).",
+          "Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures (#2).",
+          "Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray (#3).",
+          "Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels (#4)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "What's Changed Enhancements",
+        "previously": "Prior to v0.1.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Initial open-source release of vLLM with PagedAttention and continuous batching (#1).",
+          "Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures (#2).",
+          "Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray (#3).",
+          "Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels (#4)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
     "wheres_the_proof": [
       {
         "category": "What's Changed",
@@ -136,9 +171,9 @@
   ],
   "cited_keps": [],
   "cited_identifiers": [],
-  "markdown": "# What's New in VLLM v0.1.0: The Adoption Decision Guide\n\n> **Positioning**: *Translating VLLM v0.1.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*\n\n**Release Snapshot**: `4` upstream changes analyzed | `1` capability themes | `1` upgrade/deprecation notices | `4` quantified performance proofs\n\n---\n\n## 1. What's the Big Deal?\n\nInstead of reading hundreds of isolated PR descriptions, here are the most consequential architectural shifts in this release and why they matter operationally:\n\n1. **What's Changed Enhancements** ([#1](https://github.com/vllm-project/vllm/pull/1), [#2](https://github.com/vllm-project/vllm/pull/2), [#3](https://github.com/vllm-project/vllm/pull/3), [#4](https://github.com/vllm-project/vllm/pull/4))\n   - **What changed**: Initial open-source release of vLLM with PagedAttention and continuous batching; Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures; Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray; Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n\n### Last Week / Patch Pulse (Last Week in vLLM Style)\n* `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n* `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n* `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n* `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n* `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n* `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n* `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n* `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n---\n\n## 2. Who Benefits? (Models, GPUs, Workloads & Your Bill)\n\n| Capability Area | Models / Workloads Served | GPUs / Infrastructure Owned | Impact on Your Bill & SLAs |\n|---|---|---|---|\n| **What's Changed Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n\n---\n\n## 3. What Does the Jargon Mean?\n\nPlain-English translations for the systems and inference terms that show up in this release:\n\n- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.  \n  *Bottom line for operators*: Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.\n- **Model Runner V2 (MRV2)**: vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding.  \n  *Bottom line for operators*: Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity.\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass.  \n  *Bottom line for operators*: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing.  \n  *Bottom line for operators*: Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.  \n  *Bottom line for operators*: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n\n---\n\n## 4. Should I Upgrade?\n\n**Executive Verdict**: **UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first**\n\n### Pre-Upgrade Checklist (Breaking Changes, Removals & Flag Shifts)\n- **[Upgrade Check]** No breaking CLI/API removals flagged in top-level notes; verify standard PyTorch/CUDA wheel compatibility before rollout. ([#1](https://github.com/vllm-project/vllm/pull/1))\n\n---\n\n## 5. Where's the Proof?\n\n### Quantified Benchmarks & Primary Proofs\n- **What's Changed** ([#1](https://github.com/vllm-project/vllm/pull/1)): Initial open-source release of vLLM with PagedAttention and continuous batching\n- **What's Changed** ([#2](https://github.com/vllm-project/vllm/pull/2)): Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures\n- **What's Changed** ([#3](https://github.com/vllm-project/vllm/pull/3)): Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray\n- **What's Changed** ([#4](https://github.com/vllm-project/vllm/pull/4)): Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[What's Changed]** Initial open-source release of vLLM with PagedAttention and continuous batching ([#1](https://github.com/vllm-project/vllm/pull/1))\n- **[What's Changed]** Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures ([#2](https://github.com/vllm-project/vllm/pull/2))\n- **[What's Changed]** Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray ([#3](https://github.com/vllm-project/vllm/pull/3))\n- **[What's Changed]** Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels ([#4](https://github.com/vllm-project/vllm/pull/4))",
+  "markdown": "# What's New in vLLM v0.1.0\n\n## High-Level Explanation\nvLLM v0.1.0 focuses on What's Changed Enhancements. For operators, this release translates 4 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **What's Changed Enhancements**: Improves what's changed enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **What's Changed Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Extensible KV Cache, Memory Budgeting & Tiered Offloading** | High-concurrency chat APIs, long-context coding agents (32K\u2013128K+), and multi-turn RAG workloads | NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers | Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware |\n| **Model Runner V2 (MRV2) Consolidation & Breakable CUDA Graphs** | All production GPU deployments, latency-sensitive streaming apps, and custom logits processors | All CUDA and ROCm GPU fleets running vLLM's V2 execution engine | Cuts CPU dispatch overhead and lowers inter-token latency (ITL) by 3\u201315% while simplifying engine maintenance |\n\n## 3. What Does the Jargon Mean?\n- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction. Why it matters: Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.\n- **Model Runner V2 (MRV2)**: vLLM's redesigned GPU execution loop featuring persistent batching, zero-overhead input preparation, unified CUDA graph capture, and native speculative decoding. Why it matters: Replaces legacy Model Runner V1 as the sole GPU runner; lowers CPU-to-GPU launch overhead and unlocks higher token interactivity.\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass. Why it matters: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing. Why it matters: Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores. Why it matters: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Upgrade Check**: No breaking CLI/API removals flagged in top-level notes; verify standard PyTorch/CUDA wheel compatibility before rollout. ([#1](https://github.com/vllm-project/vllm/pull/1))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. What's Changed Enhancements ([#1](https://github.com/vllm-project/vllm/pull/1), [#2](https://github.com/vllm-project/vllm/pull/2), [#3](https://github.com/vllm-project/vllm/pull/3), [#4](https://github.com/vllm-project/vllm/pull/4))\n- **Previously**: Prior to v0.1.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: Initial open-source release of vLLM with PagedAttention and continuous batching (#1).\n- **Technical change**: Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures (#2).\n- **Technical change**: Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray (#3).\n- **Technical change**: Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels (#4).\n- **Operational impact**: Operational reliability and lower maintenance toil\n\n### Weekly / Patch Merge Pulse\n- `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n- `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n- `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n- `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n- `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n- `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n- `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n- `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n## 6. Where's the Proof?\n- **What's Changed** ([#1](https://github.com/vllm-project/vllm/pull/1)): Initial open-source release of vLLM with PagedAttention and continuous batching.\n- **What's Changed** ([#2](https://github.com/vllm-project/vllm/pull/2)): Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures.\n- **What's Changed** ([#3](https://github.com/vllm-project/vllm/pull/3)): Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray.\n- **What's Changed** ([#4](https://github.com/vllm-project/vllm/pull/4)): Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels.\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[What's Changed]** Initial open-source release of vLLM with PagedAttention and continuous batching. ([#1](https://github.com/vllm-project/vllm/pull/1))\n- **[What's Changed]** Support for LLaMA, OPT, GPT-NeoX, GPT-2, and StarCoder architectures. ([#2](https://github.com/vllm-project/vllm/pull/2))\n- **[What's Changed]** Distributed Tensor Parallelism across multi-GPU nodes with NCCL and Ray. ([#3](https://github.com/vllm-project/vllm/pull/3))\n- **[What's Changed]** Fast C++/CUDA PagedAttention, rotary embedding, and layernorm kernels. ([#4](https://github.com/vllm-project/vllm/pull/4))",
   "eval": {
-    "variant": "v4_adoption_engine",
+    "variant": "v5_progressive_clarity_engine",
     "project": "vllm",
     "version": "v0.1.0",
     "headline_salience_recall": 1.0,
@@ -147,7 +182,8 @@
     "five_part_completeness": 1.0,
     "jargon_translation_score": 0.7562,
     "cluster_diversity_score": 0.2,
-    "composite_score": 0.8956,
+    "anti_blob_clarity_score": 0.65,
+    "composite_score": 0.8711,
     "matched_spotlights": "3/3",
     "cited_prs_count": 4,
     "cited_keps_count": 0

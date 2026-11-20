@@ -26,6 +26,7 @@ VARIANTS = [
     "v2_salience_and_risk_ranker",
     "v3_clustered_synthesis",
     "v4_adoption_engine",
+    "v5_progressive_clarity_engine",
 ]
 
 
@@ -1006,6 +1007,216 @@ def generate_v4_adoption_engine(
     }
 
 
+def _clean_single_engineering_bullet(text: str, max_len: int = 210) -> str:
+    """
+    Cleans a raw changelog line into a single crisp technical bullet:
+    - Strips leading `[Tag][Subtag]` brackets and markdown bold wrappers
+    - Strips `by @username` author attribution noise
+    - Strips trailing `(#12345, @author) [SIG ...]` boilerplate
+    - Never truncates mid-word or mid-parenthesis
+    """
+    s = text.strip()
+    s = re.sub(r"^[-*]\s+", "", s)
+    s = re.sub(r"^(?:\[[^\]]+\]\s*)+", "", s)
+    s = re.sub(r"\s+by\s+@[A-Za-z0-9_-]+", "", s)
+    s = re.sub(r"\(\s*#\d+[^)]*\)\s*(?:\[SIG[^\]]*\])?\s*$", "", s).strip()
+    s = s.replace("**", "")
+    # If the line itself is a semicolon-separated list of sub-items, take the first two clean clauses
+    if s.count(";") >= 2:
+        parts = [p.strip() for p in s.split(";") if p.strip()]
+        s = ". ".join(parts[:2])
+    if len(s) > max_len:
+        cut = s[:max_len].rsplit(" ", 1)[0].rstrip(",;:-(")
+        s = cut + "."
+    elif s and s[-1] not in ".!?":
+        s += "."
+    return s
+
+
+def generate_v5_progressive_clarity_engine(
+    raw_record: dict[str, Any],
+    weekly_record: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """
+    v5_progressive_clarity_engine (Anti-Blob Progressive Disclosure Architecture):
+    Solves the 'wall-of-text / semicolon blob' problem in v4 by structuring every release
+    from Non-Technical High-Level down to Technical Deep Dive & Proof:
+      1. High-Level Explanation (2 crisp plain-English sentences, zero PR/flag dumps)
+      2. What Are the High-Level Changes? (4–6 non-technical 1-sentence bullets)
+      3. Who Benefits? (Models, GPUs & Your Bill table)
+      4. What Does the Jargon Mean? (Plain-English glossary before technical details)
+      5. Should I Upgrade? (Executive verdict + breaking/config checklist)
+      6. Technical Deep Dive: What's the Big Deal Under the Hood? (Moved to bottom;
+         clean individual bullets per subsystem—never semicolon-jammed paragraphs)
+      7. Where's the Proof? (Benchmarks + upstream PR/KEP index)
+    """
+    base = generate_v4_adoption_engine(raw_record, weekly_record=weekly_record)
+    project = raw_record["project"]
+    version = raw_record["version"]
+    items = _all_raw_items(raw_record)
+
+    scored_all: list[dict[str, Any]] = []
+    for it in items:
+        base_s = _score_item_salience(it, project)
+        cat_l = it.get("category", "").lower()
+        if "bug" in cat_l or "regression" in cat_l or "cleanup" in cat_l or "flake" in cat_l:
+            base_s *= 0.45
+        elif "feature" in cat_l or "api change" in cat_l:
+            base_s += 3.5
+        scored_all.append({**it, "_score": round(base_s, 3)})
+    scored_all.sort(key=lambda x: x["_score"], reverse=True)
+
+    primary_pool = [
+        it for it in scored_all
+        if not any(w in it.get("category", "").lower() for w in ("bug or regression", "other", "failing test"))
+    ]
+    if len(primary_pool) < 12:
+        primary_pool = scored_all
+
+    clusters = _cluster_items_v3(primary_pool, project)
+    top_clusters = clusters[:6]
+
+    proj_display = "vLLM" if project == "vllm" else "Kubernetes"
+    lead_labels = [c["label"].split("(")[0].strip() for c in top_clusters[:3]]
+    high_level_explanation = (
+        f"{proj_display} {version} focuses on {', '.join(lead_labels[:2])}"
+        + (f", and {lead_labels[2]}" if len(lead_labels) > 2 else "")
+        + f". For operators, this release translates {', '.join(str(x) for x in [raw_record.get('total_raw_items', len(items))])} upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts."
+    )
+
+    # Section 1: Non-technical high-level changes (1 crisp sentence per theme)
+    high_level_changes: list[dict[str, Any]] = []
+    for c in top_clusters[:5]:
+        short_theme = c["label"].split("(")[0].strip()
+        high_level_changes.append({
+            "headline": short_theme,
+            "plain_summary": f"Improves {short_theme.lower()} for {c['models_workloads'].lower()} running on {c['gpus_infra'].lower()}, delivering {c['bill_impact'][0].lower() + c['bill_impact'][1:]}.",
+        })
+
+    # Section 5 (Technical Deep Dive at bottom): Clean bullet list per cluster, zero semicolon blobs
+    deep_dive_records: list[dict[str, Any]] = []
+    for idx, c in enumerate(top_clusters[:6], start=1):
+        tech_bullets: list[str] = []
+        for it in c["items"][:4]:
+            cleaned_b = _clean_single_engineering_bullet(it.get("text", ""), 200)
+            pr_str = ", ".join(f"#{p}" for p in it.get("prs", [])[:2])
+            if pr_str and pr_str not in cleaned_b:
+                cleaned_b = f"{cleaned_b[:-1]} ({pr_str})."
+            tech_bullets.append(cleaned_b)
+        deep_dive_records.append({
+            "rank": idx,
+            "theme": c["label"],
+            "previously": f"Prior to {version}, teams operating {c['label'].split('(')[0].strip().lower()} relied on older execution paths or manual tuning on {c['gpus_infra']}.",
+            "tech_bullets": tech_bullets,
+            "why_it_matters": c["bill_impact"],
+            "prs": c["prs"][:5],
+            "keps": c["keps"][:5],
+            "identifiers": c["identifiers"][:6],
+        })
+
+    # Build progressive markdown (Non-Technical first -> Technical Deep Dive & Proof at bottom)
+    lines = [
+        f"# What's New in {proj_display} {version}",
+        "",
+        "## High-Level Explanation",
+        high_level_explanation,
+        "",
+        "## 1. What Are the High-Level Changes?",
+    ]
+    for h in high_level_changes:
+        lines.append(f"- **{h['headline']}**: {h['plain_summary']}")
+
+    lines.extend([
+        "",
+        "## 2. Who Benefits? (Models, GPUs & Your Bill)",
+        "| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |",
+        "|---|---|---|---|",
+    ])
+    for w in base["sections"]["who_benefits"]:
+        lines.append(f"| **{w['capability']}** | {w['models_workloads']} | {w['gpus_infra']} | {w['bill_impact']} |")
+
+    lines.extend([
+        "",
+        "## 3. What Does the Jargon Mean?",
+    ])
+    for j in base["sections"]["jargon_glossary"]:
+        lines.append(f"- **{j['term']}**: {j['meaning']} Why it matters: {j['why_it_matters']}")
+
+    lines.extend([
+        "",
+        "## 4. Should I Upgrade?",
+        f"**Verdict**: {base['verdict']}",
+    ])
+    for r in base["sections"]["should_i_upgrade"]:
+        cites = _format_citations(r.get("prs", [])[:2], r.get("keps", [])[:2], project)
+        lines.append(f"- **{r.get('category', 'Upgrade Check')}**: {_clean_single_engineering_bullet(r.get('text', ''), 210)} ({cites})")
+
+    lines.extend([
+        "",
+        "## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)",
+    ])
+    for d in deep_dive_records:
+        cites = _format_citations(d["prs"][:4], d["keps"][:4], project)
+        lines.append(f"### {d['rank']}. {d['theme']} ({cites})")
+        lines.append(f"- **Previously**: {d['previously']}")
+        for tb in d["tech_bullets"]:
+            lines.append(f"- **Technical change**: {tb}")
+        lines.append(f"- **Operational impact**: {d['why_it_matters']}")
+
+    lines.extend([
+        "",
+        "### Weekly / Patch Merge Pulse",
+    ])
+    for bullet in base["sections"]["lwkd_patch_pulse"]:
+        lines.append(f"- {bullet}")
+
+    lines.extend([
+        "",
+        "## 6. Where's the Proof?",
+    ])
+    for b in base["sections"]["wheres_the_proof"]:
+        cites = _format_citations(b.get("prs", [])[:3], b.get("keps", [])[:3], project)
+        lines.append(f"- **{b.get('category', 'Proof')}** ({cites}): {_clean_single_engineering_bullet(b.get('text', ''), 220)}")
+
+    lines.extend([
+        "",
+        "### Complete Feature Graduation & Enhancement Rollup",
+    ])
+    for it in primary_pool[:195]:
+        cites = _format_citations(it.get("prs", [])[:2], it.get("keps", [])[:2], project)
+        lines.append(f"- **[{it.get('category', 'Enhancement')}]** {_clean_single_engineering_bullet(it.get('text', ''), 300)} ({cites})")
+
+    if base["cited_keps"]:
+        kep_links = ", ".join(f"[KEP-{k}](https://github.com/kubernetes/enhancements/issues/{k})" for k in base["cited_keps"][:40])
+        lines.extend(["", f"**Complete Tracked KEP Index in {version}**: {kep_links}"])
+    if base["cited_identifiers"]:
+        id_list = ", ".join(f"`{i}`" for i in base["cited_identifiers"][:40])
+        lines.extend(["", f"**Key Feature Gates / API Identifiers**: {id_list}"])
+
+    return {
+        "variant": "v5_progressive_clarity_engine",
+        "project": project,
+        "version": version,
+        "positioning": high_level_explanation,
+        "high_level_explanation": high_level_explanation,
+        "verdict": base["verdict"],
+        "sections": {
+            "high_level_changes": high_level_changes,
+            "who_benefits": base["sections"]["who_benefits"],
+            "jargon_glossary": base["sections"]["jargon_glossary"],
+            "should_i_upgrade": base["sections"]["should_i_upgrade"],
+            "technical_deep_dive": deep_dive_records,
+            "whats_the_big_deal": deep_dive_records,
+            "wheres_the_proof": base["sections"]["wheres_the_proof"],
+            "lwkd_patch_pulse": base["sections"]["lwkd_patch_pulse"],
+        },
+        "cited_prs": base["cited_prs"],
+        "cited_keps": base["cited_keps"],
+        "cited_identifiers": base["cited_identifiers"],
+        "markdown": "\n".join(lines),
+    }
+
+
 def generate_weekly_edition(
     weekly_record: dict[str, Any],
     project: str = "vllm",
@@ -1056,7 +1267,7 @@ def generate_weekly_edition(
         "upgrade_notices": upgrade_notices[:8],
         "benchmarks": benchmarks[:10],
     }
-    res = generate_v4_adoption_engine(synthetic_raw, weekly_record=weekly_record)
+    res = generate_v5_progressive_clarity_engine(synthetic_raw, weekly_record=weekly_record)
     res["is_weekly"] = True
     res["window_label"] = window
     return res
@@ -1077,4 +1288,6 @@ def run_generator(
         return generate_v3_clustered_synthesis(raw_record, weekly_record=weekly_record)
     if variant == "v4_adoption_engine":
         return generate_v4_adoption_engine(raw_record, weekly_record=weekly_record)
+    if variant == "v5_progressive_clarity_engine":
+        return generate_v5_progressive_clarity_engine(raw_record, weekly_record=weekly_record)
     raise ValueError(f"Unknown generator variant: {variant}")

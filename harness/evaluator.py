@@ -153,7 +153,11 @@ def evaluate_generated_brief(
         cluster_diversity_score = 0.2
     else:
         token_sets = [
-            _significant_tokens(str(b.get("theme", "")) + " " + str(b.get("what_changed", b.get("text", ""))))
+            _significant_tokens(
+                str(b.get("theme", ""))
+                + " "
+                + str(b.get("what_changed", " ".join(b.get("tech_bullets", [])) or b.get("text", "")))
+            )
             for b in big_deals
         ]
         pairwise_jaccard: list[float] = []
@@ -165,14 +169,36 @@ def evaluate_generated_brief(
         avg_sim = sum(pairwise_jaccard) / len(pairwise_jaccard) if pairwise_jaccard else 0.0
         cluster_diversity_score = max(0.0, min(1.0, 1.0 - avg_sim))
 
+    # 7. Anti-Blob Clarity & Progressive Disclosure Score
+    # Rewards:
+    #   - Explicit non-technical `high_level_changes` section at the top
+    #   - Structured `tech_bullets` list in the deep dive (instead of semicolon-jammed `what_changed` blobs)
+    #   - Technical Deep Dive placed after Who Benefits / Jargon / Upgrade
+    has_high_level_changes = bool(secs.get("high_level_changes")) and len(secs.get("high_level_changes", [])) >= 3
+    has_clean_tech_bullets = bool(big_deals) and all(isinstance(b.get("tech_bullets"), list) and len(b.get("tech_bullets", [])) >= 1 for b in big_deals if isinstance(b, dict))
+    semicolon_blob_lines = sum(1 for line in md.splitlines() if line.count(";") >= 3 and len(line) > 220)
+    no_semicolon_blobs = semicolon_blob_lines == 0
+    progressive_order = (
+        md_lower.find("who benefits") < md_lower.find("technical deep dive")
+        if ("who benefits" in md_lower and "technical deep dive" in md_lower)
+        else False
+    )
+    anti_blob_clarity_score = (
+        0.35 * (1.0 if has_high_level_changes else 0.0)
+        + 0.30 * (1.0 if has_clean_tech_bullets else 0.0)
+        + 0.20 * (1.0 if no_semicolon_blobs else 0.0)
+        + 0.15 * (1.0 if progressive_order else 0.0)
+    )
+
     # Weighted Composite Score
     composite_score = (
-        0.28 * headline_salience_recall
-        + 0.22 * upgrade_risk_recall
-        + 0.16 * factual_citation_precision
-        + 0.14 * five_part_completeness
-        + 0.10 * jargon_translation_score
-        + 0.10 * cluster_diversity_score
+        0.24 * headline_salience_recall
+        + 0.20 * upgrade_risk_recall
+        + 0.15 * factual_citation_precision
+        + 0.13 * five_part_completeness
+        + 0.09 * jargon_translation_score
+        + 0.09 * cluster_diversity_score
+        + 0.10 * anti_blob_clarity_score
     )
 
     return {
@@ -185,6 +211,7 @@ def evaluate_generated_brief(
         "five_part_completeness": round(five_part_completeness, 4),
         "jargon_translation_score": round(jargon_translation_score, 4),
         "cluster_diversity_score": round(cluster_diversity_score, 4),
+        "anti_blob_clarity_score": round(anti_blob_clarity_score, 4),
         "composite_score": round(composite_score, 4),
         "matched_spotlights": f"{matched_spotlights}/{len(spotlights)}",
         "cited_prs_count": len(gen_prs),

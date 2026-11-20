@@ -56,7 +56,7 @@ def run_ab_benchmark_for_domain(
             gen = run_generator(variant, raw_rec, weekly_record=weekly_record)
             eval_res = evaluate_generated_brief(gen, raw_rec, gt_rec)
             per_variant_scores[variant].append(eval_res)
-            if variant == "v4_adoption_engine":
+            if variant == "v5_progressive_clarity_engine":
                 # Save full generated brief (JSON + Markdown)
                 payload = {
                     **gen,
@@ -75,6 +75,7 @@ def run_ab_benchmark_for_domain(
         "five_part_completeness",
         "jargon_translation_score",
         "cluster_diversity_score",
+        "anti_blob_clarity_score",
         "composite_score",
     ]
     summary_by_variant: dict[str, Any] = {}
@@ -271,14 +272,14 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
         "",
         "## 1. Executive Summary",
         "",
-        "We evaluated five progressive release-translation architectures (`v0_naive_baseline` -> `v1_five_part_template` -> `v2_salience_and_risk_ranker` -> `v3_clustered_synthesis` -> `v4_adoption_engine`) on:",
+        "We evaluated six progressive release-translation architectures (`v0_naive_baseline` -> `v1_five_part_template` -> `v2_salience_and_risk_ranker` -> `v3_clustered_synthesis` -> `v4_adoption_engine` -> `v5_progressive_clarity_engine`) on:",
         "1. **Kubernetes Control Benchmark**: 10 minor releases (`v1.28`–`v1.37`, 3,088 raw changelog items) + 47 patch releases + 5 LWKD weekly editions, scored against held-out Official Kubernetes Release Blogs (`kubernetes/website`).",
-        "2. **vLLM Target Benchmark**: 10 minor releases (`v0.25.0`–`v0.34.0`, 683 raw changelog items) + 2 patch releases (`v0.25.1`, `v0.27.1`) + **Last Week in vLLM** (100 merged PRs), scored against held-out human-written `TL;DR`, `Highlights`, and `Before you upgrade` tables.",
+        "2. **vLLM Target Benchmark**: All 34 minor releases (`v0.1.0`–`v0.34.0`, 5,302 raw changelog items) + **Last Week in vLLM** (100 merged PRs), scored against held-out human-written `TL;DR`, `Highlights`, and `Before you upgrade` tables.",
         "",
         "## 2. Kubernetes Control Benchmark (v1.28 – v1.37) Hill-Climbing Results",
         "",
-        "| Generator Variant | Headline Salience Recall | Upgrade Risk Recall | Factual Citation Precision | 5-Part Completeness | Jargon Translation | Cluster Diversity | **Composite Score** |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for var in VARIANTS:
         r = k8s[var]
@@ -286,15 +287,15 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
             f"| `{var}` | {r['headline_salience_recall']*100:.1f}% | {r['upgrade_risk_recall']*100:.1f}% | "
             f"{r['factual_citation_precision']*100:.1f}% | {r['five_part_completeness']*100:.1f}% | "
             f"{r['jargon_translation_score']*100:.1f}% | {r['cluster_diversity_score']*100:.1f}% | "
-            f"**{r['composite_score']*100:.1f}%** |"
+            f"{r['anti_blob_clarity_score']*100:.1f}% | **{r['composite_score']*100:.1f}%** |"
         )
 
     lines.extend([
         "",
-        "## 3. vLLM Target Benchmark (v0.25.0 – v0.34.0) A/B Transfer Results",
+        "## 3. vLLM Target Benchmark (v0.1.0 – v0.34.0) A/B Transfer Results",
         "",
-        "| Generator Variant | Headline Salience Recall | Upgrade Risk Recall | Factual Citation Precision | 5-Part Completeness | Jargon Translation | Cluster Diversity | **Composite Score** |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|",
+        "| Generator Variant | Salience Recall | Risk Recall | Citation Precision | 5-Part Schema | Jargon Translation | Cluster Diversity | Anti-Blob Clarity | **Composite Score** |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ])
     for var in VARIANTS:
         r = vllm[var]
@@ -302,7 +303,7 @@ def render_ab_markdown_report(summary: dict[str, Any]) -> str:
             f"| `{var}` | {r['headline_salience_recall']*100:.1f}% | {r['upgrade_risk_recall']*100:.1f}% | "
             f"{r['factual_citation_precision']*100:.1f}% | {r['five_part_completeness']*100:.1f}% | "
             f"{r['jargon_translation_score']*100:.1f}% | {r['cluster_diversity_score']*100:.1f}% | "
-            f"**{r['composite_score']*100:.1f}%** |"
+            f"{r['anti_blob_clarity_score']*100:.1f}% | **{r['composite_score']*100:.1f}%** |"
         )
 
     lines.extend([

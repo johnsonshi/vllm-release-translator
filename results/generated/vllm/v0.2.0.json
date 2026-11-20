@@ -1,72 +1,31 @@
 {
-  "variant": "v4_adoption_engine",
+  "variant": "v5_progressive_clarity_engine",
   "project": "vllm",
   "version": "v0.2.0",
-  "positioning": "Translating VLLM v0.2.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.",
+  "positioning": "vLLM v0.2.0 focuses on What's Changed Enhancements, Disaggregated Serving, and Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend. For operators, this release translates 54 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "vLLM v0.2.0 focuses on What's Changed Enhancements, Disaggregated Serving, and Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend. For operators, this release translates 54 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
   "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
   "sections": {
-    "whats_the_big_deal": [
+    "high_level_changes": [
       {
-        "rank": 1,
-        "theme": "What's Changed Enhancements",
-        "what_changed": "Remove AsyncLLMEngine busy loop, shield background task by @Yard1; clean api code, remove redundant background task. by @esmeetu; [Fix] Remove false assertion by @WoosukKwon; add option to shorten prompt print in log by @leiwen83; Make `max_model_len` configurable by @Yard1",
-        "why_it_matters": "Operational reliability and lower maintenance toil",
-        "prs": [
-          "1059",
-          "1102",
-          "1222",
-          "991",
-          "972",
-          "1033"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "What's Changed Enhancements",
+        "plain_summary": "Improves what's changed enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil."
       },
       {
-        "rank": 2,
-        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
-        "what_changed": "[FIX] Don't initialize parameter by default by @zhuohan123; Provide default max model length by @WoosukKwon",
-        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
-        "prs": [
-          "1067",
-          "1224"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "Disaggregated Serving",
+        "plain_summary": "Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore."
       },
       {
-        "rank": 3,
-        "theme": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
-        "what_changed": "fix qwen-14b model by @Sanster; qwen add rope_scaling by @Sanster",
-        "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
-        "prs": [
-          "1173",
-          "1210"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "plain_summary": "Improves day-0 model architectures, multimodal vision/audio & transformers backend for newly released foundation models, vision-language (vlm), speech/asr (`/v1/audio/transcriptions`), and multi-lora adapters running on standard single-node and multi-node gpu inference pools, delivering consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet."
       },
       {
-        "rank": 4,
-        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
-        "what_changed": "Implement AWQ quantization support for LLaMA by @WoosukKwon",
-        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
-        "prs": [
-          "1032"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "Low-Precision Quantization Kernels",
+        "plain_summary": "Improves low-precision quantization kernels for 100b\u20131t+ parameter models (mistral large 4, deepseek-v4, qwen3.5/3.8) quantized to 4-bit/8-bit running on nvidia blackwell (sm100 nvfp4), hopper (sm90 fp8), and amd mi350/mi355x, delivering halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput."
       },
       {
-        "rank": 5,
-        "theme": "Extensible KV Cache, Memory Budgeting & Tiered Offloading",
-        "what_changed": "Add gpu_memory_utilization and swap_space to LLM by @WoosukKwon",
-        "why_it_matters": "Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware",
-        "prs": [
-          "1090"
-        ],
-        "keps": [],
-        "identifiers": []
+        "headline": "Extensible KV Cache, Memory Budgeting & Tiered Offloading",
+        "plain_summary": "Improves extensible kv cache, memory budgeting & tiered offloading for high-concurrency chat apis, long-context coding agents (32k\u2013128k+), and multi-turn rag workloads running on nvidia hopper (h100/h200), blackwell (b200/gb200), and amd instinct (mi300x/mi355x) + host dram/nvme tiers, delivering expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware."
       }
     ],
     "who_benefits": [
@@ -159,6 +118,172 @@
           "1047"
         ],
         "_score": 1.8
+      }
+    ],
+    "technical_deep_dive": [
+      {
+        "rank": 1,
+        "theme": "What's Changed Enhancements",
+        "previously": "Prior to v0.2.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Remove AsyncLLMEngine busy loop, shield background task (#1059).",
+          "clean api code, remove redundant background task (#1102).",
+          "Remove false assertion (#1222).",
+          "add option to shorten prompt print in log (#991)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "1059",
+          "1102",
+          "1222",
+          "991",
+          "972"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
+        "previously": "Prior to v0.2.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
+        "tech_bullets": [
+          "Don't initialize parameter by default (#1067).",
+          "Provide default max model length (#1224)."
+        ],
+        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
+        "prs": [
+          "1067",
+          "1224"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "previously": "Prior to v0.2.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
+        "tech_bullets": [
+          "fix qwen-14b model (#1173).",
+          "qwen add rope_scaling (#1210)."
+        ],
+        "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
+        "prs": [
+          "1173",
+          "1210"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "previously": "Prior to v0.2.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
+        "tech_bullets": [
+          "Implement AWQ quantization support for LLaMA (#1032)."
+        ],
+        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
+        "prs": [
+          "1032"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Extensible KV Cache, Memory Budgeting & Tiered Offloading",
+        "previously": "Prior to v0.2.0, teams operating extensible kv cache, memory budgeting & tiered offloading relied on older execution paths or manual tuning on NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers.",
+        "tech_bullets": [
+          "Add gpu_memory_utilization and swap_space to LLM (#1090)."
+        ],
+        "why_it_matters": "Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware",
+        "prs": [
+          "1090"
+        ],
+        "keps": [],
+        "identifiers": []
+      }
+    ],
+    "whats_the_big_deal": [
+      {
+        "rank": 1,
+        "theme": "What's Changed Enhancements",
+        "previously": "Prior to v0.2.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.",
+        "tech_bullets": [
+          "Remove AsyncLLMEngine busy loop, shield background task (#1059).",
+          "clean api code, remove redundant background task (#1102).",
+          "Remove false assertion (#1222).",
+          "add option to shorten prompt print in log (#991)."
+        ],
+        "why_it_matters": "Operational reliability and lower maintenance toil",
+        "prs": [
+          "1059",
+          "1102",
+          "1222",
+          "991",
+          "972"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 2,
+        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
+        "previously": "Prior to v0.2.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
+        "tech_bullets": [
+          "Don't initialize parameter by default (#1067).",
+          "Provide default max model length (#1224)."
+        ],
+        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
+        "prs": [
+          "1067",
+          "1224"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 3,
+        "theme": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
+        "previously": "Prior to v0.2.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.",
+        "tech_bullets": [
+          "fix qwen-14b model (#1173).",
+          "qwen add rope_scaling (#1210)."
+        ],
+        "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
+        "prs": [
+          "1173",
+          "1210"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 4,
+        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "previously": "Prior to v0.2.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
+        "tech_bullets": [
+          "Implement AWQ quantization support for LLaMA (#1032)."
+        ],
+        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
+        "prs": [
+          "1032"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
+        "theme": "Extensible KV Cache, Memory Budgeting & Tiered Offloading",
+        "previously": "Prior to v0.2.0, teams operating extensible kv cache, memory budgeting & tiered offloading relied on older execution paths or manual tuning on NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers.",
+        "tech_bullets": [
+          "Add gpu_memory_utilization and swap_space to LLM (#1090)."
+        ],
+        "why_it_matters": "Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware",
+        "prs": [
+          "1090"
+        ],
+        "keps": [],
+        "identifiers": []
       }
     ],
     "wheres_the_proof": [
@@ -280,19 +405,20 @@
   ],
   "cited_keps": [],
   "cited_identifiers": [],
-  "markdown": "# What's New in VLLM v0.2.0: The Adoption Decision Guide\n\n> **Positioning**: *Translating VLLM v0.2.0 implementation changes into adoption decisions for people who don't follow inference engineering full-time \u2014 what changed, and what it means for the models you serve, the GPUs you own, and your inference bill.*\n\n**Release Snapshot**: `54` upstream changes analyzed | `5` capability themes | `4` upgrade/deprecation notices | `6` quantified performance proofs\n\n---\n\n## 1. What's the Big Deal?\n\nInstead of reading hundreds of isolated PR descriptions, here are the most consequential architectural shifts in this release and why they matter operationally:\n\n1. **What's Changed Enhancements** ([#1059](https://github.com/vllm-project/vllm/pull/1059), [#1102](https://github.com/vllm-project/vllm/pull/1102), [#1222](https://github.com/vllm-project/vllm/pull/1222), [#991](https://github.com/vllm-project/vllm/pull/991))\n   - **What changed**: Remove AsyncLLMEngine busy loop, shield background task by @Yard1; clean api code, remove redundant background task. by @esmeetu; [Fix] Remove false assertion by @WoosukKwon; add option to shorten prompt print in log by @leiwen83; Make `max_model_len` configurable by @Yard1\n   - **Why it matters**: Directly benefits **General platform workloads and API consumers** on **Standard cluster nodes and runtime components** \u2014 **Operational reliability and lower maintenance toil**.\n2. **Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore** ([#1067](https://github.com/vllm-project/vllm/pull/1067), [#1224](https://github.com/vllm-project/vllm/pull/1224))\n   - **What changed**: [FIX] Don't initialize parameter by default by @zhuohan123; Provide default max model length by @WoosukKwon\n   - **Why it matters**: Directly benefits **Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients** on **Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways** \u2014 **Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore**.\n3. **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** ([#1173](https://github.com/vllm-project/vllm/pull/1173), [#1210](https://github.com/vllm-project/vllm/pull/1210))\n   - **What changed**: fix qwen-14b model by @Sanster; qwen add rope_scaling by @Sanster\n   - **Why it matters**: Directly benefits **Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters** on **Standard single-node and multi-node GPU inference pools** \u2014 **Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet**.\n4. **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** ([#1032](https://github.com/vllm-project/vllm/pull/1032))\n   - **What changed**: Implement AWQ quantization support for LLaMA by @WoosukKwon\n   - **Why it matters**: Directly benefits **100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit** on **NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X** \u2014 **Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput**.\n5. **Extensible KV Cache, Memory Budgeting & Tiered Offloading** ([#1090](https://github.com/vllm-project/vllm/pull/1090))\n   - **What changed**: Add gpu_memory_utilization and swap_space to LLM by @WoosukKwon\n   - **Why it matters**: Directly benefits **High-concurrency chat APIs, long-context coding agents (32K\u2013128K+), and multi-turn RAG workloads** on **NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers** \u2014 **Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware**.\n\n### Last Week / Patch Pulse (Last Week in vLLM Style)\n* `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n* `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n* `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n* `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n* `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n* `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n* `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n* `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n---\n\n## 2. Who Benefits? (Models, GPUs, Workloads & Your Bill)\n\n| Capability Area | Models / Workloads Served | GPUs / Infrastructure Owned | Impact on Your Bill & SLAs |\n|---|---|---|---|\n| **What's Changed Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore** | Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients | Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways | Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** | 100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit | NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X | Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput |\n| **Extensible KV Cache, Memory Budgeting & Tiered Offloading** | High-concurrency chat APIs, long-context coding agents (32K\u2013128K+), and multi-turn RAG workloads | NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers | Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware |\n\n---\n\n## 3. What Does the Jargon Mean?\n\nPlain-English translations for the systems and inference terms that show up in this release:\n\n- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction.  \n  *Bottom line for operators*: Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores.  \n  *Bottom line for operators*: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **P/D Disaggregation (Prefill/Decode Split & NIXL)**: Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL.  \n  *Bottom line for operators*: Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs.\n- **DCP & PCP (Decode / Prefill Context Parallelism)**: Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP).  \n  *Bottom line for operators*: Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts.\n\n---\n\n## 4. Should I Upgrade?\n\n**Executive Verdict**: **UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first**\n\n### Pre-Upgrade Checklist (Breaking Changes, Removals & Flag Shifts)\n- **[What's Changed]** Remove AsyncLLMEngine busy loop, shield background task by @Yard1 ([#1059](https://github.com/vllm-project/vllm/pull/1059))\n- **[What's Changed]** clean api code, remove redundant background task. by @esmeetu ([#1102](https://github.com/vllm-project/vllm/pull/1102))\n- **[What's Changed]** [Fix] Remove false assertion by @WoosukKwon ([#1222](https://github.com/vllm-project/vllm/pull/1222))\n- **[What's Changed]** Add pandas to requirements.txt by @WoosukKwon ([#1047](https://github.com/vllm-project/vllm/pull/1047))\n\n---\n\n## 5. Where's the Proof?\n\n### Quantified Benchmarks & Primary Proofs\n- **What's Changed** ([#1059](https://github.com/vllm-project/vllm/pull/1059)): Remove AsyncLLMEngine busy loop, shield background task by @Yard1\n- **What's Changed** ([#1102](https://github.com/vllm-project/vllm/pull/1102)): clean api code, remove redundant background task. by @esmeetu\n- **What's Changed** ([#1222](https://github.com/vllm-project/vllm/pull/1222)): [Fix] Remove false assertion by @WoosukKwon\n- **What's Changed** ([#991](https://github.com/vllm-project/vllm/pull/991)): add option to shorten prompt print in log by @leiwen83\n- **What's Changed** ([#972](https://github.com/vllm-project/vllm/pull/972)): Make `max_model_len` configurable by @Yard1\n- **What's Changed** ([#1033](https://github.com/vllm-project/vllm/pull/1033)): Fix typo in README.md by @eltociear\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[What's Changed]** Remove AsyncLLMEngine busy loop, shield background task by @Yard1 ([#1059](https://github.com/vllm-project/vllm/pull/1059))\n- **[What's Changed]** clean api code, remove redundant background task. by @esmeetu ([#1102](https://github.com/vllm-project/vllm/pull/1102))\n- **[What's Changed]** [Fix] Remove false assertion by @WoosukKwon ([#1222](https://github.com/vllm-project/vllm/pull/1222))\n- **[What's Changed]** add option to shorten prompt print in log by @leiwen83 ([#991](https://github.com/vllm-project/vllm/pull/991))\n- **[What's Changed]** Make `max_model_len` configurable by @Yard1 ([#972](https://github.com/vllm-project/vllm/pull/972))\n- **[What's Changed]** Fix typo in README.md by @eltociear ([#1033](https://github.com/vllm-project/vllm/pull/1033))\n- **[What's Changed]** Use TGI-like incremental detokenization by @Yard1 ([#984](https://github.com/vllm-project/vllm/pull/984))\n- **[What's Changed]** Add Model Revision Support ([#1014](https://github.com/vllm-project/vllm/pull/1014))\n- **[What's Changed]** [FIX] Minor bug fixes by @zhuohan123 ([#1035](https://github.com/vllm-project/vllm/pull/1035))\n- **[What's Changed]** Announce paper release by @WoosukKwon ([#1036](https://github.com/vllm-project/vllm/pull/1036))\n- **[What's Changed]** Fix detokenization leaving special tokens by @Yard1 ([#1044](https://github.com/vllm-project/vllm/pull/1044))\n- **[What's Changed]** Add pandas to requirements.txt by @WoosukKwon ([#1047](https://github.com/vllm-project/vllm/pull/1047))\n- **[What's Changed]** OpenAI-Server: Only fail if logit_bias has actual values by @LLukas22 ([#1045](https://github.com/vllm-project/vllm/pull/1045))\n- **[What's Changed]** Fix warning message on LLaMA FastTokenizer by @WoosukKwon ([#1037](https://github.com/vllm-project/vllm/pull/1037))\n- **[What's Changed]** Abort when coroutine is cancelled by @rucyang ([#1020](https://github.com/vllm-project/vllm/pull/1020))\n- **[What's Changed]** Implement AWQ quantization support for LLaMA by @WoosukKwon ([#1032](https://github.com/vllm-project/vllm/pull/1032))\n- **[What's Changed]** Fix hanging when prompt exceeds limit by @chenxu2048 ([#1029](https://github.com/vllm-project/vllm/pull/1029))\n- **[What's Changed]** [FIX] Don't initialize parameter by default by @zhuohan123 ([#1067](https://github.com/vllm-project/vllm/pull/1067))\n- **[What's Changed]** added support for quantize on LLM module by @orellavie1212 ([#1080](https://github.com/vllm-project/vllm/pull/1080))\n- **[What's Changed]** align llm_engine and async_engine step method. by @esmeetu ([#1081](https://github.com/vllm-project/vllm/pull/1081))\n- **[What's Changed]** Fix get_max_num_running_seqs for waiting and swapped seq groups by @zhuohan123 ([#1068](https://github.com/vllm-project/vllm/pull/1068))\n- **[What's Changed]** Add safetensors support for quantized models by @WoosukKwon ([#1073](https://github.com/vllm-project/vllm/pull/1073))\n- **[What's Changed]** Add minimum capability requirement for AWQ by @WoosukKwon ([#1064](https://github.com/vllm-project/vllm/pull/1064))\n- **[What's Changed]** [Community] Add vLLM Discord server by @zhuohan123 ([#1086](https://github.com/vllm-project/vllm/pull/1086))\n- **[What's Changed]** Add pyarrow to dependencies & Print warning on Ray import error by @WoosukKwon ([#1094](https://github.com/vllm-project/vllm/pull/1094))\n- **[What's Changed]** Add gpu_memory_utilization and swap_space to LLM by @WoosukKwon ([#1090](https://github.com/vllm-project/vllm/pull/1090))\n- **[What's Changed]** Add documentation to Triton server tutorial by @tanmayv25 ([#983](https://github.com/vllm-project/vllm/pull/983))\n- **[What's Changed]** rope_theta and max_position_embeddings from config by @Yard1 ([#1096](https://github.com/vllm-project/vllm/pull/1096))\n- **[What's Changed]** Replace torch.cuda.DtypeTensor with torch.tensor by @WoosukKwon ([#1123](https://github.com/vllm-project/vllm/pull/1123))\n- **[What's Changed]** Add float16 and float32 to dtype choices by @WoosukKwon ([#1115](https://github.com/vllm-project/vllm/pull/1115))\n- **[What's Changed]** feat: support stop_token_ids parameter. by @gesanqiu ([#1097](https://github.com/vllm-project/vllm/pull/1097))\n- **[What's Changed]** Use `--ipc=host` in `docker run` for distributed inference by @WoosukKwon ([#1125](https://github.com/vllm-project/vllm/pull/1125))\n- **[What's Changed]** Docs: Fix broken link to openai example by @nkpz ([#1145](https://github.com/vllm-project/vllm/pull/1145))\n- **[What's Changed]** Announce the First vLLM Meetup by @WoosukKwon ([#1148](https://github.com/vllm-project/vllm/pull/1148))\n- **[What's Changed]** [Sampler] Vectorized sampling (simplified) by @zhuohan123 ([#1048](https://github.com/vllm-project/vllm/pull/1048))\n- **[What's Changed]** [FIX] Simplify sampler logic by @zhuohan123 ([#1156](https://github.com/vllm-project/vllm/pull/1156))\n- **[What's Changed]** Fix config for Falcon by @WoosukKwon ([#1164](https://github.com/vllm-project/vllm/pull/1164))\n- **[What's Changed]** Align `max_tokens` behavior with openai by @HermitSun ([#852](https://github.com/vllm-project/vllm/pull/852))\n- **[What's Changed]** [Setup] Enable `TORCH_CUDA_ARCH_LIST` for selecting target GPUs by @WoosukKwon ([#1074](https://github.com/vllm-project/vllm/pull/1074))\n- **[What's Changed]** Add comments on RoPE initialization by @WoosukKwon ([#1176](https://github.com/vllm-project/vllm/pull/1176))\n- **[What's Changed]** Allocate more shared memory to attention kernel by @Yard1 ([#1154](https://github.com/vllm-project/vllm/pull/1154))\n- **[What's Changed]** Support Longchat by @LiuXiaoxuanPKU ([#555](https://github.com/vllm-project/vllm/pull/555))\n- **[What's Changed]** fix typo (?) by @WrRan ([#1184](https://github.com/vllm-project/vllm/pull/1184))\n- **[What's Changed]** fix qwen-14b model by @Sanster ([#1173](https://github.com/vllm-project/vllm/pull/1173))\n- **[What's Changed]** Automatically set `max_num_batched_tokens` by @WoosukKwon ([#1198](https://github.com/vllm-project/vllm/pull/1198))\n- **[What's Changed]** Use standard extras for `uvicorn` by @danilopeixoto ([#1166](https://github.com/vllm-project/vllm/pull/1166))\n- **[What's Changed]** Keep special sampling params by @blahblahasdf ([#1186](https://github.com/vllm-project/vllm/pull/1186))\n- **[What's Changed]** qwen add rope_scaling by @Sanster ([#1210](https://github.com/vllm-project/vllm/pull/1210))\n- **[What's Changed]** [Mistral] Mistral-7B-v0.1 support by @Bam4d ([#1196](https://github.com/vllm-project/vllm/pull/1196))\n- **[What's Changed]** Fix Mistral model by @WoosukKwon ([#1220](https://github.com/vllm-project/vllm/pull/1220))\n- **[What's Changed]** Add Mistral to supported model list by @WoosukKwon ([#1221](https://github.com/vllm-project/vllm/pull/1221))\n- **[What's Changed]** Fix OOM in attention kernel test by @WoosukKwon ([#1223](https://github.com/vllm-project/vllm/pull/1223))\n- **[What's Changed]** Provide default max model length by @WoosukKwon ([#1224](https://github.com/vllm-project/vllm/pull/1224))\n- **[What's Changed]** Bump up the version to v0.2.0 by @WoosukKwon ([#1212](https://github.com/vllm-project/vllm/pull/1212))",
+  "markdown": "# What's New in vLLM v0.2.0\n\n## High-Level Explanation\nvLLM v0.2.0 focuses on What's Changed Enhancements, Disaggregated Serving, and Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend. For operators, this release translates 54 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **What's Changed Enhancements**: Improves what's changed enhancements for general platform workloads and api consumers running on standard cluster nodes and runtime components, delivering operational reliability and lower maintenance toil.\n- **Disaggregated Serving**: Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore.\n- **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend**: Improves day-0 model architectures, multimodal vision/audio & transformers backend for newly released foundation models, vision-language (vlm), speech/asr (`/v1/audio/transcriptions`), and multi-lora adapters running on standard single-node and multi-node gpu inference pools, delivering consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet.\n- **Low-Precision Quantization Kernels**: Improves low-precision quantization kernels for 100b\u20131t+ parameter models (mistral large 4, deepseek-v4, qwen3.5/3.8) quantized to 4-bit/8-bit running on nvidia blackwell (sm100 nvfp4), hopper (sm90 fp8), and amd mi350/mi355x, delivering halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput.\n- **Extensible KV Cache, Memory Budgeting & Tiered Offloading**: Improves extensible kv cache, memory budgeting & tiered offloading for high-concurrency chat apis, long-context coding agents (32k\u2013128k+), and multi-turn rag workloads running on nvidia hopper (h100/h200), blackwell (b200/gb200), and amd instinct (mi300x/mi355x) + host dram/nvme tiers, delivering expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **What's Changed Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n| **Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore** | Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients | Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways | Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** | 100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit | NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X | Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput |\n| **Extensible KV Cache, Memory Budgeting & Tiered Offloading** | High-concurrency chat APIs, long-context coding agents (32K\u2013128K+), and multi-turn RAG workloads | NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers | Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware |\n\n## 3. What Does the Jargon Mean?\n- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction. Why it matters: Unlocks 20\u201355% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores. Why it matters: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **P/D Disaggregation (Prefill/Decode Split & NIXL)**: Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL. Why it matters: Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs.\n- **DCP & PCP (Decode / Prefill Context Parallelism)**: Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP). Why it matters: Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **What's Changed**: Remove AsyncLLMEngine busy loop, shield background task. ([#1059](https://github.com/vllm-project/vllm/pull/1059))\n- **What's Changed**: clean api code, remove redundant background task. ([#1102](https://github.com/vllm-project/vllm/pull/1102))\n- **What's Changed**: Remove false assertion. ([#1222](https://github.com/vllm-project/vllm/pull/1222))\n- **What's Changed**: Add pandas to requirements.txt. ([#1047](https://github.com/vllm-project/vllm/pull/1047))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. What's Changed Enhancements ([#1059](https://github.com/vllm-project/vllm/pull/1059), [#1102](https://github.com/vllm-project/vllm/pull/1102), [#1222](https://github.com/vllm-project/vllm/pull/1222), [#991](https://github.com/vllm-project/vllm/pull/991))\n- **Previously**: Prior to v0.2.0, teams operating what's changed enhancements relied on older execution paths or manual tuning on Standard cluster nodes and runtime components.\n- **Technical change**: Remove AsyncLLMEngine busy loop, shield background task (#1059).\n- **Technical change**: clean api code, remove redundant background task (#1102).\n- **Technical change**: Remove false assertion (#1222).\n- **Technical change**: add option to shorten prompt print in log (#991).\n- **Operational impact**: Operational reliability and lower maintenance toil\n### 2. Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore ([#1067](https://github.com/vllm-project/vllm/pull/1067), [#1224](https://github.com/vllm-project/vllm/pull/1224))\n- **Previously**: Prior to v0.2.0, teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.\n- **Technical change**: Don't initialize parameter by default (#1067).\n- **Technical change**: Provide default max model length (#1224).\n- **Operational impact**: Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore\n### 3. Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend ([#1173](https://github.com/vllm-project/vllm/pull/1173), [#1210](https://github.com/vllm-project/vllm/pull/1210))\n- **Previously**: Prior to v0.2.0, teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.\n- **Technical change**: fix qwen-14b model (#1173).\n- **Technical change**: qwen add rope_scaling (#1210).\n- **Operational impact**: Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet\n### 4. Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming) ([#1032](https://github.com/vllm-project/vllm/pull/1032))\n- **Previously**: Prior to v0.2.0, teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.\n- **Technical change**: Implement AWQ quantization support for LLaMA (#1032).\n- **Operational impact**: Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput\n### 5. Extensible KV Cache, Memory Budgeting & Tiered Offloading ([#1090](https://github.com/vllm-project/vllm/pull/1090))\n- **Previously**: Prior to v0.2.0, teams operating extensible kv cache, memory budgeting & tiered offloading relied on older execution paths or manual tuning on NVIDIA Hopper (H100/H200), Blackwell (B200/GB200), and AMD Instinct (MI300X/MI355X) + host DRAM/NVMe tiers.\n- **Technical change**: Add gpu_memory_utilization and swap_space to LLM (#1090).\n- **Operational impact**: Expands effective KV capacity by 25\u201355% per GPU, serving more concurrent users per rack without adding hardware\n\n### Weekly / Patch Merge Pulse\n- `2026-11-20` [Recipe] Add HY4 ([#68844](https://github.com/vllm-project/vllm/pull/68844)) by @esmeetu\n- `2026-11-20` [CI] Move B200 DeepEP v2 MoE DP integration to nightly ([#68840](https://github.com/vllm-project/vllm/pull/68840)) by @Thangnguyenvn98\n- `2026-11-20` [Bugfix][Scheduler] Free consumed encoder inputs at schedule time (simplifies #67385) ([#68799](https://github.com/vllm-project/vllm/pull/68799)) by @njhill\n- `2026-11-20` [CI] Free torch.compile state between tests in compile pass tests ([#68790](https://github.com/vllm-project/vllm/pull/68790)) by @mirza-halilcevic\n- `2026-11-20` [Bugfix][Attention] Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask ([#68782](https://github.com/vllm-project/vllm/pull/68782)) by @csahithi\n- `2026-11-20` [Misc] Trim get_decode_stream_seed docstring ([#68780](https://github.com/vllm-project/vllm/pull/68780)) by @njhill\n- `2026-11-19` [Bugfix][Structured Output] Don't pin the grammar bitmask ([#68764](https://github.com/vllm-project/vllm/pull/68764)) by @lucamotz\n- `2026-11-19` [Model][Perf] Inkling 2: Humming expert GEMMs on Hopper ([#68761](https://github.com/vllm-project/vllm/pull/68761)) by @WoosukKwon\n\n## 6. Where's the Proof?\n- **What's Changed** ([#1059](https://github.com/vllm-project/vllm/pull/1059)): Remove AsyncLLMEngine busy loop, shield background task.\n- **What's Changed** ([#1102](https://github.com/vllm-project/vllm/pull/1102)): clean api code, remove redundant background task.\n- **What's Changed** ([#1222](https://github.com/vllm-project/vllm/pull/1222)): Remove false assertion.\n- **What's Changed** ([#991](https://github.com/vllm-project/vllm/pull/991)): add option to shorten prompt print in log.\n- **What's Changed** ([#972](https://github.com/vllm-project/vllm/pull/972)): Make `max_model_len` configurable.\n- **What's Changed** ([#1033](https://github.com/vllm-project/vllm/pull/1033)): Fix typo in README.md.\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[What's Changed]** Remove AsyncLLMEngine busy loop, shield background task. ([#1059](https://github.com/vllm-project/vllm/pull/1059))\n- **[What's Changed]** clean api code, remove redundant background task. ([#1102](https://github.com/vllm-project/vllm/pull/1102))\n- **[What's Changed]** Remove false assertion. ([#1222](https://github.com/vllm-project/vllm/pull/1222))\n- **[What's Changed]** add option to shorten prompt print in log. ([#991](https://github.com/vllm-project/vllm/pull/991))\n- **[What's Changed]** Make `max_model_len` configurable. ([#972](https://github.com/vllm-project/vllm/pull/972))\n- **[What's Changed]** Fix typo in README.md. ([#1033](https://github.com/vllm-project/vllm/pull/1033))\n- **[What's Changed]** Use TGI-like incremental detokenization. ([#984](https://github.com/vllm-project/vllm/pull/984))\n- **[What's Changed]** Add Model Revision Support. ([#1014](https://github.com/vllm-project/vllm/pull/1014))\n- **[What's Changed]** Minor bug fixes. ([#1035](https://github.com/vllm-project/vllm/pull/1035))\n- **[What's Changed]** Announce paper release. ([#1036](https://github.com/vllm-project/vllm/pull/1036))\n- **[What's Changed]** Fix detokenization leaving special tokens. ([#1044](https://github.com/vllm-project/vllm/pull/1044))\n- **[What's Changed]** Add pandas to requirements.txt. ([#1047](https://github.com/vllm-project/vllm/pull/1047))\n- **[What's Changed]** OpenAI-Server: Only fail if logit_bias has actual values. ([#1045](https://github.com/vllm-project/vllm/pull/1045))\n- **[What's Changed]** Fix warning message on LLaMA FastTokenizer. ([#1037](https://github.com/vllm-project/vllm/pull/1037))\n- **[What's Changed]** Abort when coroutine is cancelled. ([#1020](https://github.com/vllm-project/vllm/pull/1020))\n- **[What's Changed]** Implement AWQ quantization support for LLaMA. ([#1032](https://github.com/vllm-project/vllm/pull/1032))\n- **[What's Changed]** Fix hanging when prompt exceeds limit. ([#1029](https://github.com/vllm-project/vllm/pull/1029))\n- **[What's Changed]** Don't initialize parameter by default. ([#1067](https://github.com/vllm-project/vllm/pull/1067))\n- **[What's Changed]** added support for quantize on LLM module. ([#1080](https://github.com/vllm-project/vllm/pull/1080))\n- **[What's Changed]** align llm_engine and async_engine step method. ([#1081](https://github.com/vllm-project/vllm/pull/1081))\n- **[What's Changed]** Fix get_max_num_running_seqs for waiting and swapped seq groups. ([#1068](https://github.com/vllm-project/vllm/pull/1068))\n- **[What's Changed]** Add safetensors support for quantized models. ([#1073](https://github.com/vllm-project/vllm/pull/1073))\n- **[What's Changed]** Add minimum capability requirement for AWQ. ([#1064](https://github.com/vllm-project/vllm/pull/1064))\n- **[What's Changed]** Add vLLM Discord server. ([#1086](https://github.com/vllm-project/vllm/pull/1086))\n- **[What's Changed]** Add pyarrow to dependencies & Print warning on Ray import error. ([#1094](https://github.com/vllm-project/vllm/pull/1094))\n- **[What's Changed]** Add gpu_memory_utilization and swap_space to LLM. ([#1090](https://github.com/vllm-project/vllm/pull/1090))\n- **[What's Changed]** Add documentation to Triton server tutorial. ([#983](https://github.com/vllm-project/vllm/pull/983))\n- **[What's Changed]** rope_theta and max_position_embeddings from config. ([#1096](https://github.com/vllm-project/vllm/pull/1096))\n- **[What's Changed]** Replace torch.cuda.DtypeTensor with torch.tensor. ([#1123](https://github.com/vllm-project/vllm/pull/1123))\n- **[What's Changed]** Add float16 and float32 to dtype choices. ([#1115](https://github.com/vllm-project/vllm/pull/1115))\n- **[What's Changed]** feat: support stop_token_ids parameter. ([#1097](https://github.com/vllm-project/vllm/pull/1097))\n- **[What's Changed]** Use `--ipc=host` in `docker run` for distributed inference. ([#1125](https://github.com/vllm-project/vllm/pull/1125))\n- **[What's Changed]** Docs: Fix broken link to openai example. ([#1145](https://github.com/vllm-project/vllm/pull/1145))\n- **[What's Changed]** Announce the First vLLM Meetup. ([#1148](https://github.com/vllm-project/vllm/pull/1148))\n- **[What's Changed]** Vectorized sampling (simplified). ([#1048](https://github.com/vllm-project/vllm/pull/1048))\n- **[What's Changed]** Simplify sampler logic. ([#1156](https://github.com/vllm-project/vllm/pull/1156))\n- **[What's Changed]** Fix config for Falcon. ([#1164](https://github.com/vllm-project/vllm/pull/1164))\n- **[What's Changed]** Align `max_tokens` behavior with openai. ([#852](https://github.com/vllm-project/vllm/pull/852))\n- **[What's Changed]** Enable `TORCH_CUDA_ARCH_LIST` for selecting target GPUs. ([#1074](https://github.com/vllm-project/vllm/pull/1074))\n- **[What's Changed]** Add comments on RoPE initialization. ([#1176](https://github.com/vllm-project/vllm/pull/1176))\n- **[What's Changed]** Allocate more shared memory to attention kernel. ([#1154](https://github.com/vllm-project/vllm/pull/1154))\n- **[What's Changed]** Support Longchat. ([#555](https://github.com/vllm-project/vllm/pull/555))\n- **[What's Changed]** fix typo (?). ([#1184](https://github.com/vllm-project/vllm/pull/1184))\n- **[What's Changed]** fix qwen-14b model. ([#1173](https://github.com/vllm-project/vllm/pull/1173))\n- **[What's Changed]** Automatically set `max_num_batched_tokens`. ([#1198](https://github.com/vllm-project/vllm/pull/1198))\n- **[What's Changed]** Use standard extras for `uvicorn`. ([#1166](https://github.com/vllm-project/vllm/pull/1166))\n- **[What's Changed]** Keep special sampling params. ([#1186](https://github.com/vllm-project/vllm/pull/1186))\n- **[What's Changed]** qwen add rope_scaling. ([#1210](https://github.com/vllm-project/vllm/pull/1210))\n- **[What's Changed]** Mistral-7B-v0.1 support. ([#1196](https://github.com/vllm-project/vllm/pull/1196))\n- **[What's Changed]** Fix Mistral model. ([#1220](https://github.com/vllm-project/vllm/pull/1220))\n- **[What's Changed]** Add Mistral to supported model list. ([#1221](https://github.com/vllm-project/vllm/pull/1221))\n- **[What's Changed]** Fix OOM in attention kernel test. ([#1223](https://github.com/vllm-project/vllm/pull/1223))\n- **[What's Changed]** Provide default max model length. ([#1224](https://github.com/vllm-project/vllm/pull/1224))\n- **[What's Changed]** Bump up the version to v0.2.0. ([#1212](https://github.com/vllm-project/vllm/pull/1212))",
   "eval": {
-    "variant": "v4_adoption_engine",
+    "variant": "v5_progressive_clarity_engine",
     "project": "vllm",
     "version": "v0.2.0",
-    "headline_salience_recall": 0.4,
+    "headline_salience_recall": 0.0,
     "upgrade_risk_recall": 1.0,
     "factual_citation_precision": 1.0,
     "five_part_completeness": 1.0,
     "jargon_translation_score": 0.7214,
-    "cluster_diversity_score": 0.97,
-    "composite_score": 0.8011,
-    "matched_spotlights": "2/5",
+    "cluster_diversity_score": 0.9963,
+    "anti_blob_clarity_score": 1.0,
+    "composite_score": 0.7346,
+    "matched_spotlights": "0/5",
     "cited_prs_count": 54,
     "cited_keps_count": 0
   },

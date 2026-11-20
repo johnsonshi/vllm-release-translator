@@ -30,39 +30,47 @@ class TestReleaseTranslatorHarness(unittest.TestCase):
         s2 = k8s["v2_salience_and_risk_ranker"]["composite_score"]
         s3 = k8s["v3_clustered_synthesis"]["composite_score"]
         s4 = k8s["v4_adoption_engine"]["composite_score"]
+        s5 = k8s["v5_progressive_clarity_engine"]["composite_score"]
 
         self.assertLess(s0, s1)
         self.assertLess(s1, s3)
         self.assertLess(s2, s3)
         self.assertLess(s3, s4)
-        self.assertGreaterEqual(s4, 0.92, "v4 must exceed 92% composite score on 10-version K8s control benchmark")
-        self.assertEqual(k8s["v4_adoption_engine"]["factual_citation_precision"], 1.0)
-        self.assertEqual(k8s["v4_adoption_engine"]["upgrade_risk_recall"], 1.0)
-        self.assertEqual(k8s["v4_adoption_engine"]["five_part_completeness"], 1.0)
+        self.assertLess(s4, s5)
+        self.assertGreaterEqual(s5, 0.95, "v5 must exceed 95% composite score on 10-version K8s control benchmark")
+        self.assertEqual(k8s["v5_progressive_clarity_engine"]["factual_citation_precision"], 1.0)
+        self.assertEqual(k8s["v5_progressive_clarity_engine"]["upgrade_risk_recall"], 1.0)
+        self.assertEqual(k8s["v5_progressive_clarity_engine"]["five_part_completeness"], 1.0)
+        self.assertEqual(k8s["v5_progressive_clarity_engine"]["anti_blob_clarity_score"], 1.0)
 
     def test_hill_climbing_transfer_to_vllm(self) -> None:
         vllm = self.summary["vllm_target_ab"]
         s0 = vllm["v0_naive_baseline"]["composite_score"]
         s4 = vllm["v4_adoption_engine"]["composite_score"]
+        s5 = vllm["v5_progressive_clarity_engine"]["composite_score"]
 
-        self.assertGreater(s4 - s0, 0.45)
-        self.assertGreaterEqual(s4, 0.95)
-        self.assertEqual(vllm["v4_adoption_engine"]["factual_citation_precision"], 1.0)
-        self.assertEqual(vllm["v4_adoption_engine"]["upgrade_risk_recall"], 1.0)
-        self.assertEqual(vllm["v4_adoption_engine"]["five_part_completeness"], 1.0)
+        self.assertLess(s4, s5)
+        self.assertGreater(s5 - s0, 0.50)
+        self.assertGreaterEqual(s5, 0.96)
+        self.assertEqual(vllm["v5_progressive_clarity_engine"]["factual_citation_precision"], 1.0)
+        self.assertEqual(vllm["v5_progressive_clarity_engine"]["upgrade_risk_recall"], 1.0)
+        self.assertEqual(vllm["v5_progressive_clarity_engine"]["five_part_completeness"], 1.0)
+        self.assertGreaterEqual(vllm["v5_progressive_clarity_engine"]["anti_blob_clarity_score"], 0.98)
 
     def test_single_release_five_part_structure_and_citations(self) -> None:
         raw_v034 = json.loads((REPO_ROOT / "corpus" / "vllm" / "raw" / "v0.34.0.json").read_text())
         gt_v034 = json.loads((REPO_ROOT / "corpus" / "vllm" / "ground_truth" / "v0.34.0.json").read_text())
-        gen = run_generator("v4_adoption_engine", raw_v034)
+        gen = run_generator("v5_progressive_clarity_engine", raw_v034)
         ev = evaluate_generated_brief(gen, raw_v034, gt_v034)
 
-        self.assertIn("## 1. What's the Big Deal?", gen["markdown"])
+        self.assertIn("## 1. What Are the High-Level Changes?", gen["markdown"])
         self.assertIn("## 2. Who Benefits?", gen["markdown"])
         self.assertIn("## 3. What Does the Jargon Mean?", gen["markdown"])
         self.assertIn("## 4. Should I Upgrade?", gen["markdown"])
-        self.assertIn("## 5. Where's the Proof?", gen["markdown"])
+        self.assertIn("## 5. Technical Deep Dive", gen["markdown"])
+        self.assertIn("## 6. Where's the Proof?", gen["markdown"])
         self.assertEqual(ev["factual_citation_precision"], 1.0)
+        self.assertEqual(ev["anti_blob_clarity_score"], 1.0)
         self.assertGreaterEqual(ev["headline_salience_recall"], 0.90)
 
     def test_weekly_edition_generation(self) -> None:

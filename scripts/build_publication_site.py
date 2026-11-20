@@ -1148,6 +1148,18 @@ def _backfill_remaining_releases() -> None:
     for domain in ("vllm", "kubernetes"):
         for r in PUBLICATION_DATA[domain]["releases"]:
             r["date"] = date_map.get(r["version"], r.get("date", ""))
+            fp = r["five_parts"]
+            if "high_level_changes" not in fp:
+                fp["high_level_changes"] = [
+                    {
+                        "headline": b["title"].split("—")[0].split("(")[0].strip(),
+                        "plain_summary": b["now"],
+                    }
+                    for b in fp.get("big_deal", [])[:4]
+                ]
+            for b in fp.get("big_deal", []):
+                if "tech_bullets" not in b:
+                    b["tech_bullets"] = [b["now"]] if b.get("now") else []
 
         existing_vers = {r["version"] for r in PUBLICATION_DATA[domain]["releases"]}
         gen_dir = REPO_ROOT / "results" / "generated" / domain
@@ -1166,7 +1178,8 @@ def _backfill_remaining_releases() -> None:
             raw_data = json.loads(raw_path.read_text()) if raw_path.exists() else {}
 
             secs = data.get("sections", {})
-            big_deals = secs.get("whats_the_big_deal", [])[:4]
+            hl_changes = secs.get("high_level_changes", [])[:5]
+            deep_dives = (secs.get("technical_deep_dive") or secs.get("whats_the_big_deal") or [])[:5]
             who_ben = secs.get("who_benefits", [])[:4]
             jargon = secs.get("jargon_glossary", [])[:4]
             upgrades = secs.get("should_i_upgrade", [])[:5]
@@ -1180,20 +1193,25 @@ def _backfill_remaining_releases() -> None:
                     if sp.get("heading")
                 ]
                 headline = ", ".join(lead_titles[:2]) if lead_titles else ""
-                exec_points = "; ".join(
-                    _clean_bullet_for_reader(sp.get("summary", "")).rstrip(".")
-                    for sp in spotlights[:3]
-                    if sp.get("summary")
-                )
-                exec_summary = (
-                    f"{domain.upper() if domain == 'vllm' else 'Kubernetes'} {ver} ships {raw_data.get('total_raw_items', data.get('total_raw_items', 0))} upstream changes. "
-                    f"Key highlights include: {exec_points}."
-                )
+                # Build clean non-technical high-level bullets from human spotlights if available
+                spot_hl = []
+                for sp in spotlights[:4]:
+                    h_clean = re.sub(r"\s*\(#\d+.*\)", "", sp.get("heading", "")).strip()
+                    s_clean = _clean_bullet_for_reader(sp.get("summary", ""))
+                    if h_clean and s_clean.lower().startswith(h_clean.lower()):
+                        s_clean = s_clean[len(h_clean):].lstrip(": -–—")
+                    if h_clean and s_clean:
+                        spot_hl.append({
+                            "headline": h_clean,
+                            "plain_summary": s_clean,
+                        })
+                if spot_hl:
+                    hl_changes = spot_hl
             else:
-                lead_themes = ", ".join(b.get("theme", "").split("(")[0].strip() for b in big_deals[:2] if b.get("theme"))
+                lead_themes = ", ".join(b.get("theme", "").split("(")[0].strip() for b in deep_dives[:2] if b.get("theme"))
                 headline = lead_themes or f"Key Capability Graduations & Runtime Updates in {ver}"
-                exec_summary = data.get("positioning", "")
 
+            exec_summary = data.get("high_level_explanation") or data.get("positioning", "")
             iso_date = raw_data.get("published_date") or date_map.get(ver) or data.get("published_date") or "2025-01-01"
             PUBLICATION_DATA[domain]["releases"].append({
                 "version": ver,
@@ -1203,17 +1221,19 @@ def _backfill_remaining_releases() -> None:
                 "headline": headline[:140] if headline else f"Core Engine & Model Updates in {ver}",
                 "executive_summary": exec_summary.replace("VLLM", "vLLM"),
                 "five_parts": {
+                    "high_level_changes": hl_changes,
                     "big_deal": [
                         {
                             "title": b.get("theme", "Core Enhancement"),
                             "status": "Graduated / Merged",
                             "status_tone": "green",
                             "prs": ([f"KEP-{k}" for k in b.get("keps", [])[:2]] + [f"#{p}" for p in b.get("prs", [])[:3]])[:4],
-                            "before": f"Earlier releases required separate workarounds or lacked native kernel/runtime support in {b.get('theme', 'this area').split('(')[0].strip()}.",
-                            "now": _clean_bullet_for_reader(b.get("what_changed", "")),
+                            "before": b.get("previously") or f"Earlier releases required separate workarounds or lacked native kernel/runtime support in {b.get('theme', 'this area').split('(')[0].strip()}.",
+                            "tech_bullets": b.get("tech_bullets") or ([_clean_bullet_for_reader(b.get("what_changed", ""))] if b.get("what_changed") else []),
+                            "why_it_matters": b.get("why_it_matters", ""),
                             "config_snippet": ""
                         }
-                        for b in big_deals
+                        for b in deep_dives
                     ],
                     "who_benefits": [
                         {

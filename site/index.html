@@ -584,7 +584,7 @@
   <!-- MAIN CONTENT -->
   <main class="container" id="main-content" tabindex="-1"></main>
 
-  <script src="publication_data.js?v=4"></script>
+  <script src="publication_data.js?v=5"></script>
   <script>
     const PUB = window.__PUBLICATION_DATA__ || {};
 
@@ -703,6 +703,7 @@
     function renderReleaseView(releases, rel) {
       const fp = rel.five_parts;
       const ghTag = rel.version === 'v0.33.0' ? 'v0.33.0rc3' : rel.version;
+      const hlChanges = fp.high_level_changes || [];
 
       return `
         <article>
@@ -714,21 +715,15 @@
             <p class="lead">${formatProse(rel.executive_summary)}</p>
           </header>
 
-          <section class="section-block" id="whats-the-big-deal">
-            <h2>1. What’s the big deal?</h2>
-            <p class="section-subtitle">The headline changes in vLLM ${escapeHtml(rel.version)} and what they replace.</p>
+          <section class="section-block" id="high-level-changes">
+            <h2>1. What are the high-level changes?</h2>
+            <p class="section-subtitle">A plain-English summary of what changed in vLLM ${escapeHtml(rel.version)} before diving into the technical internals.</p>
 
-            <div>
-              ${fp.big_deal.map(item => `
-                <div class="feature-item">
-                  <h3 class="feature-title">${escapeHtml(item.title)}</h3>
-                  ${(item.prs && item.prs.length) ? `<p class="feature-prs">Pull requests: ${item.prs.map(p => formatRefLink(p)).join(', ')}</p>` : ''}
-                  <p class="feature-p"><strong>Previously:</strong> ${formatProse(item.before)}</p>
-                  <p class="feature-p"><strong>Now in ${escapeHtml(rel.version)}:</strong> ${formatProse(item.now)}</p>
-                  ${item.config_snippet ? `<pre class="code-box"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
-                </div>
+            <ul class="merge-list">
+              ${hlChanges.map(h => `
+                <li><strong>${escapeHtml(h.headline)}:</strong> ${formatProse(h.plain_summary)}</li>
               `).join('')}
-            </div>
+            </ul>
           </section>
 
           <section class="section-block" id="who-benefits">
@@ -808,8 +803,33 @@
             </div>
           </section>
 
+          <section class="section-block" id="technical-deep-dive">
+            <h2>5. Technical deep dive (What’s the big deal under the hood?)</h2>
+            <p class="section-subtitle">Detailed engineering breakdown by subsystem, replacing raw changelog dumps with structured bullets.</p>
+
+            <div>
+              ${fp.big_deal.map(item => {
+                const bullets = (item.tech_bullets && item.tech_bullets.length)
+                  ? item.tech_bullets
+                  : (item.now ? [item.now] : []);
+                return `
+                  <div class="feature-item">
+                    <h3 class="feature-title">${escapeHtml(item.title)}</h3>
+                    ${(item.prs && item.prs.length) ? `<p class="feature-prs">Pull requests: ${item.prs.map(p => formatRefLink(p)).join(', ')}</p>` : ''}
+                    <p class="feature-p"><strong>Previously:</strong> ${formatProse(item.before)}</p>
+                    <p class="feature-p" style="margin-bottom:0.35rem;"><strong>What changed in ${escapeHtml(rel.version)}:</strong></p>
+                    <ul class="merge-list" style="margin-bottom:0.5rem;">
+                      ${bullets.map(b => `<li>${formatProse(b)}</li>`).join('')}
+                    </ul>
+                    ${item.config_snippet ? `<pre class="code-box"><code translate="no">${escapeHtml(item.config_snippet)}</code></pre>` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </section>
+
           <section class="section-block" id="wheres-the-proof">
-            <h2>5. Where’s the proof?</h2>
+            <h2>6. Where’s the proof?</h2>
             <p class="section-subtitle">Benchmarks and upstream pull requests with hardware and model conditions preserved.</p>
 
             <div class="table-responsive">
