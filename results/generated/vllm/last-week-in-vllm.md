@@ -22,7 +22,6 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 | **CI Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |
 
 ## 3. What Does the Jargon Mean?
-- **Extensible KV Cache**: Sizes the GPU Key-Value (KV) cache dynamically from actual free VRAM measured *after* model loading and CUDA graph warmup, rather than guessing via a static `gpu_memory_utilization` fraction. Why it matters: Unlocks 20–55% more KV token capacity per GPU (higher concurrency & throughput) without risking startup OOM crashes.
 - **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass. Why it matters: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x–2.5x without changing output quality.
 - **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing. Why it matters: Slashes KV cache memory footprint on long contexts (32K–128K+), enabling far larger batch sizes per GPU.
 - **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores. Why it matters: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.
@@ -90,6 +89,7 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - **Operational impact**: Operational reliability and lower maintenance toil
 
 ### Weekly / Patch Merge Pulse
+- `2026-11-22` [Perf][Inkling2-Mini] Improve small M GEMM on 5090 (sm120) ([#69168](https://github.com/vllm-project/vllm/pull/69168)) by @gau-nernst
 - `2026-11-21` [Bugfix] Normalize native GTE positional embedding configuration ([#69145](https://github.com/vllm-project/vllm/pull/69145)) by @hlin99
 - `2026-11-21` [CI] Use platform device in M-RoPE prompt embeds test ([#69134](https://github.com/vllm-project/vllm/pull/69134)) by @hlin99
 - `2026-11-21` [Doc] Add vLLM security review skill ([#69101](https://github.com/vllm-project/vllm/pull/69101)) by @jperezdealgaba
@@ -97,19 +97,19 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - `2026-11-21` [Bugfix][Multimodal] Return 400 for unreadable embedding payloads ([#69073](https://github.com/vllm-project/vllm/pull/69073)) by @my-git9
 - `2026-11-21` [Kernel][GDN] Faster fused CUDA MTP decode for 16-bit recurrent state ([#69065](https://github.com/vllm-project/vllm/pull/69065)) by @gau-nernst
 - `2026-11-20` [Recipe] Inkling 2 Mini: serve the full 1M context on one GPU ([#69039](https://github.com/vllm-project/vllm/pull/69039)) by @WoosukKwon
-- `2026-11-21` [Model] Add Inkling 2 Mini ([#69028](https://github.com/vllm-project/vllm/pull/69028)) by @WoosukKwon
 
 ## 6. Where's the Proof?
+- **Perf** ([#69168](https://github.com/vllm-project/vllm/pull/69168)): Improve small M GEMM on 5090 (sm120).
 - **Kernel** ([#69065](https://github.com/vllm-project/vllm/pull/69065)): Faster fused CUDA MTP decode for 16-bit recurrent state.
 - **HiSparse** ([#69026](https://github.com/vllm-project/vllm/pull/69026)): Support HY4 Flash.
 - **Bugfix** ([#69023](https://github.com/vllm-project/vllm/pull/69023)): Read the DSpark draft's native mega MoE flag from its layers.
+- **Perf** ([#69021](https://github.com/vllm-project/vllm/pull/69021)): Inkling 2: keep the TMA k_group_partials path on SM12x.
 - **Model** ([#69013](https://github.com/vllm-project/vllm/pull/69013)): Hy4-flash Cleanup.
 - **ROCm** ([#68965](https://github.com/vllm-project/vllm/pull/68965)): Check the MLA W_UV kernel through a Triton launch hook.
 - **Perf** ([#68921](https://github.com/vllm-project/vllm/pull/68921)): Export ZAYA1 CCA prefill checkpoints.
 - **Perf** ([#68842](https://github.com/vllm-project/vllm/pull/68842)): QSA: sm_100 split-K launch configs for small batches.
 - **Perf** ([#68831](https://github.com/vllm-project/vllm/pull/68831)): Encoder CUDA graphs for the Qwen3-Omni / Qwen3-ASR audio tower.
-- **Model** ([#68761](https://github.com/vllm-project/vllm/pull/68761)): Inkling 2: Humming expert GEMMs on Hopper.
-- **Kimi K3.1** ([#68701](https://github.com/vllm-project/vllm/pull/68701)): Serve GQA DSpark drafts on the specialized drafter.
+- **Perf** ([#69021](https://github.com/vllm-project/vllm/pull/69021)): Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021).
 
 ### Complete Feature Graduation & Enhancement Rollup
 - **[Engine & Runtime]** Revert "[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily" (@sheralskumar, #68987). ([#68987](https://github.com/vllm-project/vllm/pull/68987))
@@ -139,6 +139,7 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - **[Model]** Inkling 2: Humming expert GEMMs on Hopper (@WoosukKwon, #68761). ([#68761](https://github.com/vllm-project/vllm/pull/68761))
 - **[Model]** Voxtral: drop the unused model field from TranscriptionRequest (@juliendenize, #68702). ([#68702](https://github.com/vllm-project/vllm/pull/68702))
 - **[Model]** Serve native Transformers GTE rerankers and their LoRA adapters (@LantaoJin, #68622). ([#68622](https://github.com/vllm-project/vllm/pull/68622))
+- **[Perf]** Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021). ([#69021](https://github.com/vllm-project/vllm/pull/69021))
 - **[Misc]** Remove --disable-cascade-attn past its removal version (@sh4shv4t, #68789). ([#68789](https://github.com/vllm-project/vllm/pull/68789))
 - **[Bugfix]** Read the DSpark draft's native mega MoE flag from its layers (@roborluo, #69023). ([#69023](https://github.com/vllm-project/vllm/pull/69023))
 - **[Bugfix]** Qwen3-VL: accept integer per-video fps lists (@yarikama, #68832). ([#68832](https://github.com/vllm-project/vllm/pull/68832))
@@ -148,6 +149,7 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - **[Bugfix]** Give EngineCore the cleanup grace window when shutdown has no budget (@AndreasKaratzas, #68554). ([#68554](https://github.com/vllm-project/vllm/pull/68554))
 - **[Rust Frontend]** Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019). ([#69019](https://github.com/vllm-project/vllm/pull/69019))
 - **[Transformers backend]** Trace decorated forwards and pin `cache` in the fx tracer (@hmellor, #68724). ([#68724](https://github.com/vllm-project/vllm/pull/68724))
+- **[Perf]** Improve small M GEMM on 5090 (sm120) (@gau-nernst, #69168). ([#69168](https://github.com/vllm-project/vllm/pull/69168))
 - **[CI]** Use platform device in M-RoPE prompt embeds test (@hlin99, #69134). ([#69134](https://github.com/vllm-project/vllm/pull/69134))
 - **[Doc]** Add vLLM security review skill (@jperezdealgaba, #69101). ([#69101](https://github.com/vllm-project/vllm/pull/69101))
 - **[Recipe]** Inkling 2 Mini: serve the full 1M context on one GPU (@WoosukKwon, #69039). ([#69039](https://github.com/vllm-project/vllm/pull/69039))
@@ -186,7 +188,6 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - **[Build]** Cap nvidia-cudnn-frontend below 1.33 (@Thangnguyenvn98, #68566). ([#68566](https://github.com/vllm-project/vllm/pull/68566))
 - **[Rust Frontend]** Report metadata-only input capability in engine handshake (@gty111, #68565). ([#68565](https://github.com/vllm-project/vllm/pull/68565))
 - **[Refactor]** Move CUDA graph sizing policy into Platform (@Pb314314, #68552). ([#68552](https://github.com/vllm-project/vllm/pull/68552))
-- **[XPU]** Enable sampler-flag and logits-processor tests on XPU (@zhenwei-intel, #68541). ([#68541](https://github.com/vllm-project/vllm/pull/68541))
 - **[Bugfix]** Normalize native GTE positional embedding configuration (@hlin99, #69145). ([#69145](https://github.com/vllm-project/vllm/pull/69145))
 - **[Bugfix]** Convert PIL video frames to RGB like PIL images (@yarikama, #69089). ([#69089](https://github.com/vllm-project/vllm/pull/69089))
 - **[Bugfix]** Return 400 for unreadable embedding payloads (@my-git9, #69073). ([#69073](https://github.com/vllm-project/vllm/pull/69073))
@@ -211,6 +212,5 @@ vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelera
 - **[Bugfix]** Keep shared KV layers bound when the target is host-resident (@my-git9, #68586). ([#68586](https://github.com/vllm-project/vllm/pull/68586))
 - **[Bugfix]** Decode the Mooncake store's lookup_lease stats (@gcanlin, #68584). ([#68584](https://github.com/vllm-project/vllm/pull/68584))
 - **[Bugfix]** Make Unlimited-OCR-2 DASH routing batch invariant (@gty111, #68563). ([#68563](https://github.com/vllm-project/vllm/pull/68563))
-- **[Bugfix]** Don't size KV cache groups from draft-only sliding-window buckets (@robertgshaw2-redhat, #68533). ([#68533](https://github.com/vllm-project/vllm/pull/68533))
 
 **Key Feature Gates / API Identifiers**: `mi300_dpx`, `mi300_1`, `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME`, `additional_tools`, `cache`, `*args`
