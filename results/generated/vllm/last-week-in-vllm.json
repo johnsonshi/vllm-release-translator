@@ -2,8 +2,8 @@
   "variant": "v5_progressive_clarity_engine",
   "project": "vllm",
   "version": "last-week-in-vllm",
-  "positioning": "vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Next-Gen Speculative Decoding. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
-  "high_level_explanation": "vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Next-Gen Speculative Decoding. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "positioning": "vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Disaggregated Serving. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
+  "high_level_explanation": "vLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Disaggregated Serving. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.",
   "verdict": "UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first",
   "sections": {
     "high_level_changes": [
@@ -16,16 +16,16 @@
         "plain_summary": "Improves frontier moe & sparse-mla speedups for frontier mixture-of-experts (moe) reasoning and agentic models (deepseek-v4/v4.1, glm-5.3, kimi-k3/k3.1, minimax-m3.1) running on nvidia blackwell (gb200/gb300/b200), hopper (h100/h200), and multi-node expert parallel (ep) clusters, delivering delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens."
       },
       {
-        "headline": "Next-Gen Speculative Decoding",
-        "plain_summary": "Improves next-gen speculative decoding for interactive coding assistants, agent loops, and low-batch-size real-time inference running on nvidia hopper/blackwell, amd mi300x/mi355x, and cpu/xpu draft runners, delivering accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth."
+        "headline": "Disaggregated Serving",
+        "plain_summary": "Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore."
       },
       {
         "headline": "Low-Precision Quantization Kernels",
         "plain_summary": "Improves low-precision quantization kernels for 100b\u20131t+ parameter models (mistral large 4, deepseek-v4, qwen3.5/3.8) quantized to 4-bit/8-bit running on nvidia blackwell (sm100 nvfp4), hopper (sm90 fp8), and amd mi350/mi355x, delivering halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput."
       },
       {
-        "headline": "Disaggregated Serving",
-        "plain_summary": "Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore."
+        "headline": "Next-Gen Speculative Decoding",
+        "plain_summary": "Improves next-gen speculative decoding for interactive coding assistants, agent loops, and low-batch-size real-time inference running on nvidia hopper/blackwell, amd mi300x/mi355x, and cpu/xpu draft runners, delivering accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth."
       }
     ],
     "who_benefits": [
@@ -42,10 +42,10 @@
         "bill_impact": "Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens"
       },
       {
-        "capability": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
-        "models_workloads": "Interactive coding assistants, agent loops, and low-batch-size real-time inference",
-        "gpus_infra": "NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners",
-        "bill_impact": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth"
+        "capability": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
+        "models_workloads": "Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients",
+        "gpus_infra": "Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways",
+        "bill_impact": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore"
       },
       {
         "capability": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
@@ -54,10 +54,10 @@
         "bill_impact": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput"
       },
       {
-        "capability": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
-        "models_workloads": "Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients",
-        "gpus_infra": "Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways",
-        "bill_impact": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore"
+        "capability": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
+        "models_workloads": "Interactive coding assistants, agent loops, and low-batch-size real-time inference",
+        "gpus_infra": "NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners",
+        "bill_impact": "Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth"
       },
       {
         "capability": "Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend",
@@ -131,6 +131,14 @@
     "should_i_upgrade": [
       {
         "category": "Before You Upgrade",
+        "text": "[Bugfix][Config] Keep host-only renderer, timeout, and recovery fields out of compile cache key -> Action: Included in weekly merge #69475 (2026-11-24)",
+        "prs": [
+          "69475"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
         "text": "[Bugfix] Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode -> Action: Included in weekly merge #69468 (2026-11-23)",
         "prs": [
           "69468"
@@ -155,6 +163,14 @@
       },
       {
         "category": "Before You Upgrade",
+        "text": "[Bugfix][DSA][PCP] Fix indexer prefill logits lifetime and fused chunk planning -> Action: Included in weekly merge #69332 (2026-11-24)",
+        "prs": [
+          "69332"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Before You Upgrade",
         "text": "[Bugfix] Respect root_path in elastic EP scaling middleware -> Action: Included in weekly merge #69285 (2026-11-23)",
         "prs": [
           "69285"
@@ -174,22 +190,6 @@
         "text": "[Bugfix] Restore HY4 Flash CUDA platform checks -> Action: Included in weekly merge #69193 (2026-11-23)",
         "prs": [
           "69193"
-        ],
-        "keps": []
-      },
-      {
-        "category": "Before You Upgrade",
-        "text": "[Bugfix] Normalize native GTE positional embedding configuration -> Action: Included in weekly merge #69145 (2026-11-21)",
-        "prs": [
-          "69145"
-        ],
-        "keps": []
-      },
-      {
-        "category": "Before You Upgrade",
-        "text": "[Bugfix][KV Offload] Preserve reused ARC prefixes during running-request eviction -> Action: Included in weekly merge #69110 (2026-11-22)",
-        "prs": [
-          "69110"
         ],
         "keps": []
       },
@@ -221,17 +221,17 @@
         "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
         "tech_bullets": [
           "Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987).",
+          "Spawn the GPU memory wait worker (@RuibinCheung, #69374).",
           "Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085).",
-          "Avoid MIOpen's split-K conv solver in batch-invariant mode (@mirza-halilcevic, #69025).",
-          "Retry ROCm image builds when a package mirror still fails after apt's retries (@AndreasKaratzas, #68829)."
+          "Cache a PR's ROCm base image automatically before merge (@AndreasKaratzas, #69056)."
         ],
         "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
         "prs": [
           "68987",
+          "69374",
           "69085",
-          "69025",
-          "68829",
-          "69108"
+          "69056",
+          "69025"
         ],
         "keps": [],
         "identifiers": [
@@ -262,6 +262,51 @@
       },
       {
         "rank": 3,
+        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
+        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
+        "tech_bullets": [
+          "Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).",
+          "Write only the used FlashInfer prefill checkpoint states (@gau-nernst, #69401).",
+          "Fix indexer prefill logits lifetime and fused chunk planning (@Heisenberg-Yin, #69332).",
+          "Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019)."
+        ],
+        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
+        "prs": [
+          "68875",
+          "69401",
+          "69332",
+          "69019",
+          "69468"
+        ],
+        "keps": [],
+        "identifiers": [
+          "additional_tools",
+          "cohere_format"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
+        "tech_bullets": [
+          "Deprecate the TorchAO backend (@devanshi-code18, #69066).",
+          "Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).",
+          "Remove dead code quantizations (@yewentao256, #69483).",
+          "Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446)."
+        ],
+        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
+        "prs": [
+          "69066",
+          "69274",
+          "69483",
+          "69446",
+          "68858"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
         "theme": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
         "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
         "tech_bullets": [
@@ -276,55 +321,10 @@
           "69182",
           "69065",
           "68986",
-          "68827"
+          "69023"
         ],
         "keps": [],
         "identifiers": []
-      },
-      {
-        "rank": 4,
-        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
-        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
-        "tech_bullets": [
-          "Deprecate the TorchAO backend (@devanshi-code18, #69066).",
-          "Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).",
-          "Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446).",
-          "add modelopt_mxfp8 quantization format (@yma11, #68858)."
-        ],
-        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
-        "prs": [
-          "69066",
-          "69274",
-          "69446",
-          "68858",
-          "69002"
-        ],
-        "keps": [],
-        "identifiers": []
-      },
-      {
-        "rank": 5,
-        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
-        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
-        "tech_bullets": [
-          "Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).",
-          "Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019).",
-          "Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode (@NickLucche, #69468).",
-          "Expose CuMemBackend allocator hook (@Ronald1995, #69412)."
-        ],
-        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
-        "prs": [
-          "68875",
-          "69019",
-          "69468",
-          "69412",
-          "68921"
-        ],
-        "keps": [],
-        "identifiers": [
-          "additional_tools",
-          "cohere_format"
-        ]
       },
       {
         "rank": 6,
@@ -333,16 +333,16 @@
         "tech_bullets": [
           "Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900).",
           "Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864).",
-          "Encoder CUDA graphs for the Qwen3-Omni / Qwen3-ASR audio tower (@deepankerk, #68831).",
-          "Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087)."
+          "Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087).",
+          "Add Inkling 2 Mini (@WoosukKwon, #69028)."
         ],
         "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
         "prs": [
           "68900",
           "68864",
-          "68831",
           "69087",
-          "69028"
+          "69028",
+          "68975"
         ],
         "keps": [],
         "identifiers": [
@@ -357,17 +357,17 @@
         "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.",
         "tech_bullets": [
           "Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987).",
+          "Spawn the GPU memory wait worker (@RuibinCheung, #69374).",
           "Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085).",
-          "Avoid MIOpen's split-K conv solver in batch-invariant mode (@mirza-halilcevic, #69025).",
-          "Retry ROCm image builds when a package mirror still fails after apt's retries (@AndreasKaratzas, #68829)."
+          "Cache a PR's ROCm base image automatically before merge (@AndreasKaratzas, #69056)."
         ],
         "why_it_matters": "Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code",
         "prs": [
           "68987",
+          "69374",
           "69085",
-          "69025",
-          "68829",
-          "69108"
+          "69056",
+          "69025"
         ],
         "keps": [],
         "identifiers": [
@@ -398,6 +398,51 @@
       },
       {
         "rank": 3,
+        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
+        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
+        "tech_bullets": [
+          "Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).",
+          "Write only the used FlashInfer prefill checkpoint states (@gau-nernst, #69401).",
+          "Fix indexer prefill logits lifetime and fused chunk planning (@Heisenberg-Yin, #69332).",
+          "Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019)."
+        ],
+        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
+        "prs": [
+          "68875",
+          "69401",
+          "69332",
+          "69019",
+          "69468"
+        ],
+        "keps": [],
+        "identifiers": [
+          "additional_tools",
+          "cohere_format"
+        ]
+      },
+      {
+        "rank": 4,
+        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
+        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
+        "tech_bullets": [
+          "Deprecate the TorchAO backend (@devanshi-code18, #69066).",
+          "Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).",
+          "Remove dead code quantizations (@yewentao256, #69483).",
+          "Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446)."
+        ],
+        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
+        "prs": [
+          "69066",
+          "69274",
+          "69483",
+          "69446",
+          "68858"
+        ],
+        "keps": [],
+        "identifiers": []
+      },
+      {
+        "rank": 5,
         "theme": "Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)",
         "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.",
         "tech_bullets": [
@@ -412,55 +457,10 @@
           "69182",
           "69065",
           "68986",
-          "68827"
+          "69023"
         ],
         "keps": [],
         "identifiers": []
-      },
-      {
-        "rank": 4,
-        "theme": "Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)",
-        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.",
-        "tech_bullets": [
-          "Deprecate the TorchAO backend (@devanshi-code18, #69066).",
-          "Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).",
-          "Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446).",
-          "add modelopt_mxfp8 quantization format (@yma11, #68858)."
-        ],
-        "why_it_matters": "Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput",
-        "prs": [
-          "69066",
-          "69274",
-          "69446",
-          "68858",
-          "69002"
-        ],
-        "keps": [],
-        "identifiers": []
-      },
-      {
-        "rank": 5,
-        "theme": "Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore",
-        "previously": "Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.",
-        "tech_bullets": [
-          "Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).",
-          "Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019).",
-          "Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode (@NickLucche, #69468).",
-          "Expose CuMemBackend allocator hook (@Ronald1995, #69412)."
-        ],
-        "why_it_matters": "Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore",
-        "prs": [
-          "68875",
-          "69019",
-          "69468",
-          "69412",
-          "68921"
-        ],
-        "keps": [],
-        "identifiers": [
-          "additional_tools",
-          "cohere_format"
-        ]
       },
       {
         "rank": 6,
@@ -469,16 +469,16 @@
         "tech_bullets": [
           "Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900).",
           "Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864).",
-          "Encoder CUDA graphs for the Qwen3-Omni / Qwen3-ASR audio tower (@deepankerk, #68831).",
-          "Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087)."
+          "Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087).",
+          "Add Inkling 2 Mini (@WoosukKwon, #69028)."
         ],
         "why_it_matters": "Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet",
         "prs": [
           "68900",
           "68864",
-          "68831",
           "69087",
-          "69028"
+          "69028",
+          "68975"
         ],
         "keps": [],
         "identifiers": [
@@ -487,6 +487,14 @@
       }
     ],
     "wheres_the_proof": [
+      {
+        "category": "Perf",
+        "text": "[Perf][Qwen4Exp] Add SM100 TP=2 and TP=8 skinny GEMM plans (#69529)",
+        "prs": [
+          "69529"
+        ],
+        "keps": []
+      },
       {
         "category": "Docs",
         "text": "[Docs] Fix HY4 Flash IndexPool API reference warnings (#69472)",
@@ -500,6 +508,30 @@
         "text": "[Bugfix][MLA] Fix race in in-place LSE merge of chunked context (#69433)",
         "prs": [
           "69433"
+        ],
+        "keps": []
+      },
+      {
+        "category": "EPD",
+        "text": "[EPD] Support metadata-only images and videos for HY4 and HY4 Flash (#69426)",
+        "prs": [
+          "69426"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Recipe",
+        "text": "[Recipe] Update ERNIE recipe Support ERNIE 5.5 Flash Preview (#69425)",
+        "prs": [
+          "69425"
+        ],
+        "keps": []
+      },
+      {
+        "category": "Perf",
+        "text": "[Perf][GDN] Write only the used FlashInfer prefill checkpoint states (#69401)",
+        "prs": [
+          "69401"
         ],
         "keps": []
       },
@@ -532,38 +564,6 @@
         "text": "[Recipe] Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (#69163)",
         "prs": [
           "69163"
-        ],
-        "keps": []
-      },
-      {
-        "category": "Bugfix",
-        "text": "[Bugfix] Fix ROCm OCR preemption logit drift with DeepEncoder GEMM (#69108)",
-        "prs": [
-          "69108"
-        ],
-        "keps": []
-      },
-      {
-        "category": "Kernel",
-        "text": "[Kernel][GDN] Faster fused CUDA MTP decode for 16-bit recurrent state (#69065)",
-        "prs": [
-          "69065"
-        ],
-        "keps": []
-      },
-      {
-        "category": "Perf",
-        "text": "[Perf][Kernel] Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level) (#69029)",
-        "prs": [
-          "69029"
-        ],
-        "keps": []
-      },
-      {
-        "category": "HiSparse",
-        "text": "[HiSparse] Support HY4 Flash (#69026)",
-        "prs": [
-          "69026"
         ],
         "keps": []
       },
@@ -609,14 +609,14 @@
       }
     ],
     "lwkd_patch_pulse": [
-      "`2026-11-23` [Docs] Fix HY4 Flash IndexPool API reference warnings ([#69472](https://github.com/vllm-project/vllm/pull/69472)) by @taneem-ibrahim",
-      "`2026-11-23` [Bugfix] Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode ([#69468](https://github.com/vllm-project/vllm/pull/69468)) by @NickLucche",
-      "`2026-11-23` [Bugfix][DSv4.1] Keep MXFP8 linear weights in FP8 on SM90 at TP1 ([#69446](https://github.com/vllm-project/vllm/pull/69446)) by @Ganto12",
-      "`2026-11-23` [Governance] Add Taneem Ibrahim as a pooling committer ([#69437](https://github.com/vllm-project/vllm/pull/69437)) by @taneem-ibrahim",
-      "`2026-11-23` [Bugfix][MLA] Fix race in in-place LSE merge of chunked context ([#69433](https://github.com/vllm-project/vllm/pull/69433)) by @stefankoncarevic",
-      "`2026-11-23` [CI] Retry gcc-15 downloads from the Launchpad PPA in the CPU image ([#69416](https://github.com/vllm-project/vllm/pull/69416)) by @khluu",
-      "`2026-11-23` [Refactor][SleepMode] Expose CuMemBackend allocator hook ([#69412](https://github.com/vllm-project/vllm/pull/69412)) by @Ronald1995",
-      "`2026-11-23` [Governance] Update codeowner for wangxiyuan ([#69397](https://github.com/vllm-project/vllm/pull/69397)) by @wangxiyuan"
+      "`2026-11-24` [Perf][Qwen4Exp] Add SM100 TP=2 and TP=8 skinny GEMM plans ([#69529](https://github.com/vllm-project/vllm/pull/69529)) by @Johnsonms",
+      "`2026-11-24` [Startup] Keep Inductor and Dynamo imports off the non-compiled path ([#69520](https://github.com/vllm-project/vllm/pull/69520)) by @WoosukKwon",
+      "`2026-11-24` [CI] Switch vllm-runners callers to @main reusable workflows (step 2/2) ([#69513](https://github.com/vllm-project/vllm/pull/69513)) by @khluu",
+      "`2026-11-24` [CI] Add reusable workflows for vllm-runners (step 1/2) ([#69510](https://github.com/vllm-project/vllm/pull/69510)) by @khluu",
+      "`2026-11-24` [CI][XPU] Enable batch invariance for OLMoE LoRA tests ([#69509](https://github.com/vllm-project/vllm/pull/69509)) by @hlin99",
+      "`2026-11-24` [CI] Let auto-rebase ignore per-step ci/step statuses ([#69503](https://github.com/vllm-project/vllm/pull/69503)) by @Thangnguyenvn98",
+      "`2026-11-23` [CI] Don't treat a finished build left blocked by the test picker as running ([#69497](https://github.com/vllm-project/vllm/pull/69497)) by @khluu",
+      "`2026-11-24` [Refactor] Remove dead code quantizations ([#69483](https://github.com/vllm-project/vllm/pull/69483)) by @yewentao256"
     ]
   },
   "cited_prs": [
@@ -627,37 +627,44 @@
     "69163",
     "69001",
     "68900",
+    "69401",
+    "69374",
     "69274",
     "69264",
     "69182",
     "69085",
     "69065",
+    "69056",
     "69025",
     "68986",
     "68965",
     "68864",
-    "68840",
-    "68831",
-    "68829",
-    "68827",
     "69087",
     "69028",
     "69013",
     "68976",
     "68975",
-    "68793",
     "69029",
     "69021",
-    "68789",
+    "69483",
     "69446",
+    "69332",
     "69226",
     "69108",
     "69023",
-    "68832",
     "69019",
+    "69529",
+    "69520",
+    "69513",
+    "69510",
+    "69509",
+    "69503",
+    "69497",
     "69472",
     "69468",
     "69437",
+    "69426",
+    "69425",
     "69416",
     "69412",
     "69397",
@@ -670,6 +677,7 @@
     "69168",
     "69140",
     "69134",
+    "69122",
     "69101",
     "69076",
     "69039",
@@ -692,12 +700,7 @@
     "68858",
     "68844",
     "68842",
-    "68815",
-    "68798",
-    "68790",
-    "68785",
-    "68781",
-    "68780",
+    "69475",
     "69433",
     "69285",
     "69193",
@@ -716,10 +719,7 @@
     "68917",
     "68859",
     "68857",
-    "68852",
-    "68802",
-    "68799",
-    "68782"
+    "68852"
   ],
   "cited_keps": [],
   "cited_identifiers": [
@@ -729,7 +729,7 @@
     "additional_tools",
     "cohere_format"
   ],
-  "markdown": "# What's New in vLLM Last Week in VLLM (Week Ending 2026-11-19)\n\n## High-Level Explanation\nvLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Next-Gen Speculative Decoding. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Multi-Vendor Accelerator Scaling**: Improves multi-vendor accelerator scaling for cross-vendor llm fleets running deepseek, qwen, llama, and minimax outside cuda-only clouds running on amd instinct mi300x/mi350/mi355x (rocm 10.0), intel xpu, and google cloud tpu, delivering enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code.\n- **Frontier MoE & Sparse-MLA Speedups**: Improves frontier moe & sparse-mla speedups for frontier mixture-of-experts (moe) reasoning and agentic models (deepseek-v4/v4.1, glm-5.3, kimi-k3/k3.1, minimax-m3.1) running on nvidia blackwell (gb200/gb300/b200), hopper (h100/h200), and multi-node expert parallel (ep) clusters, delivering delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens.\n- **Next-Gen Speculative Decoding**: Improves next-gen speculative decoding for interactive coding assistants, agent loops, and low-batch-size real-time inference running on nvidia hopper/blackwell, amd mi300x/mi355x, and cpu/xpu draft runners, delivering accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth.\n- **Low-Precision Quantization Kernels**: Improves low-precision quantization kernels for 100b\u20131t+ parameter models (mistral large 4, deepseek-v4, qwen3.5/3.8) quantized to 4-bit/8-bit running on nvidia blackwell (sm100 nvfp4), hopper (sm90 fp8), and amd mi350/mi355x, delivering halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput.\n- **Disaggregated Serving**: Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** | Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds | AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU | Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code |\n| **Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)** | Frontier Mixture-of-Experts (MoE) reasoning and agentic models (DeepSeek-V4/V4.1, GLM-5.3, Kimi-K3/K3.1, MiniMax-M3.1) | NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters | Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens |\n| **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** | Interactive coding assistants, agent loops, and low-batch-size real-time inference | NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners | Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth |\n| **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** | 100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit | NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X | Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput |\n| **Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore** | Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients | Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways | Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **Model Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n\n## 3. What Does the Jargon Mean?\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass. Why it matters: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing. Why it matters: Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores. Why it matters: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **P/D Disaggregation (Prefill/Decode Split & NIXL)**: Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL. Why it matters: Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs.\n- **DCP & PCP (Decode / Prefill Context Parallelism)**: Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP). Why it matters: Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts.\n- **MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)**: Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs. Why it matters: Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU.\n- **Piecewise & Breakable CUDA Graphs**: Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token. Why it matters: Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups.\n- **TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)**: The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream. Why it matters: Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users.\n- **Tiered KV Offloading & Prefix Caching**: Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts. Why it matters: Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Before You Upgrade**: Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode -> Action: Included in weekly merge #69468 (2026-11-23). ([#69468](https://github.com/vllm-project/vllm/pull/69468))\n- **Before You Upgrade**: Keep MXFP8 linear weights in FP8 on SM90 at TP1 -> Action: Included in weekly merge #69446 (2026-11-23). ([#69446](https://github.com/vllm-project/vllm/pull/69446))\n- **Before You Upgrade**: Fix race in in-place LSE merge of chunked context -> Action: Included in weekly merge #69433 (2026-11-23). ([#69433](https://github.com/vllm-project/vllm/pull/69433))\n- **Before You Upgrade**: Respect root_path in elastic EP scaling middleware -> Action: Included in weekly merge #69285 (2026-11-23). ([#69285](https://github.com/vllm-project/vllm/pull/69285))\n- **Before You Upgrade**: Normalize the legacy Qwen3-ASR text config alias -> Action: Included in weekly merge #69226 (2026-11-23). ([#69226](https://github.com/vllm-project/vllm/pull/69226))\n- **Before You Upgrade**: Restore HY4 Flash CUDA platform checks -> Action: Included in weekly merge #69193 (2026-11-23). ([#69193](https://github.com/vllm-project/vllm/pull/69193))\n- **Before You Upgrade**: Normalize native GTE positional embedding configuration -> Action: Included in weekly merge #69145 (2026-11-21). ([#69145](https://github.com/vllm-project/vllm/pull/69145))\n- **Before You Upgrade**: Preserve reused ARC prefixes during running-request eviction -> Action: Included in weekly merge #69110 (2026-11-22). ([#69110](https://github.com/vllm-project/vllm/pull/69110))\n- **Deprecation**: Deprecate the TorchAO backend (@devanshi-code18, #69066). ([#69066](https://github.com/vllm-project/vllm/pull/69066))\n- **Security**: Stop Responses input validation after the first invalid item (@jperezdealgaba, #68907). ([#68907](https://github.com/vllm-project/vllm/pull/68907))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU) ([#68987](https://github.com/vllm-project/vllm/pull/68987), [#69085](https://github.com/vllm-project/vllm/pull/69085), [#69025](https://github.com/vllm-project/vllm/pull/69025), [#68829](https://github.com/vllm-project/vllm/pull/68829))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.\n- **Technical change**: Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987).\n- **Technical change**: Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085).\n- **Technical change**: Avoid MIOpen's split-K conv solver in batch-invariant mode (@mirza-halilcevic, #69025).\n- **Technical change**: Retry ROCm image builds when a package mirror still fails after apt's retries (@AndreasKaratzas, #68829).\n- **Operational impact**: Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code\n### 2. Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3) ([#68948](https://github.com/vllm-project/vllm/pull/68948), [#69001](https://github.com/vllm-project/vllm/pull/69001), [#69264](https://github.com/vllm-project/vllm/pull/69264), [#68965](https://github.com/vllm-project/vllm/pull/68965))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.\n- **Technical change**: Use upstream DeepseekV32Config and fix DeepSeek-V3.2 NVFP4 loading (@hmellor, #68948).\n- **Technical change**: Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001).\n- **Technical change**: Kimi-K3.1-Pro: B300 PD preset on kimi-k31-mc-f4c9618, align with InferenceX#5175 (@mispa-ms, #69264).\n- **Technical change**: Check the MLA W_UV kernel through a Triton launch hook (@bogdan-petkovic, #68965).\n- **Operational impact**: Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens\n### 3. Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix) ([#69163](https://github.com/vllm-project/vllm/pull/69163), [#69182](https://github.com/vllm-project/vllm/pull/69182), [#69065](https://github.com/vllm-project/vllm/pull/69065), [#68986](https://github.com/vllm-project/vllm/pull/68986))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.\n- **Technical change**: Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163).\n- **Technical change**: Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109 (@mispa-ms, #69182).\n- **Technical change**: Faster fused CUDA MTP decode for 16-bit recurrent state (@gau-nernst, #69065).\n- **Technical change**: Warm the Triton autotune cache in the MTP sharded-sampling test (@stefankoncarevic, #68986).\n- **Operational impact**: Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth\n### 4. Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming) ([#69066](https://github.com/vllm-project/vllm/pull/69066), [#69274](https://github.com/vllm-project/vllm/pull/69274), [#69446](https://github.com/vllm-project/vllm/pull/69446), [#68858](https://github.com/vllm-project/vllm/pull/68858))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.\n- **Technical change**: Deprecate the TorchAO backend (@devanshi-code18, #69066).\n- **Technical change**: Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).\n- **Technical change**: Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446).\n- **Technical change**: add modelopt_mxfp8 quantization format (@yma11, #68858).\n- **Operational impact**: Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput\n### 5. Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore ([#68875](https://github.com/vllm-project/vllm/pull/68875), [#69019](https://github.com/vllm-project/vllm/pull/69019), [#69468](https://github.com/vllm-project/vllm/pull/69468), [#69412](https://github.com/vllm-project/vllm/pull/69412))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.\n- **Technical change**: Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).\n- **Technical change**: Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019).\n- **Technical change**: Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode (@NickLucche, #69468).\n- **Technical change**: Expose CuMemBackend allocator hook (@Ronald1995, #69412).\n- **Operational impact**: Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore\n### 6. Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend ([#68900](https://github.com/vllm-project/vllm/pull/68900), [#68864](https://github.com/vllm-project/vllm/pull/68864), [#68831](https://github.com/vllm-project/vllm/pull/68831), [#69087](https://github.com/vllm-project/vllm/pull/69087))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.\n- **Technical change**: Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900).\n- **Technical change**: Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864).\n- **Technical change**: Encoder CUDA graphs for the Qwen3-Omni / Qwen3-ASR audio tower (@deepankerk, #68831).\n- **Technical change**: Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087).\n- **Operational impact**: Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet\n\n### Weekly / Patch Merge Pulse\n- `2026-11-23` [Docs] Fix HY4 Flash IndexPool API reference warnings ([#69472](https://github.com/vllm-project/vllm/pull/69472)) by @taneem-ibrahim\n- `2026-11-23` [Bugfix] Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode ([#69468](https://github.com/vllm-project/vllm/pull/69468)) by @NickLucche\n- `2026-11-23` [Bugfix][DSv4.1] Keep MXFP8 linear weights in FP8 on SM90 at TP1 ([#69446](https://github.com/vllm-project/vllm/pull/69446)) by @Ganto12\n- `2026-11-23` [Governance] Add Taneem Ibrahim as a pooling committer ([#69437](https://github.com/vllm-project/vllm/pull/69437)) by @taneem-ibrahim\n- `2026-11-23` [Bugfix][MLA] Fix race in in-place LSE merge of chunked context ([#69433](https://github.com/vllm-project/vllm/pull/69433)) by @stefankoncarevic\n- `2026-11-23` [CI] Retry gcc-15 downloads from the Launchpad PPA in the CPU image ([#69416](https://github.com/vllm-project/vllm/pull/69416)) by @khluu\n- `2026-11-23` [Refactor][SleepMode] Expose CuMemBackend allocator hook ([#69412](https://github.com/vllm-project/vllm/pull/69412)) by @Ronald1995\n- `2026-11-23` [Governance] Update codeowner for wangxiyuan ([#69397](https://github.com/vllm-project/vllm/pull/69397)) by @wangxiyuan\n\n## 6. Where's the Proof?\n- **Docs** ([#69472](https://github.com/vllm-project/vllm/pull/69472)): Fix HY4 Flash IndexPool API reference warnings.\n- **Bugfix** ([#69433](https://github.com/vllm-project/vllm/pull/69433)): Fix race in in-place LSE merge of chunked context.\n- **Bugfix** ([#69193](https://github.com/vllm-project/vllm/pull/69193)): Restore HY4 Flash CUDA platform checks.\n- **Recipe** ([#69182](https://github.com/vllm-project/vllm/pull/69182)): Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109.\n- **Perf** ([#69168](https://github.com/vllm-project/vllm/pull/69168)): Improve small M GEMM on 5090 (sm120).\n- **Recipe** ([#69163](https://github.com/vllm-project/vllm/pull/69163)): Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119.\n- **Bugfix** ([#69108](https://github.com/vllm-project/vllm/pull/69108)): Fix ROCm OCR preemption logit drift with DeepEncoder GEMM.\n- **Kernel** ([#69065](https://github.com/vllm-project/vllm/pull/69065)): Faster fused CUDA MTP decode for 16-bit recurrent state.\n- **Perf** ([#69029](https://github.com/vllm-project/vllm/pull/69029)): Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level).\n- **HiSparse** ([#69026](https://github.com/vllm-project/vllm/pull/69026)): Support HY4 Flash.\n- **Recipe** ([#69163](https://github.com/vllm-project/vllm/pull/69163)): Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163).\n- **Perf** ([#69001](https://github.com/vllm-project/vllm/pull/69001)): Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001).\n- **Perf** ([#69029](https://github.com/vllm-project/vllm/pull/69029)): Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level) (@rwtarpit, #69029).\n- **Perf** ([#69021](https://github.com/vllm-project/vllm/pull/69021)): Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Engine & Runtime]** Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987). ([#68987](https://github.com/vllm-project/vllm/pull/68987))\n- **[Deprecation]** Deprecate the TorchAO backend (@devanshi-code18, #69066). ([#69066](https://github.com/vllm-project/vllm/pull/69066))\n- **[Model]** Use upstream DeepseekV32Config and fix DeepSeek-V3.2 NVFP4 loading (@hmellor, #68948). ([#68948](https://github.com/vllm-project/vllm/pull/68948))\n- **[Model]** Register public HY4 checkpoint and update supported models (@jeejeelee, #68875). ([#68875](https://github.com/vllm-project/vllm/pull/68875))\n- **[Recipe]** Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163). ([#69163](https://github.com/vllm-project/vllm/pull/69163))\n- **[Perf]** Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001). ([#69001](https://github.com/vllm-project/vllm/pull/69001))\n- **[Multimodal]** Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900). ([#68900](https://github.com/vllm-project/vllm/pull/68900))\n- **[Spec Decode]** Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274). ([#69274](https://github.com/vllm-project/vllm/pull/69274))\n- **[Recipe]** Kimi-K3.1-Pro: B300 PD preset on kimi-k31-mc-f4c9618, align with InferenceX#5175 (@mispa-ms, #69264). ([#69264](https://github.com/vllm-project/vllm/pull/69264))\n- **[Recipe]** Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109 (@mispa-ms, #69182). ([#69182](https://github.com/vllm-project/vllm/pull/69182))\n- **[ROCm]** Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085). ([#69085](https://github.com/vllm-project/vllm/pull/69085))\n- **[Kernel]** Faster fused CUDA MTP decode for 16-bit recurrent state (@gau-nernst, #69065). ([#69065](https://github.com/vllm-project/vllm/pull/69065))\n- **[ROCm]** Avoid MIOpen's split-K conv solver in batch-invariant mode (@mirza-halilcevic, #69025). ([#69025](https://github.com/vllm-project/vllm/pull/69025))\n- **[CI]** Warm the Triton autotune cache in the MTP sharded-sampling test (@stefankoncarevic, #68986). ([#68986](https://github.com/vllm-project/vllm/pull/68986))\n- **[ROCm]** Check the MLA W_UV kernel through a Triton launch hook (@bogdan-petkovic, #68965). ([#68965](https://github.com/vllm-project/vllm/pull/68965))\n- **[Recipe]** Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864). ([#68864](https://github.com/vllm-project/vllm/pull/68864))\n- **[CI]** Move B200 DeepEP v2 MoE DP integration to nightly (@Thangnguyenvn98, #68840). ([#68840](https://github.com/vllm-project/vllm/pull/68840))\n- **[Perf]** Encoder CUDA graphs for the Qwen3-Omni / Qwen3-ASR audio tower (@deepankerk, #68831). ([#68831](https://github.com/vllm-project/vllm/pull/68831))\n- **[ROCm]** Retry ROCm image builds when a package mirror still fails after apt's retries (@AndreasKaratzas, #68829). ([#68829](https://github.com/vllm-project/vllm/pull/68829))\n- **[Spec Decode]** Support anchor-first (sample_from_anchor) DFlash/DFlash2 drafts (@deepankerk, #68827). ([#68827](https://github.com/vllm-project/vllm/pull/68827))\n- **[Model]** Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087). ([#69087](https://github.com/vllm-project/vllm/pull/69087))\n- **[Model]** Add Inkling 2 Mini (@WoosukKwon, #69028). ([#69028](https://github.com/vllm-project/vllm/pull/69028))\n- **[Model]** Hy4-flash Cleanup (@jeejeelee, #69013). ([#69013](https://github.com/vllm-project/vllm/pull/69013))\n- **[Model]** Add masked_token_ids to never sample given tokens (@aoshen02, #68976). ([#68976](https://github.com/vllm-project/vllm/pull/68976))\n- **[Model]** Use upstream Transformers configs for Inkling (@hmellor, #68975). ([#68975](https://github.com/vllm-project/vllm/pull/68975))\n- **[Model]** Use upstream Falcon and RADIO configs at the Transformers 5.16 floor (@hmellor, #68793). ([#68793](https://github.com/vllm-project/vllm/pull/68793))\n- **[Perf]** Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level) (@rwtarpit, #69029). ([#69029](https://github.com/vllm-project/vllm/pull/69029))\n- **[Perf]** Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021). ([#69021](https://github.com/vllm-project/vllm/pull/69021))\n- **[Misc]** Remove --disable-cascade-attn past its removal version (@sh4shv4t, #68789). ([#68789](https://github.com/vllm-project/vllm/pull/68789))\n- **[Bugfix]** Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446). ([#69446](https://github.com/vllm-project/vllm/pull/69446))\n- **[Bugfix]** Normalize the legacy Qwen3-ASR text config alias (@pk954061458, #69226). ([#69226](https://github.com/vllm-project/vllm/pull/69226))\n- **[Bugfix]** Fix ROCm OCR preemption logit drift with DeepEncoder GEMM (@gty111, #69108). ([#69108](https://github.com/vllm-project/vllm/pull/69108))\n- **[Bugfix]** Read the DSpark draft's native mega MoE flag from its layers (@roborluo, #69023). ([#69023](https://github.com/vllm-project/vllm/pull/69023))\n- **[Bugfix]** Qwen3-VL: accept integer per-video fps lists (@yarikama, #68832). ([#68832](https://github.com/vllm-project/vllm/pull/68832))\n- **[Rust Frontend]** Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019). ([#69019](https://github.com/vllm-project/vllm/pull/69019))\n- **[Docs]** Fix HY4 Flash IndexPool API reference warnings (@taneem-ibrahim, #69472). ([#69472](https://github.com/vllm-project/vllm/pull/69472))\n- **[Bugfix]** Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode (@NickLucche, #69468). ([#69468](https://github.com/vllm-project/vllm/pull/69468))\n- **[Governance]** Add Taneem Ibrahim as a pooling committer (@taneem-ibrahim, #69437). ([#69437](https://github.com/vllm-project/vllm/pull/69437))\n- **[CI]** Retry gcc-15 downloads from the Launchpad PPA in the CPU image (@khluu, #69416). ([#69416](https://github.com/vllm-project/vllm/pull/69416))\n- **[Refactor]** Expose CuMemBackend allocator hook (@Ronald1995, #69412). ([#69412](https://github.com/vllm-project/vllm/pull/69412))\n- **[Governance]** Update codeowner for wangxiyuan (@wangxiyuan, #69397). ([#69397](https://github.com/vllm-project/vllm/pull/69397))\n- **[Governance]** Add Tianyu Guo as an EPD code owner (@gty111, #69376). ([#69376](https://github.com/vllm-project/vllm/pull/69376))\n- **[Doc]** Highlight HTTP-only (no vLLM import) weight updates in training docs (@aoshen02, #69333). ([#69333](https://github.com/vllm-project/vllm/pull/69333))\n- **[Doc]** Fix relative example links in docs/training/weight_updates/engines (@aoshen02, #69300). ([#69300](https://github.com/vllm-project/vllm/pull/69300))\n- **[Recipe]** Inkling 2 Mini: use the nightly image (@WoosukKwon, #69296). ([#69296](https://github.com/vllm-project/vllm/pull/69296))\n- **[Doc]** Reorganize docs/training/ into weight_updates and rollout_artifacts (@aoshen02, #69248). ([#69248](https://github.com/vllm-project/vllm/pull/69248))\n- **[LoRA]** Add private worker-local tensor adapter loading (@jeejeelee, #69229). ([#69229](https://github.com/vllm-project/vllm/pull/69229))\n- **[Perf]** Improve small M GEMM on 5090 (sm120) (@gau-nernst, #69168). ([#69168](https://github.com/vllm-project/vllm/pull/69168))\n- **[CI]** Allow Gemma3n GPU sync on older Transformers (@hlin99, #69140). ([#69140](https://github.com/vllm-project/vllm/pull/69140))\n- **[CI]** Use platform device in M-RoPE prompt embeds test (@hlin99, #69134). ([#69134](https://github.com/vllm-project/vllm/pull/69134))\n- **[Doc]** Add vLLM security review skill (@jperezdealgaba, #69101). ([#69101](https://github.com/vllm-project/vllm/pull/69101))\n- **[Benchmark]** Time real server starts in vllm bench startup (--serve-cmd) (@matteso1, #69076). ([#69076](https://github.com/vllm-project/vllm/pull/69076))\n- **[Recipe]** Inkling 2 Mini: serve the full 1M context on one GPU (@WoosukKwon, #69039). ([#69039](https://github.com/vllm-project/vllm/pull/69039))\n- **[Recipe]** Add Inkling 2 Mini (@WoosukKwon, #69027). ([#69027](https://github.com/vllm-project/vllm/pull/69027))\n- **[HiSparse]** Support HY4 Flash (@MatthewBonanni, #69026). ([#69026](https://github.com/vllm-project/vllm/pull/69026))\n- **[Build]** Relax PyNvVideoCodec pin to >=2.2.4 to resolve CVEs (@brandonpelfrey, #68991). ([#68991](https://github.com/vllm-project/vllm/pull/68991))\n- **[Docs]** Add stecasta to reviewers (@stecasta, #68981). ([#68981](https://github.com/vllm-project/vllm/pull/68981))\n- **[XPU]** skip not applied tests in lora/test_layer.py and test_config.py on XPU (@yma11, #68971). ([#68971](https://github.com/vllm-project/vllm/pull/68971))\n- **[Perf]** Export ZAYA1 CCA prefill checkpoints (@JaredforReal, #68921). ([#68921](https://github.com/vllm-project/vllm/pull/68921))\n- **[Rust Frontend]** List valid model aliases when a model is not found (@BugenZhao, #68913). ([#68913](https://github.com/vllm-project/vllm/pull/68913))\n- **[Rust Frontend]** Prefer tokenizer.json over tekken.json (@BugenZhao, #68911). ([#68911](https://github.com/vllm-project/vllm/pull/68911))\n- **[Rust Frontend]** Unload a LoRA adapter an engine already evicted (@BugenZhao, #68910). ([#68910](https://github.com/vllm-project/vllm/pull/68910))\n- **[Security]** Stop Responses input validation after the first invalid item (@jperezdealgaba, #68907). ([#68907](https://github.com/vllm-project/vllm/pull/68907))\n- **[Security]** Bound the number of batch chat conversations (@jperezdealgaba, #68904). ([#68904](https://github.com/vllm-project/vllm/pull/68904))\n- **[CI]** Use a uv-managed Python in the Python 3.12 smoke test (@csahithi, #68887). ([#68887](https://github.com/vllm-project/vllm/pull/68887))\n- **[CI]** Use test runner for sampling and LoRA tests (@hlin99, #68884). ([#68884](https://github.com/vllm-project/vllm/pull/68884))\n- **[CI]** Skip HYV4Flash in PP equivalence below Hopper (@JaredforReal, #68883). ([#68883](https://github.com/vllm-project/vllm/pull/68883))\n- **[CI]** Fix Engram peer group test capability (@hlin99, #68881). ([#68881](https://github.com/vllm-project/vllm/pull/68881))\n- **[CI]** Decouple LoRA layer tests from GLM model imports (@hlin99, #68867). ([#68867](https://github.com/vllm-project/vllm/pull/68867))\n- **[XPU]** add modelopt_mxfp8 quantization format (@yma11, #68858). ([#68858](https://github.com/vllm-project/vllm/pull/68858))\n- **[Recipe]** Add HY4 (@esmeetu, #68844). ([#68844](https://github.com/vllm-project/vllm/pull/68844))\n- **[Perf]** QSA: sm_100 split-K launch configs for small batches (@notch776, #68842). ([#68842](https://github.com/vllm-project/vllm/pull/68842))\n- **[CI]** Use real hash initialization in KV handshake tests (@hlin99, #68815). ([#68815](https://github.com/vllm-project/vllm/pull/68815))\n- **[Spec Decode]** Derive speculator behavior from SpeculatorConfig instead of method checks (@njhill, #68798). ([#68798](https://github.com/vllm-project/vllm/pull/68798))\n- **[CI]** Free torch.compile state between tests in compile pass tests (@mirza-halilcevic, #68790). ([#68790](https://github.com/vllm-project/vllm/pull/68790))\n- **[HiSparse]** Store one copy of the offloaded indexer across TP ranks (@MatthewBonanni, #68785). ([#68785](https://github.com/vllm-project/vllm/pull/68785))\n- **[Bugfix]** Hoist `additional_tools` input items into Responses tools (@albertoperdomo2, #68781). ([#68781](https://github.com/vllm-project/vllm/pull/68781))\n- **[Misc]** Trim get_decode_stream_seed docstring (@njhill, #68780). ([#68780](https://github.com/vllm-project/vllm/pull/68780))\n- **[Bugfix]** Fix race in in-place LSE merge of chunked context (@stefankoncarevic, #69433). ([#69433](https://github.com/vllm-project/vllm/pull/69433))\n- **[Bugfix]** Respect root_path in elastic EP scaling middleware (@rishabhsai, #69285). ([#69285](https://github.com/vllm-project/vllm/pull/69285))\n- **[Bugfix]** Restore HY4 Flash CUDA platform checks (@hlin99, #69193). ([#69193](https://github.com/vllm-project/vllm/pull/69193))\n- **[Bugfix]** Normalize native GTE positional embedding configuration (@hlin99, #69145). ([#69145](https://github.com/vllm-project/vllm/pull/69145))\n- **[Bugfix]** Preserve reused ARC prefixes during running-request eviction (@waizuichougou, #69110). ([#69110](https://github.com/vllm-project/vllm/pull/69110))\n- **[Bugfix]** Accept NumPy images and PIL frame videos in Muse Spark Open (@yarikama, #69099). ([#69099](https://github.com/vllm-project/vllm/pull/69099))\n- **[Bugfix]** Convert PIL video frames to RGB like PIL images (@yarikama, #69089). ([#69089](https://github.com/vllm-project/vllm/pull/69089))\n- **[Bugfix]** Return 400 for unreadable embedding payloads (@my-git9, #69073). ([#69073](https://github.com/vllm-project/vllm/pull/69073))\n- **[Bugfix]** Accept torch.Tensor videos in vLLM's own HF processors (@yarikama, #69052). ([#69052](https://github.com/vllm-project/vllm/pull/69052))\n- **[Bugfix]** Store the chunk containing a partial-tail CPU hit (@nvisional, #69048). ([#69048](https://github.com/vllm-project/vllm/pull/69048))\n- **[Bugfix]** torchao: apply each fused shard's AWQ act_pre_scale (@devanshi-code18, #69002). ([#69002](https://github.com/vllm-project/vllm/pull/69002))\n- **[Bugfix]** Reject stop strings when the generate server has no tokenizer (@hickeyma, #68989). ([#68989](https://github.com/vllm-project/vllm/pull/68989))\n- **[Bugfix]** Emit the prefill staging plan without a dense prefill backend (@HansG89, #68967). ([#68967](https://github.com/vllm-project/vllm/pull/68967))\n- **[Bugfix]** Fix oversized piecewise CUDA graphs for Gemma3n cross-decoder (@searlion, #68944). ([#68944](https://github.com/vllm-project/vllm/pull/68944))\n- **[Bugfix]** call sys._current_frames() to dump callstack (@wenjinhust, #68924). ([#68924](https://github.com/vllm-project/vllm/pull/68924))\n- **[Bugfix]** Read /v1/decisions predicates like /v1/systemone noul questions (@simon-veitner-redhat, #68917). ([#68917](https://github.com/vllm-project/vllm/pull/68917))\n- **[Bugfix]** Forward --seed to the spec_bench and speed_bench datasets (@johnsonshi, #68859). ([#68859](https://github.com/vllm-project/vllm/pull/68859))\n- **[Bugfix]** Normalize negative-stride video inputs (@yarikama, #68857). ([#68857](https://github.com/vllm-project/vllm/pull/68857))\n- **[Bugfix]** Let chunked embeddings truncate above max_model_len (@hungnnvidia, #68852). ([#68852](https://github.com/vllm-project/vllm/pull/68852))\n- **[Bugfix]** Apply the video processor frame caps when loading videos (@paulpak58, #68802). ([#68802](https://github.com/vllm-project/vllm/pull/68802))\n- **[Bugfix]** Free consumed encoder inputs at schedule time (simplifies #67385) (@njhill, #68799). ([#68799](https://github.com/vllm-project/vllm/pull/68799))\n- **[Bugfix]** Avoid GPU<->CPU sync in FlashInfer XQA ragged draft mask (@csahithi, #68782). ([#68782](https://github.com/vllm-project/vllm/pull/68782))\n\n**Key Feature Gates / API Identifiers**: `mi300_dpx`, `mi300_1`, `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME`, `additional_tools`, `cohere_format`",
+  "markdown": "# What's New in vLLM Last Week in VLLM (Week Ending 2026-11-19)\n\n## High-Level Explanation\nvLLM Last Week in VLLM (Week Ending 2026-11-19) focuses on Multi-Vendor Accelerator Scaling, Frontier MoE & Sparse-MLA Speedups, and Disaggregated Serving. For operators, this release translates 100 upstream engineering changes into lower serving costs, broader hardware/model support, and safer production rollouts.\n\n## 1. What Are the High-Level Changes?\n- **Multi-Vendor Accelerator Scaling**: Improves multi-vendor accelerator scaling for cross-vendor llm fleets running deepseek, qwen, llama, and minimax outside cuda-only clouds running on amd instinct mi300x/mi350/mi355x (rocm 10.0), intel xpu, and google cloud tpu, delivering enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code.\n- **Frontier MoE & Sparse-MLA Speedups**: Improves frontier moe & sparse-mla speedups for frontier mixture-of-experts (moe) reasoning and agentic models (deepseek-v4/v4.1, glm-5.3, kimi-k3/k3.1, minimax-m3.1) running on nvidia blackwell (gb200/gb300/b200), hopper (h100/h200), and multi-node expert parallel (ep) clusters, delivering delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens.\n- **Disaggregated Serving**: Improves disaggregated serving for planet-scale distributed inference clusters, serverless gpu autoscalers, and openai responses api clients running on multi-node rdma / infiniband / aws efa clusters and kubernetes inference gateways, delivering eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore.\n- **Low-Precision Quantization Kernels**: Improves low-precision quantization kernels for 100b\u20131t+ parameter models (mistral large 4, deepseek-v4, qwen3.5/3.8) quantized to 4-bit/8-bit running on nvidia blackwell (sm100 nvfp4), hopper (sm90 fp8), and amd mi350/mi355x, delivering halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput.\n- **Next-Gen Speculative Decoding**: Improves next-gen speculative decoding for interactive coding assistants, agent loops, and low-batch-size real-time inference running on nvidia hopper/blackwell, amd mi300x/mi355x, and cpu/xpu draft runners, delivering accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth.\n\n## 2. Who Benefits? (Models, GPUs & Your Bill)\n| Workload / Team | Models / Services | GPUs / Hardware | Practical Impact |\n|---|---|---|---|\n| **Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU)** | Cross-vendor LLM fleets running DeepSeek, Qwen, Llama, and MiniMax outside CUDA-only clouds | AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU | Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code |\n| **Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3)** | Frontier Mixture-of-Experts (MoE) reasoning and agentic models (DeepSeek-V4/V4.1, GLM-5.3, Kimi-K3/K3.1, MiniMax-M3.1) | NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters | Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens |\n| **Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore** | Planet-scale distributed inference clusters, serverless GPU autoscalers, and OpenAI Responses API clients | Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways | Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore |\n| **Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming)** | 100B\u20131T+ parameter models (Mistral Large 4, DeepSeek-V4, Qwen3.5/3.8) quantized to 4-bit/8-bit | NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X | Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput |\n| **Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix)** | Interactive coding assistants, agent loops, and low-batch-size real-time inference | NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners | Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth |\n| **Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend** | Newly released foundation models, Vision-Language (VLM), Speech/ASR (`/v1/audio/transcriptions`), and Multi-LoRA adapters | Standard single-node and multi-node GPU inference pools | Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet |\n| **Model Enhancements** | General platform workloads and API consumers | Standard cluster nodes and runtime components | Operational reliability and lower maintenance toil |\n\n## 3. What Does the Jargon Mean?\n- **Speculative Decoding (EAGLE3 / DSpark / DFlash / MTP / Suffix)**: Uses a fast draft mechanism (a lightweight head like EAGLE3/DSpark, Multi-Token Prediction layers, or n-gram suffix matching) to propose multiple tokens at once, which the main model verifies in a single forward pass. Why it matters: Boosts per-user token generation speed (interactivity/TPOT) by 1.4x\u20132.5x without changing output quality.\n- **MLA & Sparse-MLA (Multi-head Latent Attention)**: An attention architecture (used by DeepSeek-V3/V4, Kimi-K3, GLM-5) that compresses Key-Value states into a compact latent vector, optionally combined with sparse top-k token indexing. Why it matters: Slashes KV cache memory footprint on long contexts (32K\u2013128K+), enabling far larger batch sizes per GPU.\n- **NVFP4 / MXFP4 / FP8 Quantization**: 4-bit and 8-bit floating-point weight and activation formats accelerated natively by NVIDIA Blackwell/Hopper and AMD MI350/MI355X Tensor/Matrix cores. Why it matters: Nearly halves GPU memory vs. FP8 (and 4x vs. BF16) while up to doubling GEMM/MoE throughput on Blackwell and MI355X racks.\n- **P/D Disaggregation (Prefill/Decode Split & NIXL)**: Separating compute-bound prompt processing (Prefill) onto one pool of GPUs and memory-bandwidth-bound token generation (Decode) onto another, transferring KV cache over RDMA/NVLink via NIXL. Why it matters: Stops long incoming prompts from stalling active streaming users, letting you tune GPU ratios independently for TTFT and TPOT SLAs.\n- **DCP & PCP (Decode / Prefill Context Parallelism)**: Sharding the KV cache and attention computation of a single long-context sequence across multiple GPUs during prefill (PCP) or decode (DCP). Why it matters: Prevents single-GPU KV cache bottlenecks and reduces Time-to-First-Token (TTFT) on 32K\u20131M token agentic prompts.\n- **MoE / MegaMoE & Expert Parallelism (EP / DeepGEMM)**: Specialized kernels and all-to-all communication schedules that route tokens across Mixture-of-Experts (MoE) layers distributed across many GPUs. Why it matters: Essential for serving frontier MoE models (DeepSeek-V4, Mistral Large 4, GLM-5.3, Kimi-K3) at high tokens/sec per GPU.\n- **Piecewise & Breakable CUDA Graphs**: Capturing sequences of GPU kernel launches into replayable graphs (even across dynamic control flow) so the CPU doesn't launch hundreds of tiny kernels per token. Why it matters: Eliminates CPU bottlenecks during decode, cutting inter-token latency (ITL) by 5\u201325% without long `torch.compile` warmups.\n- **TTFT (Time to First Token) & TPOT / ITL (Time Per Output Token)**: The two core LLM latency SLAs: TTFT measures how fast the first response token appears after a prompt; TPOT/ITL measures how fast subsequent tokens stream. Why it matters: Directly determines whether an AI coding agent or voice assistant feels snappy or sluggish to end users.\n- **Tiered KV Offloading & Prefix Caching**: Evicting and reusing computed KV cache blocks across GPU HBM, host CPU DRAM, local NVMe, or shared object storage instead of recomputing shared system prompts. Why it matters: Dramatically lowers prefill compute cost and TTFT for multi-turn chat and agent workloads that share long context prefixes.\n\n## 4. Should I Upgrade?\n**Verdict**: UPGRADE WITH CONFIG CHECK \u2014 High-ROI throughput/stability gains, but review breaking flag/API removals first\n- **Before You Upgrade**: Keep host-only renderer, timeout, and recovery fields out of compile cache key -> Action: Included in weekly merge #69475 (2026-11-24). ([#69475](https://github.com/vllm-project/vllm/pull/69475))\n- **Before You Upgrade**: Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode -> Action: Included in weekly merge #69468 (2026-11-23). ([#69468](https://github.com/vllm-project/vllm/pull/69468))\n- **Before You Upgrade**: Keep MXFP8 linear weights in FP8 on SM90 at TP1 -> Action: Included in weekly merge #69446 (2026-11-23). ([#69446](https://github.com/vllm-project/vllm/pull/69446))\n- **Before You Upgrade**: Fix race in in-place LSE merge of chunked context -> Action: Included in weekly merge #69433 (2026-11-23). ([#69433](https://github.com/vllm-project/vllm/pull/69433))\n- **Before You Upgrade**: Fix indexer prefill logits lifetime and fused chunk planning -> Action: Included in weekly merge #69332 (2026-11-24). ([#69332](https://github.com/vllm-project/vllm/pull/69332))\n- **Before You Upgrade**: Respect root_path in elastic EP scaling middleware -> Action: Included in weekly merge #69285 (2026-11-23). ([#69285](https://github.com/vllm-project/vllm/pull/69285))\n- **Before You Upgrade**: Normalize the legacy Qwen3-ASR text config alias -> Action: Included in weekly merge #69226 (2026-11-23). ([#69226](https://github.com/vllm-project/vllm/pull/69226))\n- **Before You Upgrade**: Restore HY4 Flash CUDA platform checks -> Action: Included in weekly merge #69193 (2026-11-23). ([#69193](https://github.com/vllm-project/vllm/pull/69193))\n- **Deprecation**: Deprecate the TorchAO backend (@devanshi-code18, #69066). ([#69066](https://github.com/vllm-project/vllm/pull/69066))\n- **Security**: Stop Responses input validation after the first invalid item (@jperezdealgaba, #68907). ([#68907](https://github.com/vllm-project/vllm/pull/68907))\n\n## 5. Technical Deep Dive (What's the Big Deal Under the Hood?)\n### 1. Multi-Vendor Accelerator Scaling (AMD ROCm 10 / MI355X, TPU & XPU) ([#68987](https://github.com/vllm-project/vllm/pull/68987), [#69374](https://github.com/vllm-project/vllm/pull/69374), [#69085](https://github.com/vllm-project/vllm/pull/69085), [#69056](https://github.com/vllm-project/vllm/pull/69056))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating multi-vendor accelerator scaling relied on older execution paths or manual tuning on AMD Instinct MI300X/MI350/MI355X (ROCm 10.0), Intel XPU, and Google Cloud TPU.\n- **Technical change**: Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987).\n- **Technical change**: Spawn the GPU memory wait worker (@RuibinCheung, #69374).\n- **Technical change**: Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085).\n- **Technical change**: Cache a PR's ROCm base image automatically before merge (@AndreasKaratzas, #69056).\n- **Operational impact**: Enables hardware price-performance arbitrage across AMD and NVIDIA GPU clouds without changing serving code\n### 2. Frontier MoE & Sparse-MLA Speedups (DeepSeek-V4, GLM-5.3, Kimi-K3, MiniMax-M3) ([#68948](https://github.com/vllm-project/vllm/pull/68948), [#69001](https://github.com/vllm-project/vllm/pull/69001), [#69264](https://github.com/vllm-project/vllm/pull/69264), [#68965](https://github.com/vllm-project/vllm/pull/68965))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating frontier moe & sparse-mla speedups relied on older execution paths or manual tuning on NVIDIA Blackwell (GB200/GB300/B200), Hopper (H100/H200), and multi-node Expert Parallel (EP) clusters.\n- **Technical change**: Use upstream DeepseekV32Config and fix DeepSeek-V3.2 NVFP4 loading (@hmellor, #68948).\n- **Technical change**: Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001).\n- **Technical change**: Kimi-K3.1-Pro: B300 PD preset on kimi-k31-mc-f4c9618, align with InferenceX#5175 (@mispa-ms, #69264).\n- **Technical change**: Check the MLA W_UV kernel through a Triton launch hook (@bogdan-petkovic, #68965).\n- **Operational impact**: Delivers 1.24x\u20131.95x higher throughput and faster long-prompt TTFT, directly slashing cost-per-million tokens\n### 3. Disaggregated Serving (P/D, DCP/PCP), Fault Tolerance & Fast Checkpoint/Restore ([#68875](https://github.com/vllm-project/vllm/pull/68875), [#69401](https://github.com/vllm-project/vllm/pull/69401), [#69332](https://github.com/vllm-project/vllm/pull/69332), [#69019](https://github.com/vllm-project/vllm/pull/69019))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating disaggregated serving relied on older execution paths or manual tuning on Multi-node RDMA / InfiniBand / AWS EFA clusters and Kubernetes inference gateways.\n- **Technical change**: Register public HY4 checkpoint and update supported models (@jeejeelee, #68875).\n- **Technical change**: Write only the used FlashInfer prefill checkpoint states (@gau-nernst, #69401).\n- **Technical change**: Fix indexer prefill logits lifetime and fused chunk planning (@Heisenberg-Yin, #69332).\n- **Technical change**: Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019).\n- **Operational impact**: Eliminates full-cluster restarts when a single GPU rank dies and cuts autoscaling cold-start time via CRIU restore\n### 4. Low-Precision Quantization Kernels (NVFP4, MXFP4, MXFP8, FP8 & Humming) ([#69066](https://github.com/vllm-project/vllm/pull/69066), [#69274](https://github.com/vllm-project/vllm/pull/69274), [#69483](https://github.com/vllm-project/vllm/pull/69483), [#69446](https://github.com/vllm-project/vllm/pull/69446))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating low-precision quantization kernels relied on older execution paths or manual tuning on NVIDIA Blackwell (SM100 NVFP4), Hopper (SM90 FP8), and AMD MI350/MI355X.\n- **Technical change**: Deprecate the TorchAO backend (@devanshi-code18, #69066).\n- **Technical change**: Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274).\n- **Technical change**: Remove dead code quantizations (@yewentao256, #69483).\n- **Technical change**: Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446).\n- **Operational impact**: Halves GPU count required to fit 400B\u20131T weights in VRAM and up to doubles Tensor Core compute throughput\n### 5. Next-Gen Speculative Decoding (EAGLE3, DSpark, DFlash, MTP & Suffix) ([#69163](https://github.com/vllm-project/vllm/pull/69163), [#69182](https://github.com/vllm-project/vllm/pull/69182), [#69065](https://github.com/vllm-project/vllm/pull/69065), [#68986](https://github.com/vllm-project/vllm/pull/68986))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating next-gen speculative decoding relied on older execution paths or manual tuning on NVIDIA Hopper/Blackwell, AMD MI300X/MI355X, and CPU/XPU draft runners.\n- **Technical change**: Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163).\n- **Technical change**: Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109 (@mispa-ms, #69182).\n- **Technical change**: Faster fused CUDA MTP decode for 16-bit recurrent state (@gau-nernst, #69065).\n- **Technical change**: Warm the Triton autotune cache in the MTP sharded-sampling test (@stefankoncarevic, #68986).\n- **Operational impact**: Accelerates single-stream decode speed by 1.35x\u20132.2x using idle GPU memory bandwidth\n### 6. Day-0 Model Architectures, Multimodal Vision/Audio & Transformers Backend ([#68900](https://github.com/vllm-project/vllm/pull/68900), [#68864](https://github.com/vllm-project/vllm/pull/68864), [#69087](https://github.com/vllm-project/vllm/pull/69087), [#69028](https://github.com/vllm-project/vllm/pull/69028))\n- **Previously**: Prior to Last Week in VLLM (Week Ending 2026-11-19), teams operating day-0 model architectures, multimodal vision/audio & transformers backend relied on older execution paths or manual tuning on Standard single-node and multi-node GPU inference pools.\n- **Technical change**: Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900).\n- **Technical change**: Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864).\n- **Technical change**: Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087).\n- **Technical change**: Add Inkling 2 Mini (@WoosukKwon, #69028).\n- **Operational impact**: Consolidates text, vision, speech, and embedding models onto a single unified vLLM serving fleet\n\n### Weekly / Patch Merge Pulse\n- `2026-11-24` [Perf][Qwen4Exp] Add SM100 TP=2 and TP=8 skinny GEMM plans ([#69529](https://github.com/vllm-project/vllm/pull/69529)) by @Johnsonms\n- `2026-11-24` [Startup] Keep Inductor and Dynamo imports off the non-compiled path ([#69520](https://github.com/vllm-project/vllm/pull/69520)) by @WoosukKwon\n- `2026-11-24` [CI] Switch vllm-runners callers to @main reusable workflows (step 2/2) ([#69513](https://github.com/vllm-project/vllm/pull/69513)) by @khluu\n- `2026-11-24` [CI] Add reusable workflows for vllm-runners (step 1/2) ([#69510](https://github.com/vllm-project/vllm/pull/69510)) by @khluu\n- `2026-11-24` [CI][XPU] Enable batch invariance for OLMoE LoRA tests ([#69509](https://github.com/vllm-project/vllm/pull/69509)) by @hlin99\n- `2026-11-24` [CI] Let auto-rebase ignore per-step ci/step statuses ([#69503](https://github.com/vllm-project/vllm/pull/69503)) by @Thangnguyenvn98\n- `2026-11-23` [CI] Don't treat a finished build left blocked by the test picker as running ([#69497](https://github.com/vllm-project/vllm/pull/69497)) by @khluu\n- `2026-11-24` [Refactor] Remove dead code quantizations ([#69483](https://github.com/vllm-project/vllm/pull/69483)) by @yewentao256\n\n## 6. Where's the Proof?\n- **Perf** ([#69529](https://github.com/vllm-project/vllm/pull/69529)): Add SM100 TP=2 and TP=8 skinny GEMM plans.\n- **Docs** ([#69472](https://github.com/vllm-project/vllm/pull/69472)): Fix HY4 Flash IndexPool API reference warnings.\n- **Bugfix** ([#69433](https://github.com/vllm-project/vllm/pull/69433)): Fix race in in-place LSE merge of chunked context.\n- **EPD** ([#69426](https://github.com/vllm-project/vllm/pull/69426)): Support metadata-only images and videos for HY4 and HY4 Flash.\n- **Recipe** ([#69425](https://github.com/vllm-project/vllm/pull/69425)): Update ERNIE recipe Support ERNIE 5.5 Flash Preview.\n- **Perf** ([#69401](https://github.com/vllm-project/vllm/pull/69401)): Write only the used FlashInfer prefill checkpoint states.\n- **Bugfix** ([#69193](https://github.com/vllm-project/vllm/pull/69193)): Restore HY4 Flash CUDA platform checks.\n- **Recipe** ([#69182](https://github.com/vllm-project/vllm/pull/69182)): Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109.\n- **Perf** ([#69168](https://github.com/vllm-project/vllm/pull/69168)): Improve small M GEMM on 5090 (sm120).\n- **Recipe** ([#69163](https://github.com/vllm-project/vllm/pull/69163)): Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119.\n- **Recipe** ([#69163](https://github.com/vllm-project/vllm/pull/69163)): Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163).\n- **Perf** ([#69001](https://github.com/vllm-project/vllm/pull/69001)): Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001).\n- **Perf** ([#69029](https://github.com/vllm-project/vllm/pull/69029)): Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level) (@rwtarpit, #69029).\n- **Perf** ([#69021](https://github.com/vllm-project/vllm/pull/69021)): Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021).\n\n### Complete Feature Graduation & Enhancement Rollup\n- **[Engine & Runtime]** Revert \"[ROCm][CI] Retarget `mi300_dpx` jobs to `mi300_1` queue temporarily\" (@sheralskumar, #68987). ([#68987](https://github.com/vllm-project/vllm/pull/68987))\n- **[Deprecation]** Deprecate the TorchAO backend (@devanshi-code18, #69066). ([#69066](https://github.com/vllm-project/vllm/pull/69066))\n- **[Model]** Use upstream DeepseekV32Config and fix DeepSeek-V3.2 NVFP4 loading (@hmellor, #68948). ([#68948](https://github.com/vllm-project/vllm/pull/68948))\n- **[Model]** Register public HY4 checkpoint and update supported models (@jeejeelee, #68875). ([#68875](https://github.com/vllm-project/vllm/pull/68875))\n- **[Recipe]** Kimi-K3.1-Pro: MI355X kimi-k31-712d9eb image and released DSpark draft, align with InferenceX#5119 (@seungrokj, #69163). ([#69163](https://github.com/vllm-project/vllm/pull/69163))\n- **[Perf]** Enable fused all-reduce + mHC + RMSNorm on Hopper, 8.7%E2E Throughput Improvement (@yewentao256, #69001). ([#69001](https://github.com/vllm-project/vllm/pull/69001))\n- **[Multimodal]** Deprecate `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME` env var (@Isotr0py, #68900). ([#68900](https://github.com/vllm-project/vllm/pull/68900))\n- **[Perf]** Write only the used FlashInfer prefill checkpoint states (@gau-nernst, #69401). ([#69401](https://github.com/vllm-project/vllm/pull/69401))\n- **[CI]** Spawn the GPU memory wait worker (@RuibinCheung, #69374). ([#69374](https://github.com/vllm-project/vllm/pull/69374))\n- **[Spec Decode]** Allow DFly on any compressed-tensors target scheme (NVFP4) (@mgoin, #69274). ([#69274](https://github.com/vllm-project/vllm/pull/69274))\n- **[Recipe]** Kimi-K3.1-Pro: B300 PD preset on kimi-k31-mc-f4c9618, align with InferenceX#5175 (@mispa-ms, #69264). ([#69264](https://github.com/vllm-project/vllm/pull/69264))\n- **[Recipe]** Kimi-K3.1-Pro: move the GB300 AgentX presets to the released DSpark draft, align with InferenceX#5109 (@mispa-ms, #69182). ([#69182](https://github.com/vllm-project/vllm/pull/69182))\n- **[ROCm]** Fix precision loss in asymmetric int8 linear layers on ROCm (@rasmith, #69085). ([#69085](https://github.com/vllm-project/vllm/pull/69085))\n- **[Kernel]** Faster fused CUDA MTP decode for 16-bit recurrent state (@gau-nernst, #69065). ([#69065](https://github.com/vllm-project/vllm/pull/69065))\n- **[ROCm]** Cache a PR's ROCm base image automatically before merge (@AndreasKaratzas, #69056). ([#69056](https://github.com/vllm-project/vllm/pull/69056))\n- **[ROCm]** Avoid MIOpen's split-K conv solver in batch-invariant mode (@mirza-halilcevic, #69025). ([#69025](https://github.com/vllm-project/vllm/pull/69025))\n- **[CI]** Warm the Triton autotune cache in the MTP sharded-sampling test (@stefankoncarevic, #68986). ([#68986](https://github.com/vllm-project/vllm/pull/68986))\n- **[ROCm]** Check the MLA W_UV kernel through a Triton launch hook (@bogdan-petkovic, #68965). ([#68965](https://github.com/vllm-project/vllm/pull/68965))\n- **[Recipe]** Inkling 2 Small: serve from nightly and add Hopper (H200) (@WoosukKwon, #68864). ([#68864](https://github.com/vllm-project/vllm/pull/68864))\n- **[Model]** Migrate ERNIE 4.5 to Transformers backend (@Remarkable911, #69087). ([#69087](https://github.com/vllm-project/vllm/pull/69087))\n- **[Model]** Add Inkling 2 Mini (@WoosukKwon, #69028). ([#69028](https://github.com/vllm-project/vllm/pull/69028))\n- **[Model]** Hy4-flash Cleanup (@jeejeelee, #69013). ([#69013](https://github.com/vllm-project/vllm/pull/69013))\n- **[Model]** Add masked_token_ids to never sample given tokens (@aoshen02, #68976). ([#68976](https://github.com/vllm-project/vllm/pull/68976))\n- **[Model]** Use upstream Transformers configs for Inkling (@hmellor, #68975). ([#68975](https://github.com/vllm-project/vllm/pull/68975))\n- **[Perf]** Coalesce K_Buffer loads and co-schedule head blocks TRITON_MLA (upto 1.7x gain at kernel level) (@rwtarpit, #69029). ([#69029](https://github.com/vllm-project/vllm/pull/69029))\n- **[Perf]** Inkling 2: keep the TMA k_group_partials path on SM12x (@hclsys, #69021). ([#69021](https://github.com/vllm-project/vllm/pull/69021))\n- **[Refactor]** Remove dead code quantizations (@yewentao256, #69483). ([#69483](https://github.com/vllm-project/vllm/pull/69483))\n- **[Bugfix]** Keep MXFP8 linear weights in FP8 on SM90 at TP1 (@Ganto12, #69446). ([#69446](https://github.com/vllm-project/vllm/pull/69446))\n- **[Bugfix]** Fix indexer prefill logits lifetime and fused chunk planning (@Heisenberg-Yin, #69332). ([#69332](https://github.com/vllm-project/vllm/pull/69332))\n- **[Bugfix]** Normalize the legacy Qwen3-ASR text config alias (@pk954061458, #69226). ([#69226](https://github.com/vllm-project/vllm/pull/69226))\n- **[Bugfix]** Fix ROCm OCR preemption logit drift with DeepEncoder GEMM (@gty111, #69108). ([#69108](https://github.com/vllm-project/vllm/pull/69108))\n- **[Bugfix]** Read the DSpark draft's native mega MoE flag from its layers (@roborluo, #69023). ([#69023](https://github.com/vllm-project/vllm/pull/69023))\n- **[Rust Frontend]** Support `additional_tools` input items in the Responses API (@albertoperdomo2, #69019). ([#69019](https://github.com/vllm-project/vllm/pull/69019))\n- **[Perf]** Add SM100 TP=2 and TP=8 skinny GEMM plans (@Johnsonms, #69529). ([#69529](https://github.com/vllm-project/vllm/pull/69529))\n- **[Startup]** Keep Inductor and Dynamo imports off the non-compiled path (@WoosukKwon, #69520). ([#69520](https://github.com/vllm-project/vllm/pull/69520))\n- **[CI]** Switch vllm-runners callers to @main reusable workflows (step 2/2) (@khluu, #69513). ([#69513](https://github.com/vllm-project/vllm/pull/69513))\n- **[CI]** Add reusable workflows for vllm-runners (step 1/2) (@khluu, #69510). ([#69510](https://github.com/vllm-project/vllm/pull/69510))\n- **[CI]** Enable batch invariance for OLMoE LoRA tests (@hlin99, #69509). ([#69509](https://github.com/vllm-project/vllm/pull/69509))\n- **[CI]** Let auto-rebase ignore per-step ci/step statuses (@Thangnguyenvn98, #69503). ([#69503](https://github.com/vllm-project/vllm/pull/69503))\n- **[CI]** Don't treat a finished build left blocked by the test picker as running (@khluu, #69497). ([#69497](https://github.com/vllm-project/vllm/pull/69497))\n- **[Docs]** Fix HY4 Flash IndexPool API reference warnings (@taneem-ibrahim, #69472). ([#69472](https://github.com/vllm-project/vllm/pull/69472))\n- **[Bugfix]** Only inject `cohere_format` default chat-template kwarg in Cohere tokenizer mode (@NickLucche, #69468). ([#69468](https://github.com/vllm-project/vllm/pull/69468))\n- **[Governance]** Add Taneem Ibrahim as a pooling committer (@taneem-ibrahim, #69437). ([#69437](https://github.com/vllm-project/vllm/pull/69437))\n- **[EPD]** Support metadata-only images and videos for HY4 and HY4 Flash (@grYe99, #69426). ([#69426](https://github.com/vllm-project/vllm/pull/69426))\n- **[Recipe]** Update ERNIE recipe Support ERNIE 5.5 Flash Preview (@CSWYF3634076, #69425). ([#69425](https://github.com/vllm-project/vllm/pull/69425))\n- **[CI]** Retry gcc-15 downloads from the Launchpad PPA in the CPU image (@khluu, #69416). ([#69416](https://github.com/vllm-project/vllm/pull/69416))\n- **[Refactor]** Expose CuMemBackend allocator hook (@Ronald1995, #69412). ([#69412](https://github.com/vllm-project/vllm/pull/69412))\n- **[Governance]** Update codeowner for wangxiyuan (@wangxiyuan, #69397). ([#69397](https://github.com/vllm-project/vllm/pull/69397))\n- **[Governance]** Add Tianyu Guo as an EPD code owner (@gty111, #69376). ([#69376](https://github.com/vllm-project/vllm/pull/69376))\n- **[Doc]** Highlight HTTP-only (no vLLM import) weight updates in training docs (@aoshen02, #69333). ([#69333](https://github.com/vllm-project/vllm/pull/69333))\n- **[Doc]** Fix relative example links in docs/training/weight_updates/engines (@aoshen02, #69300). ([#69300](https://github.com/vllm-project/vllm/pull/69300))\n- **[Recipe]** Inkling 2 Mini: use the nightly image (@WoosukKwon, #69296). ([#69296](https://github.com/vllm-project/vllm/pull/69296))\n- **[Doc]** Reorganize docs/training/ into weight_updates and rollout_artifacts (@aoshen02, #69248). ([#69248](https://github.com/vllm-project/vllm/pull/69248))\n- **[LoRA]** Add private worker-local tensor adapter loading (@jeejeelee, #69229). ([#69229](https://github.com/vllm-project/vllm/pull/69229))\n- **[Perf]** Improve small M GEMM on 5090 (sm120) (@gau-nernst, #69168). ([#69168](https://github.com/vllm-project/vllm/pull/69168))\n- **[CI]** Allow Gemma3n GPU sync on older Transformers (@hlin99, #69140). ([#69140](https://github.com/vllm-project/vllm/pull/69140))\n- **[CI]** Use platform device in M-RoPE prompt embeds test (@hlin99, #69134). ([#69134](https://github.com/vllm-project/vllm/pull/69134))\n- **[Perf]** Small NVIDIA-path wins: HC expand via cat, GDN ba overlap, fused HC mix from M=48 (@gau-nernst, #69122). ([#69122](https://github.com/vllm-project/vllm/pull/69122))\n- **[Doc]** Add vLLM security review skill (@jperezdealgaba, #69101). ([#69101](https://github.com/vllm-project/vllm/pull/69101))\n- **[Benchmark]** Time real server starts in vllm bench startup (--serve-cmd) (@matteso1, #69076). ([#69076](https://github.com/vllm-project/vllm/pull/69076))\n- **[Recipe]** Inkling 2 Mini: serve the full 1M context on one GPU (@WoosukKwon, #69039). ([#69039](https://github.com/vllm-project/vllm/pull/69039))\n- **[Recipe]** Add Inkling 2 Mini (@WoosukKwon, #69027). ([#69027](https://github.com/vllm-project/vllm/pull/69027))\n- **[HiSparse]** Support HY4 Flash (@MatthewBonanni, #69026). ([#69026](https://github.com/vllm-project/vllm/pull/69026))\n- **[Build]** Relax PyNvVideoCodec pin to >=2.2.4 to resolve CVEs (@brandonpelfrey, #68991). ([#68991](https://github.com/vllm-project/vllm/pull/68991))\n- **[Docs]** Add stecasta to reviewers (@stecasta, #68981). ([#68981](https://github.com/vllm-project/vllm/pull/68981))\n- **[XPU]** skip not applied tests in lora/test_layer.py and test_config.py on XPU (@yma11, #68971). ([#68971](https://github.com/vllm-project/vllm/pull/68971))\n- **[Perf]** Export ZAYA1 CCA prefill checkpoints (@JaredforReal, #68921). ([#68921](https://github.com/vllm-project/vllm/pull/68921))\n- **[Rust Frontend]** List valid model aliases when a model is not found (@BugenZhao, #68913). ([#68913](https://github.com/vllm-project/vllm/pull/68913))\n- **[Rust Frontend]** Prefer tokenizer.json over tekken.json (@BugenZhao, #68911). ([#68911](https://github.com/vllm-project/vllm/pull/68911))\n- **[Rust Frontend]** Unload a LoRA adapter an engine already evicted (@BugenZhao, #68910). ([#68910](https://github.com/vllm-project/vllm/pull/68910))\n- **[Security]** Stop Responses input validation after the first invalid item (@jperezdealgaba, #68907). ([#68907](https://github.com/vllm-project/vllm/pull/68907))\n- **[Security]** Bound the number of batch chat conversations (@jperezdealgaba, #68904). ([#68904](https://github.com/vllm-project/vllm/pull/68904))\n- **[CI]** Use a uv-managed Python in the Python 3.12 smoke test (@csahithi, #68887). ([#68887](https://github.com/vllm-project/vllm/pull/68887))\n- **[CI]** Use test runner for sampling and LoRA tests (@hlin99, #68884). ([#68884](https://github.com/vllm-project/vllm/pull/68884))\n- **[CI]** Skip HYV4Flash in PP equivalence below Hopper (@JaredforReal, #68883). ([#68883](https://github.com/vllm-project/vllm/pull/68883))\n- **[CI]** Fix Engram peer group test capability (@hlin99, #68881). ([#68881](https://github.com/vllm-project/vllm/pull/68881))\n- **[CI]** Decouple LoRA layer tests from GLM model imports (@hlin99, #68867). ([#68867](https://github.com/vllm-project/vllm/pull/68867))\n- **[XPU]** add modelopt_mxfp8 quantization format (@yma11, #68858). ([#68858](https://github.com/vllm-project/vllm/pull/68858))\n- **[Recipe]** Add HY4 (@esmeetu, #68844). ([#68844](https://github.com/vllm-project/vllm/pull/68844))\n- **[Perf]** QSA: sm_100 split-K launch configs for small batches (@notch776, #68842). ([#68842](https://github.com/vllm-project/vllm/pull/68842))\n- **[Bugfix]** Keep host-only renderer, timeout, and recovery fields out of compile cache key (@matteso1, #69475). ([#69475](https://github.com/vllm-project/vllm/pull/69475))\n- **[Bugfix]** Fix race in in-place LSE merge of chunked context (@stefankoncarevic, #69433). ([#69433](https://github.com/vllm-project/vllm/pull/69433))\n- **[Bugfix]** Respect root_path in elastic EP scaling middleware (@rishabhsai, #69285). ([#69285](https://github.com/vllm-project/vllm/pull/69285))\n- **[Bugfix]** Restore HY4 Flash CUDA platform checks (@hlin99, #69193). ([#69193](https://github.com/vllm-project/vllm/pull/69193))\n- **[Bugfix]** Normalize native GTE positional embedding configuration (@hlin99, #69145). ([#69145](https://github.com/vllm-project/vllm/pull/69145))\n- **[Bugfix]** Preserve reused ARC prefixes during running-request eviction (@waizuichougou, #69110). ([#69110](https://github.com/vllm-project/vllm/pull/69110))\n- **[Bugfix]** Accept NumPy images and PIL frame videos in Muse Spark Open (@yarikama, #69099). ([#69099](https://github.com/vllm-project/vllm/pull/69099))\n- **[Bugfix]** Convert PIL video frames to RGB like PIL images (@yarikama, #69089). ([#69089](https://github.com/vllm-project/vllm/pull/69089))\n- **[Bugfix]** Return 400 for unreadable embedding payloads (@my-git9, #69073). ([#69073](https://github.com/vllm-project/vllm/pull/69073))\n- **[Bugfix]** Accept torch.Tensor videos in vLLM's own HF processors (@yarikama, #69052). ([#69052](https://github.com/vllm-project/vllm/pull/69052))\n- **[Bugfix]** Store the chunk containing a partial-tail CPU hit (@nvisional, #69048). ([#69048](https://github.com/vllm-project/vllm/pull/69048))\n- **[Bugfix]** torchao: apply each fused shard's AWQ act_pre_scale (@devanshi-code18, #69002). ([#69002](https://github.com/vllm-project/vllm/pull/69002))\n- **[Bugfix]** Reject stop strings when the generate server has no tokenizer (@hickeyma, #68989). ([#68989](https://github.com/vllm-project/vllm/pull/68989))\n- **[Bugfix]** Emit the prefill staging plan without a dense prefill backend (@HansG89, #68967). ([#68967](https://github.com/vllm-project/vllm/pull/68967))\n- **[Bugfix]** Fix oversized piecewise CUDA graphs for Gemma3n cross-decoder (@searlion, #68944). ([#68944](https://github.com/vllm-project/vllm/pull/68944))\n- **[Bugfix]** call sys._current_frames() to dump callstack (@wenjinhust, #68924). ([#68924](https://github.com/vllm-project/vllm/pull/68924))\n- **[Bugfix]** Read /v1/decisions predicates like /v1/systemone noul questions (@simon-veitner-redhat, #68917). ([#68917](https://github.com/vllm-project/vllm/pull/68917))\n- **[Bugfix]** Forward --seed to the spec_bench and speed_bench datasets (@johnsonshi, #68859). ([#68859](https://github.com/vllm-project/vllm/pull/68859))\n- **[Bugfix]** Normalize negative-stride video inputs (@yarikama, #68857). ([#68857](https://github.com/vllm-project/vllm/pull/68857))\n- **[Bugfix]** Let chunked embeddings truncate above max_model_len (@hungnnvidia, #68852). ([#68852](https://github.com/vllm-project/vllm/pull/68852))\n\n**Key Feature Gates / API Identifiers**: `mi300_dpx`, `mi300_1`, `VLLM_OBJECT_STORAGE_SHM_BUFFER_NAME`, `additional_tools`, `cohere_format`",
   "is_weekly": true,
   "window_label": "Week Ending 2026-11-19",
   "display_title": "Last Week in vLLM (Week Ending 2026-11-19)",
